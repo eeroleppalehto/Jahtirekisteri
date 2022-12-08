@@ -1,0 +1,56 @@
+[11:30 AM] Joonas Pitkänen
+jaettavat_lihat:
+----------------
+-- View: public.jaettavat_lihat
+ 
+-- DROP VIEW public.jaettavat_lihat;
+ 
+CREATE OR REPLACE VIEW public.jaettavat_lihat
+AS
+SELECT kaato.kaato_id AS id,
+    (jasen.sukunimi::text || ' '::text) || jasen.etunimi::text AS kaataja,
+    kaato.kaatopaiva AS "kaatopäivä",
+    kaato.paikka_teksti AS paikka,
+    kaato.elaimen_nimi AS "eläin",
+    kaato.ikaluokka AS "ikäryhmä",
+    kaato.sukupuoli,
+    kaato.ruhopaino AS paino
+   FROM jasen
+     JOIN kaato ON jasen.jasen_id = kaato.jasen_id
+     JOIN kasittely ON kaato.kasittelyid = kasittely.kasittelyid
+  WHERE kasittely.kasittelyid = 2
+  ORDER BY kaato.kaatopaiva DESC;
+ 
+ALTER TABLE public.jaettavat_lihat
+    OWNER TO postgres;
+ 
+GRANT ALL ON TABLE public.jaettavat_lihat TO sovellus;
+GRANT ALL ON TABLE public.jaettavat_lihat TO postgres;
+ 
+
+[11:31 AM] Joonas Pitkänen
+simple-sankey (ei vaikuta pakolliselta):
+----------------------------
+-- View: public.simple_sankey
+ 
+-- DROP VIEW public.simple_sankey;
+ 
+CREATE OR REPLACE VIEW public.simple_sankey
+AS
+SELECT kaato.elaimen_nimi AS source,
+    jakoryhma.ryhman_nimi AS target,
+    sum(jakotapahtuma.maara) AS value
+   FROM kaato
+     JOIN jakotapahtuma ON kaato.kaato_id = jakotapahtuma.kaato_id
+     JOIN jakoryhma ON jakotapahtuma.ryhma_id = jakoryhma.ryhma_id
+  GROUP BY kaato.elaimen_nimi, jakoryhma.ryhman_nimi;
+ 
+ALTER TABLE public.simple_sankey
+    OWNER TO postgres;
+COMMENT ON VIEW public.simple_sankey
+    IS 'A view for producing Sankey chart data: source, target, and value.';
+ 
+GRANT ALL ON TABLE public.simple_sankey TO sovellus;
+GRANT ALL ON TABLE public.simple_sankey TO postgres;
+ 
+
