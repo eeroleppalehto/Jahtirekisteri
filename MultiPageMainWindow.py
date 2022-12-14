@@ -458,7 +458,7 @@ class MultiPageMainWindow(QMainWindow):
         # FIXME: Id values are not correctly managed
         try:
             shareKillChosenRowIx = self.shareKillsTW.currentRow()
-            shareKill = int(self.shareKillsTW.itemAt(shareKillChosenRowIx, 0).text())
+            shareKill = int(self.shareKillsTW.itemAt(shareKillChosenRowIx, 0).text()) # FIXME: Check if row and column are correctly placed
             shareDay = self.shareDE.date().toPyDate()
             portion = self.sharePortionCB.currentText()
             weight = float(self.shareAmountLE.text())

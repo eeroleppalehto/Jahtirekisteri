@@ -1020,8 +1020,15 @@ class EditGroupDialog(DialogFrame):
 
         self.setWindowTitle('Muokkaa ryhmän tietoja')
 
-        
+        # Elements
+        self.editGroupCB = self.editGroupComboBox
+        self.editGroupPartyCB = self.editGroupPartyComboBox
+        self.editGroupNameLE = self.editGroupNameLineEdit
+        self.editGroupCancelPushBtn = self.editGroupCancelPushButton
+        self.editGroupSavePushBtn = self.editGroupSavePushButton
 
+    def populateGroupCB(self):
+        pass
 
 class TestMainWindow(QMainWindow):
     """Main Window for testing dialogs."""
