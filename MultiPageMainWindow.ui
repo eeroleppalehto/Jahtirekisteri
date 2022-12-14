@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>603</width>
+    <width>807</width>
     <height>600</height>
    </rect>
   </property>
@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="summaryPage">
      <attribute name="title">
@@ -92,17 +92,19 @@
        <string>Päivitä</string>
       </property>
      </widget>
-     <widget class="QGroupBox" name="summarySuggestGroupBox">
+     <widget class="QWebEngineView" name="sankeyWebEngineView">
       <property name="geometry">
        <rect>
-        <x>330</x>
-        <y>40</y>
-        <width>251</width>
-        <height>441</height>
+        <x>340</x>
+        <y>20</y>
+        <width>421</width>
+        <height>481</height>
        </rect>
       </property>
-      <property name="title">
-       <string>Ehdotukset</string>
+      <property name="url">
+       <url>
+        <string>about:blank</string>
+       </url>
       </property>
      </widget>
     </widget>
@@ -868,7 +870,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>603</width>
+     <width>807</width>
      <height>21</height>
     </rect>
    </property>
@@ -890,6 +892,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QWebEngineView</class>
+   <extends>QWidget</extends>
+   <header location="global">QtWebEngineWidgets/QWebEngineView</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>summaryRefreshPushButton</tabstop>
   <tabstop>meatSharedTableWidget</tabstop>

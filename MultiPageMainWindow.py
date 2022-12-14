@@ -6,12 +6,14 @@
 
 import sys  # Needed for starting the application
 from PyQt5.QtWidgets import *  # All widgets
+from PyQt5 import QtWebEngineWidgets # For showing html content
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import *  # FIXME: Everything,  change to individual components
 from datetime import date
 import pgModule
 import prepareData
 import DialogueWindow
+import figures
 
 # CLASS DEFINITIONS FOR THE APP
 # -----------------------------
@@ -49,6 +51,7 @@ class MultiPageMainWindow(QMainWindow):
             self.populateSummaryPage)  # Signal
         self.summaryMeatSharedTW = self.meatSharedTableWidget
         self.summaryGroupSummaryTW = self.groupSummaryTableWidget
+        self.sankeyWebV = self.sankeyWebEngineView
 
         # Kill page (Kaato)
         self.shotByCB = self.shotByComboBox
@@ -100,6 +103,10 @@ class MultiPageMainWindow(QMainWindow):
         self.maintenanceRemovePartyPushBtn.clicked.connect(self.openRemovePartyDialog) # Signal
         self.maintenanceEditCompanyPushBtn = self.maintenanceEditCompanyPushButton
         self.maintenanceEditCompanyPushBtn.clicked.connect(self.openEditCompanyDialog) # Signal
+        self.maintenanceEditMemberPushBtn = self.maintenanceEditMemberPushButton
+        self.maintenanceEditMemberPushBtn.clicked.connect(self.openEditMemberDialog) # Signal
+        self.maintenanceEditMembershipPushBtn = self.maintenanceEditMembershipPushButton
+        self.maintenanceEditMembershipPushBtn.clicked.connect(self.openEditMembershipDialog) # Signal
 
         # Signal when a page is opened
         self.pageTab = self.tabWidget
@@ -167,6 +174,32 @@ class MultiPageMainWindow(QMainWindow):
         else:
             prepareData.prepareTable(
                 databaseOperation2, self.summaryGroupSummaryTW)
+
+        # SankeyGraph
+        # 
+        databaseOperation3 = pgModule.DatabaseOperation()
+        databaseOperation3.getAllRowsFromTable(
+            self.connectionArguments, 'public.kaytto_ryhmille')
+        if databaseOperation3.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation3.errorMessage,
+                databaseOperation3.detailedMessage
+                )
+        else:
+            sankeyData = databaseOperation3.resultSet
+        
+        # TODO: Access groupdata and assign color values depending on delta of expected meat value
+        # figures.colors(sankeyData, databaseOperation2.resultSet)
+
+        # figure = figures.createSankeyChart(sankeyData, [], [], [], 'Sankey')
+        # figure = figures.testChart()
+        htmlFile = 'meatstreams.html'
+        urlString = f'file:///{htmlFile}'
+        # figures.createOfflineFile(figure, 'sankey.html') # Write the chart to a html file
+        url = QUrl(urlString) # Create a relative url to the file
+        self.sankeyWebV.load(url) # Load it into the web view element
 
     def populateKillPage(self):
         # Set default date to current date
@@ -531,6 +564,14 @@ class MultiPageMainWindow(QMainWindow):
     
     def openEditCompanyDialog(self):
         dialog = DialogueWindow.EditCompanyDialog()
+        dialog.exec()
+
+    def openEditMemberDialog(self):
+        dialog = DialogueWindow.EditMemberDialog()
+        dialog.exec()
+
+    def openEditMembershipDialog(self):
+        dialog = DialogueWindow.EditMembershipDialog()
         dialog.exec()
 
 # APPLICATION CREATION AND STARTING

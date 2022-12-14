@@ -1,4 +1,5 @@
 import sys
+from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
 import pgModule
@@ -166,7 +167,7 @@ class AddMemberDialog(DialogFrame):
 
 class RemoveMemberDialog(DialogFrame):
     """Creates a dialog to remove member from database"""
-    
+    # TODO: Change from using delete from database to changing members status to deactive('poistunut')
     # Constructor
     def __init__(self):
 
@@ -753,14 +754,19 @@ class EditMemberDialog(DialogFrame):
 
         # Elements
         self.editMemberCB = self.editMemberComboBox
-        self.editMemberPopulatePushBtn = self.editMemberPopulatePushButton
         self.editMemberFirstNameLE = self.editMemberFirstNameLineEdit
         self.editMemberLastNameLE = self.editMemberLastNameLineEdit
         self.editMemberPostalAddressLE = self.editMemberPostalAddressLineEdit
         self.editMemberZipLE = self.editMemberZipLineEdit
         self.editMemberCityLE = self.editMemberCityLineEdit
         self.editMemberCancelPushBtn = self.editMemberCancelPushButton
+        self.editMemberCancelPushBtn.clicked.connect(self.closeDialog)
         self.editMemberSavePushBtn = self.editMemberSavePushButton
+        self.editMemberSavePushBtn.clicked.connect(self.editMember)
+        self.editMemberPopulatePushBtn = self.editMemberPopulatePushButton
+        self.editMemberPopulatePushBtn.clicked.connect(self.populateFields)
+
+        self.populateMemberCB()
 
     def populateMemberCB(self):
         databaseOperation = pgModule.DatabaseOperation()
@@ -789,7 +795,7 @@ class EditMemberDialog(DialogFrame):
                 databaseOperation.detailedMessage
                 )
         else:
-            self.companyInfo = []
+            self.companyInfo = [] # TODO: Check if needed
             if databaseOperation.resultSet != []:
 
                 memberChosenItemIx = self.editMemberCB.currentIndex()
@@ -822,13 +828,14 @@ class EditMemberDialog(DialogFrame):
             )
             print(updateList)
             columnList = [
-                'seuran_nimi',
+                'etunimi',
+                'sukunimi',
                 'jakeluosoite',
                 'postinumero',
                 'postitoimipaikka'
             ]
             table = 'public.jasen'
-            limit = f"public.jasen.jasen_id = {self.member}"
+            limit = f"public.jasen.jasen_id = {self.member[0]}"
 
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
@@ -836,7 +843,7 @@ class EditMemberDialog(DialogFrame):
         i = 0
         j = 1
         for data in updateList:
-            if data != self.companyInfo[j]:
+            if data != self.member[j]:
                 databaseOperation = pgModule.DatabaseOperation()
                 databaseOperation.updateTable(self.connectionArguments, table,
                 columnList[i], f"'{data}'", limit)
@@ -853,8 +860,168 @@ class EditMemberDialog(DialogFrame):
             i += 1
             j += 1
 
+        success = SuccessfulOperationDialog()
+        success.exec()
+        self.editMemberFirstNameLE.clear(),
+        self.editMemberLastNameLE.clear(),
+        self.editMemberPostalAddressLE.clear(),
+        self.editMemberZipLE.clear(),
+        self.editMemberCityLE.clear()
 
+    def closeDialog(self):
+            self.close()
+
+class EditMembershipDialog(DialogFrame):
+    """docstring for EditMemberDialog(DialogFrame
+    def __init__(self, arg):
+        super(EditMemberDialog(DialogFrame).__init__()
+    arg"""
+
+    def __init__(self):
+
+        super().__init__()
+
+        loadUi("editMembershipDialog.ui", self)
+
+        self.setWindowTitle('Muokkaa jäsenyys tietoja')
+        
+        # Elements
+        self.editMembershipTW = self.editMembershipTableWidget
+        self.editMembershipGroupCB = self.editMembershipGroupComboBox
+        self.editMembershipMemberCB = self.editMembershipMemberComboBox
+        self.editMembershipJoinedDE = self.editMembershipJoinedDateEdit
+        self.editMembershipExitDE = self.editMembershipExitDateEdit
+        self.editMembershipShareSB = self.editMembershipShareSpinBox
+        self.editMembershipCancelPushBtn = self.editMembershipCancelPushButton
+        self.editMembershipCancelPushBtn.clicked.connect(self.closeDialog)
+        self.editMembershipSavePushBtn = self.editMembershipSavePushButton
+        self.editMembershipSavePushBtn.clicked.connect(self.editMember)
+        self.editMembershipPopulatePushBtn = self.editMembershipPopulatePushButton
+        self.editMembershipPopulatePushBtn.clicked.connect(self.populateFields)
+
+        self.populateMembershipTW()
+
+    def populateMembershipTW(self):
+        databaseOperation = pgModule.DatabaseOperation()
+        databaseOperation.getAllRowsFromTable(
+            self.connectionArguments, 'public.jasenyys_nimella')
+        if databaseOperation.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation.errorMessage,
+                databaseOperation.detailedMessage
+                )
+        else:
+            self.membershipTable = prepareData.prepareTable(
+                databaseOperation, self.editMembershipTW)
+
+        databaseOperation2 = pgModule.DatabaseOperation()
+        databaseOperation2.getAllRowsFromTable(
+            self.connectionArguments, 'public.nimivalinta')
+        if databaseOperation2.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation2.errorMessage,
+                databaseOperation2.detailedMessage
+                )
+        else:
+            self.memberIdList = prepareData.prepareComboBox(
+                databaseOperation2, self.editMembershipMemberCB, 1, 0)
+
+        databaseOperation3 = pgModule.DatabaseOperation()
+        databaseOperation3.getAllRowsFromTable(
+            self.connectionArguments, 'public.jakoryhma')
+        if databaseOperation3.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation3.errorMessage,
+                databaseOperation3.detailedMessage
+                )
+        else:
+            self.memberIdList = prepareData.prepareComboBox(
+                databaseOperation3, self.editMembershipGroupCB, 2, 0)
     
+    def populateFields(self):
+        currentRow = self.editMembershipTW.currentRow()
+        
+        memberCBIx = self.editMembershipMemberCB.findText(self.editMembershipTW.itemAt(0, currentRow).text(), Qt.MatchFixedString)
+        print(self.editMembershipTW.itemAt(0, currentRow).text() + ", " + self.editMembershipTW.itemAt(1, currentRow).text())
+        if memberCBIx >= 0:
+            self.editMembershipMemberCB.setCurrentIndex(memberCBIx)
+        else:
+            print("No match") # TODO: Remove in production
+
+        # self.editMembershipMemberCB.setCurrentText(self.editMembershipTW.itemAt(0, self.editMembershipTW.currentRow()).text())
+        
+
+    def editMember(self):
+        try:
+            updateList = (
+                self.editMemberFirstNameLE.text(),
+                self.editMemberLastNameLE.text(),
+                self.editMemberPostalAddressLE.text(),
+                self.editMemberZipLE.text(),
+                self.editMemberCityLE.text()
+            )
+            print(updateList)
+            columnList = [
+                'etunimi',
+                'sukunimi',
+                'jakeluosoite',
+                'postinumero',
+                'postitoimipaikka'
+            ]
+            table = 'public.jasen'
+            limit = f"public.jasen.jasen_id = {self.member[0]}"
+
+        except:
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+        
+        i = 0
+        j = 1
+        for data in updateList:
+            if data != self.member[j]:
+                databaseOperation = pgModule.DatabaseOperation()
+                databaseOperation.updateTable(self.connectionArguments, table,
+                columnList[i], f"'{data}'", limit)
+                if databaseOperation.errorCode != 0:
+                    self.alert(
+                        'Vakava virhe',
+                        'Tietokantaoperaatio epäonnistui',
+                        databaseOperation.errorMessage,
+                        databaseOperation.detailedMessage
+                        )
+                else:
+                    print("Updated")
+                # FIXME: Finish
+            i += 1
+            j += 1
+
+        success = SuccessfulOperationDialog()
+        success.exec()
+        self.editMemberFirstNameLE.clear(),
+        self.editMemberLastNameLE.clear(),
+        self.editMemberPostalAddressLE.clear(),
+        self.editMemberZipLE.clear(),
+        self.editMemberCityLE.clear()
+
+    def closeDialog(self):
+            self.close()    
+
+class EditGroupDialog(DialogFrame):
+    def __init__(self):
+
+        super().__init__()
+
+        loadUi("editGroupDialog.ui", self)
+
+        self.setWindowTitle('Muokkaa ryhmän tietoja')
+
+        
+
 
 class TestMainWindow(QMainWindow):
     """Main Window for testing dialogs."""
@@ -865,7 +1032,7 @@ class TestMainWindow(QMainWindow):
         self.setWindowTitle('Pääikkuna dialogien testaukseen')
 
         # Add dialogs to be tested here and run them as follows:
-        saveDBSettingsDialog = SaveDBSettingsDialog()
+        saveDBSettingsDialog = EditMembershipDialog()
         saveDBSettingsDialog.exec()
 
 class SuccessfulOperationDialog(QDialog):
