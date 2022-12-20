@@ -884,6 +884,8 @@ class EditMembershipDialog(DialogFrame):
         loadUi("editMembershipDialog.ui", self)
 
         self.setWindowTitle('Muokkaa jäsenyys tietoja')
+
+        # TODO: Set current date on date edit widgets as default value
         
         # Elements
         self.editMembershipTW = self.editMembershipTableWidget
@@ -899,12 +901,17 @@ class EditMembershipDialog(DialogFrame):
         self.editMembershipPopulatePushBtn = self.editMembershipPopulatePushButton
         self.editMembershipPopulatePushBtn.clicked.connect(self.populateFields)
 
+        # Signal when the user clicks an item on the table widget
+        self.editMembershipTW.itemClicked.connect(self.onTableItemClick)
+
+        # self.editMembershipTW.itemClicked.connect(self.onTableItemClick)
+
         self.populateMembershipTW()
 
     def populateMembershipTW(self):
         databaseOperation = pgModule.DatabaseOperation()
         databaseOperation.getAllRowsFromTable(
-            self.connectionArguments, 'public.jasenyys_nimella')
+            self.connectionArguments, 'public.jakoryhma_nimella_ryhmalla')
         if databaseOperation.errorCode != 0:
             self.alert(
                 'Vakava virhe',
@@ -945,14 +952,24 @@ class EditMembershipDialog(DialogFrame):
                 databaseOperation3, self.editMembershipGroupCB, 2, 0)
     
     def populateFields(self):
-        currentRow = self.editMembershipTW.currentRow()
+        # currentRow = self.editMembershipTW.currentRow()
         
-        memberCBIx = self.editMembershipMemberCB.findText(self.editMembershipTW.itemAt(0, currentRow).text(), Qt.MatchFixedString)
-        print(self.editMembershipTW.itemAt(0, currentRow).text() + ", " + self.editMembershipTW.itemAt(1, currentRow).text())
+        #TODO: Check if item is selected from tableWidget
+        memberCBIx = self.editMembershipMemberCB.findText(self.nameValue, Qt.MatchFixedString)
+        groupCBIx = self.editMembershipGroupCB.findText(self.groupName, Qt.MatchFixedString)
         if memberCBIx >= 0:
             self.editMembershipMemberCB.setCurrentIndex(memberCBIx)
         else:
             print("No match") # TODO: Remove in production
+        
+        if groupCBIx >= 0:
+            self.editMembershipGroupCB.setCurrentIndex(groupCBIx)
+        else:
+            print("No match") # TODO: Remove in production
+
+        # TODO: Add join date
+        self.editMembershipShareSB.setValue(int(self.shareValue))
+
 
         # self.editMembershipMemberCB.setCurrentText(self.editMembershipTW.itemAt(0, self.editMembershipTW.currentRow()).text())
         
@@ -1009,7 +1026,15 @@ class EditMembershipDialog(DialogFrame):
         self.editMemberCityLE.clear()
 
     def closeDialog(self):
-            self.close()    
+            self.close()  
+
+    def onTableItemClick(self, item): #NOTE: Working as intented!
+        selectedRow = item.row() # The row of the selection
+        selectedColumn = item.column() # The column of the selection
+        self.nameValue = self.editMembershipTW.item(selectedRow, 0).text() # text value of the id field
+        self.groupName = self.editMembershipTW.item(selectedRow, 4).text()
+        self.shareValue = self.editMembershipTW.item(selectedRow, 7).text()
+        print(self.nameValue + ", " + self.groupName)
 
 class EditGroupDialog(DialogFrame):
     def __init__(self):
