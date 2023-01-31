@@ -102,19 +102,19 @@ class Group(DialogFrame):
     
 
     def populateRemoveGroupDialog(self):
-        databaseOperation2 = pgModule.DatabaseOperation()
-        databaseOperation2.getAllRowsFromTable(
+        databaseOperation = pgModule.DatabaseOperation()
+        databaseOperation.getAllRowsFromTable(
             self.connectionArguments, 'public.jakoryhma')
-        if databaseOperation2.errorCode != 0:
+        if databaseOperation.errorCode != 0:
             self.alert(
                 'Vakava virhe',
                 'Tietokantaoperaatio epäonnistui',
-                databaseOperation2.errorMessage,
-                databaseOperation2.detailedMessage
+                databaseOperation.errorMessage,
+                databaseOperation.detailedMessage
                 )
         else:
             self.groupIdList = prepareData.prepareComboBox(
-                databaseOperation2, self.removeGroupCB, 2, 0)
+                databaseOperation, self.removeGroupCB, 2, 0)
     
     def removeGroup(self):
         # TODO: dbConnection...deleteRow...try/catch...
