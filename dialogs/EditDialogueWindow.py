@@ -308,7 +308,7 @@ class Membership(DialogFrame):
     def populateMembershipTW(self):
         databaseOperation = pgModule.DatabaseOperation()
         databaseOperation.getAllRowsFromTable(
-            self.connectionArguments, 'public.jakoryhma_nimella_ryhmalla')
+            self.connectionArguments, 'public.jasenyys_nimella_ryhmalla')
         if databaseOperation.errorCode != 0:
             self.alert(
                 'Vakava virhe',
@@ -427,7 +427,7 @@ class Membership(DialogFrame):
 
     def onTableItemClick(self, item): #NOTE: Working as intented!
         selectedRow = item.row() # The row of the selection
-        selectedColumn = item.column() # The column of the selection
+        selectedColumn = item.column() # The column of the selection TODO: Not necessary?
         self.nameValue = self.editMembershipTW.item(selectedRow, 0).text() # text value of the id field
         self.groupName = self.editMembershipTW.item(selectedRow, 4).text()
         self.shareValue = self.editMembershipTW.item(selectedRow, 7).text()
@@ -444,10 +444,101 @@ class Group(DialogFrame):
 
         # Elements
         self.editGroupCB = self.editGroupComboBox
+        self.editGroupCB.currentTextChanged.connect(self.text_changed)
         self.editGroupPartyCB = self.editGroupPartyComboBox
         self.editGroupNameLE = self.editGroupNameLineEdit
         self.editGroupCancelPushBtn = self.editGroupCancelPushButton
         self.editGroupSavePushBtn = self.editGroupSavePushButton
+        self.editGroupPopulatePushBtn = self.editGroupPopulatePushButton
+        self.editGroupPopulatePushBtn.clicked.connect(self.populateFields)
+
+        self.populateGroupCB()
+
+    
+    def text_changed(self, s):
+        print("Text changed:", s)
 
     def populateGroupCB(self):
-        pass
+        databaseOperation1 = pgModule.DatabaseOperation()
+        databaseOperation1.getAllRowsFromTable(
+            self.connectionArguments, 'public.jakoryhma_seurueen_nimella')
+        if databaseOperation1.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation1.errorMessage,
+                databaseOperation1.detailedMessage
+                )
+        else:
+            self.groupIdList = prepareData.prepareComboBox(
+                databaseOperation1, self.editGroupCB, 1, 0)
+        
+        databaseOperation2 = pgModule.DatabaseOperation()
+        databaseOperation2.getAllRowsFromTable(
+            self.connectionArguments, 'public.seurue')
+        if databaseOperation2.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation2.errorMessage,
+                databaseOperation2.detailedMessage
+                )
+        else:
+            self.memberIdList = prepareData.prepareComboBox(
+                databaseOperation2, self.editGroupPartyCB, 2, 0)
+    
+    def populateFields(self):
+        databaseOperation = pgModule.DatabaseOperation()
+        databaseOperation.getAllRowsFromTable(
+            self.connectionArguments, 'public.jakoryhma_seurueen_nimella')
+        if databaseOperation.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation.errorMessage,
+                databaseOperation.detailedMessage
+                )
+        else:
+            self.companyInfo = [] # TODO: Check if needed
+            if databaseOperation.resultSet != []:
+
+                groupChosenItemIx = self.editGroupCB.currentIndex()
+                groupId = self.groupIdList[groupChosenItemIx]
+
+                groupList = databaseOperation.resultSet
+                index = -1
+                i = 0
+
+                for group in groupList:
+                    if group[0] == groupId:
+                        index = i
+                    i += 1
+            
+                self.group = groupList[index]
+                self.editGroupPartyCB.setText(self.group[1])
+                self.editGroupNameLE.setText(self.group[1])
+
+class TestMainWindow(QMainWindow):
+    """Main Window for testing dialogs."""
+
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('Pääikkuna dialogien testaukseen')
+
+        # Add dialogs to be tested here and run them as follows:
+        saveDBSettingsDialog = Group()
+        saveDBSettingsDialog.exec()
+
+# Some tests
+if __name__ == "__main__":
+
+    # Create a testing application
+    testApp = QApplication(sys.argv)
+
+    # Create a main window for testing a dialog
+    testMainWindow = TestMainWindow()
+    testMainWindow.show()
+
+    # Run the testing application
+    testApp.exec()
