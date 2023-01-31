@@ -12,7 +12,10 @@ from PyQt5.QtCore import *  # FIXME: Everything,  change to individual component
 from datetime import date
 import pgModule
 import prepareData
-import DialogueWindow
+import dialogs.DialogueWindow as DialogueWindow
+import dialogs.AddDialogueWindow as AddDialogueWindow
+import dialogs.RemoveDialogueWindow as RemoveDialogueWindow
+import dialogs.EditDialogueWindow as EditDialogueWindow
 import figures
 
 # CLASS DEFINITIONS FOR THE APP
@@ -535,43 +538,53 @@ class MultiPageMainWindow(QMainWindow):
         dialog.exec()
     
     def openAddMemberDialog(self):
-        dialog = DialogueWindow.AddMemberDialog()
+        dialog = AddDialogueWindow.Member()
+        # dialog = DialogueWindow.AddMemberDialog()
         dialog.exec()
     
     def openRemoveMemberDialog(self):
-        dialog = DialogueWindow.RemoveMemberDialog()
+        dialog = RemoveDialogueWindow.Member()
+        # dialog = DialogueWindow.RemoveMemberDialog()
         dialog.exec()
     
     def openAddMembershipDialog(self):
-        dialog = DialogueWindow.AddMembershipDialog()
+        dialog = AddDialogueWindow.Membership()
+        # dialog = DialogueWindow.AddMembershipDialog()
         dialog.exec()
     
     def openAddGroupDialog(self):
-        dialog = DialogueWindow.AddGroupDialog()
+        dialog = AddDialogueWindow.Group()
+        # dialog = DialogueWindow.AddGroupDialog()
         dialog.exec()
 
     def openRemoveGroupDialog(self):
-        dialog = DialogueWindow.RemoveGroupDialog()
+        dialog = RemoveDialogueWindow.Group()
+        # dialog = DialogueWindow.RemoveGroupDialog()
         dialog.exec()
 
     def openAddMPartyDialog(self):
-        dialog = DialogueWindow.AddPartyDialog()
+        dialog = AddDialogueWindow.Party()
+        # dialog = DialogueWindow.AddPartyDialog()
         dialog.exec()
     
     def openRemovePartyDialog(self):
-        dialog = DialogueWindow.RemovePartyDialog()
+        dialog = RemoveDialogueWindow.Party()
+        # dialog = DialogueWindow.RemovePartyDialog()
         dialog.exec()
     
     def openEditCompanyDialog(self):
-        dialog = DialogueWindow.EditCompanyDialog()
+        dialog = EditDialogueWindow.Company()
+        # dialog = DialogueWindow.EditCompanyDialog()
         dialog.exec()
 
     def openEditMemberDialog(self):
-        dialog = DialogueWindow.EditMemberDialog()
+        dialog = EditDialogueWindow.Member()
+        # dialog = DialogueWindow.EditMemberDialog()
         dialog.exec()
 
     def openEditMembershipDialog(self):
-        dialog = DialogueWindow.EditMembershipDialog()
+        dialog = EditDialogueWindow.Membership()
+        # dialog = DialogueWindow.EditMembershipDialog()
         dialog.exec()
 
 # APPLICATION CREATION AND STARTING
