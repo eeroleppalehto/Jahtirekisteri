@@ -110,6 +110,8 @@ class MultiPageMainWindow(QMainWindow):
         self.maintenanceEditMemberPushBtn.clicked.connect(self.openEditMemberDialog) # Signal
         self.maintenanceEditMembershipPushBtn = self.maintenanceEditMembershipPushButton
         self.maintenanceEditMembershipPushBtn.clicked.connect(self.openEditMembershipDialog) # Signal
+        self.maintenanceEditGroupPushBtn = self.maintenanceEditGroupPushButton
+        self.maintenanceEditGroupPushBtn.clicked.connect(self.openEditGroupDialog) # Signal
 
         # Signal when a page is opened
         self.pageTab = self.tabWidget
@@ -539,52 +541,46 @@ class MultiPageMainWindow(QMainWindow):
     
     def openAddMemberDialog(self):
         dialog = AddDialogueWindow.Member()
-        # dialog = DialogueWindow.AddMemberDialog()
         dialog.exec()
     
     def openRemoveMemberDialog(self):
         dialog = RemoveDialogueWindow.Member()
-        # dialog = DialogueWindow.RemoveMemberDialog()
         dialog.exec()
     
     def openAddMembershipDialog(self):
         dialog = AddDialogueWindow.Membership()
-        # dialog = DialogueWindow.AddMembershipDialog()
         dialog.exec()
     
     def openAddGroupDialog(self):
         dialog = AddDialogueWindow.Group()
-        # dialog = DialogueWindow.AddGroupDialog()
         dialog.exec()
 
     def openRemoveGroupDialog(self):
         dialog = RemoveDialogueWindow.Group()
-        # dialog = DialogueWindow.RemoveGroupDialog()
         dialog.exec()
 
     def openAddMPartyDialog(self):
         dialog = AddDialogueWindow.Party()
-        # dialog = DialogueWindow.AddPartyDialog()
         dialog.exec()
     
     def openRemovePartyDialog(self):
         dialog = RemoveDialogueWindow.Party()
-        # dialog = DialogueWindow.RemovePartyDialog()
         dialog.exec()
     
     def openEditCompanyDialog(self):
         dialog = EditDialogueWindow.Company()
-        # dialog = DialogueWindow.EditCompanyDialog()
         dialog.exec()
 
     def openEditMemberDialog(self):
         dialog = EditDialogueWindow.Member()
-        # dialog = DialogueWindow.EditMemberDialog()
         dialog.exec()
 
     def openEditMembershipDialog(self):
         dialog = EditDialogueWindow.Membership()
-        # dialog = DialogueWindow.EditMembershipDialog()
+        dialog.exec()
+    
+    def openEditGroupDialog(self):
+        dialog = EditDialogueWindow.Group()
         dialog.exec()
 
 # APPLICATION CREATION AND STARTING
