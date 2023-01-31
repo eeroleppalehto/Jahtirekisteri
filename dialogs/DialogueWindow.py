@@ -110,8 +110,8 @@ class TestMainWindow(QMainWindow):
         self.setWindowTitle('Pääikkuna dialogien testaukseen')
 
         # Add dialogs to be tested here and run them as follows:
-        # saveDBSettingsDialog = EditMembershipDialog()
-        # saveDBSettingsDialog.exec()
+        saveDBSettingsDialog = SaveDBSettingsDialog()
+        saveDBSettingsDialog.exec()
 
 class SuccessfulOperationDialog(QDialog):
     def __init__(self):
