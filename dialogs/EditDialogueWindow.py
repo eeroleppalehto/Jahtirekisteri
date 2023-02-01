@@ -445,10 +445,12 @@ class Group(DialogFrame):
         # Elements
         self.editGroupCB = self.editGroupComboBox
         self.editGroupCB.currentTextChanged.connect(self.text_changed)
+        self.editGroupTW = self.editGroupTableWidget
         self.editGroupPartyCB = self.editGroupPartyComboBox
         self.editGroupNameLE = self.editGroupNameLineEdit
         self.editGroupCancelPushBtn = self.editGroupCancelPushButton
         self.editGroupSavePushBtn = self.editGroupSavePushButton
+        self.editGroupSavePushBtn.clicked.connect(self.editGroup)
         self.editGroupPopulatePushBtn = self.editGroupPopulatePushButton
         self.editGroupPopulatePushBtn.clicked.connect(self.populateFields)
 
@@ -472,6 +474,7 @@ class Group(DialogFrame):
         else:
             self.groupIdList = prepareData.prepareComboBox(
                 databaseOperation1, self.editGroupCB, 1, 0)
+            print(self.groupIdList)
         
         databaseOperation2 = pgModule.DatabaseOperation()
         databaseOperation2.getAllRowsFromTable(
@@ -484,7 +487,7 @@ class Group(DialogFrame):
                 databaseOperation2.detailedMessage
                 )
         else:
-            self.memberIdList = prepareData.prepareComboBox(
+            self.partyIdList = prepareData.prepareComboBox(
                 databaseOperation2, self.editGroupPartyCB, 2, 0)
     
     def populateFields(self):
@@ -501,11 +504,14 @@ class Group(DialogFrame):
         else:
             self.companyInfo = [] # TODO: Check if needed
             if databaseOperation.resultSet != []:
-
+                # TODO: Remove comments
                 groupChosenItemIx = self.editGroupCB.currentIndex()
+                # print(groupChosenItemIx)
                 groupId = self.groupIdList[groupChosenItemIx]
+                # print(groupId)
 
                 groupList = databaseOperation.resultSet
+                # print("GroupList:", groupList)
                 index = -1
                 i = 0
 
@@ -515,8 +521,60 @@ class Group(DialogFrame):
                     i += 1
             
                 self.group = groupList[index]
-                self.editGroupPartyCB.setText(self.group[1])
+                # print("Group:", self.group)
+                # (ryhma_id, ryhma_nimi, seurue_id, seurue_nimi)
+                self.uneditedData = ( self.group[2], self.group[1] )
+                partyCBIx = self.editGroupPartyCB.findText(self.group[3], Qt.MatchFixedString)
+                if partyCBIx >= 0:
+                    self.editGroupPartyCB.setCurrentIndex(partyCBIx)
+                else:
+                    print("No match")
                 self.editGroupNameLE.setText(self.group[1])
+    
+    def editGroup(self):
+        try:
+            partyChosenItemIx = self.editGroupPartyCB.currentIndex()
+            partyId = self.partyIdList[partyChosenItemIx]
+
+            updateList = (
+                partyId,
+                self.editGroupNameLE.text()
+            )
+            # print(updateList)
+            columnList = [
+                'seurue_id',
+                'ryhman_nimi'
+            ]
+            table = 'public.jakoryhma'
+            limit = f"public.jakoryhma.ryhma_id = {self.group[0]}"
+
+            
+        except:
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+        
+        i = 0
+        j = 1
+        for data in updateList:
+            if data != self.uneditedData[0]:
+                databaseOperation = pgModule.DatabaseOperation()
+                databaseOperation.updateTable(self.connectionArguments, table,
+                columnList[i], f"'{data}'", limit)
+                if databaseOperation.errorCode != 0:
+                    self.alert(
+                        'Vakava virhe',
+                        'Tietokantaoperaatio epäonnistui',
+                        databaseOperation.errorMessage,
+                        databaseOperation.detailedMessage
+                        )
+                else:
+                    print("Updated")
+                # FIXME: Finish
+            i += 1
+            j += 1
+
+        # TODO: Clear line edits and clear the uneditedData tuple, check for empty Line edits
+        success = SuccessfulOperationDialog()
+        success.exec()
 
 class TestMainWindow(QMainWindow):
     """Main Window for testing dialogs."""
