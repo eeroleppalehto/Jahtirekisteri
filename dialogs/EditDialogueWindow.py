@@ -386,7 +386,7 @@ class Membership(DialogFrame):
 
 
         # self.editMembershipMemberCB.setCurrentText(self.editMembershipTW.itemAt(0, self.editMembershipTW.currentRow()).text())
-        
+
     def onTableItemClick(self, item): #NOTE: Working as intented!
         selectedRow = item.row() # The row of the selection
         selectedColumn = item.column() # The column of the selection TODO: Not necessary?
@@ -400,26 +400,41 @@ class Membership(DialogFrame):
         self.shareValue = self.editMembershipTW.item(selectedRow, 7).text()
         # print(self.nameValue + ", " + self.groupName) TODO: remove comments  
 
-    def editMember(self):
+    def editMembership(self):
+        # TODO: NOT FINISHED!!!!!!!!!!!!!!!!!!!
         try:
+            # Get memberId from the member combo box
+            memberChosenItemIx = self.editMembershipMemberCB.currentIndex()
+            memberId = self.memberIdList[memberChosenItemIx]
+
+            # Get groupId from the group combo box
+            groupChosenItemIx = self.editMembershipGroupCB.currentIndex()
+            groupId = self.groupIdList[groupChosenItemIx]
+
+            # Check if the exit check box is selected
+            if self.editMembershipExitCheck.isChecked() == True:
+                # TODO: Figure out how to skip the update if 
+                pass
+            else:
+                pass
+
             updateList = (
-                self.editMemberFirstNameLE.text(),
-                self.editMemberLastNameLE.text(),
-                self.editMemberPostalAddressLE.text(),
-                self.editMemberZipLE.text(),
-                self.editMemberCityLE.text()
+                groupId,
+                memberId,
+                self.editMembershipJoinedDE.date().toPyDate(),
+                self.editMembershipExitDE.text(),
+                self.editMembershipShareSB.text()
             )
             print(updateList)
             columnList = [
-                'etunimi',
-                'sukunimi',
-                'jakeluosoite',
-                'postinumero',
-                'postitoimipaikka'
+                'ryhma_id',
+                'jasen_id',
+                'liittyi',
+                'poistui',
+                'osuus'
             ]
-            table = 'public.jasen'
-            limit = f"public.jasen.jasen_id = {self.member[0]}"
-
+            table = 'public.jasenyys'
+            limit = f"public.jasenyys.jasenyys_id = {self.member[0]}"
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
         
@@ -452,15 +467,8 @@ class Membership(DialogFrame):
         self.editMemberCityLE.clear()
 
     def closeDialog(self):
-            self.close()  
+            self.close()
 
-    def onTableItemClick(self, item): #NOTE: Working as intented!
-        selectedRow = item.row() # The row of the selection
-        selectedColumn = item.column() # The column of the selection TODO: Not necessary?
-        self.nameValue = self.editMembershipTW.item(selectedRow, 0).text() # text value of the id field
-        self.groupName = self.editMembershipTW.item(selectedRow, 4).text()
-        self.shareValue = self.editMembershipTW.item(selectedRow, 7).text()
-        print(self.nameValue + ", " + self.groupName)
 
 class Group(DialogFrame):
     def __init__(self):
@@ -487,7 +495,7 @@ class Group(DialogFrame):
 
     
     def text_changed(self, s):
-        print("Text changed:", s)
+        print("Text changed:", s) # TODO: remove from production
 
     def populateGroupCB(self):
         databaseOperation1 = pgModule.DatabaseOperation()
@@ -503,7 +511,6 @@ class Group(DialogFrame):
         else:
             self.groupIdList = prepareData.prepareComboBox(
                 databaseOperation1, self.editGroupCB, 1, 0)
-            print(self.groupIdList)
         
         databaseOperation2 = pgModule.DatabaseOperation()
         databaseOperation2.getAllRowsFromTable(
