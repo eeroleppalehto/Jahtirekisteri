@@ -75,19 +75,6 @@
     <string>Liittyi</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>340</y>
-     <width>60</width>
-     <height>13</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Poistui</string>
-   </property>
-  </widget>
   <widget class="QDateEdit" name="editMembershipExitDateEdit">
    <property name="geometry">
     <rect>
@@ -200,6 +187,19 @@
      <width>631</width>
      <height>192</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="editMembershipExitCheckBox">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>340</y>
+     <width>70</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Poistuu</string>
    </property>
   </widget>
  </widget>
