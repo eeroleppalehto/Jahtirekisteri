@@ -290,35 +290,34 @@ class Membership(DialogFrame):
         self.editMembershipMemberCB = self.editMembershipMemberComboBox
         self.editMembershipJoinedDE = self.editMembershipJoinedDateEdit
         self.editMembershipExitDE = self.editMembershipExitDateEdit
+        self.editMembershipExitCheck = self.editMembershipExitCheckBox
         self.editMembershipShareSB = self.editMembershipShareSpinBox
         self.editMembershipCancelPushBtn = self.editMembershipCancelPushButton
         self.editMembershipCancelPushBtn.clicked.connect(self.closeDialog)
         self.editMembershipSavePushBtn = self.editMembershipSavePushButton
-        self.editMembershipSavePushBtn.clicked.connect(self.editMember)
+        self.editMembershipSavePushBtn.clicked.connect(self.editMembership)
         self.editMembershipPopulatePushBtn = self.editMembershipPopulatePushButton
         self.editMembershipPopulatePushBtn.clicked.connect(self.populateFields)
 
         # Signal when the user clicks an item on the table widget
         self.editMembershipTW.itemClicked.connect(self.onTableItemClick)
 
-        # self.editMembershipTW.itemClicked.connect(self.onTableItemClick)
-
         self.populateMembershipTW()
 
     def populateMembershipTW(self):
-        databaseOperation = pgModule.DatabaseOperation()
-        databaseOperation.getAllRowsFromTable(
+        databaseOperation1 = pgModule.DatabaseOperation()
+        databaseOperation1.getAllRowsFromTable(
             self.connectionArguments, 'public.jasenyys_nimella_ryhmalla')
-        if databaseOperation.errorCode != 0:
+        if databaseOperation1.errorCode != 0:
             self.alert(
                 'Vakava virhe',
                 'Tietokantaoperaatio epäonnistui',
-                databaseOperation.errorMessage,
-                databaseOperation.detailedMessage
+                databaseOperation1.errorMessage,
+                databaseOperation1.detailedMessage
                 )
         else:
             self.membershipTable = prepareData.prepareTable(
-                databaseOperation, self.editMembershipTW)
+                databaseOperation1, self.editMembershipTW)
 
         databaseOperation2 = pgModule.DatabaseOperation()
         databaseOperation2.getAllRowsFromTable(
@@ -345,7 +344,7 @@ class Membership(DialogFrame):
                 databaseOperation3.detailedMessage
                 )
         else:
-            self.memberIdList = prepareData.prepareComboBox(
+            self.groupIdList = prepareData.prepareComboBox(
                 databaseOperation3, self.editMembershipGroupCB, 2, 0)
     
     def populateFields(self):
@@ -364,12 +363,42 @@ class Membership(DialogFrame):
         else:
             print("No match") # TODO: Remove in production
 
-        # TODO: Add join date
+        # Parse join date from self.joinDate and set it to the associated DateEdit object
+        joinDate = QDate(
+            int(self.joinDate[:4]), 
+            int(self.joinDate[5:7]),
+            int(self.joinDate[8:])
+        )
+        self.editMembershipJoinedDE.setDate(joinDate)
+
+        # Check if exit date exists and parse the date from self.exitDate and set it to the associated DateEdit object
+        if self.exitDate=="None" :
+            self.editMembershipExitCheck.setChecked(False)
+        else:
+            exitDate = QDate(
+                int(self.exitDate[:4]), 
+                int(self.exitDate[5:7]),
+                int(self.exitDate[8:])
+            )
+            self.editMembershipExitDE.setDate(exitDate)
+
         self.editMembershipShareSB.setValue(int(self.shareValue))
 
 
         # self.editMembershipMemberCB.setCurrentText(self.editMembershipTW.itemAt(0, self.editMembershipTW.currentRow()).text())
         
+    def onTableItemClick(self, item): #NOTE: Working as intented!
+        selectedRow = item.row() # The row of the selection
+        selectedColumn = item.column() # The column of the selection TODO: Not necessary?
+        self.nameValue = self.editMembershipTW.item(selectedRow, 0).text() # text value of the id field
+        self.groupName = self.editMembershipTW.item(selectedRow, 4).text()
+        self.joinDate = self.editMembershipTW.item(selectedRow, 5).text()
+        self.exitDate = self.editMembershipTW.item(selectedRow, 6).text()
+        print(self.exitDate, "type:", type(self.exitDate))
+        # print(self.joinDate)
+        # print(int(self.joinDate[:4]), int(self.joinDate[5:7]), int(self.joinDate[8:]))
+        self.shareValue = self.editMembershipTW.item(selectedRow, 7).text()
+        # print(self.nameValue + ", " + self.groupName) TODO: remove comments  
 
     def editMember(self):
         try:
