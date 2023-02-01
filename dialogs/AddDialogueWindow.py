@@ -195,7 +195,7 @@ class Group(DialogFrame):
     def populateAddGroupDialog(self):
         databaseOperation = pgModule.DatabaseOperation()
         databaseOperation.getAllRowsFromTable(
-            self.connectionArguments, 'public.jasen') # TODO: Make own view to filter members who already have membership
+            self.connectionArguments, 'public.seurue') # TODO: Make own view to filter members who already have membership
         if databaseOperation.errorCode != 0:
             self.alert(
                 'Vakava virhe',
@@ -216,7 +216,7 @@ class Group(DialogFrame):
             groupName = self.addGroupGroupNameLE.text()
 
             sqlClauseBeginning = "INSERT INTO public.jakoryhma(seurue_id, ryhman_nimi) VALUES("
-            sqlClauseValues = f"'{partyId}', '{groupName}'"
+            sqlClauseValues = f"{partyId}, '{groupName}'"
             sqlClauseEnd = ");"
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
         except:
