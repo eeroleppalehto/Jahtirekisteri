@@ -348,9 +348,7 @@ class Membership(DialogFrame):
                 databaseOperation3, self.editMembershipGroupCB, 2, 0)
     
     def populateFields(self):
-        # currentRow = self.editMembershipTW.currentRow()
-        
-        #TODO: Check if item is selected from tableWidget
+          #TODO: Check if item is selected from tableWidget
         memberCBIx = self.editMembershipMemberCB.findText(self.nameValue, Qt.MatchFixedString)
         groupCBIx = self.editMembershipGroupCB.findText(self.groupName, Qt.MatchFixedString)
         if memberCBIx >= 0:
@@ -363,13 +361,17 @@ class Membership(DialogFrame):
         else:
             print("No match") # TODO: Remove in production
 
+        self.editMembershipShareSB.setValue(int(self.shareValue))
         # Parse join date from self.joinDate and set it to the associated DateEdit object
         joinDate = QDate(
             int(self.joinDate[:4]), 
             int(self.joinDate[5:7]),
             int(self.joinDate[8:])
         )
+
         self.editMembershipJoinedDE.setDate(joinDate)
+        self.membershipIdInt = int(self.membershipId)
+        self.membership = [groupCBIx, memberCBIx, self.joinDate, int(self.shareValue)]
 
         # Check if exit date exists and parse the date from self.exitDate and set it to the associated DateEdit object
         if self.exitDate=="None" :
@@ -381,16 +383,12 @@ class Membership(DialogFrame):
                 int(self.exitDate[8:])
             )
             self.editMembershipExitDE.setDate(exitDate)
-
-        self.editMembershipShareSB.setValue(int(self.shareValue))
-
-
-        # self.editMembershipMemberCB.setCurrentText(self.editMembershipTW.itemAt(0, self.editMembershipTW.currentRow()).text())
+            self.membership.append(self.exitDate)
 
     def onTableItemClick(self, item): #NOTE: Working as intented!
         selectedRow = item.row() # The row of the selection
-        selectedColumn = item.column() # The column of the selection TODO: Not necessary?
         self.nameValue = self.editMembershipTW.item(selectedRow, 0).text() # text value of the id field
+        self.membershipId = self.editMembershipTW.item(selectedRow, 1).text()
         self.groupName = self.editMembershipTW.item(selectedRow, 4).text()
         self.joinDate = self.editMembershipTW.item(selectedRow, 5).text()
         self.exitDate = self.editMembershipTW.item(selectedRow, 6).text()
@@ -412,36 +410,37 @@ class Membership(DialogFrame):
             groupId = self.groupIdList[groupChosenItemIx]
 
             # Check if the exit check box is selected
-            if self.editMembershipExitCheck.isChecked() == True:
-                # TODO: Figure out how to skip the update if 
-                pass
-            else:
-                pass
+            
 
-            updateList = (
+            updateList = [
                 groupId,
                 memberId,
                 self.editMembershipJoinedDE.date().toPyDate(),
-                self.editMembershipExitDE.text(),
-                self.editMembershipShareSB.text()
-            )
+                self.editMembershipShareSB.value()
+            ]
             print(updateList)
             columnList = [
                 'ryhma_id',
                 'jasen_id',
                 'liittyi',
-                'poistui',
                 'osuus'
             ]
+
+            if self.editMembershipExitCheck.isChecked() == True:
+                # TODO: Figure out how to skip the update if
+                updateList.append(self.editMembershipExitDE.date().toPyDate())
+                columnList.append('poistui')
+                pass
+
             table = 'public.jasenyys'
-            limit = f"public.jasenyys.jasenyys_id = {self.member[0]}"
+            limit = f"public.jasenyys.jasenyys_id = {self.membershipIdInt}"
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
         
         i = 0
         j = 1
-        for data in updateList:
-            if data != self.member[j]:
+        for data in updateList: # Check for empty list
+            if data != self.membership[i]:
                 databaseOperation = pgModule.DatabaseOperation()
                 databaseOperation.updateTable(self.connectionArguments, table,
                 columnList[i], f"'{data}'", limit)
@@ -460,11 +459,7 @@ class Membership(DialogFrame):
 
         success = SuccessfulOperationDialog()
         success.exec()
-        self.editMemberFirstNameLE.clear(),
-        self.editMemberLastNameLE.clear(),
-        self.editMemberPostalAddressLE.clear(),
-        self.editMemberZipLE.clear(),
-        self.editMemberCityLE.clear()
+        updateList = []
 
     def closeDialog(self):
             self.close()
