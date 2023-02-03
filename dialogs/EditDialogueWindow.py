@@ -348,7 +348,7 @@ class Membership(DialogFrame):
                 databaseOperation3, self.editMembershipGroupCB, 2, 0)
     
     def populateFields(self):
-          #TODO: Check if item is selected from tableWidget
+        # TODO: Check if item is selected from tableWidget
         memberCBIx = self.editMembershipMemberCB.findText(self.nameValue, Qt.MatchFixedString)
         groupCBIx = self.editMembershipGroupCB.findText(self.groupName, Qt.MatchFixedString)
         if memberCBIx >= 0:
@@ -399,7 +399,7 @@ class Membership(DialogFrame):
         # print(self.nameValue + ", " + self.groupName) TODO: remove comments  
 
     def editMembership(self):
-        # TODO: NOT FINISHED!!!!!!!!!!!!!!!!!!!
+        # TODO: Chech Error handeling
         try:
             # Get memberId from the member combo box
             memberChosenItemIx = self.editMembershipMemberCB.currentIndex()
@@ -606,6 +606,69 @@ class Group(DialogFrame):
         # TODO: Clear line edits and clear the uneditedData tuple, check for empty Line edits
         success = SuccessfulOperationDialog()
         success.exec()
+
+    def closeDialog(self):
+        pass # TODO: Finish and conncect to cancel button
+
+class Party(DialogFrame):
+    def __init__(self):
+
+        super().__init__()
+
+        loadUi("editPartyDialog.ui", self)
+
+        self.setWindowTitle('Muokkaa seurue tietoja')
+        
+        # Elements
+        self.editPartyCB = self.editPartyComboBox
+        self.editPartyNameLE = self.editPartyNameLineEdit
+        self.editPartyLeaderCB = self.editPartyLeaderComboBox
+        self.editPartyPopulatePushBtn = self.editPartyPopulatePushButton
+        self.editPartyCancelPushBtn = self.editPartyCancelPushButton
+        self.editPartySavePushBtn = self.editPartySavePushButton
+
+        self.populatePartyCB()
+
+    def populatePartyCB(self):
+        databaseOperation1 = pgModule.DatabaseOperation()
+        databaseOperation1.getAllRowsFromTable(
+            self.connectionArguments, 'public.seurue')
+        if databaseOperation1.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation1.errorMessage,
+                databaseOperation1.detailedMessage
+                )
+        else:
+            self.partyIdList = prepareData.prepareComboBox(
+                databaseOperation1, self.editPartyCB, 2, 0)
+
+        databaseOperation2 = pgModule.DatabaseOperation()
+        databaseOperation2.getAllRowsFromTable(
+            self.connectionArguments, 'public.nimivalinta')
+        if databaseOperation2.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation2.errorMessage,
+                databaseOperation2.detailedMessage
+                )
+        else:
+            self.memberIdList = prepareData.prepareComboBox(
+                databaseOperation2, self.editPartyLeaderCB, 1, 0)
+    
+    # Finish populateFields, editParty, closeDialog methods
+    def populateFields(self):
+        pass
+
+    def editParty(self):
+        pass
+
+    def closeDialog(self):
+        pass
+
+        
 
 class TestMainWindow(QMainWindow):
     """Main Window for testing dialogs."""
