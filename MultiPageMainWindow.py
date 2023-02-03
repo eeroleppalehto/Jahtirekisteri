@@ -112,6 +112,8 @@ class MultiPageMainWindow(QMainWindow):
         self.maintenanceEditMembershipPushBtn.clicked.connect(self.openEditMembershipDialog) # Signal
         self.maintenanceEditGroupPushBtn = self.maintenanceEditGroupPushButton
         self.maintenanceEditGroupPushBtn.clicked.connect(self.openEditGroupDialog) # Signal
+        self.maintenanceEditPartyPushBtn = self.maintenanceEditPartyPushButton
+        self.maintenanceEditPartyPushBtn.clicked.connect(self.openEditPartyDialog) # Signal
 
         # Signal when a page is opened
         self.pageTab = self.tabWidget
@@ -581,6 +583,10 @@ class MultiPageMainWindow(QMainWindow):
     
     def openEditGroupDialog(self):
         dialog = EditDialogueWindow.Group()
+        dialog.exec()
+
+    def openEditPartyDialog(self):
+        dialog = EditDialogueWindow.Party()
         dialog.exec()
 
 # APPLICATION CREATION AND STARTING
