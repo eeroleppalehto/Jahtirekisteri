@@ -15,7 +15,7 @@ class Member(DialogFrame):
 
         super().__init__()
 
-        loadUi("removeMemberDialog.ui", self)
+        loadUi("ui/removeMemberDialog.ui", self)
 
         self.setWindowTitle('Poista jäsen')
 
@@ -85,7 +85,7 @@ class Group(DialogFrame):
 
         super().__init__()
 
-        loadUi("removeGroupDialog.ui", self)
+        loadUi("ui/removeGroupDialog.ui", self)
 
         self.setWindowTitle('Poista ryhmä')
 
@@ -153,7 +153,7 @@ class Party(DialogFrame):
 
         super().__init__()
 
-        loadUi("removePartyDialog.ui", self)
+        loadUi("ui/removePartyDialog.ui", self)
 
         self.setWindowTitle('Poista seurue')
 

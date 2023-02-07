@@ -29,7 +29,7 @@ class MultiPageMainWindow(QMainWindow):
         QMainWindow.__init__(self)
 
         # Create an UI from the ui file
-        loadUi('MultiPageMainWindow.ui', self)
+        loadUi('ui/MultiPageMainWindow.ui', self)
 
         # Read database connection arguments from the settings file
         databaseOperation = pgModule.DatabaseOperation()

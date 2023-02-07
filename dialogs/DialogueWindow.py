@@ -43,7 +43,7 @@ class SaveDBSettingsDialog(QDialog):
     def __init__(self):
         super().__init__()
 
-        loadUi("saveDBSettingsDialog.ui", self)
+        loadUi("ui/saveDBSettingsDialog.ui", self)
 
         self.setWindowTitle('Tietokantapalvelimen asetukset')
 
@@ -118,7 +118,7 @@ class SuccessfulOperationDialog(QDialog):
 
         super().__init__()
 
-        loadUi("successfulOperationDialog.ui", self)
+        loadUi("ui/successfulOperationDialog.ui", self)
 
         self.setWindowTitle('Onnistui!')
 

@@ -16,7 +16,7 @@ class Member(DialogFrame):
 
         super().__init__()
 
-        loadUi("addMemberDialog.ui", self)
+        loadUi("ui/addMemberDialog.ui", self)
 
         self.setWindowTitle('Lisää jäsen')
 
@@ -80,7 +80,7 @@ class Membership(DialogFrame):
         # TODO: set current day as default
         super().__init__()
 
-        loadUi("addMembershipDialog.ui", self)
+        loadUi("ui/addMembershipDialog.ui", self)
 
         self.setWindowTitle('Lisää jäsen ryhmään')
 
@@ -176,7 +176,7 @@ class Group(DialogFrame):
 
         super().__init__()
 
-        loadUi("addGroupDialog.ui", self)
+        loadUi("ui/addGroupDialog.ui", self)
 
         self.setWindowTitle('Lisää ryhmä')
 
@@ -249,7 +249,7 @@ class Party(DialogFrame):
 
         super().__init__()
 
-        loadUi("addPartyDialog.ui", self)
+        loadUi("ui/addPartyDialog.ui", self)
 
         self.setWindowTitle('Lisää seurue')
 

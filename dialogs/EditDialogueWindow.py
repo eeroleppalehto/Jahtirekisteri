@@ -19,7 +19,7 @@ class Company(DialogFrame):
 
         super().__init__()
 
-        loadUi("editCompanyDialog.ui", self)
+        loadUi("ui/editCompanyDialog.ui", self)
 
         self.setWindowTitle('Muokkaa seuraa')
 
@@ -146,7 +146,7 @@ class Member(DialogFrame):
 
         super().__init__()
 
-        loadUi("editMemberDialog.ui", self)
+        loadUi("ui/editMemberDialog.ui", self)
 
         self.setWindowTitle('Muokkaa jäsen tietoja')
 
@@ -279,7 +279,7 @@ class Membership(DialogFrame):
 
         super().__init__()
 
-        loadUi("editMembershipDialog.ui", self)
+        loadUi("ui/editMembershipDialog.ui", self)
 
         self.setWindowTitle('Muokkaa jäsenyys tietoja')
 
@@ -463,13 +463,12 @@ class Membership(DialogFrame):
     def closeDialog(self):
             self.close()
 
-
 class Group(DialogFrame):
     def __init__(self):
 
         super().__init__()
 
-        loadUi("editGroupDialog.ui", self)
+        loadUi("ui/editGroupDialog.ui", self)
 
         self.setWindowTitle('Muokkaa ryhmän tietoja')
 
@@ -615,7 +614,7 @@ class Party(DialogFrame):
 
         super().__init__()
 
-        loadUi("editPartyDialog.ui", self)
+        loadUi("ui/editPartyDialog.ui", self)
 
         self.setWindowTitle('Muokkaa seurue tietoja')
         
