@@ -126,7 +126,6 @@ class DatabaseOperation():
             if self.errorCode == 0:
                 dbconnection.close()
 
-    # TODO: Finish writing methods for update and delete
     # Method to insert a row to a given table
 
     def insertRowToTable(self, connectionArgs, sqlClause):

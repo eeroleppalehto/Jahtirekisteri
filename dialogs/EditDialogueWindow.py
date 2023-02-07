@@ -576,16 +576,14 @@ class Group(DialogFrame):
                 'ryhman_nimi'
             ]
             table = 'public.jakoryhma'
-            limit = f"public.jakoryhma.ryhma_id = {self.group[0]}"
-
-            
+            limit = f"public.jakoryhma.ryhma_id = {self.group[0]}"   
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
         
         i = 0
         j = 1
         for data in updateList:
-            if data != self.uneditedData[0]:
+            if data != self.uneditedData[i]:
                 databaseOperation = pgModule.DatabaseOperation()
                 databaseOperation.updateTable(self.connectionArguments, table,
                 columnList[i], f"'{data}'", limit)
@@ -625,7 +623,9 @@ class Party(DialogFrame):
         self.editPartyPopulatePushBtn = self.editPartyPopulatePushButton
         self.editPartyPopulatePushBtn.clicked.connect(self.populateFields)
         self.editPartyCancelPushBtn = self.editPartyCancelPushButton
+        self.editPartyCancelPushBtn.clicked.connect(self.closeDialog)
         self.editPartySavePushBtn = self.editPartySavePushButton
+        self.editPartySavePushBtn.clicked.connect(self.editParty)
 
         self.populatePartyCB()
 
@@ -696,10 +696,46 @@ class Party(DialogFrame):
                     print("No match")
 
     def editParty(self):
-        pass
+        try:
+            memberChosenItemIx = self.editPartyLeaderCB.currentIndex()
+            memberId = self.memberIdList[memberChosenItemIx]
+
+            updateList = (
+                self.editPartyNameLE.text(),
+                memberId
+            )
+
+            columnList = [
+                'seurueen_nimi',
+                'jasen_id'
+            ]
+            table = 'public.seurue'
+            limit = f"public.seurue.seurue_id = {self.party[0]}"
+        except:
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+        
+        i = 0
+        for data in updateList:
+            if data != self.uneditedData[i]:
+                databaseOperation = pgModule.DatabaseOperation()
+                databaseOperation.updateTable(self.connectionArguments, table,
+                columnList[i], f"'{data}'", limit)
+                if databaseOperation.errorCode != 0:
+                    self.alert(
+                        'Vakava virhe',
+                        'Tietokantaoperaatio epäonnistui',
+                        databaseOperation.errorMessage,
+                        databaseOperation.detailedMessage
+                        )
+                else:
+                    print("Updated", columnList[i], "with", data)
+            i += 1
+        
+        success = SuccessfulOperationDialog()
+        success.exec()
 
     def closeDialog(self):
-        pass
+        self.close()
 
         
 

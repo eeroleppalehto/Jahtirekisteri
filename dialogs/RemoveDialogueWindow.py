@@ -49,7 +49,6 @@ class Member(DialogFrame):
     
 
     def removeMember(self):
-        # TODO: dbConnection...deleteRow...try/catch...
         try:
             memberChosenItemIx = self.removeMemberCB.currentIndex()
             memberId = self.memberIdList[memberChosenItemIx]
