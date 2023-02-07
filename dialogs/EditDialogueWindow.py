@@ -10,6 +10,7 @@ import pgModule
 import prepareData
 from datetime import date
 
+# FIXME: Change save updates to execute the save as one update that saves all the columns at once rather than each column seperately
 class Company(DialogFrame):
     """Creates a dialog to edit company in database"""
     # TODO: Check for possible errors
@@ -479,6 +480,7 @@ class Group(DialogFrame):
         self.editGroupPartyCB = self.editGroupPartyComboBox
         self.editGroupNameLE = self.editGroupNameLineEdit
         self.editGroupCancelPushBtn = self.editGroupCancelPushButton
+        self.editGroupCancelPushBtn.clicked.connect(self.closeDialog)
         self.editGroupSavePushBtn = self.editGroupSavePushButton
         self.editGroupSavePushBtn.clicked.connect(self.editGroup)
         self.editGroupPopulatePushBtn = self.editGroupPopulatePushButton
@@ -606,7 +608,7 @@ class Group(DialogFrame):
         success.exec()
 
     def closeDialog(self):
-        pass # TODO: Finish and conncect to cancel button
+        self.close()
 
 class Party(DialogFrame):
     def __init__(self):
@@ -622,6 +624,7 @@ class Party(DialogFrame):
         self.editPartyNameLE = self.editPartyNameLineEdit
         self.editPartyLeaderCB = self.editPartyLeaderComboBox
         self.editPartyPopulatePushBtn = self.editPartyPopulatePushButton
+        self.editPartyPopulatePushBtn.clicked.connect(self.populateFields)
         self.editPartyCancelPushBtn = self.editPartyCancelPushButton
         self.editPartySavePushBtn = self.editPartySavePushButton
 
@@ -658,7 +661,40 @@ class Party(DialogFrame):
     
     # Finish populateFields, editParty, closeDialog methods
     def populateFields(self):
-        pass
+        databaseOperation = pgModule.DatabaseOperation()
+        databaseOperation.getAllRowsFromTable(
+            self.connectionArguments, 'public.seurue_jasen_nimella')
+        if databaseOperation.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation.errorMessage,
+                databaseOperation.detailedMessage
+                )
+        else:
+            if databaseOperation.resultSet != []:
+                partyChosenItemIx = self.editPartyCB.currentIndex()
+                partyId = self.partyIdList[partyChosenItemIx]
+
+                partyList = databaseOperation.resultSet
+                index = -1
+                i = 0
+
+                for party in partyList:
+                    if party[0] == partyId:
+                        index = i
+                    i += 1
+
+                self.party = partyList[index]
+                self.uneditedData = (self.party[1], self.party[2])
+
+                self.editPartyNameLE.setText(self.party[1])
+
+                memberCBIx = self.editPartyLeaderCB.findText(self.party[3], Qt.MatchFixedString)
+                if memberCBIx >= 0:
+                    self.editPartyLeaderCB.setCurrentIndex(memberCBIx)
+                else:
+                    print("No match")
 
     def editParty(self):
         pass
