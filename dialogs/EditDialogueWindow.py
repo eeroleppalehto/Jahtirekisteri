@@ -383,7 +383,8 @@ class Membership(DialogFrame):
                 int(self.exitDate[8:])
             )
             self.editMembershipExitDE.setDate(exitDate)
-            self.membership.append(self.exitDate)
+            self.editMembershipExitCheck.setChecked(True)
+        self.membership.append(self.exitDate)
 
     def onTableItemClick(self, item): #NOTE: Working as intented!
         selectedRow = item.row() # The row of the selection
@@ -430,7 +431,6 @@ class Membership(DialogFrame):
                 # TODO: Figure out how to skip the update if
                 updateList.append(self.editMembershipExitDE.date().toPyDate())
                 columnList.append('poistui')
-                pass
 
             table = 'public.jasenyys'
             limit = f"public.jasenyys.jasenyys_id = {self.membershipIdInt}"
@@ -438,7 +438,6 @@ class Membership(DialogFrame):
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
         
         i = 0
-        j = 1
         for data in updateList: # Check for empty list
             if data != self.membership[i]:
                 databaseOperation = pgModule.DatabaseOperation()
@@ -452,10 +451,9 @@ class Membership(DialogFrame):
                         databaseOperation.detailedMessage
                         )
                 else:
-                    print("Updated")
+                    print("Updated", columnList[i])
                 # FIXME: Finish
             i += 1
-            j += 1
 
         success = SuccessfulOperationDialog()
         success.exec()
