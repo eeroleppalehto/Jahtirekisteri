@@ -5,6 +5,7 @@
 # ----------------------
 import plotly.graph_objects as charts
 import plotly.offline as offline
+import numpy as np
 
 # FUNCTIONS
 
@@ -70,7 +71,7 @@ def testChart():
         color = 'rgba(255, 128, 0, 0.5)'
     ))])
 
-    figure.update_layout(title_text="Lihanjakotilanne", font_size=16)
+    # figure.update_layout(title_text="Lihanjakotilanne", font_size=16)
     # figure.update_traces(orientation='v', selector=dict(type='sankey'))
     offline.plot(figure, filename= htmlFileName) # Write the chart to an html file
     
@@ -92,9 +93,14 @@ def createSankeyChart(dBData, sourceColors, targetColors, linkColors, heading):
     
     allLabels = [] # All sources and targets in a single list <- dBdata
     
-
-    
-
+    for data in dBData:
+        allLabels.append(data[0])
+    for data in dBData:
+        allLabels.append(data[1])
+        
+    print(allLabels)
+    # color = tuple(np.random.choice(range(256), size=3))
+    # print(f"rgb{color}")
     # Define colors for meat sources (animals) -> for sending nodes ie. left side boxes in the chart
     sourceNodeColors = sourceColors # Alpha (opacity) 0 - 1 
 
@@ -102,8 +108,19 @@ def createSankeyChart(dBData, sourceColors, targetColors, linkColors, heading):
     targetNodeColors = targetColors # CSS named colors
 
     # All label colors in a single list for the chart
-    allColors = sourceNodeColors + targetNodeColors 
+    allColors = sourceNodeColors + targetNodeColors
 
+    # allColors = []
+    if allColors == []:
+        for i in range(0, 10):
+            color = tuple(np.random.choice(range(256), size=3))
+            allColors.append(f"rgb{color}")
+    
+    if linkColors == []:
+        for i in range(0, 10):
+            color = tuple(np.random.choice(range(256), size=3))
+            linkColors.append(f"rgb{color}")
+    
     # Empty lists for label indexes and values
     sankeySources = []
     sankeyTargets = []
@@ -120,7 +137,7 @@ def createSankeyChart(dBData, sourceColors, targetColors, linkColors, heading):
         sankeyTargets.append(targetIx)
         sankeyValues.append(tupleValue)
 
-    print(sankeySources)
+    # print(sankeySources)
 
     figure = charts.Figure(data=[charts.Sankey(
         node = dict(

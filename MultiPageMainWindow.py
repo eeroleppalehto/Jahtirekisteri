@@ -6,7 +6,7 @@
 
 import sys  # Needed for starting the application
 from PyQt5.QtWidgets import *  # All widgets
-from PyQt5 import QtWebEngineWidgets # For showing html content
+from PyQt5 import QtWebEngineWidgets, QtCore # For showing html content
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import *  # FIXME: Everything,  change to individual components
 from datetime import date
@@ -186,7 +186,7 @@ class MultiPageMainWindow(QMainWindow):
         # 
         databaseOperation3 = pgModule.DatabaseOperation()
         databaseOperation3.getAllRowsFromTable(
-            self.connectionArguments, 'public.kaytto_ryhmille')
+            self.connectionArguments, 'public.sankey_data')
         if databaseOperation3.errorCode != 0:
             self.alert(
                 'Vakava virhe',
@@ -199,13 +199,13 @@ class MultiPageMainWindow(QMainWindow):
         
         # TODO: Access groupdata and assign color values depending on delta of expected meat value
         # figures.colors(sankeyData, databaseOperation2.resultSet)
-
-        # figure = figures.createSankeyChart(sankeyData, [], [], [], 'Sankey')
+        # print(sankeyData)
         # figure = figures.testChart()
         htmlFile = 'meatstreams.html'
         urlString = f'file:///{htmlFile}'
-        # figures.createOfflineFile(figure, 'sankey.html') # Write the chart to a html file
-        url = QUrl(urlString) # Create a relative url to the file
+        figure = figures.createSankeyChart(sankeyData, [], [], [], 'Sankey')
+        figures.createOfflineFile(figure, htmlFile) # Write the chart to a html file 'sankey.html'
+        url = QtCore.QUrl(urlString) # Create a relative url to the file
         self.sankeyWebV.load(url) # Load it into the web view element
 
     def populateKillPage(self):
