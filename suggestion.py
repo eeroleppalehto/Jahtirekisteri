@@ -60,7 +60,7 @@ def suggestion(killId, portion):
     groups = []
     i = 0
     for group in sharedMeats: # TODO: Check for possible output errors
-        if shareGroupSummary[i][2] == None:
+        if shareGroupSummary[i][2] == None or shareGroupSummary[i][2] == 0:
             i += 1
             continue
         else:
@@ -162,9 +162,10 @@ def checkNoneType(value):
 
 # TODO: Make test data and test the algorithm for consistency
 # TODO: Button + DialogueWindow to add suggested share to database
+# TODO: Run the module through with debug mode
 
 if __name__ == "__main__":
-    testText = suggestion(6,"Neljännes")
+    testText = suggestion(6, "Neljännes")
     print(testText)
-    testText = suggestion(2,"Puolikas")
-    print(testText)
+    # testText = suggestion(2, "Puolikas")
+    # print(testText)
