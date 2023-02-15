@@ -16,6 +16,7 @@ import dialogs.DialogueWindow as DialogueWindow
 import dialogs.AddDialogueWindow as AddDialogueWindow
 import dialogs.RemoveDialogueWindow as RemoveDialogueWindow
 import dialogs.EditDialogueWindow as EditDialogueWindow
+import dialogs.SuggestionDialog as SuggestionDialog
 import figures
 
 # CLASS DEFINITIONS FOR THE APP
@@ -78,6 +79,8 @@ class MultiPageMainWindow(QMainWindow):
         self.shareGroupCB = self.groupComboBox
         self.shareSavePushBtn = self.shareSavePushButton
         self.shareSavePushBtn.clicked.connect(self.saveShare) # Signal
+        self.shareSuggestionPushBtn = self.shareSuggestionPushButton
+        self.shareSuggestionPushBtn.clicked.connect(self.openSuggestionDialog) # Signal
 
         # License page (Luvat)
         self.licenseYearLE = self.licenseYearLineEdit
@@ -537,10 +540,14 @@ class MultiPageMainWindow(QMainWindow):
             self.licenseAmountLE.clear()
 
     def removeMember(self):
-        pass
+        pass # FIXME: ???
         
     def openSettingsDialog(self):
         dialog = DialogueWindow.SaveDBSettingsDialog()
+        dialog.exec()
+
+    def openSuggestionDialog(self):
+        dialog = SuggestionDialog.Suggestion()
         dialog.exec()
     
     def openAddMemberDialog(self):
