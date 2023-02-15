@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="summaryPage">
      <attribute name="title">
@@ -536,13 +536,26 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>310</y>
+        <y>420</y>
         <width>571</width>
-        <height>201</height>
+        <height>91</height>
        </rect>
       </property>
       <property name="title">
        <string>Jakoehdotukset</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="shareSuggestionPushButton">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>380</y>
+        <width>75</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Ehdotus...</string>
       </property>
      </widget>
     </widget>
