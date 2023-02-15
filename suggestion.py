@@ -51,7 +51,7 @@ def suggestion(killId, portion):
 
     # Dictionary of portions to give integer value to each string value
     portionDict ={
-        "Kokonainen": 1,
+        "Koko": 1,
         "Puolikas": 2,
         "Neljännes": 4
     }
@@ -98,25 +98,18 @@ def suggestion(killId, portion):
     while i < portionDict[portion]:
         tempData = suggestionCalc(weightPortion, groups, deltaSum)
         groups = tempData[0]
+        # deltaSum = tempData[2]
         resultGroups.append(tempData[1])
-        resultString += f"{tempData[1]} saa {portion},\n"
+        resultString += f"{tempData[1]}: {portion}, {weightPortion}kg\n"
         i += 1
 
     # TODO: List of required agruments to make share inserts to database
     # ryhma_id, osnimitys, maara, kaato_id
 
-    # insertList = []
-    # for result in resultGroups:
-    #     insertList.append(
-    #         {
-
-    #         }
-    #     )
-
     return resultString
 
 
-def suggestionCalc(weight, groups, deltaSum): 
+def suggestionCalc(weight, groups, deltaSum): # FIXME: possible wrong output
     """ Calculates minimal relative variance from values given by function
         suggestion and determines which group receives the portion
 
@@ -131,6 +124,7 @@ def suggestionCalc(weight, groups, deltaSum):
 
     shareMeatVar = 0
     varianceList = []
+    tempDeltaSquare = []
 
     for group in groups:
         shareMeatVar = group["sharedMeat"] + weight # FIXME: Kill not yet implemented
@@ -138,10 +132,13 @@ def suggestionCalc(weight, groups, deltaSum):
         varianceList.append(
             deltaSum - group["deltaSquare"] + pow((shareMeatVar - group["expectedValue"])/group["expectedValue"], 2)
         )
+
+        tempDeltaSquare.append(pow((shareMeatVar - group["expectedValue"])/group["expectedValue"], 2))
     
     minVarianceId = varianceList.index(min(varianceList))
     
     groups[minVarianceId]["sharedMeat"] += weight # FIXME: Kill not yet implemented
+    groups[minVarianceId]["deltaSquare"] = tempDeltaSquare[minVarianceId]
 
     # Update deltaSum value
     deltaSum = min(varianceList)
