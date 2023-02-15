@@ -179,6 +179,7 @@ class MultiPageMainWindow(QMainWindow):
                 databaseOperation2.detailedMessage
                 )
         else:
+            self.groupSummary = databaseOperation2.resultSet
             prepareData.prepareTable(
                 databaseOperation2, self.summaryGroupSummaryTW)
 
@@ -203,7 +204,8 @@ class MultiPageMainWindow(QMainWindow):
         # figure = figures.testChart()
         htmlFile = 'meatstreams.html'
         urlString = f'file:///{htmlFile}'
-        figure = figures.createSankeyChart(sankeyData, [], [], [], 'Sankey')
+        targetColors = figures.colors(sankeyData, self.groupSummary)
+        figure = figures.createSankeyChart(sankeyData, [], targetColors, [], 'Sankey')
         figures.createOfflineFile(figure, htmlFile) # Write the chart to a html file 'sankey.html'
         url = QtCore.QUrl(urlString) # Create a relative url to the file
         self.sankeyWebV.load(url) # Load it into the web view element
