@@ -70,7 +70,7 @@ def suggestion(killId, portion):
                     "sharedMeat": checkNoneType(group[1]),
                     "shareMultiplier": checkNoneType(shareGroupSummary[i][2]),
                     "expectedValue": 0.0,
-                    "deltaSquare": 0.0
+                    "deltaSquare": 0.0 # Try multiply by shareMultiplier
                 }
             )
             i += 1
@@ -87,7 +87,7 @@ def suggestion(killId, portion):
         # E = TotalMeat * shareMult/TotalMult
         group["expectedValue"] = meatSharedTotal * (group["shareMultiplier"] / multiplierTotal) 
         # Relative Variance = ((E-CurrentMeat)/E)^2
-        group["deltaSquare"] = pow((group["expectedValue"] - group["sharedMeat"])/group["expectedValue"], 2) 
+        group["deltaSquare"] = pow((group["expectedValue"] - group["sharedMeat"])/group["expectedValue"], 2)*group["shareMultiplier"]
         # deltaGroup.append(group["deltaSquare"])
         deltaSum += group["deltaSquare"]
 
@@ -97,6 +97,9 @@ def suggestion(killId, portion):
     i = 0
     while i < portionDict[portion]:
         tempData = suggestionCalc(weightPortion, groups, deltaSum)
+        for data in tempData[0]:
+            print(data["shareMultiplier"], data['expectedValue'], data["sharedMeat"])
+        print('----------------')
         groups = tempData[0]
         # deltaSum = tempData[2]
         resultGroups.append(tempData[1])
@@ -130,10 +133,10 @@ def suggestionCalc(weight, groups, deltaSum): # FIXME: possible wrong output
         shareMeatVar = group["sharedMeat"] + weight # FIXME: Kill not yet implemented
 
         varianceList.append(
-            deltaSum - group["deltaSquare"] + pow((shareMeatVar - group["expectedValue"])/group["expectedValue"], 2)
+            deltaSum - group["deltaSquare"] + pow((shareMeatVar - group["expectedValue"])/group["expectedValue"], 2)*group["shareMultiplier"]
         )
 
-        tempDeltaSquare.append(pow((shareMeatVar - group["expectedValue"])/group["expectedValue"], 2))
+        tempDeltaSquare.append(pow((shareMeatVar - group["expectedValue"])/group["expectedValue"], 2)*group["shareMultiplier"])
     
     minVarianceId = varianceList.index(min(varianceList))
     
