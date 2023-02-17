@@ -57,21 +57,34 @@ class Member(DialogFrame):
             limit = f"public.jasen.jasen_id = {memberId}"
         except Exception:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+        
+        databaseOperation1 = pgModule.DatabaseOperation()
+        databaseOperation1.getAllRowsFromTable(self.connectionArguments, 'public.jasen_liitokset')
+        memberConnections = databaseOperation1.resultSet
+        alert = 0
 
-        databaseOperation = pgModule.DatabaseOperation()
-        databaseOperation.deleteFromTable(self.connectionArguments, table, limit)
-        if databaseOperation.errorCode != 0:
-            self.alert(
-                'Vakava virhe',
-                'Tietokantaoperaatio epäonnistui',
-                databaseOperation.errorMessage,
-                databaseOperation.detailedMessage
-                )
-        else:
-            # Update the page to show new data and clear 
-            success = SuccessfulOperationDialog()
-            success.exec()
-            self.populateRemoveMemberDialog()
+        for id in memberConnections:
+            if id[0] == memberId:
+                connectionWarning = 'Et voi poistaa jäsentä joka on lisätty toiseen tauluun'
+                alert = 1
+                self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen',connectionWarning)
+                break
+
+        if alert != 1:
+            databaseOperation2 = pgModule.DatabaseOperation()
+            databaseOperation2.deleteFromTable(self.connectionArguments, table, limit)
+            if databaseOperation2.errorCode != 0:
+                self.alert(
+                    'Vakava virhe',
+                    'Tietokantaoperaatio epäonnistui',
+                    databaseOperation2.errorMessage,
+                    databaseOperation2.detailedMessage
+                    )
+            else:
+                # Update the page to show new data and clear 
+                success = SuccessfulOperationDialog()
+                success.exec()
+                self.populateRemoveMemberDialog()
 
     def closeDialog(self):
         self.close()
@@ -126,20 +139,33 @@ class Group(DialogFrame):
         except Exception:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
 
-        databaseOperation = pgModule.DatabaseOperation()
-        databaseOperation.deleteFromTable(self.connectionArguments, table, limit)
-        if databaseOperation.errorCode != 0:
-            self.alert(
-                'Vakava virhe',
-                'Tietokantaoperaatio epäonnistui',
-                databaseOperation.errorMessage,
-                databaseOperation.detailedMessage
-                )
-        else:
-            # Update the page to show new data and clear 
-            success = SuccessfulOperationDialog()
-            success.exec()
-            self.populateRemoveGroupDialog()
+        databaseOperation1 = pgModule.DatabaseOperation()
+        databaseOperation1.getAllRowsFromTable(self.connectionArguments, 'public.jakoryhma_liitokset')
+        groupConnections = databaseOperation1.resultSet
+        alert = 0
+
+        for id in groupConnections:
+            if id[0] == groupId:
+                connectionWarning = 'Et voi poistaa ryhmää joka on lisätty toiseen tauluun'
+                alert = 1
+                self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen',connectionWarning)
+                break
+
+        if alert != 1:
+            databaseOperation2 = pgModule.DatabaseOperation()
+            databaseOperation2.deleteFromTable(self.connectionArguments, table, limit)
+            if databaseOperation2.errorCode != 0:
+                self.alert(
+                    'Vakava virhe',
+                    'Tietokantaoperaatio epäonnistui',
+                    databaseOperation2.errorMessage,
+                    databaseOperation2.detailedMessage
+                    )
+            else:
+                # Update the page to show new data and clear 
+                success = SuccessfulOperationDialog()
+                success.exec()
+                self.populateRemoveGroupDialog()
 
     def closeDialog(self):
         self.close()
@@ -184,7 +210,6 @@ class Party(DialogFrame):
                 databaseOperation2, self.removePartyCB, 2, 0)
 
     def removeParty(self):
-        # TODO: dbConnection...deleteRow...try/catch...
         try:
             partyChosenItemIx = self.removePartyCB.currentIndex()
             partyId = self.partyIdList[partyChosenItemIx]
@@ -194,20 +219,33 @@ class Party(DialogFrame):
         except Exception:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
 
-        databaseOperation = pgModule.DatabaseOperation()
-        databaseOperation.deleteFromTable(self.connectionArguments, table, limit)
-        if databaseOperation.errorCode != 0:
-            self.alert(
-                'Vakava virhe',
-                'Tietokantaoperaatio epäonnistui',
-                databaseOperation.errorMessage,
-                databaseOperation.detailedMessage
-                )
-        else:
-            # Update the page to show new data and clear 
-            success = SuccessfulOperationDialog()
-            success.exec()
-            self.populateRemovePartyDialog()
+        databaseOperation1 = pgModule.DatabaseOperation()
+        databaseOperation1.getAllRowsFromTable(self.connectionArguments, 'public.seurue_liitokset')
+        partyConnections = databaseOperation1.resultSet
+        alert = 0
+
+        for id in partyConnections:
+            if id[0] == partyId:
+                connectionWarning = 'Et voi poistaa seuruetta joka on lisätty toiseen tauluun'
+                alert = 1
+                self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen', connectionWarning)
+                break
+
+        if alert != 1:
+            databaseOperation2 = pgModule.DatabaseOperation()
+            databaseOperation2.deleteFromTable(self.connectionArguments, table, limit)
+            if databaseOperation2.errorCode != 0:
+                self.alert(
+                    'Vakava virhe',
+                    'Tietokantaoperaatio epäonnistui',
+                    databaseOperation2.errorMessage,
+                    databaseOperation2.detailedMessage
+                    )
+            else:
+                # Update the page to show new data and clear 
+                success = SuccessfulOperationDialog()
+                success.exec()
+                self.populateRemovePartyDialog()
 
     def closeDialog(self):
         self.close()
