@@ -249,6 +249,4 @@ def colors(sankeyData, groupShare):
             targetColors.append(f"rgb(0, 0, {color})")
             j += 1
         
-
-    # print(targetColors) TODO: Remove from production
     return targetColors
