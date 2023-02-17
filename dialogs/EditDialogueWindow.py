@@ -319,6 +319,9 @@ class Membership(DialogFrame):
         else:
             self.membershipTable = prepareData.prepareTable(
                 databaseOperation1, self.editMembershipTW)
+            self.editMembershipTW.setColumnHidden(1, True)
+            self.editMembershipTW.setColumnHidden(2, True)
+            self.editMembershipTW.setColumnHidden(3, True)
 
         databaseOperation2 = pgModule.DatabaseOperation()
         databaseOperation2.getAllRowsFromTable(
