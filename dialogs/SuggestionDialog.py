@@ -87,7 +87,7 @@ class Suggestion(DialogFrame):
         #     self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','Jaahas')
         
 
-
+    # TODO: Add table click to choose kill to operate on
     def saveSuggestion(self):
         try:
             shareKillChosenRowIx = self.shareKillsTW.currentRow()
