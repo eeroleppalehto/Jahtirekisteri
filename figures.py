@@ -116,35 +116,15 @@ def createSankeyChart(dBData, sourceColors, targetColors, linkColors, heading):
             sourceColors.append(f"rgb(0, {color}, {color})")
 
     
-    allColors = sourceColors + targetColors
+    allColors = targetColors
 
     ## All label colors in a single list for the chart
     # allColors = sourceNodeColors + targetNodeColors
-
-    # allColors = []
-    # k = 0
-    # for data in dBData:
-    #     if data[0] == "Seurueelle":
-    #         break
-    #     k += 1
-
-    # if allColors == []:
-    #     for i in range(0, len(allLabels)):
-    #         if i<=k:
-    #             color = 180 + i*5
-    #             allColors.append(f"rgb(0, {color}, {color})")
-    #         else:
-    #             color = tuple(np.random.choice(range(256), size=3))
-    #             allColors.append(f"rgb{color}")
     
     if linkColors == []:
-        # for i in range(0, 10):
-        #     color = tuple(np.random.choice(range(256), size=3))
-        #     linkColors.append(f"rgb{color}")
-
-        for i in range(0, len(allLabels)):
-            color = 180 + i*5
-            linkColors.append(f"rgb(155, {color}, {color})")
+        for i in range(0, len(dBData)):
+            color = 120 + i*5
+            linkColors.append(f"rgb(155, {color}, 255)")
     
     # Empty lists for label indexes and values
     sankeySources = []
@@ -190,24 +170,47 @@ def createOfflineFile(figure, htmlFileName):
         figure (obj): The chart to bring to offline
         htmlFileName (str): name of the file to save into disk
     """
-    offline.plot(figure, filename= htmlFileName) # Write the chart to an html file
+    offline.plot(figure, filename= htmlFileName, auto_open=False) # Write the chart to an html file
 
+# TODO: Create docStrings for function colors
 def colors(sankeyData, groupShare):
-    
-    # Find data for party meats from sankeyData
-    partyMeats = -1
-    for data in sankeyData:
-        if data[0]=="Hirvi" and data[1]=="Seurueelle":
-            partyMeats=data[2]
-            break
+    """_summary_
 
-    if partyMeats == -1:
+    Args:
+        sankeyData (_type_): _description_
+        groupShare (_type_): _description_
+
+    Returns: 
+        _type_: _description_
+    """
+    # Find data for party meats from sankeyData
+    partyMeats = 0
+    for data in sankeyData:
+        if data[1]=="Seurueelle":
+            partyMeats+=data[2]
+
+    if partyMeats == 0:
         return "Party data not found"
 
+    allLabels = [] # All sources and targets in a single list <- dBdata
+    
+    for data in sankeyData:
+        allLabels.append(data[0])
+    for data in sankeyData:
+        allLabels.append(data[1])
+
+    allLabels = list(dict.fromkeys(allLabels))
     # groupname : { share, expectedvalue, color}
     # Form groups dictionary and sum shares from sankeyData
     groups = {}
     totalShare = 0
+
+    groupList = []
+    groupDict = {}
+    for data in sankeyData:
+        if data[0] == 'Seurueelle':
+            groupList.append(data[1])
+            groupDict[data[1]] = data[2]
 
     for group in groupShare:
         if group[2] != 0 and group[2] != None:
@@ -219,31 +222,33 @@ def colors(sankeyData, groupShare):
               "share": group[2],
               "expected meats": partyMeats*group[2]/totalShare,
             }
+    
+    # for data in sankeyData:
+    #     if data[0] == "Seurueelle"
            
     # Generate target colors
     targetColors = []
     j = 0
-    for data in sankeyData: # TODO: Use sankeyData instead of range?
-        if data[0] == 'Seurueelle':
-            group = groups[data[1]]
-            groupMeatDelta = group["expected meats"] - data[2]
+    k = 0
+    for label in allLabels:
+        if label in groupList:
+            group = groups[label]
+            groupMeatDelta = group["expected meats"] - groupDict[label]
             relativeGroupMeatDelta = groupMeatDelta/group["expected meats"]
             if relativeGroupMeatDelta > 0 :
                 red = 255 - 255*relativeGroupMeatDelta
                 red = max(red, 0)
                 targetColors.append(f"rgb({red},255,0)")
-                continue
 
             elif relativeGroupMeatDelta <= 0:
                 green = 255 + 255*relativeGroupMeatDelta
                 green = max(green, 0)
                 targetColors.append(f"rgb(255,{green},0)")
-    
         else:
             color = 10 + j*5
             targetColors.append(f"rgb(0, 0, {color})")
             j += 1
         
 
-    print(targetColors)          
+    # print(targetColors) TODO: Remove from production
     return targetColors
