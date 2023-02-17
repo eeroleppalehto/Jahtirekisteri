@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="summaryPage">
      <attribute name="title">
@@ -833,7 +833,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Mukkaa jäsen tietoja...</string>
+       <string>Muokkaa jäsen tietoja...</string>
       </property>
      </widget>
      <widget class="QPushButton" name="maintenanceEditMembershipPushButton">
