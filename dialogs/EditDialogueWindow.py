@@ -371,6 +371,7 @@ class Membership(DialogFrame):
         )
 
         self.editMembershipJoinedDE.setDate(joinDate)
+        print(self.editMembershipJoinedDE.date().toPyDate(), "asd")
         self.membershipIdInt = int(self.membershipId)
         self.membership = [groupCBIx, memberCBIx, self.joinDate, int(self.shareValue)]
 
@@ -394,8 +395,8 @@ class Membership(DialogFrame):
         self.groupName = self.editMembershipTW.item(selectedRow, 4).text()
         self.joinDate = self.editMembershipTW.item(selectedRow, 5).text()
         self.exitDate = self.editMembershipTW.item(selectedRow, 6).text()
-        print(self.exitDate, "type:", type(self.exitDate))
-        # print(self.joinDate)
+        # print(self.exitDate, "type:", type(self.exitDate))
+        print(self.joinDate, "asd")
         # print(int(self.joinDate[:4]), int(self.joinDate[5:7]), int(self.joinDate[8:]))
         self.shareValue = self.editMembershipTW.item(selectedRow, 7).text()
         # print(self.nameValue + ", " + self.groupName) TODO: remove comments  
@@ -411,9 +412,6 @@ class Membership(DialogFrame):
             groupChosenItemIx = self.editMembershipGroupCB.currentIndex()
             groupId = self.groupIdList[groupChosenItemIx]
 
-            # Check if the exit check box is selected
-            
-
             updateList = [
                 groupId,
                 memberId,
@@ -428,6 +426,7 @@ class Membership(DialogFrame):
                 'osuus'
             ]
 
+            # Check if the exit check box is selected
             if self.editMembershipExitCheck.isChecked() == True:
                 # TODO: Figure out how to skip the update if
                 updateList.append(self.editMembershipExitDE.date().toPyDate())
