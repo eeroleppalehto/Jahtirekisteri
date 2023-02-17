@@ -204,13 +204,6 @@ def colors(sankeyData, groupShare):
     if partyMeats == -1:
         return "Party data not found"
 
-    # Find break point for group data in sankeyData
-    i = 0
-    for data in sankeyData:
-        if data[0] == "Seurueelle":
-            break
-        i += 1
-
     # groupname : { share, expectedvalue, color}
     # Form groups dictionary and sum shares from sankeyData
     groups = {}
@@ -229,24 +222,28 @@ def colors(sankeyData, groupShare):
            
     # Generate target colors
     targetColors = []
-    for j in range(0, len(sankeyData)): # TODO: Use sankeyData instead of range?
-        if j<i:
-            color = 10 + i*5
-            targetColors.append(f"rgb(0, 0, {color})")
-        else:
-            group = groups[sankeyData[j][1]]
-            groupMeatDelta = group["expected meats"] - sankeyData[j][2]
+    j = 0
+    for data in sankeyData: # TODO: Use sankeyData instead of range?
+        if data[0] == 'Seurueelle':
+            group = groups[data[1]]
+            groupMeatDelta = group["expected meats"] - data[2]
             relativeGroupMeatDelta = groupMeatDelta/group["expected meats"]
-
             if relativeGroupMeatDelta > 0 :
                 red = 255 - 255*relativeGroupMeatDelta
                 red = max(red, 0)
                 targetColors.append(f"rgb({red},255,0)")
                 continue
+
             elif relativeGroupMeatDelta <= 0:
                 green = 255 + 255*relativeGroupMeatDelta
                 green = max(green, 0)
                 targetColors.append(f"rgb(255,{green},0)")
+    
+        else:
+            color = 10 + j*5
+            targetColors.append(f"rgb(0, 0, {color})")
+            j += 1
+        
 
     print(targetColors)          
     return targetColors
