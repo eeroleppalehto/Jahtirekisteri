@@ -466,6 +466,21 @@ class MultiPageMainWindow(QMainWindow):
         self.populateLicensePage()
         self.populateMaintenancePage()
 
+    def populatePage(self):
+        index = self.pageTab.currentIndex()
+        match index:
+            case 0:
+                self.populateSummaryPage()
+            case 1:
+                self.populateKillPage()
+            case 2:
+                self.populateSharePage()
+            case 3:
+                self.populateLicensePage()
+            case 4:
+                self.populateMaintenancePage()
+
+
     def saveShot(self):
         try:
             shotByChosenItemIx = self.shotByCB.currentIndex() # Row index of the selected row
