@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>968</width>
-    <height>600</height>
+    <height>830</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,11 +20,11 @@
       <x>10</x>
       <y>10</y>
       <width>941</width>
-      <height>541</height>
+      <height>771</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="summaryPage">
      <attribute name="title">
@@ -46,8 +46,8 @@
      <widget class="QTableWidget" name="groupSummaryTableWidget">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>290</y>
+        <x>350</x>
+        <y>50</y>
         <width>301</width>
         <height>192</height>
        </rect>
@@ -69,8 +69,8 @@
      <widget class="QLabel" name="groupSummarylabel">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>270</y>
+        <x>350</x>
+        <y>30</y>
         <width>151</width>
         <height>16</height>
        </rect>
@@ -95,9 +95,9 @@
      <widget class="QWebEngineView" name="sankeyWebEngineView">
       <property name="geometry">
        <rect>
-        <x>340</x>
-        <y>20</y>
-        <width>581</width>
+        <x>10</x>
+        <y>250</y>
+        <width>901</width>
         <height>481</height>
        </rect>
       </property>
@@ -532,30 +532,32 @@
        <string>Tallenna</string>
       </property>
      </widget>
-     <widget class="QGroupBox" name="shareSuggestGroupBox">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>420</y>
-        <width>571</width>
-        <height>91</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Jakoehdotukset</string>
-      </property>
-     </widget>
      <widget class="QPushButton" name="shareSuggestionPushButton">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>380</y>
+        <x>10</x>
+        <y>280</y>
         <width>75</width>
         <height>23</height>
        </rect>
       </property>
       <property name="text">
        <string>Ehdotus...</string>
+      </property>
+     </widget>
+     <widget class="QWebEngineView" name="shareSankeyWebEngineView">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>330</y>
+        <width>911</width>
+        <height>401</height>
+       </rect>
+      </property>
+      <property name="url">
+       <url>
+        <string>about:blank</string>
+       </url>
       </property>
      </widget>
     </widget>
@@ -893,7 +895,14 @@
     </property>
     <addaction name="actionServerSettings"/>
    </widget>
+   <widget class="QMenu" name="menuOhje">
+    <property name="title">
+     <string>Ohje</string>
+    </property>
+    <addaction name="actionOhje"/>
+   </widget>
    <addaction name="menuTietokanta"/>
+   <addaction name="menuOhje"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionServerSettings">
@@ -902,6 +911,11 @@
    </property>
    <property name="toolTip">
     <string>Muuta tietokantapalvelimen asetuksia</string>
+   </property>
+  </action>
+  <action name="actionOhje">
+   <property name="text">
+    <string>Ohje...</string>
    </property>
   </action>
  </widget>
