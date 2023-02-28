@@ -34,7 +34,7 @@ class MultiPageMainWindow(QMainWindow):
 
         # Read database connection arguments from the settings file
         databaseOperation = pgModule.DatabaseOperation()
-        self.connectionArguments = databaseOperation.readDatabaseSettingsFromFile('settings.dat')
+        self.connectionArguments = databaseOperation.readDatabaseSettingsFromFile('connectionSettings.dat')
         
 
         # UI ELEMENTS TO PROPERTIES
@@ -81,6 +81,7 @@ class MultiPageMainWindow(QMainWindow):
         self.shareSavePushBtn.clicked.connect(self.saveShare) # Signal
         self.shareSuggestionPushBtn = self.shareSuggestionPushButton
         self.shareSuggestionPushBtn.clicked.connect(self.openSuggestionDialog) # Signal
+        self.shareSankeyWebV = self.shareSankeyWebEngineView
 
         # License page (Luvat)
         self.licenseYearLE = self.licenseYearLineEdit
@@ -120,7 +121,7 @@ class MultiPageMainWindow(QMainWindow):
 
         # Signal when a page is opened
         self.pageTab = self.tabWidget
-        self.pageTab.currentChanged.connect(self.populateAllPages)
+        self.pageTab.currentChanged.connect(self.populatePage)
 
         # Menu signals
         self.actionServerSettings.triggered.connect(self.openSettingsDialog)
@@ -353,6 +354,46 @@ class MultiPageMainWindow(QMainWindow):
             self.shareGroupIdList = prepareData.prepareComboBox(
                 databaseOperation3, self.shareGroupCB, 2, 0)
 
+        databaseOperation4 = pgModule.DatabaseOperation()
+        databaseOperation4.getAllRowsFromTable(
+            self.connectionArguments, 'public.jakoryhma_yhteenveto')
+        if databaseOperation4.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation4.errorMessage,
+                databaseOperation4.detailedMessage
+                )
+        else:
+            self.groupSummary = databaseOperation4.resultSet
+
+        # SankeyGraph
+        # 
+        databaseOperation5 = pgModule.DatabaseOperation()
+        databaseOperation5.getAllRowsFromTable(
+            self.connectionArguments, 'public.kaytto_ryhmille')
+        if databaseOperation5.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation5.errorMessage,
+                databaseOperation5.detailedMessage
+                )
+        else:
+            sankeyData = databaseOperation5.resultSet
+        
+        """# TODO: Access groupdata and assign color values depending on delta of expected meat value
+        # figures.colors(sankeyData, databaseOperation2.resultSet)
+        # print(sankeyData)
+        # figure = figures.testChart()
+        htmlFile = 'meatstreams.html'
+        urlString = f'file:///{htmlFile}'
+        targetColors = figures.colors(sankeyData, self.groupSummary)
+        figure = figures.createSankeyChart(sankeyData, [], targetColors, [], 'Sankey')
+        figures.createOfflineFile(figure, htmlFile) # Write the chart to a html file 'sankey.html'
+        url = QtCore.QUrl(urlString) # Create a relative url to the file
+        self.shareSankeyWebV.load(url) # Load it into the web view element"""
+
     def populateLicensePage(self):
         
         databaseOperation1 = pgModule.DatabaseOperation()
@@ -410,18 +451,20 @@ class MultiPageMainWindow(QMainWindow):
         else:
             prepareData.prepareTable(databaseOperation4, self.licenseSummaryTW)
 
-    # TODO: Add maintenance objects in Qt Designer    
-
+    
+    def populateMaintenancePage(self):
+        pass
         
 
 
-    # TODO: Make populate sharepage
+
     def populateAllPages(self):
+
         self.populateSummaryPage()
         self.populateKillPage()
         self.populateSharePage()
         self.populateLicensePage()
-        # self.populateMaintenancePage()
+        self.populateMaintenancePage()
 
     def saveShot(self):
         try:
