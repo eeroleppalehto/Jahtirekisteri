@@ -13,7 +13,7 @@ class DialogFrame(QDialog):
         super().__init__()
 
         databaseOperationConnections = pgModule.DatabaseOperation()
-        self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('settings.dat')
+        self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
     
         self.currentDate = date.today()
 
@@ -65,7 +65,7 @@ class SaveDBSettingsDialog(QDialog):
 
         self.databaseOperation = pgModule.DatabaseOperation() # Needed in slots -> self # FIXME: Uncomment + add pgModule
         currentSettings = self.databaseOperation.readDatabaseSettingsFromFile(
-            'settings.dat')  # Read current settings, needed only in the constructor
+            'connectionSettings.dat')  # Read current settings, needed only in the constructor
         self.hostLE.setText(currentSettings['server'])  # Server's host name
         # Port number, spin box uses integer values
         self.portSB.setValue(int(currentSettings['port']))
@@ -97,7 +97,7 @@ class SaveDBSettingsDialog(QDialog):
             database, user, password, server, port)
         
         # Save arguments to a json file
-        self.databaseOperation.createConnectionArgumentDict(
+        self.databaseOperation.saveDatabaseSettingsToFile(
             'connectionSettings.dat', newSettings)
         self.close()
 

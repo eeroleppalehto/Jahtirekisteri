@@ -33,7 +33,6 @@ class Member(DialogFrame):
     
 
     def addMember(self):
-        # TODO: dbConnection...insertRow...try/catch...
         try:
             firstName = self.addMemberFirstNameLE.text()
             lastName = self.addMemberLastNameLE.text()
@@ -132,7 +131,6 @@ class Membership(DialogFrame):
 
 
     def addMembership(self):
-        # TODO: dbConnection...insertRow...try/catch...
         try:
             share = self.membershipShareSB.value()
             memberChosenItemIx = self.membershipMemberCB.currentIndex()
@@ -209,7 +207,6 @@ class Group(DialogFrame):
 
 
     def addGroup(self):
-        # TODO: dbConnection...insertRow...try/catch...
         try:
             partyChosenItemIx = self.addGroupPartyCB.currentIndex()
             partyId = self.partyIdList[partyChosenItemIx]
@@ -280,7 +277,6 @@ class Party(DialogFrame):
                 databaseOperation2, self.addPartyLeaderCB, 1, 0)
 
     def addParty(self):
-        # TODO: dbConnection...insertRow...try/catch...
         try:
             companyId = 1
             partyName = self.addPartyNameLE.text()
