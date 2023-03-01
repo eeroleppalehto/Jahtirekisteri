@@ -81,7 +81,10 @@ class MultiPageMainWindow(QMainWindow):
         self.shareSavePushBtn.clicked.connect(self.saveShare) # Signal
         self.shareSuggestionPushBtn = self.shareSuggestionPushButton
         self.shareSuggestionPushBtn.clicked.connect(self.openSuggestionDialog) # Signal
-        self.shareSankeyWebV = self.shareSankeyWebEngineView
+
+        self.shareSankeyTabW = self.shareSankeyTabWidget
+        self.shareMooseSankeyWebView = self.shareMooseSankeyWebEngineView
+        self.shareDeerSankeyWebView= self.shareDeerSankeyWebEngineView
 
         # License page (Luvat)
         self.licenseYearLE = self.licenseYearLineEdit
@@ -323,6 +326,7 @@ class MultiPageMainWindow(QMainWindow):
                 databaseOperation1.detailedMessage
                 )
         else:
+            sharekills = databaseOperation1.resultSet
             self.shareKillIdList = prepareData.prepareTable(databaseOperation1, self.shareKillsTW)
         
         # Read data fom table ruhonosa and populate the combo box
@@ -372,7 +376,7 @@ class MultiPageMainWindow(QMainWindow):
         # 
         databaseOperation5 = pgModule.DatabaseOperation()
         databaseOperation5.getAllRowsFromTable(
-            self.connectionArguments, 'public.kaytto_ryhmille')
+            self.connectionArguments, 'public.jaetut_hirvi')
         if databaseOperation5.errorCode != 0:
             self.alert(
                 'Vakava virhe',
@@ -381,19 +385,27 @@ class MultiPageMainWindow(QMainWindow):
                 databaseOperation5.detailedMessage
                 )
         else:
-            sankeyData = databaseOperation5.resultSet
+            mooseData = databaseOperation5.resultSet
         
-        """# TODO: Access groupdata and assign color values depending on delta of expected meat value
+        
         # figures.colors(sankeyData, databaseOperation2.resultSet)
         # print(sankeyData)
         # figure = figures.testChart()
-        htmlFile = 'meatstreams.html'
+        totalMoose = 0
+        totalDeer = 0
+        for data in sharekills:
+            if data[4] == 'Hirvi':
+                totalMoose += data[8]
+            elif data[8] == 'Valkohäntäpeura':
+                totalDeer += data[8]
+
+        htmlFile = 'moosestreams.html'
         urlString = f'file:///{htmlFile}'
-        targetColors = figures.colors(sankeyData, self.groupSummary)
-        figure = figures.createSankeyChart(sankeyData, [], targetColors, [], 'Sankey')
+        targetColors = figures.colors(mooseData, self.groupSummary)
+        figure = figures.createSankeyChart(mooseData, [], targetColors, [], 'Hirvi')
         figures.createOfflineFile(figure, htmlFile) # Write the chart to a html file 'sankey.html'
         url = QtCore.QUrl(urlString) # Create a relative url to the file
-        self.shareSankeyWebV.load(url) # Load it into the web view element"""
+        self.shareMooseSankeyWebView.load(url) # Load it into the web view element
 
     def populateLicensePage(self):
         
@@ -451,6 +463,8 @@ class MultiPageMainWindow(QMainWindow):
                 )
         else:
             prepareData.prepareTable(databaseOperation4, self.licenseSummaryTW)
+            self.licenseSummaryTW.setColumnHidden(0, True)
+            self.licenseSummaryTW.setColumnHidden(1, True)
 
     
     def populateMaintenancePage(self):

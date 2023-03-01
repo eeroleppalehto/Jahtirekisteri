@@ -209,7 +209,9 @@ def colors(sankeyData, groupShare):
     groupDict = {}
     for data in sankeyData:
         if data[0] == 'Seurueelle':
+            # Append groupname to list
             groupList.append(data[1])
+            # Append groupname : weight to dict
             groupDict[data[1]] = data[2]
 
     for group in groupShare:
@@ -250,3 +252,23 @@ def colors(sankeyData, groupShare):
             j += 1
         
     return targetColors
+
+def colors2(sankeyData, groupShare, totalWeight):
+
+    partyMeats = 0
+    for data in sankeyData:
+        if data[2] != None:
+            partyMeats += data[2]
+    
+    allLabels = [] # All sources and targets in a single list <- dBdata
+    
+    for data in sankeyData:
+        allLabels.append(data[0])
+    for data in sankeyData:
+        allLabels.append(data[1])
+
+    allLabels = list(dict.fromkeys(allLabels))
+
+    groups = {}
+    for data in sankeyData:
+        groups[data[1]] = data[2]
