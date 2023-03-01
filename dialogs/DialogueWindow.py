@@ -128,8 +128,18 @@ class SuccessfulOperationDialog(QDialog):
     def closeDialog(self):
         self.close()
 
-# TODO: Edit dialogs for party. Possible to have a parent class for editDialogs?
-# TODO: Add dialog window for suggestion in share tab
+class ManualDialog(QDialog):
+    def __init__(self):
+
+        super().__init__()
+
+        loadUi("ui/manualDialog.ui", self)
+
+        self.setWindowTitle('Ohjeet')
+
+        self.manualTB = self.manualTextBrowser
+        # self.manualTB.openExternalLinks()
+
 
 # Some tests
 if __name__ == "__main__":

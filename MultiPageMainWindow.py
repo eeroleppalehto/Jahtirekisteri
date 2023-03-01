@@ -125,6 +125,7 @@ class MultiPageMainWindow(QMainWindow):
 
         # Menu signals
         self.actionServerSettings.triggered.connect(self.openSettingsDialog)
+        self.actionManual.triggered.connect(self.openManualDialog)
 
         # Signals other than emitted by UI elements
         self.populateAllPages()
@@ -602,6 +603,10 @@ class MultiPageMainWindow(QMainWindow):
         
     def openSettingsDialog(self):
         dialog = DialogueWindow.SaveDBSettingsDialog()
+        dialog.exec()
+
+    def openManualDialog(self):
+        dialog = DialogueWindow.ManualDialog()
         dialog.exec()
 
     def openSuggestionDialog(self):
