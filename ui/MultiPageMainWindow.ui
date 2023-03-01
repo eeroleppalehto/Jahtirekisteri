@@ -35,7 +35,7 @@
        <rect>
         <x>10</x>
         <y>50</y>
-        <width>301</width>
+        <width>231</width>
         <height>192</height>
        </rect>
       </property>
@@ -46,9 +46,9 @@
      <widget class="QTableWidget" name="groupSummaryTableWidget">
       <property name="geometry">
        <rect>
-        <x>350</x>
+        <x>260</x>
         <y>50</y>
-        <width>301</width>
+        <width>321</width>
         <height>192</height>
        </rect>
       </property>
@@ -69,7 +69,7 @@
      <widget class="QLabel" name="groupSummarylabel">
       <property name="geometry">
        <rect>
-        <x>350</x>
+        <x>260</x>
         <y>30</y>
         <width>151</width>
         <height>16</height>
@@ -82,7 +82,7 @@
      <widget class="QPushButton" name="summaryRefreshPushButton">
       <property name="geometry">
        <rect>
-        <x>240</x>
+        <x>840</x>
         <y>20</y>
         <width>75</width>
         <height>23</height>
@@ -323,8 +323,8 @@
        <rect>
         <x>10</x>
         <y>280</y>
-        <width>571</width>
-        <height>192</height>
+        <width>821</width>
+        <height>291</height>
        </rect>
       </property>
      </widget>
@@ -390,7 +390,7 @@
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>571</width>
+        <width>911</width>
         <height>192</height>
        </rect>
       </property>
@@ -545,20 +545,58 @@
        <string>Ehdotus...</string>
       </property>
      </widget>
-     <widget class="QWebEngineView" name="shareSankeyWebEngineView">
+     <widget class="QTabWidget" name="shareSankeyTabWidget">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>330</y>
-        <width>911</width>
-        <height>401</height>
+        <width>921</width>
+        <height>411</height>
        </rect>
       </property>
-      <property name="url">
-       <url>
-        <string>about:blank</string>
-       </url>
+      <property name="currentIndex">
+       <number>1</number>
       </property>
+      <widget class="QWidget" name="mooseTab">
+       <attribute name="title">
+        <string>Hirvi</string>
+       </attribute>
+       <widget class="QWebEngineView" name="shareMooseSankeyWebEngineView">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>891</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="url">
+         <url>
+          <string>about:blank</string>
+         </url>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="deerTab">
+       <attribute name="title">
+        <string>Valkohäntäpeura</string>
+       </attribute>
+       <widget class="QWebEngineView" name="shareDeerSankeyWebEngineView">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>891</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="url">
+         <url>
+          <string>about:blank</string>
+         </url>
+        </property>
+       </widget>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="licensePage">
@@ -698,8 +736,8 @@
        <rect>
         <x>10</x>
         <y>120</y>
-        <width>541</width>
-        <height>192</height>
+        <width>521</width>
+        <height>371</height>
        </rect>
       </property>
      </widget>
@@ -899,7 +937,7 @@
     <property name="title">
      <string>Ohje</string>
     </property>
-    <addaction name="actionOhje"/>
+    <addaction name="actionManual"/>
    </widget>
    <addaction name="menuTietokanta"/>
    <addaction name="menuOhje"/>
@@ -913,7 +951,7 @@
     <string>Muuta tietokantapalvelimen asetuksia</string>
    </property>
   </action>
-  <action name="actionOhje">
+  <action name="actionManual">
    <property name="text">
     <string>Ohje...</string>
    </property>
