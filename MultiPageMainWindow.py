@@ -86,6 +86,9 @@ class MultiPageMainWindow(QMainWindow):
         self.shareMooseSankeyWebView = self.shareMooseSankeyWebEngineView
         self.shareDeerSankeyWebView= self.shareDeerSankeyWebEngineView
 
+        # Signal when the user clicks an item on shareKillsTW
+        self.shareKillsTW.itemClicked.connect(self.onShareKillTableClick)
+
         # License page (Luvat)
         self.licenseYearLE = self.licenseYearLineEdit
         self.licenseAnimalCB = self.licenseAnimalComboBox
@@ -372,9 +375,7 @@ class MultiPageMainWindow(QMainWindow):
         else:
             self.groupSummary = databaseOperation4.resultSet
 
-        # SankeyGraph
-        # 
-        databaseOperation5 = pgModule.DatabaseOperation()
+        databaseOperation5 = pgModule.DatabaseOperation() # TODO:Remove
         databaseOperation5.getAllRowsFromTable(
             self.connectionArguments, 'public.jaetut_hirvi')
         if databaseOperation5.errorCode != 0:
@@ -387,25 +388,87 @@ class MultiPageMainWindow(QMainWindow):
         else:
             mooseData = databaseOperation5.resultSet
         
-        
-        # figures.colors(sankeyData, databaseOperation2.resultSet)
-        # print(sankeyData)
-        # figure = figures.testChart()
-        totalMoose = 0
-        totalDeer = 0
-        for data in sharekills:
-            if data[4] == 'Hirvi':
-                totalMoose += data[8]
-            elif data[8] == 'Valkohäntäpeura':
-                totalDeer += data[8]
+        databaseOperation6 = pgModule.DatabaseOperation()
+        databaseOperation6.getAllRowsFromTable(
+            self.connectionArguments, 'public.seurue_ryhma_lihat')
+        if databaseOperation6.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation6.errorMessage,
+                databaseOperation6.detailedMessage
+                )
+        else:
+            partyGroupData = databaseOperation6.resultSet
 
-        htmlFile = 'moosestreams.html'
+        # mooseSources = (row[0] for row in mooseData)
+        # mooseSourcesNumber = len(set(mooseSources))
+
+        # totalMoose = 0
+        # totalDeer = 0
+        
+
+        # for data in sharekills:
+        #     if data[4] == 'Hirvi':
+        #         totalMoose += data[8]
+        #     elif data[8] == 'Valkohäntäpeura':
+        #         totalDeer += data[8]
+
+        # htmlFile = 'moosestreams.html'
+        # urlString = f'file:///{htmlFile}'
+        # sourceColors = figures.colors2(mooseSourcesNumber)
+        # groupColors = figures.groupColors(mooseData, self.groupSummary, totalMoose)
+        # targetColors = sourceColors + groupColors
+        # figure = figures.createSankeyChart(mooseData, [], targetColors, [], 'Hirvi')
+        # figures.createOfflineFile(figure, htmlFile) # Write the chart to a html file 'sankey.html'
+        # url = QtCore.QUrl(urlString) # Create a relative url to the file
+        # self.shareMooseSankeyWebView.load(url) # Load it into the web view element
+
+        # Party Sanky Chart
+        partySources = (row[0] for row in partyGroupData)
+        # Remove duplicates
+        partySources = list(dict.fromkeys(partySources))
+        
+        sourceColors = figures.colors2(len(partySources))
+        # Generate colors for groups
+        targetColors = []
+        for party in partySources:
+            temp_sankeyData = []
+            for row in partyGroupData:
+                if row[0] == party and row[2] != None:
+                    temp_sankeyData.append(row)
+
+            weight=0
+            for row in temp_sankeyData:
+                if row[2] != None:
+                    weight += row[2]
+
+            temp_groupNames = [row[1] for row in temp_sankeyData]
+
+            temp_groupShareData = []
+            for row in self.groupSummary:
+                if row[0] in temp_groupNames:
+                    temp_groupShareData.append(row)
+            print(temp_groupShareData)
+            targetColors += figures.partyGroupColors(temp_sankeyData, temp_groupShareData)
+
+
+        labelColors = sourceColors + targetColors
+        print(labelColors)
+        joku = []
+        for i in partyGroupData:
+            if i[2] !=None:
+                joku.append(i)
+        print(partyGroupData)
+        htmlFile = 'partystreams.html'
         urlString = f'file:///{htmlFile}'
-        targetColors = figures.colors(mooseData, self.groupSummary)
-        figure = figures.createSankeyChart(mooseData, [], targetColors, [], 'Hirvi')
+        figure = figures.createSankeyChart(joku, [], labelColors, [], 'Hope')
         figures.createOfflineFile(figure, htmlFile) # Write the chart to a html file 'sankey.html'
         url = QtCore.QUrl(urlString) # Create a relative url to the file
         self.shareMooseSankeyWebView.load(url) # Load it into the web view element
+
+
+
 
     def populateLicensePage(self):
         
@@ -542,8 +605,9 @@ class MultiPageMainWindow(QMainWindow):
     def saveShare(self):
         # FIXME: Id values are not correctly managed
         try:
-            shareKillChosenRowIx = self.shareKillsTW.currentRow()
-            shareKill = int(self.shareKillsTW.itemAt(shareKillChosenRowIx, 0).text()) # FIXME: Check if row and column are correctly placed
+            # shareKillChosenRowIx = self.shareKillsTW.currentRow()
+            # shareKill = int(self.shareKillsTW.itemAt(shareKillChosenRowIx, 0).text()) # FIXME: Check if row and column are correctly placed
+            shareKillId = int(self.shareKillId)
             shareDay = self.shareDE.date().toPyDate()
             portion = self.sharePortionCB.currentText()
             weight = float(self.shareAmountLE.text())
@@ -554,7 +618,7 @@ class MultiPageMainWindow(QMainWindow):
             # Insert data into kaato table
             # Create a SQL clause to insert element values to the DB
             sqlClauseBeginning = "INSERT INTO public.jakotapahtuma(paiva, ryhma_id, osnimitys, maara, kaato_id) VALUES("
-            sqlClauseValues = f"'{shareDay}', {shareGroup}, '{portion}', {weight}, {shareKill}"
+            sqlClauseValues = f"'{shareDay}', {shareGroup}, '{portion}', {weight}, {shareKillId}"
             sqlClauseEnd = ");"
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
         except:
@@ -612,8 +676,9 @@ class MultiPageMainWindow(QMainWindow):
             self.licenseYearLE.clear()
             self.licenseAmountLE.clear()
 
-    def removeMember(self):
-        pass # FIXME: ???
+    def onShareKillTableClick(self, item):
+        selectedRow = item.row()
+        self.shareKillId = self.shareKillsTW.item(selectedRow, 0).text()
         
     def openSettingsDialog(self):
         dialog = DialogueWindow.SaveDBSettingsDialog()
