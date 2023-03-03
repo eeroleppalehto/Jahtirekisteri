@@ -173,6 +173,7 @@ def createOfflineFile(figure, htmlFileName):
     offline.plot(figure, filename= htmlFileName, auto_open=False) # Write the chart to an html file
 
 # TODO: Create docStrings for function colors
+# TODO: Remove?
 def colors(sankeyData, groupShare):
     """_summary_
 
@@ -270,6 +271,7 @@ def colors2(labels):
 
     return labelColors
 
+# TODO: Remove?
 def groupColors(groupSankeyData, groupShare, totalWeight):
     """Generates traffic light colors 
 
@@ -386,4 +388,8 @@ if __name__ == "__main__":
     lihat = 300
     
     varit = groupColors(sankeyData, groupShare, lihat)
-    print(varit)
+
+
+
+    seurueVarit = partyGroupColors(sankeyData, groupShare)
+    print(seurueVarit)
