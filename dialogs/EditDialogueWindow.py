@@ -477,7 +477,6 @@ class Group(DialogFrame):
         # Elements
         self.editGroupCB = self.editGroupComboBox
         self.editGroupCB.currentTextChanged.connect(self.text_changed)
-        self.editGroupTW = self.editGroupTableWidget
         self.editGroupPartyCB = self.editGroupPartyComboBox
         self.editGroupNameLE = self.editGroupNameLineEdit
         self.editGroupCancelPushBtn = self.editGroupCancelPushButton
