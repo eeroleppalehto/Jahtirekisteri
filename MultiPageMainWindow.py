@@ -79,12 +79,8 @@ class MultiPageMainWindow(QMainWindow):
         self.shareGroupCB = self.groupComboBox
         self.shareSavePushBtn = self.shareSavePushButton
         self.shareSavePushBtn.clicked.connect(self.saveShare) # Signal
-        self.shareSuggestionPushBtn = self.shareSuggestionPushButton
-        self.shareSuggestionPushBtn.clicked.connect(self.openSuggestionDialog) # Signal
 
-        self.shareSankeyTabW = self.shareSankeyTabWidget
-        self.shareMooseSankeyWebView = self.shareMooseSankeyWebEngineView
-        self.shareDeerSankeyWebView= self.shareDeerSankeyWebEngineView
+        self.shareSankeyWebView = self.shareSankeyWebEngineView
 
         # Signal when the user clicks an item on shareKillsTW
         self.shareKillsTW.itemClicked.connect(self.onShareKillTableClick)
@@ -194,8 +190,7 @@ class MultiPageMainWindow(QMainWindow):
             prepareData.prepareTable(
                 databaseOperation2, self.summaryGroupSummaryTW)
 
-        # SankeyGraph
-        # 
+        # SankeyGraph 
         databaseOperation3 = pgModule.DatabaseOperation()
         databaseOperation3.getAllRowsFromTable(
             self.connectionArguments, 'public.sankey_data')
@@ -209,17 +204,84 @@ class MultiPageMainWindow(QMainWindow):
         else:
             sankeyData = databaseOperation3.resultSet
         
-        # TODO: Access groupdata and assign color values depending on delta of expected meat value
-        # figures.colors(sankeyData, databaseOperation2.resultSet)
-        # print(sankeyData)
-        # figure = figures.testChart()
+        databaseOperation4 = pgModule.DatabaseOperation()
+        databaseOperation4.getAllRowsFromTable(
+            self.connectionArguments, 'public.sankey_elain_kasittely_seurue')
+        if databaseOperation4.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation4.errorMessage,
+                databaseOperation4.detailedMessage
+                )
+        else:
+            sankeyAnimalHandle = databaseOperation4.resultSet
+        
+        databaseOperation5 = pgModule.DatabaseOperation()
+        databaseOperation5.getAllRowsFromTable(
+            self.connectionArguments, 'public.seurue_ryhma_lihat')
+        if databaseOperation5.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation5.errorMessage,
+                databaseOperation5.detailedMessage
+                )
+        else:
+            partyGroupData = databaseOperation5.resultSet
+
+        # Extract lables from sankeydata
+        labels = []
+        for row in sankeyAnimalHandle:
+            labels.append(row[0])
+            labels.append(row[1])
+
+        partySources = [row[0] for row in partyGroupData]
+        partySources = list(dict.fromkeys(partySources))
+        
+        # Remove duplicates
+        labels = list(dict.fromkeys(labels))
+
+        # Generate colors for the labels
+        labelColors = figures.colors2(len(labels))
+
+        # Generate colors for groups
+        targetColors = []
+
+
+        for party in partySources:
+            temp_sankeyData = []
+            for row in partyGroupData:
+                if row[0] == party and row[2] != None:
+                    temp_sankeyData.append(row)
+
+            weight=0
+            for row in temp_sankeyData:
+                if row[2] != None:
+                    weight += row[2]
+
+            temp_groupNames = [row[1] for row in temp_sankeyData]
+            
+            temp_groupShareData = []
+            for row in self.groupSummary:
+                if row[0] in temp_groupNames:
+                    temp_groupShareData.append(row)
+            
+            targetColors += figures.partyGroupColors(temp_sankeyData, temp_groupShareData)
+
+        labelColors += targetColors
+        filteredPartyGroupData = []
+        for row in partyGroupData:
+            if row[2] != None:
+                filteredPartyGroupData.append(row)
+        sankeydata = sankeyAnimalHandle + filteredPartyGroupData
         htmlFile = 'meatstreams.html'
         urlString = f'file:///{htmlFile}'
-        targetColors = figures.colors(sankeyData, self.groupSummary)
-        figure = figures.createSankeyChart(sankeyData, [], targetColors, [], 'Sankey')
+        figure = figures.createSankeyChart(sankeydata, [], labelColors, [], 'Sankey')
         figures.createOfflineFile(figure, htmlFile) # Write the chart to a html file 'sankey.html'
         url = QtCore.QUrl(urlString) # Create a relative url to the file
         self.sankeyWebV.load(url) # Load it into the web view element
+
 
     def populateKillPage(self):
         # Set default date to current date
@@ -375,9 +437,10 @@ class MultiPageMainWindow(QMainWindow):
         else:
             self.groupSummary = databaseOperation4.resultSet
 
-        databaseOperation5 = pgModule.DatabaseOperation() # TODO:Remove
+        
+        databaseOperation5 = pgModule.DatabaseOperation()
         databaseOperation5.getAllRowsFromTable(
-            self.connectionArguments, 'public.jaetut_hirvi')
+            self.connectionArguments, 'public.seurue_ryhma_lihat')
         if databaseOperation5.errorCode != 0:
             self.alert(
                 'Vakava virhe',
@@ -386,43 +449,8 @@ class MultiPageMainWindow(QMainWindow):
                 databaseOperation5.detailedMessage
                 )
         else:
-            mooseData = databaseOperation5.resultSet
-        
-        databaseOperation6 = pgModule.DatabaseOperation()
-        databaseOperation6.getAllRowsFromTable(
-            self.connectionArguments, 'public.seurue_ryhma_lihat')
-        if databaseOperation6.errorCode != 0:
-            self.alert(
-                'Vakava virhe',
-                'Tietokantaoperaatio epäonnistui',
-                databaseOperation6.errorMessage,
-                databaseOperation6.detailedMessage
-                )
-        else:
-            partyGroupData = databaseOperation6.resultSet
+            partyGroupData = databaseOperation5.resultSet
 
-        # mooseSources = (row[0] for row in mooseData)
-        # mooseSourcesNumber = len(set(mooseSources))
-
-        # totalMoose = 0
-        # totalDeer = 0
-        
-
-        # for data in sharekills:
-        #     if data[4] == 'Hirvi':
-        #         totalMoose += data[8]
-        #     elif data[8] == 'Valkohäntäpeura':
-        #         totalDeer += data[8]
-
-        # htmlFile = 'moosestreams.html'
-        # urlString = f'file:///{htmlFile}'
-        # sourceColors = figures.colors2(mooseSourcesNumber)
-        # groupColors = figures.groupColors(mooseData, self.groupSummary, totalMoose)
-        # targetColors = sourceColors + groupColors
-        # figure = figures.createSankeyChart(mooseData, [], targetColors, [], 'Hirvi')
-        # figures.createOfflineFile(figure, htmlFile) # Write the chart to a html file 'sankey.html'
-        # url = QtCore.QUrl(urlString) # Create a relative url to the file
-        # self.shareMooseSankeyWebView.load(url) # Load it into the web view element
 
         # Party Sanky Chart
         partySources = (row[0] for row in partyGroupData)
@@ -432,6 +460,7 @@ class MultiPageMainWindow(QMainWindow):
         sourceColors = figures.colors2(len(partySources))
         # Generate colors for groups
         targetColors = []
+
         for party in partySources:
             temp_sankeyData = []
             for row in partyGroupData:
@@ -444,30 +473,26 @@ class MultiPageMainWindow(QMainWindow):
                     weight += row[2]
 
             temp_groupNames = [row[1] for row in temp_sankeyData]
-
+            
             temp_groupShareData = []
             for row in self.groupSummary:
                 if row[0] in temp_groupNames:
                     temp_groupShareData.append(row)
-            print(temp_groupShareData)
+            
             targetColors += figures.partyGroupColors(temp_sankeyData, temp_groupShareData)
-
-
+            
         labelColors = sourceColors + targetColors
-        print(labelColors)
-        joku = []
-        for i in partyGroupData:
-            if i[2] !=None:
-                joku.append(i)
-        print(partyGroupData)
+    
+        filteredPartyGroupData = []
+        for row in partyGroupData:
+            if row[2] != None:
+                filteredPartyGroupData.append(row)
         htmlFile = 'partystreams.html'
         urlString = f'file:///{htmlFile}'
-        figure = figures.createSankeyChart(joku, [], labelColors, [], 'Hope')
+        figure = figures.createSankeyChart(filteredPartyGroupData, [], labelColors, [], 'Seurueet')
         figures.createOfflineFile(figure, htmlFile) # Write the chart to a html file 'sankey.html'
         url = QtCore.QUrl(urlString) # Create a relative url to the file
-        self.shareMooseSankeyWebView.load(url) # Load it into the web view element
-
-
+        self.shareSankeyWebView.load(url) # Load it into the web view element
 
 
     def populateLicensePage(self):
@@ -546,17 +571,28 @@ class MultiPageMainWindow(QMainWindow):
 
     def populatePage(self):
         index = self.pageTab.currentIndex()
-        match index:
-            case 0:
-                self.populateSummaryPage()
-            case 1:
-                self.populateKillPage()
-            case 2:
-                self.populateSharePage()
-            case 3:
-                self.populateLicensePage()
-            case 4:
-                self.populateMaintenancePage()
+        # match index:
+        #     case 0:
+        #         self.populateSummaryPage()
+        #     case 1:
+        #         self.populateKillPage()
+        #     case 2:
+        #         self.populateSharePage()
+        #     case 3:
+        #         self.populateLicensePage()
+        #     case 4:
+        #         self.populateMaintenancePage()
+
+        if index == 0:
+            self.populateSummaryPage()
+        elif index == 1:
+            self.populateKillPage()
+        elif index == 2:
+            self.populateSharePage()
+        elif index == 3:
+            self.populateLicensePage()
+        elif index == 4:
+            self.populateMaintenancePage()
 
 
     def saveShot(self):
