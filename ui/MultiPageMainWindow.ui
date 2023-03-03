@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>968</width>
+    <width>973</width>
     <height>830</height>
    </rect>
   </property>
@@ -19,12 +19,12 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>941</width>
+      <width>951</width>
       <height>771</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="summaryPage">
      <attribute name="title">
@@ -390,7 +390,7 @@
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>911</width>
+        <width>920</width>
         <height>192</height>
        </rect>
       </property>
@@ -532,71 +532,40 @@
        <string>Tallenna</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="shareSuggestionPushButton">
+     <widget class="QWebEngineView" name="shareSankeyWebEngineView">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>280</y>
-        <width>75</width>
-        <height>23</height>
+        <y>370</y>
+        <width>510</width>
+        <height>361</height>
        </rect>
       </property>
-      <property name="text">
-       <string>Ehdotus...</string>
+      <property name="url">
+       <url>
+        <string>about:blank</string>
+       </url>
       </property>
      </widget>
-     <widget class="QTabWidget" name="shareSankeyTabWidget">
+     <widget class="QTextBrowser" name="shareTextBrowser">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>330</y>
-        <width>921</width>
-        <height>411</height>
+        <x>530</x>
+        <y>370</y>
+        <width>311</width>
+        <height>361</height>
        </rect>
       </property>
-      <property name="currentIndex">
-       <number>0</number>
+      <property name="html">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
-      <widget class="QWidget" name="mooseTab">
-       <attribute name="title">
-        <string>Hirvi</string>
-       </attribute>
-       <widget class="QWebEngineView" name="shareMooseSankeyWebEngineView">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>10</y>
-          <width>891</width>
-          <height>361</height>
-         </rect>
-        </property>
-        <property name="url">
-         <url>
-          <string>about:blank</string>
-         </url>
-        </property>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="deerTab">
-       <attribute name="title">
-        <string>Valkohäntäpeura</string>
-       </attribute>
-       <widget class="QWebEngineView" name="shareDeerSankeyWebEngineView">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>10</y>
-          <width>891</width>
-          <height>361</height>
-         </rect>
-        </property>
-        <property name="url">
-         <url>
-          <string>about:blank</string>
-         </url>
-        </property>
-       </widget>
-      </widget>
+      <property name="openExternalLinks">
+       <bool>true</bool>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="licensePage">
@@ -923,7 +892,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>968</width>
+     <width>973</width>
      <height>21</height>
     </rect>
    </property>
