@@ -123,8 +123,9 @@ def createSankeyChart(dBData, sourceColors, targetColors, linkColors, heading):
     
     if linkColors == []:
         for i in range(0, len(dBData)):
-            color = 120 + i*5
-            linkColors.append(f"rgb(155, {color}, 255)")
+            color = 160 - i*5
+            color = max(color,0)
+            linkColors.append(f"rgb({color}, {color}, {color+40})")
     
     # Empty lists for label indexes and values
     sankeySources = []
