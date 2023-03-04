@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>973</width>
-    <height>830</height>
+    <height>850</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>10</x>
       <y>10</y>
       <width>951</width>
-      <height>771</height>
+      <height>791</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -322,9 +322,9 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>280</y>
-        <width>821</width>
-        <height>291</height>
+        <y>270</y>
+        <width>841</width>
+        <height>241</height>
        </rect>
       </property>
      </widget>
@@ -332,7 +332,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>260</y>
+        <y>250</y>
         <width>47</width>
         <height>13</height>
        </rect>
@@ -378,6 +378,29 @@
       </property>
       <property name="text">
        <string>Paikka</string>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="shotLicenseTableWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>550</y>
+        <width>521</width>
+        <height>201</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="shotByLabel_14">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>530</y>
+        <width>80</width>
+        <height>13</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Käytetty Luvat</string>
       </property>
      </widget>
     </widget>

@@ -70,6 +70,7 @@ class MultiPageMainWindow(QMainWindow):
         self.shotSavePushBtn = self.saveShotPushButton
         self.shotSavePushBtn.clicked.connect(self.saveShot) # Signal
         self.shotKillsTW = self.killsKillsTableWidget
+        self.shotLicenseTW = self.shotLicenseTableWidget
 
         # Share page (Lihanjako)
         self.shareKillsTW = self.shareKillsTableWidget
@@ -374,6 +375,20 @@ class MultiPageMainWindow(QMainWindow):
         else:
             self.shotUsageIdList = prepareData.prepareComboBox(
                 databaseOperation6, self.shotUsageCB, 1, 0)
+            
+        databaseOperation7 = pgModule.DatabaseOperation()
+        databaseOperation7.getAllRowsFromTable(
+            self.connectionArguments, 'public.luvat_kayttamatta_kpl_pros')
+        if databaseOperation7.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation7.errorMessage,
+                databaseOperation7.detailedMessage
+                )
+        else:
+            prepareData.prepareTable(
+                databaseOperation7, self.shotLicenseTW)
 
     def populateSharePage(self):
         # Set default date to current date
