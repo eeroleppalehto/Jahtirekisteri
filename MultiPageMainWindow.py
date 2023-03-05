@@ -80,6 +80,7 @@ class MultiPageMainWindow(QMainWindow):
         self.shareGroupCB = self.groupComboBox
         self.shareSavePushBtn = self.shareSavePushButton
         self.shareSavePushBtn.clicked.connect(self.saveShare) # Signal
+        self.sharedPortionsTW = self.shareSharedPortionsTableWidget
 
         self.shareSankeyWebView = self.shareSankeyWebEngineView
 
@@ -508,6 +509,41 @@ class MultiPageMainWindow(QMainWindow):
         figures.createOfflineFile(figure, htmlFile) # Write the chart to a html file 'sankey.html'
         url = QtCore.QUrl(urlString) # Create a relative url to the file
         self.shareSankeyWebView.load(url) # Load it into the web view element
+
+        databaseOperation6 = pgModule.DatabaseOperation()
+        databaseOperation6.getAllRowsFromTable(
+            self.connectionArguments, 'public.jaetut_ruhon_osat')
+        if databaseOperation6.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation6.errorMessage,
+                databaseOperation6.detailedMessage
+                )
+        else:
+            sharedPortionsData = databaseOperation6.resultSet
+            sharedKillsListID = [ row[0] for row in sharedPortionsData ]
+            sharedKillsListID = list(dict.fromkeys(sharedKillsListID))
+            databaseOperation6.columnHeaders[2] = 'Jaettu'
+            databaseOperation6.rows = len(sharedKillsListID)
+            portionDict = {'Koko': 4, 'Puolikas': 2, 'Neljännes': 1}
+            newData = []
+            for id in sharedKillsListID:
+                animal = ""
+                sharedPortions = 0
+                amount = 0
+                for row in sharedPortionsData:
+                    if row[0] == id:
+                        animal = row[1]
+                        sharedPortions += portionDict[row[2]]
+                        amount += row[3]
+                sharedPortions = f"{sharedPortions}/4"
+                newData.append((id, animal, sharedPortions, amount))
+            databaseOperation6.resultSet = newData
+            prepareData.prepareTable(databaseOperation6, self.sharedPortionsTW)
+
+
+
 
 
     def populateLicensePage(self):
