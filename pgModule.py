@@ -289,12 +289,6 @@ class DatabaseOperation():
                 command = f'CAll {procedure}({params})'
                 cursor.execute(command)
 
-                # Set object properties
-                # self.rows = cursor.rowcount
-                # self.resultSet = cursor.fetchall()
-                # self.columnHeaders = [cname[0] for cname in cursor.description]
-                # self.columns = len(self.columnHeaders)
-
                 # Set error values
                 self.errorCode = 0
                 self.errorMessage = 'Suoritettiin proseduuri onnistuneesti'
@@ -312,8 +306,52 @@ class DatabaseOperation():
             if self.errorCode == 0:
                 dbconnection.close()
 
-    def callFunction(self, connectionArgs, procedure, params):
-        pass
+    def callFunction(self, connectionArgs, function, params):
+        """Calls a function and passes parameters
+
+        Args:
+            connectionArgs (dict): Connection arguments in key-value pairs
+            function (str): Name of the function to call
+            params (list): List of input parameters for function
+        """
+
+        server = connectionArgs['server']
+        port = connectionArgs['port']
+        database = connectionArgs['database']
+        user = connectionArgs['user']
+        password = connectionArgs['password']
+
+        try:
+            # Connect to the database and set error parameters
+            dbconnection = psycopg2.connect(
+                database=database, user=user, password=password, host=server, port=port)
+            self.errorCode = 0
+            self.errorMessage = 'Yhdistettiin tietokantaan'
+            self.detailedMessage = 'Connected to database successfully'
+
+            with dbconnection.cursor() as cursor:
+                command = f"SELECT * FROM {function}({params});"
+                cursor.execute(command)
+
+                self.resultSet = cursor.fetchone()
+
+                # Set error values
+                self.errorCode = 0
+                self.errorMessage = 'Suoritettiin funktio onnistuneesti'
+                self.detailedMessage = 'Function call was succesful'
+                dbconnection.commit()
+
+
+
+        except (Exception, psycopg2.Error )as error:
+
+            # Set error values
+            self.errorCode = 1
+            self.errorMessage = 'Tietokannan käsittely ei onnistunut'
+            self.detailedMessage = str(error)
+        finally:
+            if self.errorCode == 0:
+                dbconnection.close()
 
 
 # LOCAL TESTS, REMOVE WHEN FINISHED DESIGNING THE MODULE
@@ -322,7 +360,7 @@ if __name__ == "__main__":
     testOperation = DatabaseOperation()
     # Create a dictionary for connection settings using defaults
     dictionary = testOperation.createConnectionArgumentDict(
-        'metsastys', 'sovellus', 'Q2werty')
+        'metsastys', 'application', 'Q2werty')
     
     # Save those settings to file
     testOperation.saveDatabaseSettingsToFile('settings.dat', dictionary)
@@ -331,6 +369,8 @@ if __name__ == "__main__":
     readedSettings = testOperation.readDatabaseSettingsFromFile('settings.dat')
 
     # print(readedSettings)
-    testOperation.getAllRowsFromTable(readedSettings, 'public.jasen')
+    #testOperation.getAllRowsFromTable(readedSettings, 'public.jasen')
+
+    testOperation.callFunction(readedSettings, 'public.get_party', 1)
 
     print(testOperation.resultSet)
