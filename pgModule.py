@@ -312,6 +312,9 @@ class DatabaseOperation():
             if self.errorCode == 0:
                 dbconnection.close()
 
+    def callFunction(self, connectionArgs, procedure, params):
+        pass
+
 
 # LOCAL TESTS, REMOVE WHEN FINISHED DESIGNING THE MODULE
 if __name__ == "__main__":
