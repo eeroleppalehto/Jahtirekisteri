@@ -18,6 +18,7 @@ import dialogs.RemoveDialogueWindow as RemoveDialogueWindow
 import dialogs.EditDialogueWindow as EditDialogueWindow
 import dialogs.SuggestionDialog as SuggestionDialog
 import figures
+import Party
 
 # CLASS DEFINITIONS FOR THE APP
 # -----------------------------
@@ -221,7 +222,7 @@ class MultiPageMainWindow(QMainWindow):
         
         databaseOperation5 = pgModule.DatabaseOperation()
         databaseOperation5.getAllRowsFromTable(
-            self.connectionArguments, 'public.seurue_ryhma_lihat')
+            self.connectionArguments, 'public.seurue_lihat_osuus')
         if databaseOperation5.errorCode != 0:
             self.alert(
                 'Vakava virhe',
@@ -230,7 +231,21 @@ class MultiPageMainWindow(QMainWindow):
                 databaseOperation5.detailedMessage
                 )
         else:
-            partyGroupData = databaseOperation5.resultSet
+            partyData = databaseOperation5.resultSet
+
+        databaseOperation6 = pgModule.DatabaseOperation()
+        databaseOperation6.getAllRowsFromTable(
+            self.connectionArguments, 'public.jakoryhma_osuus_maara')
+        if databaseOperation6.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation6.errorMessage,
+                databaseOperation6.detailedMessage
+                )
+        else:
+            groupList = databaseOperation6.resultSet
+        
 
         # Extract lables from sankeydata
         labels = []
@@ -238,45 +253,24 @@ class MultiPageMainWindow(QMainWindow):
             labels.append(row[0])
             labels.append(row[1])
 
-        partySources = [row[0] for row in partyGroupData]
-        partySources = list(dict.fromkeys(partySources))
-        
         # Remove duplicates
         labels = list(dict.fromkeys(labels))
 
         # Generate colors for the labels
-        labelColors = figures.colors2(len(labels))
+        labelColors = figures.colors(len(labels))
 
         # Generate colors for groups
-        targetColors = []
 
+        partySankeyData = []
+        partyColors = []
+        for party in partyData:
+            newParty = Party.Party(party[0], party[1], party[2], party[3])
+            newParty.getGroups(groupList)
+            partySankeyData += newParty.getSankeyData()
+            partyColors += newParty.getSankeyColors()
 
-        for party in partySources:
-            temp_sankeyData = []
-            for row in partyGroupData:
-                if row[0] == party and row[2] != None:
-                    temp_sankeyData.append(row)
-
-            weight=0
-            for row in temp_sankeyData:
-                if row[2] != None:
-                    weight += row[2]
-
-            temp_groupNames = [row[1] for row in temp_sankeyData]
-            
-            temp_groupShareData = []
-            for row in self.groupSummary:
-                if row[0] in temp_groupNames:
-                    temp_groupShareData.append(row)
-            
-            targetColors += figures.partyGroupColors(temp_sankeyData, temp_groupShareData)
-
-        labelColors += targetColors
-        filteredPartyGroupData = []
-        for row in partyGroupData:
-            if row[2] != None:
-                filteredPartyGroupData.append(row)
-        sankeydata = sankeyAnimalHandle + filteredPartyGroupData
+        labelColors += partyColors
+        sankeydata = sankeyAnimalHandle + partySankeyData
         htmlFile = 'meatstreams.html'
         urlString = f'file:///{htmlFile}'
         figure = figures.createSankeyChart(sankeydata, [], labelColors, [], 'Sankey')
@@ -440,23 +434,9 @@ class MultiPageMainWindow(QMainWindow):
             self.shareGroupIdList = prepareData.prepareComboBox(
                 databaseOperation3, self.shareGroupCB, 2, 0)
 
-        databaseOperation4 = pgModule.DatabaseOperation()
-        databaseOperation4.getAllRowsFromTable(
-            self.connectionArguments, 'public.jakoryhma_yhteenveto')
-        if databaseOperation4.errorCode != 0:
-            self.alert(
-                'Vakava virhe',
-                'Tietokantaoperaatio epäonnistui',
-                databaseOperation4.errorMessage,
-                databaseOperation4.detailedMessage
-                )
-        else:
-            self.groupSummary = databaseOperation4.resultSet
-
-        
         databaseOperation5 = pgModule.DatabaseOperation()
         databaseOperation5.getAllRowsFromTable(
-            self.connectionArguments, 'public.seurue_ryhma_lihat')
+            self.connectionArguments, 'public.seurue_lihat_osuus')
         if databaseOperation5.errorCode != 0:
             self.alert(
                 'Vakava virhe',
@@ -465,50 +445,45 @@ class MultiPageMainWindow(QMainWindow):
                 databaseOperation5.detailedMessage
                 )
         else:
-            partyGroupData = databaseOperation5.resultSet
+            partyData = databaseOperation5.resultSet
 
+        databaseOperation6 = pgModule.DatabaseOperation()
+        databaseOperation6.getAllRowsFromTable(
+            self.connectionArguments, 'public.jakoryhma_osuus_maara')
+        if databaseOperation6.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation6.errorMessage,
+                databaseOperation6.detailedMessage
+                )
+        else:
+            groupList = databaseOperation6.resultSet
 
-        # Party Sanky Chart
-        partySources = (row[0] for row in partyGroupData)
-        # Remove duplicates
-        partySources = list(dict.fromkeys(partySources))
+        sourceColors = figures.colors(len(partyData))
+
+        partySankeyData = []
+        partyColors = []
+        for party in partyData:
+            newParty = Party.Party(party[0], party[1], party[2], party[3])
+            newParty.getGroups(groupList)
+            partySankeyData += newParty.getSankeyData()
+            partyColors += newParty.getSankeyColors()
+
         
-        sourceColors = figures.colors2(len(partySources))
-        # Generate colors for groups
-        targetColors = []
-
-        for party in partySources:
-            temp_sankeyData = []
-            for row in partyGroupData:
-                if row[0] == party and row[2] != None:
-                    temp_sankeyData.append(row)
-
-            weight=0
-            for row in temp_sankeyData:
-                if row[2] != None:
-                    weight += row[2]
-
-            temp_groupNames = [row[1] for row in temp_sankeyData]
             
-            temp_groupShareData = []
-            for row in self.groupSummary:
-                if row[0] in temp_groupNames:
-                    temp_groupShareData.append(row)
-            
-            targetColors += figures.partyGroupColors(temp_sankeyData, temp_groupShareData)
-            
-        labelColors = sourceColors + targetColors
+        labelColors = sourceColors + partyColors
     
-        filteredPartyGroupData = []
-        for row in partyGroupData:
-            if row[2] != None:
-                filteredPartyGroupData.append(row)
         htmlFile = 'partystreams.html'
         urlString = f'file:///{htmlFile}'
-        figure = figures.createSankeyChart(filteredPartyGroupData, [], labelColors, [], 'Seurueet')
+        figure = figures.createSankeyChart(partySankeyData, [], labelColors, [], 'Seurueet')
         figures.createOfflineFile(figure, htmlFile) # Write the chart to a html file 'sankey.html'
         url = QtCore.QUrl(urlString) # Create a relative url to the file
         self.shareSankeyWebView.load(url) # Load it into the web view element
+
+
+
+
 
         databaseOperation6 = pgModule.DatabaseOperation()
         databaseOperation6.getAllRowsFromTable(
