@@ -131,13 +131,14 @@ class MultiPageMainWindow(QMainWindow):
         # Menu signals
         self.actionServerSettings.triggered.connect(self.openSettingsDialog)
         self.actionManual.triggered.connect(self.openManualDialog)
+        self.actionInfo.triggered.connect(self.openInfoDialog)
 
         # Signals other than emitted by UI elements
         self.populateAllPages()
 
     # SLOTS
 
-    def alert(self, windowTitle,alertMsg, additionalMsg, details):
+    def alert(self, windowTitle, alertMsg, additionalMsg, details):
         """Creates a message box for critical errors
 
         Args:
@@ -177,7 +178,7 @@ class MultiPageMainWindow(QMainWindow):
         else:
             prepareData.prepareTable(databaseOperation1, self.summaryMeatSharedTW)
 
-        # Read data from view jakoryhma_yhteenveto, no need to read connection args twice
+        # Read data from view jakoryhma_yhteenveto
         databaseOperation2 = pgModule.DatabaseOperation()
         databaseOperation2.getAllRowsFromTable(
             self.connectionArguments, 'public.jakoryhma_yhteenveto')
@@ -193,20 +194,7 @@ class MultiPageMainWindow(QMainWindow):
             prepareData.prepareTable(
                 databaseOperation2, self.summaryGroupSummaryTW)
 
-        # SankeyGraph 
-        databaseOperation3 = pgModule.DatabaseOperation()
-        databaseOperation3.getAllRowsFromTable(
-            self.connectionArguments, 'public.sankey_data')
-        if databaseOperation3.errorCode != 0:
-            self.alert(
-                'Vakava virhe',
-                'Tietokantaoperaatio epäonnistui',
-                databaseOperation3.errorMessage,
-                databaseOperation3.detailedMessage
-                )
-        else:
-            sankeyData = databaseOperation3.resultSet
-        
+        # Data for Sankey graph
         databaseOperation4 = pgModule.DatabaseOperation()
         databaseOperation4.getAllRowsFromTable(
             self.connectionArguments, 'public.sankey_elain_kasittely_seurue')
@@ -246,37 +234,45 @@ class MultiPageMainWindow(QMainWindow):
         else:
             groupList = databaseOperation6.resultSet
         
+        
+        # Process data for sankey graph and then load it UI
+        try:
+            # Extract lables from sankeydata
+            labels = []
+            for row in sankeyAnimalHandle:
+                labels.append(row[0])
+                labels.append(row[1])
 
-        # Extract lables from sankeydata
-        labels = []
-        for row in sankeyAnimalHandle:
-            labels.append(row[0])
-            labels.append(row[1])
+            # Remove duplicates
+            labels = list(dict.fromkeys(labels))
 
-        # Remove duplicates
-        labels = list(dict.fromkeys(labels))
+            # Generate colors for the labels
+            labelColors = figures.colors(len(labels))
 
-        # Generate colors for the labels
-        labelColors = figures.colors(len(labels))
+            # Generate sankey data and colors for groups
+            partySankeyData = []
+            partyColors = []
+            for party in partyData:
+                newParty = Party.Party(party[0], party[1], party[2], party[3])
+                newParty.getGroups(groupList)
+                partySankeyData += newParty.getSankeyData()
+                partyColors += newParty.getSankeyColors()
 
-        # Generate colors for groups
-
-        partySankeyData = []
-        partyColors = []
-        for party in partyData:
-            newParty = Party.Party(party[0], party[1], party[2], party[3])
-            newParty.getGroups(groupList)
-            partySankeyData += newParty.getSankeyData()
-            partyColors += newParty.getSankeyColors()
-
-        labelColors += partyColors
-        sankeydata = sankeyAnimalHandle + partySankeyData
-        htmlFile = 'meatstreams.html'
-        urlString = f'file:///{htmlFile}'
-        figure = figures.createSankeyChart(sankeydata, [], labelColors, [], 'Sankey')
-        figures.createOfflineFile(figure, htmlFile) # Write the chart to a html file 'sankey.html'
-        url = QtCore.QUrl(urlString) # Create a relative url to the file
-        self.sankeyWebV.load(url) # Load it into the web view element
+            labelColors += partyColors
+            sankeydata = sankeyAnimalHandle + partySankeyData
+            htmlFile = 'meatstreams.html'
+            urlString = f'file:///{htmlFile}'
+            figure = figures.createSankeyChart(sankeydata, [], labelColors, [], 'Sankey')
+            figures.createOfflineFile(figure, htmlFile) # Write the chart to a html file 'sankey.html'
+            url = QtCore.QUrl(urlString) # Create a relative url to the file
+            self.sankeyWebV.load(url) # Load it into the web view element
+        except:
+            self.alert(
+                'Vakava virhe',
+                'Sankey-kaavion luonti epäonnistui',
+                'Sankey diagram failed to load on summary page',
+                'Oops'
+            )
 
 
     def populateKillPage(self):
@@ -401,7 +397,7 @@ class MultiPageMainWindow(QMainWindow):
                 databaseOperation1.detailedMessage
                 )
         else:
-            sharekills = databaseOperation1.resultSet
+            # sharekills = databaseOperation1.resultSet
             self.shareKillIdList = prepareData.prepareTable(databaseOperation1, self.shareKillsTW)
         
         # Read data fom table ruhonosa and populate the combo box
@@ -434,6 +430,7 @@ class MultiPageMainWindow(QMainWindow):
             self.shareGroupIdList = prepareData.prepareComboBox(
                 databaseOperation3, self.shareGroupCB, 2, 0)
 
+        # Data for Sankey graph
         databaseOperation5 = pgModule.DatabaseOperation()
         databaseOperation5.getAllRowsFromTable(
             self.connectionArguments, 'public.seurue_lihat_osuus')
@@ -447,6 +444,7 @@ class MultiPageMainWindow(QMainWindow):
         else:
             partyData = databaseOperation5.resultSet
 
+        # Data for Sankey graph
         databaseOperation6 = pgModule.DatabaseOperation()
         databaseOperation6.getAllRowsFromTable(
             self.connectionArguments, 'public.jakoryhma_osuus_maara')
@@ -460,30 +458,35 @@ class MultiPageMainWindow(QMainWindow):
         else:
             groupList = databaseOperation6.resultSet
 
-        sourceColors = figures.colors(len(partyData))
+        # Process data for sankey graph and then load it UI
+        try:
+            # Generate source colors for sankey graph
+            sourceColors = figures.colors(len(partyData))
 
-        partySankeyData = []
-        partyColors = []
-        for party in partyData:
-            newParty = Party.Party(party[0], party[1], party[2], party[3])
-            newParty.getGroups(groupList)
-            partySankeyData += newParty.getSankeyData()
-            partyColors += newParty.getSankeyColors()
-
-        
-            
-        labelColors = sourceColors + partyColors
+            # Generate sankey data and colors for groups
+            partySankeyData = []
+            partyColors = []
+            for party in partyData:
+                newParty = Party.Party(party[0], party[1], party[2], party[3])
+                newParty.getGroups(groupList)
+                partySankeyData += newParty.getSankeyData()
+                partyColors += newParty.getSankeyColors()
     
-        htmlFile = 'partystreams.html'
-        urlString = f'file:///{htmlFile}'
-        figure = figures.createSankeyChart(partySankeyData, [], labelColors, [], 'Seurueet')
-        figures.createOfflineFile(figure, htmlFile) # Write the chart to a html file 'sankey.html'
-        url = QtCore.QUrl(urlString) # Create a relative url to the file
-        self.shareSankeyWebView.load(url) # Load it into the web view element
-
-
-
-
+            labelColors = sourceColors + partyColors
+        
+            htmlFile = 'partystreams.html'
+            urlString = f'file:///{htmlFile}'
+            figure = figures.createSankeyChart(partySankeyData, [], labelColors, [], 'Seurueet')
+            figures.createOfflineFile(figure, htmlFile) # Write the chart to a html file 'sankey.html'
+            url = QtCore.QUrl(urlString) # Create a relative url to the file
+            self.shareSankeyWebView.load(url) # Load it into the web view element
+        except:
+            self.alert(
+                'Vakava virhe',
+                'Sankey-kaavion luonti epäonnistui',
+                'Sankey diagram failed to load on share page',
+                'Oops'
+            )
 
         databaseOperation6 = pgModule.DatabaseOperation()
         databaseOperation6.getAllRowsFromTable(
@@ -496,30 +499,44 @@ class MultiPageMainWindow(QMainWindow):
                 databaseOperation6.detailedMessage
                 )
         else:
-            sharedPortionsData = databaseOperation6.resultSet
-            sharedKillsListID = [ row[0] for row in sharedPortionsData ]
-            sharedKillsListID = list(dict.fromkeys(sharedKillsListID))
-            databaseOperation6.columnHeaders[2] = 'Jaettu'
-            databaseOperation6.rows = len(sharedKillsListID)
-            portionDict = {'Koko': 4, 'Puolikas': 2, 'Neljännes': 1}
-            newData = []
-            for id in sharedKillsListID:
-                animal = ""
-                sharedPortions = 0
-                amount = 0
-                for row in sharedPortionsData:
-                    if row[0] == id:
-                        animal = row[1]
-                        sharedPortions += portionDict[row[2]]
-                        amount += row[3]
-                sharedPortions = f"{sharedPortions}/4"
-                newData.append((id, animal, sharedPortions, amount))
-            databaseOperation6.resultSet = newData
-            prepareData.prepareTable(databaseOperation6, self.sharedPortionsTW)
+            # Process data to be shown in sharedPortionsTableWidget
+            try:
+                sharedPortionsData = databaseOperation6.resultSet
 
+                # Generate id to new list and remove duplicates
+                sharedKillsListID = [ row[0] for row in sharedPortionsData ]
+                sharedKillsListID = list(dict.fromkeys(sharedKillsListID))
 
+                # Modify database attributes to accommodate for edited table
+                databaseOperation6.columnHeaders[2] = 'Jaettu'
+                databaseOperation6.rows = len(sharedKillsListID)
 
+                portionDict = {'Koko': 4, 'Puolikas': 2, 'Neljännes': 1}
 
+                # Iterate through result set and sum amounts and portions for each id
+                newData = []
+                for id in sharedKillsListID:
+                    animal = ""
+                    sharedPortions = 0
+                    amount = 0
+                    for row in sharedPortionsData:
+                        if row[0] == id:
+                            animal = row[1]
+                            sharedPortions += portionDict[row[2]]
+                            amount += row[3]
+                    sharedPortions = f"{sharedPortions}/4"
+                    newData.append((id, animal, sharedPortions, amount))
+                
+                # Replace resultSet with new data
+                databaseOperation6.resultSet = newData
+                prepareData.prepareTable(databaseOperation6, self.sharedPortionsTW)
+            except Exception as e:
+                self.alert(
+                'Vakava virhe',
+                'Jaetut taulukon luonti epäonnistui',
+                'Shared kills failed to load on share page',
+                'Oops'
+            )
 
     def populateLicensePage(self):
         
@@ -665,10 +682,7 @@ class MultiPageMainWindow(QMainWindow):
 
     # TODO: Test saveShare button functionality
     def saveShare(self):
-        # FIXME: Id values are not correctly managed
         try:
-            # shareKillChosenRowIx = self.shareKillsTW.currentRow()
-            # shareKill = int(self.shareKillsTW.itemAt(shareKillChosenRowIx, 0).text()) # FIXME: Check if row and column are correctly placed
             shareKillId = int(self.shareKillId)
             shareDay = self.shareDE.date().toPyDate()
             portion = self.sharePortionCB.currentText()
@@ -717,7 +731,6 @@ class MultiPageMainWindow(QMainWindow):
             sqlClauseValues = f"{seuraId}, '{licenceYear}', '{licenseAnimal}', '{licenseGender}', '{licenseAgeGroup}', {licenseAmount}"
             sqlClauseEnd = ");"
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
-            # print(sqlClause) # FIXME: Remove this line in pruduction
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
         
