@@ -750,6 +750,10 @@ class MultiPageMainWindow(QMainWindow):
         dialog = DialogueWindow.ManualDialog()
         dialog.exec()
 
+    def openInfoDialog(self):
+        dialog = DialogueWindow.InfoDialog()
+        dialog.exec()
+
     def openSuggestionDialog(self):
         dialog = SuggestionDialog.Suggestion()
         dialog.exec()

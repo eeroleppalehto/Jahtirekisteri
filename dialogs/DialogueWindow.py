@@ -140,6 +140,16 @@ class ManualDialog(QDialog):
         self.manualTB = self.manualTextBrowser
         # self.manualTB.openExternalLinks()
 
+class InfoDialog(QDialog):
+    def __init__(self):
+
+        super().__init__()
+
+        loadUi("ui/infoDialog.ui", self)
+
+        self.setWindowTitle('Tietoja')
+
+        # self.infoTB = self.infoTextBrowser
 
 # Some tests
 if __name__ == "__main__":
