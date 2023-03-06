@@ -2,37 +2,17 @@
 
 # IMPORTS AND MODULES
 
-import pgModule
-
 class Party():
     """docstring for ClassName."""
-    def __init__(self, partyId, connectionArguments):
-        self.connectionArguments = connectionArguments
-
-        databaseOperation = pgModule.DatabaseOperation()
-        databaseOperation.callFunction(self.connectionArguments, 'public.get_party_portion_amount', partyId)
+    def __init__(self, partyId, partyName, partyMeat, partyShare):
+        self.partyId = partyId
+        self.partyName = partyName
+        self.partyMeat = partyMeat
+        self.partyShare = partyShare
         
-        #Check if an error has occurred
-        if databaseOperation.errorCode != 0:
-            self.alert( # TODO: Make error handeling
-                'Vakava virhe',
-                'Tietokantaoperaatio epäonnistui',
-                databaseOperation.errorMessage,
-                databaseOperation.detailedMessage
-                )
-        else: 
-            self.partyId = databaseOperation.resultSet[0]
-            self.partyName = databaseOperation.resultSet[1]
-            self.partyMeat = databaseOperation.resultSet[2]
-            self.partyShare = databaseOperation.resultSet[3]
 
-        self.getGroups()
-
-    def getGroups(self):
+    def getGroups(self, groupList):
         self.groupList = []
-        databaseOperation2 = pgModule.DatabaseOperation
-        databaseOperation2.getAllRowsFromTable(self.connectionArguments, 'public.jakoryhma_osuus_maara')
-        groupList = databaseOperation2.resultSet
 
 
         for group in groupList:
@@ -73,6 +53,21 @@ class Group():
 
     def color(self):
         if self.deltaMeats > 0:
-            pass
+            green = 255 - 255*self.deltaMeats
+            green = max(green, 0)
+            return f"rgb(255,{green},0)"
         elif self.deltaMeats <= 0:
-            pass
+            red = 255 + 255*self.deltaMeats
+            red = max(red, 0)
+            return f"rgb({red},255,0)"
+        
+if __name__ == "__main__":
+    testParty = Party(1,'Seurue1', 200.0, 5.0)
+    groupList =[
+        (1, 'Ryhmä1', 1, 2.0, 150.0),
+        (2, 'Ryhmä2', 1, 2.0, 50.0)
+    ]
+    testParty.getGroups(groupList)
+
+    print(testParty.getSankeyData())
+    print(testParty.getSankeyColors())
