@@ -639,6 +639,7 @@ class MultiPageMainWindow(QMainWindow):
 
 
     def saveShot(self):
+        errorCode = 0
         try:
             shotByChosenItemIx = self.shotByCB.currentIndex() # Row index of the selected row
             shotById = self.shotByIdList[shotByChosenItemIx] # Id value of the selected row
@@ -652,6 +653,8 @@ class MultiPageMainWindow(QMainWindow):
             use = self.shotUsageIdList[useIx] # Id value of the selected row
             additionalInfo = self.shotAddInfoTE.toPlainText() # Convert multiline text edit into plain text
 
+            if shootingPlace == '' or self.shotWeightLE.text() == '':
+                errorCode = 1
             # Insert data into kaato table
             # Create a SQL clause to insert element values to the DB
             sqlClauseBeginning = "INSERT INTO public.kaato(jasen_id, kaatopaiva, ruhopaino, paikka_teksti, kasittelyid, elaimen_nimi, sukupuoli, ikaluokka, lisatieto) VALUES("
@@ -661,9 +664,14 @@ class MultiPageMainWindow(QMainWindow):
             # print(sqlClause) # FIXME: Remove this line in pruduction
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            return
         
 
         # create DatabaseOperation object to execute the SQL clause
+        if errorCode == 1:
+            self.alert('Virheellinen syöte', 'Tarvittavat kentät ei ole täytetty', '','Varmista että paikka ja paino kentät on täytetty' )
+            return
+        
         databaseOperation = pgModule.DatabaseOperation()
         databaseOperation.insertRowToTable(self.connectionArguments, sqlClause)
         if databaseOperation.errorCode != 0:
@@ -682,6 +690,7 @@ class MultiPageMainWindow(QMainWindow):
 
     # TODO: Test saveShare button functionality
     def saveShare(self):
+        errorCode = 0
         try:
             shareKillId = int(self.shareKillId)
             shareDay = self.shareDE.date().toPyDate()
@@ -690,7 +699,11 @@ class MultiPageMainWindow(QMainWindow):
             shareGroupChosenItemIx = self.shareGroupCB.currentIndex()
             shareGroup = self.shareGroupIdList[shareGroupChosenItemIx]
             
-
+            if self.shareKillId == '':
+                errorCode = 1
+            
+            if self.shareAmountLE.text() == '':
+                errorCode = 2
             # Insert data into kaato table
             # Create a SQL clause to insert element values to the DB
             sqlClauseBeginning = "INSERT INTO public.jakotapahtuma(paiva, ryhma_id, osnimitys, maara, kaato_id) VALUES("
@@ -699,8 +712,17 @@ class MultiPageMainWindow(QMainWindow):
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            return
 
         # create DatabaseOperation object to execute the SQL clause
+
+        if errorCode == 1:
+            self.alert('Virheellinen syöte', 'Valitse jaettava kaato', '','Valitse jaettava kaato yllä olevasta taulukosta' )
+            return
+        elif errorCode == 2:
+            self.alert('Virheellinen syöte', 'Tarvittavat kentät ei ole täytetty', '','Täytä paino kenttä' )
+            return
+
         databaseOperation = pgModule.DatabaseOperation()
         databaseOperation.insertRowToTable(self.connectionArguments, sqlClause)
         if databaseOperation.errorCode != 0:
@@ -717,6 +739,7 @@ class MultiPageMainWindow(QMainWindow):
             self.shareAmountLE.clear()
 
     def saveLicense(self):
+        errorCode = 0
         try:
             seuraId = 1
             licenceYear = self.licenseYearLE.text()
@@ -724,6 +747,9 @@ class MultiPageMainWindow(QMainWindow):
             licenseGender = self.licenseGenderCB.currentText()
             licenseAgeGroup = self.licenseAgeGroupCB.currentText()
             licenseAmount = int(self.licenseAmountLE.text())
+
+            if licenceYear == '' or self.licenseAmountLE.text() == '':
+                errorCode = 1
 
             # Insert data into kaato table
             # Create a SQL clause to insert element values to the DB
@@ -733,7 +759,12 @@ class MultiPageMainWindow(QMainWindow):
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            return
         
+
+        if errorCode == 1:
+            self.alert('Virheellinen syöte', 'Tarvittavat kentät ei ole täytetty', '','Täytä Lupavuosi ja Määrä kentät' )
+            return
 
         # create DatabaseOperation object to execute the SQL clause
         databaseOperation = pgModule.DatabaseOperation()
