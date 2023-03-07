@@ -54,17 +54,18 @@ class Company(DialogFrame):
         else:
             self.companyInfo = []
             if databaseOperation.resultSet != []:
-                self.companyInfo = databaseOperation.resultSet[0] # TODO: try catch?
+                self.companyInfo = databaseOperation.resultSet[0]
                 self.editCompanyNameLE.setText(self.companyInfo[1])
                 self.editCompanyPostalAddressLE.setText(self.companyInfo[2])
                 self.editCompanyZIPLE.setText(self.companyInfo[3])
                 self.editCompanyCityLE.setText(self.companyInfo[4])
-                print(self.companyInfo) # TODO: Remove in production
 
 
     def editCompany(self):
-        # TODO: dbConnection...insertRow...
-        if self.companyInfo != []: # try/except?
+        success = SuccessfulOperationDialog()
+        errorCode = 0
+        # Update option
+        if self.companyInfo != []:
             try:
                 updateList = (
                     self.editCompanyNameLE.text(),
@@ -72,7 +73,11 @@ class Company(DialogFrame):
                     self.editCompanyZIPLE.text(),
                     self.editCompanyCityLE.text()
                 )
-                print(updateList)
+
+                for item in updateList:
+                    if item == '':
+                        errorCode = 1
+
                 columnList = [
                     'seuran_nimi',
                     'jakeluosoite',
@@ -84,6 +89,15 @@ class Company(DialogFrame):
 
             except:
                 self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            
+            if errorCode == 1:
+                self.alert(
+                'Vakava virhe',
+                'Et voi päivittää tyhjää kenttää',
+                'Täytä tyhjät kentät päivittääksesi seuran tiedot',
+                '-'
+                )
+                return
             
             i = 0
             j = 1
@@ -99,17 +113,25 @@ class Company(DialogFrame):
                             databaseOperation.errorMessage,
                             databaseOperation.detailedMessage
                             )
-                    else:
-                        print("Updated")
-                    # FIXME: Finish
                 i += 1
                 j += 1
+
+            success.exec()
+            
+        # Add option
         else:
             try:
                 companyName = self.editCompanyNameLE.text()
                 postAddress = self.editCompanyPostalAddressLE.text()
                 zipCode = self.editCompanyZIPLE.text()
                 city = self.editCompanyCityLE.text()
+
+                companyList = (companyName, postAddress, zipCode, city)
+                for item in companyList:
+                    if item == '':
+                        errorCode = 1
+                        break
+                
 
                 sqlClauseBeginning = "INSERT INTO public.seura(seuran_nimi, jakeluosoite, postinumero, postitoimipaikka) VALUES("
                 sqlClauseValues = f"'{companyName}', '{postAddress}', '{zipCode}', '{city}'"
@@ -118,6 +140,15 @@ class Company(DialogFrame):
             except:
                 self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
 
+            if errorCode == 1:
+                self.alert(
+                'Vakava virhe',
+                'Et voi lisätä tyhjää kenttää',
+                'Täytä kaikki kentät lisätäksesi seuran',
+                '-'
+                )
+                return
+            
             databaseOperation = pgModule.DatabaseOperation()
             databaseOperation.insertRowToTable(self.connectionArguments, sqlClause)
             if databaseOperation.errorCode != 0:
@@ -128,8 +159,6 @@ class Company(DialogFrame):
                     databaseOperation.detailedMessage
                     )
             else:
-                # Update the page to show new data and clear 
-                success = SuccessfulOperationDialog()
                 success.exec()
 
 
@@ -164,6 +193,9 @@ class Member(DialogFrame):
         self.editMemberPopulatePushBtn = self.editMemberPopulatePushButton
         self.editMemberPopulatePushBtn.clicked.connect(self.populateFields)
 
+        # State to track whether user has selected member to edit
+        self.state = -1 
+
         self.populateMemberCB()
 
     def populateMemberCB(self):
@@ -193,7 +225,7 @@ class Member(DialogFrame):
                 databaseOperation.detailedMessage
                 )
         else:
-            self.companyInfo = [] # TODO: Check if needed
+            self.companyInfo = []
             if databaseOperation.resultSet != []:
 
                 memberChosenItemIx = self.editMemberCB.currentIndex()
@@ -208,6 +240,7 @@ class Member(DialogFrame):
                         index = i
                     i += 1
             
+                self.state = 0
                 self.member = memberList[index]
                 self.editMemberFirstNameLE.setText(self.member[1])
                 self.editMemberLastNameLE.setText(self.member[2])
@@ -216,6 +249,15 @@ class Member(DialogFrame):
                 self.editMemberCityLE.setText(self.member[5])
 
     def editMember(self):
+        errorCode = 0
+        if self.state == -1:
+            self.alert(
+                'Vakava virhe',
+                'Et ole valinnut muokattaavaa jäsentä',
+                'Valitse jäsen valikosta ja paina täytä painiketta',
+                '-'
+                )
+            return
         try:
             updateList = (
                 self.editMemberFirstNameLE.text(),
@@ -224,7 +266,11 @@ class Member(DialogFrame):
                 self.editMemberZipLE.text(),
                 self.editMemberCityLE.text()
             )
-            print(updateList)
+
+            for item in updateList:
+                    if item == '':
+                        errorCode = 1
+                
             columnList = [
                 'etunimi',
                 'sukunimi',
@@ -237,6 +283,16 @@ class Member(DialogFrame):
 
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+        
+
+        if errorCode == 1:
+                self.alert(
+                'Vakava virhe',
+                'Et voi päivittää tyhjää kenttää',
+                'Täytä tyhjät kentät päivittääksesi jäsenen tietoja',
+                '-'
+                )
+                return
         
         i = 0
         j = 1
@@ -252,9 +308,6 @@ class Member(DialogFrame):
                         databaseOperation.errorMessage,
                         databaseOperation.detailedMessage
                         )
-                else:
-                    print("Updated")
-                # FIXME: Finish
             i += 1
             j += 1
 
@@ -265,6 +318,8 @@ class Member(DialogFrame):
         self.editMemberPostalAddressLE.clear(),
         self.editMemberZipLE.clear(),
         self.editMemberCityLE.clear()
+        self.state = -1
+        self.populateMemberCB()
 
     def closeDialog(self):
             self.close()
@@ -302,6 +357,9 @@ class Membership(DialogFrame):
 
         # Signal when the user clicks an item on the table widget
         self.editMembershipTW.itemClicked.connect(self.onTableItemClick)
+
+        # State to track whether user has selected membership to edit
+        self.state = -1 
 
         self.populateMembershipTW()
 
@@ -352,20 +410,18 @@ class Membership(DialogFrame):
                 databaseOperation3, self.editMembershipGroupCB, 2, 0)
     
     def populateFields(self):
-        # TODO: Check if item is selected from tableWidget
         memberCBIx = self.editMembershipMemberCB.findText(self.nameValue, Qt.MatchFixedString)
-        groupCBIx = self.editMembershipGroupCB.findText(self.groupName, Qt.MatchFixedString)
         if memberCBIx >= 0:
             self.editMembershipMemberCB.setCurrentIndex(memberCBIx)
         else:
             print("No match") # TODO: Remove in production
         
+        groupCBIx = self.editMembershipGroupCB.findText(self.groupName, Qt.MatchFixedString)
         if groupCBIx >= 0:
             self.editMembershipGroupCB.setCurrentIndex(groupCBIx)
         else:
             print("No match") # TODO: Remove in production
 
-        self.editMembershipShareSB.setValue(int(self.shareValue))
         # Parse join date from self.joinDate and set it to the associated DateEdit object
         joinDate = QDate(
             int(self.joinDate[:4]), 
@@ -373,10 +429,11 @@ class Membership(DialogFrame):
             int(self.joinDate[8:])
         )
 
+        self.state = 0
+        self.editMembershipShareSB.setValue(int(self.shareValue))
         self.editMembershipJoinedDE.setDate(joinDate)
-        print(self.editMembershipJoinedDE.date().toPyDate(), "asd")
         self.membershipIdInt = int(self.membershipId)
-        self.membership = [groupCBIx, memberCBIx, self.joinDate, int(self.shareValue)]
+        self.membership = [self.groupIdList[groupCBIx], self.memberIdList[memberCBIx], joinDate, int(self.shareValue)]
 
         # Check if exit date exists and parse the date from self.exitDate and set it to the associated DateEdit object
         if self.exitDate=="None" :
@@ -389,7 +446,7 @@ class Membership(DialogFrame):
             )
             self.editMembershipExitDE.setDate(exitDate)
             self.editMembershipExitCheck.setChecked(True)
-        self.membership.append(self.exitDate)
+            self.membership.append(exitDate)
 
     def onTableItemClick(self, item): #NOTE: Working as intented!
         selectedRow = item.row() # The row of the selection
@@ -398,14 +455,18 @@ class Membership(DialogFrame):
         self.groupName = self.editMembershipTW.item(selectedRow, 4).text()
         self.joinDate = self.editMembershipTW.item(selectedRow, 5).text()
         self.exitDate = self.editMembershipTW.item(selectedRow, 6).text()
-        # print(self.exitDate, "type:", type(self.exitDate))
-        print(self.joinDate, "asd")
-        # print(int(self.joinDate[:4]), int(self.joinDate[5:7]), int(self.joinDate[8:]))
         self.shareValue = self.editMembershipTW.item(selectedRow, 7).text()
-        # print(self.nameValue + ", " + self.groupName) TODO: remove comments  
 
     def editMembership(self):
-        # TODO: Chech Error handeling
+        errorCode = 0
+        if self.state == -1:
+            self.alert(
+                'Vakava virhe',
+                'Et ole valinnut muokattaavaa jäsenyyttä',
+                'Valitse jäsenyys valikosta ja paina täytä painiketta',
+                '-'
+                )
+            return
         try:
             # Get memberId from the member combo box
             memberChosenItemIx = self.editMembershipMemberCB.currentIndex()
@@ -421,7 +482,10 @@ class Membership(DialogFrame):
                 self.editMembershipJoinedDE.date().toPyDate(),
                 self.editMembershipShareSB.value()
             ]
-            print(updateList)
+
+            for item in updateList:
+                    if item == '':
+                        errorCode = 1
             columnList = [
                 'ryhma_id',
                 'jasen_id',
@@ -431,7 +495,6 @@ class Membership(DialogFrame):
 
             # Check if the exit check box is selected
             if self.editMembershipExitCheck.isChecked() == True:
-                # TODO: Figure out how to skip the update if
                 updateList.append(self.editMembershipExitDE.date().toPyDate())
                 columnList.append('poistui')
 
@@ -440,6 +503,15 @@ class Membership(DialogFrame):
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
         
+        if errorCode == 1:
+                self.alert(
+                'Vakava virhe',
+                'Et voi päivittää tyhjää kenttää',
+                'Täytä tyhjät kentät päivittääksesi jäsenyyttä',
+                '-'
+                )
+                return
+
         i = 0
         for data in updateList: # Check for empty list
             if data != self.membership[i]:
@@ -453,14 +525,12 @@ class Membership(DialogFrame):
                         databaseOperation.errorMessage,
                         databaseOperation.detailedMessage
                         )
-                else:
-                    print("Updated", columnList[i])
-                # FIXME: Finish
             i += 1
 
         success = SuccessfulOperationDialog()
         success.exec()
-        updateList = []
+        self.state = -1
+        self.populateMembershipTW()
 
     def closeDialog(self):
             self.close()
@@ -476,7 +546,6 @@ class Group(DialogFrame):
 
         # Elements
         self.editGroupCB = self.editGroupComboBox
-        self.editGroupCB.currentTextChanged.connect(self.text_changed)
         self.editGroupPartyCB = self.editGroupPartyComboBox
         self.editGroupNameLE = self.editGroupNameLineEdit
         self.editGroupCancelPushBtn = self.editGroupCancelPushButton
@@ -486,11 +555,10 @@ class Group(DialogFrame):
         self.editGroupPopulatePushBtn = self.editGroupPopulatePushButton
         self.editGroupPopulatePushBtn.clicked.connect(self.populateFields)
 
-        self.populateGroupCB()
+        # State to track whether user has selected group to edit
+        self.state = -1 
 
-    
-    def text_changed(self, s):
-        print("Text changed:", s) # TODO: remove from production
+        self.populateGroupCB()
 
     def populateGroupCB(self):
         databaseOperation1 = pgModule.DatabaseOperation()
@@ -533,16 +601,14 @@ class Group(DialogFrame):
                 databaseOperation.detailedMessage
                 )
         else:
-            self.companyInfo = [] # TODO: Check if needed
+            self.companyInfo = [] 
             if databaseOperation.resultSet != []:
-                # TODO: Remove comments
+                
                 groupChosenItemIx = self.editGroupCB.currentIndex()
-                # print(groupChosenItemIx)
                 groupId = self.groupIdList[groupChosenItemIx]
-                # print(groupId)
-
+        
                 groupList = databaseOperation.resultSet
-                # print("GroupList:", groupList)
+
                 index = -1
                 i = 0
 
@@ -552,17 +618,26 @@ class Group(DialogFrame):
                     i += 1
             
                 self.group = groupList[index]
-                # print("Group:", self.group)
+        
                 # (ryhma_id, ryhma_nimi, seurue_id, seurue_nimi)
                 self.uneditedData = ( self.group[2], self.group[1] )
                 partyCBIx = self.editGroupPartyCB.findText(self.group[3], Qt.MatchFixedString)
                 if partyCBIx >= 0:
                     self.editGroupPartyCB.setCurrentIndex(partyCBIx)
-                else:
-                    print("No match")
+
+                self.state = 0
                 self.editGroupNameLE.setText(self.group[1])
     
     def editGroup(self):
+        errorCode = 0
+        if self.state == -1:
+            self.alert(
+                'Vakava virhe',
+                'Et ole valinnut muokattaavaa ryhmää',
+                'Valitse ryhmä valikosta ja paina täytä painiketta',
+                '-'
+                )
+            return
         try:
             partyChosenItemIx = self.editGroupPartyCB.currentIndex()
             partyId = self.partyIdList[partyChosenItemIx]
@@ -571,7 +646,10 @@ class Group(DialogFrame):
                 partyId,
                 self.editGroupNameLE.text()
             )
-            # print(updateList)
+            for item in updateList:
+                    if item == '':
+                        errorCode = 1
+
             columnList = [
                 'seurue_id',
                 'ryhman_nimi'
@@ -581,6 +659,15 @@ class Group(DialogFrame):
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
         
+        if errorCode == 1:
+                self.alert(
+                'Vakava virhe',
+                'Et voi päivittää tyhjää kenttää',
+                'Täytä tyhjät kentät päivittääksesi ryhmän tietoja',
+                '-'
+                )
+                return
+
         i = 0
         j = 1
         for data in updateList:
@@ -595,15 +682,14 @@ class Group(DialogFrame):
                         databaseOperation.errorMessage,
                         databaseOperation.detailedMessage
                         )
-                else:
-                    print("Updated")
-                # FIXME: Finish
             i += 1
             j += 1
 
-        # TODO: Clear line edits and clear the uneditedData tuple, check for empty Line edits
         success = SuccessfulOperationDialog()
         success.exec()
+        self.editGroupNameLE.clear()
+        self.state = -1
+        self.populateGroupCB()
 
     def closeDialog(self):
         self.close()
@@ -627,6 +713,9 @@ class Party(DialogFrame):
         self.editPartyCancelPushBtn.clicked.connect(self.closeDialog)
         self.editPartySavePushBtn = self.editPartySavePushButton
         self.editPartySavePushBtn.clicked.connect(self.editParty)
+
+        # State to track whether user has selected member to edit
+        self.state = -1
 
         self.populatePartyCB()
 
@@ -676,10 +765,10 @@ class Party(DialogFrame):
                 partyChosenItemIx = self.editPartyCB.currentIndex()
                 partyId = self.partyIdList[partyChosenItemIx]
 
+
                 partyList = databaseOperation.resultSet
                 index = -1
                 i = 0
-
                 for party in partyList:
                     if party[0] == partyId:
                         index = i
@@ -687,16 +776,25 @@ class Party(DialogFrame):
 
                 self.party = partyList[index]
                 self.uneditedData = (self.party[1], self.party[2])
-
-                self.editPartyNameLE.setText(self.party[1])
-
+                
                 memberCBIx = self.editPartyLeaderCB.findText(self.party[3], Qt.MatchFixedString)
                 if memberCBIx >= 0:
                     self.editPartyLeaderCB.setCurrentIndex(memberCBIx)
-                else:
-                    print("No match")
+
+                self.state = 0
+                self.editPartyNameLE.setText(self.party[1])
+                
 
     def editParty(self):
+        errorCode = 0
+        if self.state == -1:
+            self.alert(
+                'Vakava virhe',
+                'Et ole valinnut muokattaavaa seuruetta',
+                'Valitse seurue valikosta ja paina täytä painiketta',
+                '-'
+                )
+            return
         try:
             memberChosenItemIx = self.editPartyLeaderCB.currentIndex()
             memberId = self.memberIdList[memberChosenItemIx]
@@ -705,6 +803,10 @@ class Party(DialogFrame):
                 self.editPartyNameLE.text(),
                 memberId
             )
+
+            for item in updateList:
+                    if item == '':
+                        errorCode = 1
 
             columnList = [
                 'seurueen_nimi',
@@ -715,6 +817,15 @@ class Party(DialogFrame):
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
         
+        if errorCode == 1:
+                self.alert(
+                'Vakava virhe',
+                'Et voi päivittää tyhjää kenttää',
+                'Täytä tyhjät kentät päivittääksesi seureen tietoja',
+                '-'
+                )
+                return
+
         i = 0
         for data in updateList:
             if data != self.uneditedData[i]:
@@ -728,12 +839,13 @@ class Party(DialogFrame):
                         databaseOperation.errorMessage,
                         databaseOperation.detailedMessage
                         )
-                else:
-                    print("Updated", columnList[i], "with", data)
             i += 1
         
         success = SuccessfulOperationDialog()
         success.exec()
+        self.editPartyNameLE.clear()
+        self.state = -1
+        self.populatePartyCB()
 
     def closeDialog(self):
         self.close()
