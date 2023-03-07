@@ -89,6 +89,12 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>addPartyNameLineEdit</tabstop>
+  <tabstop>addPartyLeaderComboBox</tabstop>
+  <tabstop>addPartyCancelPushButton</tabstop>
+  <tabstop>addPartyAddPushButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -144,6 +144,14 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>membershipMemberComboBox</tabstop>
+  <tabstop>membershipGroupComboBox</tabstop>
+  <tabstop>membershipShareSpinBox</tabstop>
+  <tabstop>membershipJoinDateEdit</tabstop>
+  <tabstop>membershipCancelPushButton</tabstop>
+  <tabstop>membershipAddPushButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

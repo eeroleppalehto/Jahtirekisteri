@@ -66,6 +66,11 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>removePartyComboBox</tabstop>
+  <tabstop>removePartyCancelPushButton</tabstop>
+  <tabstop>removePartyRemovePushButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -1021,11 +1021,10 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>summaryRefreshPushButton</tabstop>
+  <tabstop>tabWidget</tabstop>
   <tabstop>meatSharedTableWidget</tabstop>
   <tabstop>groupSummaryTableWidget</tabstop>
-  <tabstop>killsKillsTableWidget</tabstop>
-  <tabstop>licenseSummaryTableWidget</tabstop>
+  <tabstop>summaryRefreshPushButton</tabstop>
   <tabstop>shotByComboBox</tabstop>
   <tabstop>shotDateEdit</tabstop>
   <tabstop>locationLineEdit</tabstop>
@@ -1036,19 +1035,34 @@
   <tabstop>usageComboBox</tabstop>
   <tabstop>additionalInfoTextEdit</tabstop>
   <tabstop>saveShotPushButton</tabstop>
-  <tabstop>tabWidget</tabstop>
+  <tabstop>killsKillsTableWidget</tabstop>
+  <tabstop>shotLicenseTableWidget</tabstop>
+  <tabstop>shareKillsTableWidget</tabstop>
   <tabstop>shareDateEdit</tabstop>
   <tabstop>portionComboBox</tabstop>
   <tabstop>amountLineEdit</tabstop>
   <tabstop>groupComboBox</tabstop>
   <tabstop>shareSavePushButton</tabstop>
-  <tabstop>shareKillsTableWidget</tabstop>
+  <tabstop>shareSharedPortionsTableWidget</tabstop>
   <tabstop>licenseYearLineEdit</tabstop>
   <tabstop>licenseAnimalComboBox</tabstop>
   <tabstop>licenseAgeGroupComboBox</tabstop>
   <tabstop>licenseGenderComboBox</tabstop>
   <tabstop>licenseAmountLineEdit</tabstop>
   <tabstop>licenseSavePushButton</tabstop>
+  <tabstop>licenseSummaryTableWidget</tabstop>
+  <tabstop>maintenanceAddMemberPushButton</tabstop>
+  <tabstop>maintenanceAddMembershipPushButton</tabstop>
+  <tabstop>maintenanceAddGroupPushButton</tabstop>
+  <tabstop>maintenanceAddPartyPushButton</tabstop>
+  <tabstop>maintenanceEditCompanyPushButton</tabstop>
+  <tabstop>maintenanceEditMemberPushButton</tabstop>
+  <tabstop>maintenanceEditMembershipPushButton</tabstop>
+  <tabstop>maintenanceEditGroupPushButton</tabstop>
+  <tabstop>maintenanceEditPartyPushButton</tabstop>
+  <tabstop>maintenanceRemoveMemberPushButton</tabstop>
+  <tabstop>maintenanceRemoveGroupPushButton</tabstop>
+  <tabstop>maintenanceRemovePartyPushButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

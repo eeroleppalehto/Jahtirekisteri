@@ -203,6 +203,18 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>editMembershipTableWidget</tabstop>
+  <tabstop>editMembershipPopulatePushButton</tabstop>
+  <tabstop>editMembershipGroupComboBox</tabstop>
+  <tabstop>editMembershipMemberComboBox</tabstop>
+  <tabstop>editMembershipJoinedDateEdit</tabstop>
+  <tabstop>editMembershipExitCheckBox</tabstop>
+  <tabstop>editMembershipExitDateEdit</tabstop>
+  <tabstop>editMembershipShareSpinBox</tabstop>
+  <tabstop>editMembershipCancelPushButton</tabstop>
+  <tabstop>editMembershipSavePushButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

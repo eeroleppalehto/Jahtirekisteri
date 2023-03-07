@@ -135,6 +135,14 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>editCompanyNameLineEdit</tabstop>
+  <tabstop>editCompanyPostalAddressLineEdit</tabstop>
+  <tabstop>editCompanyZIPLineEdit</tabstop>
+  <tabstop>editCompanyCityLineEdit</tabstop>
+  <tabstop>editCompanyCancelPushButton</tabstop>
+  <tabstop>editCompanySavePushButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

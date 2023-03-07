@@ -158,6 +158,15 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>addMemberFirstNameLineEdit</tabstop>
+  <tabstop>addMemberLastNameLineEdit</tabstop>
+  <tabstop>addMemberPostalAddressLineEdit</tabstop>
+  <tabstop>addMemberZIPLineEdit</tabstop>
+  <tabstop>addMemberCityLineEdit</tabstop>
+  <tabstop>addMemberCancelPushButton</tabstop>
+  <tabstop>addMemberAddPushButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

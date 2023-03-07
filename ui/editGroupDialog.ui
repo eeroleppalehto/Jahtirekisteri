@@ -125,6 +125,14 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>editGroupComboBox</tabstop>
+  <tabstop>editGroupPopulatePushButton</tabstop>
+  <tabstop>editGroupPartyComboBox</tabstop>
+  <tabstop>editGroupNameLineEdit</tabstop>
+  <tabstop>editGroupCancelPushButton</tabstop>
+  <tabstop>editGroupSavePushButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

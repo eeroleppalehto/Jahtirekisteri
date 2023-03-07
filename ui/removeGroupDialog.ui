@@ -66,6 +66,11 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>removeGroupComboBox</tabstop>
+  <tabstop>removeGroupCancelPushButton</tabstop>
+  <tabstop>removeGroupRemovePushButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

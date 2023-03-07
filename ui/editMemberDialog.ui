@@ -194,6 +194,17 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>editMemberComboBox</tabstop>
+  <tabstop>editMemberPopulatePushButton</tabstop>
+  <tabstop>editMemberFirstNameLineEdit</tabstop>
+  <tabstop>editMemberLastNameLineEdit</tabstop>
+  <tabstop>editMemberPostalAddressLineEdit</tabstop>
+  <tabstop>editMemberZipLineEdit</tabstop>
+  <tabstop>editMemberCityLineEdit</tabstop>
+  <tabstop>editMemberCancelPushButton</tabstop>
+  <tabstop>editMemberSavePushButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

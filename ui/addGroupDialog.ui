@@ -89,6 +89,12 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>addGroupGroupNameLineEdit</tabstop>
+  <tabstop>addGroupPartyComboBox</tabstop>
+  <tabstop>addGroupCancelPushButton</tabstop>
+  <tabstop>addGroupAddPushButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

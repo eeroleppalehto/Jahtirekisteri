@@ -122,6 +122,14 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>editPartyComboBox</tabstop>
+  <tabstop>editPartyPopulatePushButton</tabstop>
+  <tabstop>editPartyNameLineEdit</tabstop>
+  <tabstop>editPartyLeaderComboBox</tabstop>
+  <tabstop>editPartyCancelPushButton</tabstop>
+  <tabstop>editPartySavePushButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

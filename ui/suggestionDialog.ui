@@ -145,6 +145,15 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>suggestionKillsTableWidget</tabstop>
+  <tabstop>suggestionDateEdit</tabstop>
+  <tabstop>suggestionPortionComboBox</tabstop>
+  <tabstop>suggestionSuggestPushButton</tabstop>
+  <tabstop>suggestionTextEdit</tabstop>
+  <tabstop>suggestionCancelPushButton</tabstop>
+  <tabstop>suggestionSavePushButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

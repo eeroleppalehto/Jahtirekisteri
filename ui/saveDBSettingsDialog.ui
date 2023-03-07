@@ -176,6 +176,15 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>hostLineEdit</tabstop>
+  <tabstop>portSpinBox</tabstop>
+  <tabstop>databaseLineEdit</tabstop>
+  <tabstop>userLineEdit</tabstop>
+  <tabstop>passwordLineEdit</tabstop>
+  <tabstop>cancelPushButton</tabstop>
+  <tabstop>savePushButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
