@@ -29,7 +29,7 @@ class Member(DialogFrame):
         self.addMemberAddPushBtn = self.addMemberAddPushButton
         self.addMemberAddPushBtn.clicked.connect(self.addMember) # Signal
         self.addMemberCancelPushBtn = self.addMemberCancelPushButton
-        self.addMemberAddPushBtn.clicked.connect(self.closeDialog) # Signal
+        self.addMemberCancelPushBtn.clicked.connect(self.closeDialog) # Signal
     
 
     def addMember(self):
@@ -40,31 +40,48 @@ class Member(DialogFrame):
             zipCode = self.addMemberZIPLE.text()
             city = self.addMemberCityLE.text()
 
+            memberList = (firstName, lastName, postAddress, zipCode, city)
+
+            errorCode = 0
+            for item in memberList:
+                if item == '':
+                    errorCode = 1
+                    break
+
             sqlClauseBeginning = "INSERT INTO public.jasen(etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka) VALUES("
             sqlClauseValues = f"'{firstName}', '{lastName}', '{postAddress}', '{zipCode}', '{city}'"
             sqlClauseEnd = ");"
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
+            
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
 
-        databaseOperation = pgModule.DatabaseOperation()
-        databaseOperation.insertRowToTable(self.connectionArguments, sqlClause)
-        if databaseOperation.errorCode != 0:
+        if errorCode == 1:
             self.alert(
                 'Vakava virhe',
-                'Tietokantaoperaatio epäonnistui',
-                databaseOperation.errorMessage,
-                databaseOperation.detailedMessage
+                'Et voi lisätä tyhjää kenttää',
+                'Täytä kaikki kentät lisätäksesi jäsenen',
+                '-'
                 )
         else:
-            # Update the page to show new data and clear 
-            success = SuccessfulOperationDialog()
-            success.exec()
-            self.addMemberFirstNameLE.clear()
-            self.addMemberLastNameLE.clear()
-            self.addMemberPostalAddressLE.clear()
-            self.addMemberZIPLE.clear()
-            self.addMemberCityLE.clear()
+            databaseOperation = pgModule.DatabaseOperation()
+            databaseOperation.insertRowToTable(self.connectionArguments, sqlClause)
+            if databaseOperation.errorCode != 0:
+                self.alert(
+                    'Vakava virhe',
+                    'Tietokantaoperaatio epäonnistui',
+                    databaseOperation.errorMessage,
+                    databaseOperation.detailedMessage
+                    )
+            else:
+                # Update the page to show new data and clear 
+                success = SuccessfulOperationDialog()
+                success.exec()
+                self.addMemberFirstNameLE.clear()
+                self.addMemberLastNameLE.clear()
+                self.addMemberPostalAddressLE.clear()
+                self.addMemberZIPLE.clear()
+                self.addMemberCityLE.clear()
 
 
     def closeDialog(self):
@@ -212,6 +229,10 @@ class Group(DialogFrame):
             partyId = self.partyIdList[partyChosenItemIx]
             groupName = self.addGroupGroupNameLE.text()
 
+            errorCode = 0
+            if groupName == '':
+                errorCode = 1
+
             sqlClauseBeginning = "INSERT INTO public.jakoryhma(seurue_id, ryhman_nimi) VALUES("
             sqlClauseValues = f"{partyId}, '{groupName}'"
             sqlClauseEnd = ");"
@@ -219,20 +240,28 @@ class Group(DialogFrame):
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
 
-        databaseOperation = pgModule.DatabaseOperation()
-        databaseOperation.insertRowToTable(self.connectionArguments, sqlClause)
-        if databaseOperation.errorCode != 0:
+        if errorCode == 1:
             self.alert(
                 'Vakava virhe',
-                'Tietokantaoperaatio epäonnistui',
-                databaseOperation.errorMessage,
-                databaseOperation.detailedMessage
+                'Et voi lisätä tyhjää kenttää',
+                'Täytä ryhmän nimi kenttä lisätäksesi ryhmän',
+                '-'
                 )
         else:
-            # Update the page to show new data and clear 
-            success = SuccessfulOperationDialog()
-            success.exec()
-            self.addGroupGroupNameLE.clear()
+            databaseOperation = pgModule.DatabaseOperation()
+            databaseOperation.insertRowToTable(self.connectionArguments, sqlClause)
+            if databaseOperation.errorCode != 0:
+                self.alert(
+                    'Vakava virhe',
+                    'Tietokantaoperaatio epäonnistui',
+                    databaseOperation.errorMessage,
+                    databaseOperation.detailedMessage
+                    )
+            else:
+                # Update the page to show new data and clear 
+                success = SuccessfulOperationDialog()
+                success.exec()
+                self.addGroupGroupNameLE.clear()
             
 
     def closeDialog(self):
@@ -284,6 +313,10 @@ class Party(DialogFrame):
             memberChosenItemIx = self.addPartyLeaderCB.currentIndex()
             partyLeaderId = self.memberIdList[memberChosenItemIx]
 
+            errorCode = 0
+            if partyName == '':
+                errorCode = 1
+
             sqlClauseBeginning = "INSERT INTO public.seurue(seura_id, seurueen_nimi, jasen_id) VALUES("
             sqlClauseValues = f"{companyId}, '{partyName}', {partyLeaderId}"
             sqlClauseEnd = ");"
@@ -291,20 +324,28 @@ class Party(DialogFrame):
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
 
-        databaseOperation = pgModule.DatabaseOperation()
-        databaseOperation.insertRowToTable(self.connectionArguments, sqlClause)
-        if databaseOperation.errorCode != 0:
+        if errorCode == 1:
             self.alert(
                 'Vakava virhe',
-                'Tietokantaoperaatio epäonnistui',
-                databaseOperation.errorMessage,
-                databaseOperation.detailedMessage
+                'Et voi lisätä tyhjää kenttää',
+                'Täytä seurueen nimi kenttä lisätäksesi seurueen',
+                '-'
                 )
         else:
-            # Update the page to show new data and clear 
-            success = SuccessfulOperationDialog()
-            success.exec()
-            self.addPartyNameLE.clear()
+            databaseOperation = pgModule.DatabaseOperation()
+            databaseOperation.insertRowToTable(self.connectionArguments, sqlClause)
+            if databaseOperation.errorCode != 0:
+                self.alert(
+                    'Vakava virhe',
+                    'Tietokantaoperaatio epäonnistui',
+                    databaseOperation.errorMessage,
+                    databaseOperation.detailedMessage
+                    )
+            else:
+                # Update the page to show new data and clear 
+                success = SuccessfulOperationDialog()
+                success.exec()
+                self.addPartyNameLE.clear()
 
     def closeDialog(self):
         self.close()
