@@ -414,13 +414,25 @@ class Membership(DialogFrame):
         if memberCBIx >= 0:
             self.editMembershipMemberCB.setCurrentIndex(memberCBIx)
         else:
-            print("No match") # TODO: Remove in production
+            self.alert(
+                'Vakava virhe',
+                'Jäsentä ei löytynyt valikosta',
+                '-',
+                '-'
+                )
+            return
         
         groupCBIx = self.editMembershipGroupCB.findText(self.groupName, Qt.MatchFixedString)
         if groupCBIx >= 0:
             self.editMembershipGroupCB.setCurrentIndex(groupCBIx)
         else:
-            print("No match") # TODO: Remove in production
+            self.alert(
+                'Vakava virhe',
+                'Ryhmää ei löytynyt valikosta',
+                '-',
+                '-'
+                )
+            return
 
         # Parse join date from self.joinDate and set it to the associated DateEdit object
         joinDate = QDate(
@@ -624,6 +636,14 @@ class Group(DialogFrame):
                 partyCBIx = self.editGroupPartyCB.findText(self.group[3], Qt.MatchFixedString)
                 if partyCBIx >= 0:
                     self.editGroupPartyCB.setCurrentIndex(partyCBIx)
+                else:
+                    self.alert(
+                        'Vakava virhe',
+                        'Seuruetta ei löytynyt valikosta',
+                        '-',
+                        '-'
+                        )
+                    return
 
                 self.state = 0
                 self.editGroupNameLE.setText(self.group[1])
@@ -780,6 +800,14 @@ class Party(DialogFrame):
                 memberCBIx = self.editPartyLeaderCB.findText(self.party[3], Qt.MatchFixedString)
                 if memberCBIx >= 0:
                     self.editPartyLeaderCB.setCurrentIndex(memberCBIx)
+                else:
+                    self.alert(
+                        'Vakava virhe',
+                        'Jäsentä ei löytynyt valikosta',
+                        '-',
+                        '-'
+                        )
+                    return
 
                 self.state = 0
                 self.editPartyNameLE.setText(self.party[1])
