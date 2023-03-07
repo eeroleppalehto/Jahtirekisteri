@@ -7,8 +7,16 @@ class Party():
     def __init__(self, partyId, partyName, partyMeat, partyShare):
         self.partyId = partyId
         self.partyName = partyName
-        self.partyMeat = partyMeat
-        self.partyShare = partyShare
+
+        if partyMeat == None:
+            self.partyMeat = 0
+        else:
+            self.partyMeat = partyMeat
+
+        if partyShare == None:
+            self.partyShare = 0
+        else:
+            self.partyShare = partyShare
         
 
     def getGroups(self, groupList):
@@ -43,13 +51,28 @@ class Group():
     def __init__(self, groupId, groupName, groupShare, groupMeats):
         self.groupId = groupId
         self.groupName = groupName
-        self.groupShare = groupShare
-        self.groupMeats = groupMeats
+
+        if groupShare == None:
+            self.groupShare = 0
+        else:
+            self.groupShare = groupShare
+
+        if groupMeats == None:
+            self.groupMeats = 0
+        else:
+            self.groupMeats = groupMeats
 
     def expectedMeat(self, partyShare, partyMeat):
         # TODO: Make checks for 0 values!
-        self.expectedMeats = self.groupShare*partyMeat/partyShare
-        self.deltaMeats = (self.groupMeats - self.expectedMeats)/self.expectedMeats
+        if partyShare == 0:
+            self.expectedMeats = 0
+            self.deltaMeats = 1
+        else:
+            self.expectedMeats = self.groupShare*partyMeat/partyShare
+            if self.expectedMeats == 0:
+                self.deltaMeats = 1
+            else:
+                self.deltaMeats = (self.groupMeats - self.expectedMeats)/self.expectedMeats
 
     def color(self):
         if self.deltaMeats > 0:
