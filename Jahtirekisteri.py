@@ -5,10 +5,11 @@
 # ---------------------
 
 import sys  # Needed for starting the application
-from PyQt5.QtWidgets import *  # All widgets
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QMessageBox, QWidget, QTabWidget, QTableWidget,
+QLabel, QPushButton, QPlainTextEdit, QComboBox, QLineEdit, QDateEdit, QMenuBar, QMenu, QAction, QStatusBar)  # All widgets
 from PyQt5 import QtWebEngineWidgets, QtCore # For showing html content
 from PyQt5.uic import loadUi
-from PyQt5.QtCore import *  # FIXME: Everything,  change to individual components
+from PyQt5.QtCore import * # FIXME: Everything,  change to individual components
 from datetime import date
 import pgModule
 import prepareData
@@ -16,7 +17,6 @@ import dialogs.DialogueWindow as DialogueWindow
 import dialogs.AddDialogueWindow as AddDialogueWindow
 import dialogs.RemoveDialogueWindow as RemoveDialogueWindow
 import dialogs.EditDialogueWindow as EditDialogueWindow
-import dialogs.SuggestionDialog as SuggestionDialog
 import figures
 import Party
 
@@ -796,10 +796,6 @@ class MultiPageMainWindow(QMainWindow):
 
     def openInfoDialog(self):
         dialog = DialogueWindow.InfoDialog()
-        dialog.exec()
-
-    def openSuggestionDialog(self):
-        dialog = SuggestionDialog.Suggestion()
         dialog.exec()
     
     def openAddMemberDialog(self):

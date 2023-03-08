@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import (QDialog, QMessageBox, QTextBrowser, QLabel, QPushButton, QSpinBox,
+QLineEdit, QTextEdit, QComboBox, QDateEdit, QTableWidget, QMainWindow, QApplication)
 from PyQt5.uic import loadUi
 import pgModule as pgModule
 import prepareData as prepareData
