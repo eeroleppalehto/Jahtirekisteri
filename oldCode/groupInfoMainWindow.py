@@ -7,8 +7,8 @@
 import sys # Needed for starting the application
 from PyQt5.QtWidgets import * # All widgets
 from PyQt5.uic import loadUi
-import pgModule
-import prepareData
+import pgModule as pgModule
+import prepareData as prepareData
 
 # CLASS DEFINITIONS FOR THE APP
 # -----------------------------

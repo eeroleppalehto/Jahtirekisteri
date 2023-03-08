@@ -6,8 +6,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
 from dialogs.DialogueWindow import DialogFrame, SuccessfulOperationDialog
-import pgModule
-import prepareData
+import pgModule as pgModule
+import prepareData as prepareData
 from datetime import date
 
 # FIXME: Change save updates to execute the save as one update that saves all the columns at once rather than each column seperately

@@ -1,4 +1,4 @@
-import pgModule
+import pgModule as pgModule
 
 def suggestion(killId, portion): 
     """ Function that suggests which group should get what portion of the given kill

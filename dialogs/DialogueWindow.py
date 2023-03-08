@@ -2,8 +2,8 @@ import sys
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
-import pgModule
-import prepareData
+import pgModule as pgModule
+import prepareData as prepareData
 from datetime import date
 
 class DialogFrame(QDialog):
