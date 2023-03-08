@@ -34,9 +34,13 @@ class MultiPageMainWindow(QMainWindow):
         loadUi('ui/MultiPageMainWindow.ui', self)
 
         # Read database connection arguments from the settings file
-        databaseOperation = pgModule.DatabaseOperation()
-        self.connectionArguments = databaseOperation.readDatabaseSettingsFromFile('connectionSettings.dat')
-        
+        try:
+            databaseOperation = pgModule.DatabaseOperation()
+            self.connectionArguments = databaseOperation.readDatabaseSettingsFromFile('connectionSettings.dat')
+        except:
+            self.openSettingsDialog()
+            databaseOperation = pgModule.DatabaseOperation()
+            self.connectionArguments = databaseOperation.readDatabaseSettingsFromFile('connectionSettings.dat')
 
         # UI ELEMENTS TO PROPERTIES
         # -------------------------

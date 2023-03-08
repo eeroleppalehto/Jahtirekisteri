@@ -63,16 +63,25 @@ class SaveDBSettingsDialog(QDialog):
 
         # Set values of elements according to the current settings
         # Create an object to use setting methods
-
-        self.databaseOperation = pgModule.DatabaseOperation() # Needed in slots -> self # FIXME: Uncomment + add pgModule
-        currentSettings = self.databaseOperation.readDatabaseSettingsFromFile(
-            'connectionSettings.dat')  # Read current settings, needed only in the constructor
-        self.hostLE.setText(currentSettings['server'])  # Server's host name
-        # Port number, spin box uses integer values
-        self.portSB.setValue(int(currentSettings['port']))
-        self.databaseLE.setText(currentSettings['database'])
-        self.userLE.setText(currentSettings['user'])
-        self.passwordLE.setText(currentSettings['password'])
+        try:
+            self.databaseOperation = pgModule.DatabaseOperation() # Needed in slots -> self # FIXME: Uncomment + add pgModule
+            currentSettings = self.databaseOperation.readDatabaseSettingsFromFile(
+                'connectionSettings.dat')  # Read current settings, needed only in the constructor
+            self.hostLE.setText(currentSettings['server'])  # Server's host name
+            # Port number, spin box uses integer values
+            self.portSB.setValue(int(currentSettings['port']))
+            self.databaseLE.setText(currentSettings['database'])
+            self.userLE.setText(currentSettings['user'])
+            self.passwordLE.setText(currentSettings['password'])
+        except:
+            self.hostLE.setText('localhost')  # Server's host name
+            # Port number, spin box uses integer values
+            self.portSB.setValue(int(5432))
+            self.databaseLE.setText("")
+            self.userLE.setText("")
+            self.passwordLE.setText("")
+            
+        
 
 
     # Slots
