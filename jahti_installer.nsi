@@ -11,7 +11,7 @@
 
   # The name of the application, installer file name and character encoding
   Name "Jahtirekisteri "
-  OutFile "Jahtirekisteri.exe"
+  OutFile "JahtirekisteriInstaller.exe"
   Unicode True
 
   # Default installation folder: user's application data directory
