@@ -56,9 +56,11 @@ class SaveDBSettingsDialog(DialogFrame):
         self.passwordLE = self.passwordLineEdit
         self.cancelPB = self.cancelPushButton
         self.savePB = self.savePushButton
+        self.testPB = self.testPushButton
         # Signals
         self.cancelPB.clicked.connect(self.closeDialog)
         self.savePB.clicked.connect(self.saveSettings)
+        self.testPB.clicked.connect(self.testSettings)
     
 
         # Set values of elements according to the current settings
@@ -80,15 +82,32 @@ class SaveDBSettingsDialog(DialogFrame):
             self.databaseLE.setText("")
             self.userLE.setText("")
             self.passwordLE.setText("")
-            
-        
+    
+
+    def testSettings(self):
+        server = self.hostLE.text()
+        # Port is string in the settings file, integer in the spin box
+        port = str(self.portSB.value())
+        database = self.databaseLE.text()
+        user = self.userLE.text()
+        password = self.passwordLE.text()
+
+        testSettings = self.databaseOperation.createConnectionArgumentDict(
+            database, user, password, server, port)
 
 
-    # Slots
-
-    # Peru button closes the dialog
-    def closeDialog(self):
-        self.close()
+        databaseConnection = pgModule.DatabaseOperation()
+        databaseConnection.getAllRowsFromTable(testSettings, 'public.jaetut_lihat')
+        if databaseConnection.errorCode != 0:
+            self.alert(
+                'Virheelliset asetukset',
+                'Tarkista antamasi tiedot',
+                databaseConnection.errorMessage,
+                databaseConnection.detailedMessage
+                )
+        else:
+            success = SuccessfulOperationDialog()
+            success.exec()
 
     # Tallenna button saves modified settings to a file and closes the dialog
     def saveSettings(self):
@@ -100,8 +119,6 @@ class SaveDBSettingsDialog(DialogFrame):
         user = self.userLE.text()
         password = self.passwordLE.text()
 
-
-
         # Build new connection arguments
         newSettings = self.databaseOperation.createConnectionArgumentDict(
             database, user, password, server, port)
@@ -110,6 +127,11 @@ class SaveDBSettingsDialog(DialogFrame):
         self.databaseOperation.saveDatabaseSettingsToFile(
             'connectionSettings.dat', newSettings)
         self.close()
+
+    # Peru button closes the dialog
+    def closeDialog(self):
+        self.close()
+
 
 class TestMainWindow(QMainWindow):
     """Main Window for testing dialogs."""
