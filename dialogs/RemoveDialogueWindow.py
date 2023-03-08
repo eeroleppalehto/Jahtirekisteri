@@ -19,6 +19,9 @@ class Member(DialogFrame):
 
         self.setWindowTitle('Poista jäsen')
 
+        databaseOperationConnections = pgModule.DatabaseOperation()
+        self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
+
         # Elements
         self.removeMemberCB = self.removeMemberComboBox
         
@@ -101,6 +104,9 @@ class Group(DialogFrame):
 
         self.setWindowTitle('Poista ryhmä')
 
+        databaseOperationConnections = pgModule.DatabaseOperation()
+        self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
+
         # Elements
         self.removeGroupCB = self.removeGroupComboBox
         
@@ -181,6 +187,9 @@ class Party(DialogFrame):
         loadUi("ui/removePartyDialog.ui", self)
 
         self.setWindowTitle('Poista seurue')
+
+        databaseOperationConnections = pgModule.DatabaseOperation()
+        self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
 
         # Elements
         self.removePartyCB = self.removePartyComboBox

@@ -13,8 +13,8 @@ class DialogFrame(QDialog):
     def __init__(self):
         super().__init__()
 
-        databaseOperationConnections = pgModule.DatabaseOperation()
-        self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
+        # databaseOperationConnections = pgModule.DatabaseOperation()
+        # self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
     
         self.currentDate = date.today()
 
@@ -37,7 +37,7 @@ class DialogFrame(QDialog):
         alertDialog.setStandardButtons(QMessageBox.Ok) # Only OK is needed to close the dialog
         alertDialog.exec_() # Open the message box
     
-class SaveDBSettingsDialog(QDialog):
+class SaveDBSettingsDialog(DialogFrame):
     """Creates a dialog to save database settings"""
 
     # Constructor

@@ -12,7 +12,6 @@ import pgModule as pgModule
 import prepareData as prepareData
 from datetime import date
 
-# FIXME: Change save updates to execute the save as one update that saves all the columns at once rather than each column seperately
 class Company(DialogFrame):
     """Creates a dialog to edit company in database"""
     # TODO: Check for possible errors
@@ -22,6 +21,9 @@ class Company(DialogFrame):
         super().__init__()
 
         loadUi("ui/editCompanyDialog.ui", self)
+
+        databaseOperationConnections = pgModule.DatabaseOperation()
+        self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
 
         self.setWindowTitle('Muokkaa seuraa')
 
@@ -178,6 +180,9 @@ class Member(DialogFrame):
         super().__init__()
 
         loadUi("ui/editMemberDialog.ui", self)
+
+        databaseOperationConnections = pgModule.DatabaseOperation()
+        self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
 
         self.setWindowTitle('Muokkaa jäsen tietoja')
 
@@ -338,6 +343,9 @@ class Membership(DialogFrame):
 
         loadUi("ui/editMembershipDialog.ui", self)
 
+        databaseOperationConnections = pgModule.DatabaseOperation()
+        self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
+
         self.setWindowTitle('Muokkaa jäsenyys tietoja')
 
         # TODO: Set current date on date edit widgets as default value
@@ -366,6 +374,8 @@ class Membership(DialogFrame):
         self.populateMembershipTW()
 
     def populateMembershipTW(self):
+        self.editMembershipExitDE.setDate(self.currentDate)
+
         databaseOperation1 = pgModule.DatabaseOperation()
         databaseOperation1.getAllRowsFromTable(
             self.connectionArguments, 'public.jasenyys_nimella_ryhmalla')
@@ -556,6 +566,9 @@ class Group(DialogFrame):
 
         loadUi("ui/editGroupDialog.ui", self)
 
+        databaseOperationConnections = pgModule.DatabaseOperation()
+        self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
+
         self.setWindowTitle('Muokkaa ryhmän tietoja')
 
         # Elements
@@ -722,6 +735,9 @@ class Party(DialogFrame):
         super().__init__()
 
         loadUi("ui/editPartyDialog.ui", self)
+
+        databaseOperationConnections = pgModule.DatabaseOperation()
+        self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
 
         self.setWindowTitle('Muokkaa seurue tietoja')
         

@@ -18,6 +18,9 @@ class Member(DialogFrame):
 
         loadUi("ui/addMemberDialog.ui", self)
 
+        databaseOperationConnections = pgModule.DatabaseOperation()
+        self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
+
         self.setWindowTitle('Lisää jäsen')
 
         # Elements
@@ -99,6 +102,9 @@ class Membership(DialogFrame):
         loadUi("ui/addMembershipDialog.ui", self)
 
         self.setWindowTitle('Lisää jäsen ryhmään')
+
+        databaseOperationConnections = pgModule.DatabaseOperation()
+        self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
 
         # Elements
         self.membershipMemberCB = self.membershipMemberComboBox
@@ -195,6 +201,9 @@ class Group(DialogFrame):
 
         self.setWindowTitle('Lisää ryhmä')
 
+        databaseOperationConnections = pgModule.DatabaseOperation()
+        self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
+
         # Elements
         self.addGroupGroupNameLE = self.addGroupGroupNameLineEdit
         self.addGroupPartyCB = self.addGroupPartyComboBox
@@ -278,6 +287,9 @@ class Party(DialogFrame):
         loadUi("ui/addPartyDialog.ui", self)
 
         self.setWindowTitle('Lisää seurue')
+
+        databaseOperationConnections = pgModule.DatabaseOperation()
+        self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
 
         # Elements
         self.addPartyNameLE = self.addPartyNameLineEdit
