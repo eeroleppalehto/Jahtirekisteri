@@ -7,7 +7,7 @@ import json
 # Add parent directory to the path
 sys.path.append('../Jahtirekisteri_Eero')
 
-from Jahtirekisteri import pgModule
+import pgModule
 
 # Create databaseOperation-object for tests
 databaseOperation = pgModule.DatabaseOperation()
