@@ -13,12 +13,12 @@ from PyQt5.QtCore import * # FIXME: Everything,  change to individual components
 from datetime import date
 import pgModule
 import prepareData
-import dialogs.DialogueWindow as DialogueWindow
-import dialogs.AddDialogueWindow as AddDialogueWindow
-import dialogs.RemoveDialogueWindow as RemoveDialogueWindow
-import dialogs.EditDialogueWindow as EditDialogueWindow
+import dialogs.dialogueWindow as dialogueWindow
+import dialogs.addDialogueWindow as addDialogueWindow
+import dialogs.removeDialogueWindow as removeDialogueWindow
+import dialogs.editDialogueWindow as editDialogueWindow
 import figures
-import Party
+import party
 
 # CLASS DEFINITIONS FOR THE APP
 # -----------------------------
@@ -257,7 +257,7 @@ class MultiPageMainWindow(QMainWindow):
             partySankeyData = []
             partyColors = []
             for party in partyData:
-                newParty = Party.Party(party[0], party[1], party[2], party[3])
+                newParty = party.Party(party[0], party[1], party[2], party[3])
                 newParty.getGroups(groupList)
                 partySankeyData += newParty.getSankeyData()
                 partyColors += newParty.getSankeyColors()
@@ -471,7 +471,7 @@ class MultiPageMainWindow(QMainWindow):
             partySankeyData = []
             partyColors = []
             for party in partyData:
-                newParty = Party.Party(party[0], party[1], party[2], party[3])
+                newParty = party.Party(party[0], party[1], party[2], party[3])
                 newParty.getGroups(groupList)
                 partySankeyData += newParty.getSankeyData()
                 partyColors += newParty.getSankeyColors()
@@ -791,63 +791,63 @@ class MultiPageMainWindow(QMainWindow):
         self.shareKillId = self.shareKillsTW.item(selectedRow, 0).text()
         
     def openSettingsDialog(self):
-        dialog = DialogueWindow.SaveDBSettingsDialog()
+        dialog = dialogueWindow.SaveDBSettingsDialog()
         dialog.exec()
 
     def openManualDialog(self):
-        dialog = DialogueWindow.ManualDialog()
+        dialog = dialogueWindow.ManualDialog()
         dialog.exec()
 
     def openInfoDialog(self):
-        dialog = DialogueWindow.InfoDialog()
+        dialog = dialogueWindow.InfoDialog()
         dialog.exec()
     
     def openAddMemberDialog(self):
-        dialog = AddDialogueWindow.Member()
+        dialog = addDialogueWindow.Member()
         dialog.exec()
     
     def openRemoveMemberDialog(self):
-        dialog = RemoveDialogueWindow.Member()
+        dialog = removeDialogueWindow.Member()
         dialog.exec()
     
     def openAddMembershipDialog(self):
-        dialog = AddDialogueWindow.Membership()
+        dialog = addDialogueWindow.Membership()
         dialog.exec()
     
     def openAddGroupDialog(self):
-        dialog = AddDialogueWindow.Group()
+        dialog = addDialogueWindow.Group()
         dialog.exec()
 
     def openRemoveGroupDialog(self):
-        dialog = RemoveDialogueWindow.Group()
+        dialog = removeDialogueWindow.Group()
         dialog.exec()
 
     def openAddMPartyDialog(self):
-        dialog = AddDialogueWindow.Party()
+        dialog = addDialogueWindow.Party()
         dialog.exec()
     
     def openRemovePartyDialog(self):
-        dialog = RemoveDialogueWindow.Party()
+        dialog = removeDialogueWindow.Party()
         dialog.exec()
     
     def openEditCompanyDialog(self):
-        dialog = EditDialogueWindow.Company()
+        dialog = editDialogueWindow.Company()
         dialog.exec()
 
     def openEditMemberDialog(self):
-        dialog = EditDialogueWindow.Member()
+        dialog = editDialogueWindow.Member()
         dialog.exec()
 
     def openEditMembershipDialog(self):
-        dialog = EditDialogueWindow.Membership()
+        dialog = editDialogueWindow.Membership()
         dialog.exec()
     
     def openEditGroupDialog(self):
-        dialog = EditDialogueWindow.Group()
+        dialog = editDialogueWindow.Group()
         dialog.exec()
 
     def openEditPartyDialog(self):
-        dialog = EditDialogueWindow.Party()
+        dialog = editDialogueWindow.Party()
         dialog.exec()
 
 # APPLICATION CREATION AND STARTING

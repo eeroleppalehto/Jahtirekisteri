@@ -9,12 +9,12 @@ class Party():
         self.partyName = partyName
 
         if partyMeat == None:
-            self.partyMeat = 0
+            self.partyMeat = 0.0
         else:
             self.partyMeat = partyMeat
 
         if partyShare == None:
-            self.partyShare = 0
+            self.partyShare = 0.0
         else:
             self.partyShare = partyShare
         

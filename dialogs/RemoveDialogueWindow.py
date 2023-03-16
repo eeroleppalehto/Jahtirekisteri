@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QDialog, QComboBox, QLabel, QPushButton
 from PyQt5.uic import loadUi
-from dialogs.DialogueWindow import DialogFrame, SuccessfulOperationDialog
+from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
 import pgModule as pgModule
 import prepareData as prepareData
 from datetime import date
