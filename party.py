@@ -3,7 +3,8 @@
 # IMPORTS AND MODULES
 
 class Party():
-    """docstring for ClassName."""
+
+    # Constructor for party object
     def __init__(self, partyId, partyName, partyMeat, partyShare):
         self.partyId = partyId
         self.partyName = partyName
@@ -19,7 +20,13 @@ class Party():
             self.partyShare = partyShare
         
 
-    def getGroups(self, groupList):
+    # Set groups for the party from a view 'public.jakoryhma_osuus_maara' from the database
+    def setGroups(self, groupList):
+        """Set groups for the party from a view 'public.jakoryhma_osuus_maara' from the database
+
+        Args:
+            groupList (list): list containing tuples of groupId, groupName, partyId, groupShare, groupMeats
+        """
         self.groupList = []
 
 
@@ -28,7 +35,13 @@ class Party():
                 newGroup = Group(group[0], group[1], group[3], group[4])
                 self.groupList.append(newGroup)
 
-    def getSankeyData(self):
+    # Sets and returns sankey data to drawn in sankey diagrams
+    def setSankeyData(self):
+        """Sets and returns sankey data to drawn in sankey diagrams
+
+        Returns:
+            list: tuple as source, target, value
+        """
         sankeyData = []
         for group in self.groupList:
             sankeyRow = (self.partyName, group.groupName, group.groupMeats)
@@ -37,6 +50,11 @@ class Party():
         return sankeyData
 
     def getSankeyColors(self):
+        """Sets and returns traffic light colors for groups base on difference from expected meats
+
+        Returns:
+            list: list of rgb values as strings
+        """
         sankeyColors = []
         for group in self.groupList:
             group.expectedMeat(self.partyShare, self.partyMeat)
@@ -45,9 +63,8 @@ class Party():
     
 
 class Group():
-    """_summary_
-    """
 
+    # Constructor for group object
     def __init__(self, groupId, groupName, groupShare, groupMeats):
         self.groupId = groupId
         self.groupName = groupName
@@ -62,8 +79,8 @@ class Group():
         else:
             self.groupMeats = groupMeats
 
+    # TODO: docstrings for expectedMeats and color methods
     def expectedMeat(self, partyShare, partyMeat):
-        # TODO: Make checks for 0 values!
         if partyShare == 0:
             self.expectedMeats = 0
             self.deltaMeats = 1
@@ -90,7 +107,7 @@ if __name__ == "__main__":
         (1, 'Ryhmä1', 1, 2.0, 150.0),
         (2, 'Ryhmä2', 1, 2.0, 50.0)
     ]
-    testParty.getGroups(groupList)
+    testParty.setGroups(groupList)
 
-    print(testParty.getSankeyData())
+    print(testParty.setSankeyData())
     print(testParty.getSankeyColors())

@@ -98,7 +98,7 @@ def createSankeyChart(dBData, sourceColors, targetColors, linkColors, heading):
     for data in dBData:
         allLabels.append(data[1])
     
-    allLabels = list(dict.fromkeys(allLabels)) # FIXME: Needed?
+    allLabels = list(dict.fromkeys(allLabels))
     # print(allLabels)
     # allLabels = ['Hirvi', 'Seuralle', 'Seurueelle', 'Ryhmä 1', 'Ryhmä 3']
 
