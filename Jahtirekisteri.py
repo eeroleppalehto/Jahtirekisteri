@@ -256,8 +256,8 @@ class MultiPageMainWindow(QMainWindow):
             # Generate sankey data and colors for groups
             partySankeyData = []
             partyColors = []
-            for party in partyData:
-                newParty = party.Party(party[0], party[1], party[2], party[3])
+            for partyTuple in partyData:
+                newParty = party.Party(partyTuple[0], partyTuple[1], partyTuple[2], partyTuple[3])
                 newParty.getGroups(groupList)
                 partySankeyData += newParty.getSankeyData()
                 partyColors += newParty.getSankeyColors()
@@ -470,8 +470,8 @@ class MultiPageMainWindow(QMainWindow):
             # Generate sankey data and colors for groups
             partySankeyData = []
             partyColors = []
-            for party in partyData:
-                newParty = party.Party(party[0], party[1], party[2], party[3])
+            for partyTuple in partyData:
+                newParty = party.Party(partyTuple[0], partyTuple[1], partyTuple[2], partyTuple[3])
                 newParty.getGroups(groupList)
                 partySankeyData += newParty.getSankeyData()
                 partyColors += newParty.getSankeyColors()
