@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="summaryPage">
      <attribute name="title">
@@ -962,6 +962,44 @@
       </property>
       <property name="text">
        <string>Poista</string>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="maintenanceTableWidget">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>80</y>
+        <width>640</width>
+        <height>670</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="maintenanceComboBox">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>50</y>
+        <width>170</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>20</y>
+        <width>100</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Taulukot</string>
       </property>
      </widget>
     </widget>

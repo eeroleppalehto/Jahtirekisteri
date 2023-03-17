@@ -128,6 +128,9 @@ class MultiPageMainWindow(QMainWindow):
         self.maintenanceEditPartyPushBtn = self.maintenanceEditPartyPushButton
         self.maintenanceEditPartyPushBtn.clicked.connect(self.openEditPartyDialog) # Signal
 
+        self.maintenanceTW = self.maintenanceTableWidget
+        self.maintenanceCB = self.maintenanceComboBox
+
         # Signal when a page is opened
         self.pageTab = self.tabWidget
         self.pageTab.currentChanged.connect(self.populatePage)
@@ -258,8 +261,8 @@ class MultiPageMainWindow(QMainWindow):
             partyColors = []
             for partyTuple in partyData:
                 newParty = party.Party(partyTuple[0], partyTuple[1], partyTuple[2], partyTuple[3])
-                newParty.getGroups(groupList)
-                partySankeyData += newParty.getSankeyData()
+                newParty.setGroups(groupList)
+                partySankeyData += newParty.setSankeyData()
                 partyColors += newParty.getSankeyColors()
 
             labelColors += partyColors
@@ -472,8 +475,8 @@ class MultiPageMainWindow(QMainWindow):
             partyColors = []
             for partyTuple in partyData:
                 newParty = party.Party(partyTuple[0], partyTuple[1], partyTuple[2], partyTuple[3])
-                newParty.getGroups(groupList)
-                partySankeyData += newParty.getSankeyData()
+                newParty.setGroups(groupList)
+                partySankeyData += newParty.setSankeyData()
                 partyColors += newParty.getSankeyColors()
     
             labelColors = sourceColors + partyColors
@@ -603,7 +606,28 @@ class MultiPageMainWindow(QMainWindow):
 
     
     def populateMaintenancePage(self):
-        pass
+        cbOptionsList = ["Kaikki jäsenet"]
+
+        self.maintenanceCB.addItems(cbOptionsList)
+
+        optionDict = {
+            "Kaikki jäsenet": "public.jasen_tila"
+        }
+
+        tableToShow = optionDict[self.maintenanceCB.currentText()]
+
+        databaseOperation1 = pgModule.DatabaseOperation()
+        databaseOperation1.getAllRowsFromTable(
+            self.connectionArguments, tableToShow)
+        if databaseOperation1.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation1.errorMessage,
+                databaseOperation1.detailedMessage
+                )
+        else:
+            prepareData.prepareTable(databaseOperation1, self.maintenanceTW)
         
 
 
@@ -665,7 +689,6 @@ class MultiPageMainWindow(QMainWindow):
             sqlClauseValues = f"{shotById}, '{shootingDay}', {weight}, '{shootingPlace}', {use}, '{animal}', '{gender}', '{ageGroup}', '{additionalInfo}'"
             sqlClauseEnd = ");"
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
-            # print(sqlClause) # FIXME: Remove this line in pruduction
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
             return
@@ -692,7 +715,6 @@ class MultiPageMainWindow(QMainWindow):
             self.shotWeightLE.clear()
             self.shotAddInfoTE.clear()
 
-    # TODO: Test saveShare button functionality
     def saveShare(self):
         errorCode = 0
         try:
