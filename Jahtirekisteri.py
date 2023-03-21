@@ -131,6 +131,12 @@ class MultiPageMainWindow(QMainWindow):
         self.maintenanceTW = self.maintenanceTableWidget
         self.maintenanceCB = self.maintenanceComboBox
 
+        cbOptionsList = ["Kaikki jäsenet", "Ryhmät jäsenillä"]
+
+        self.maintenanceCB.addItems(cbOptionsList)
+
+        self.maintenanceCB.currentIndexChanged.connect(self.populateMaintenancePage)
+
         # Signal when a page is opened
         self.pageTab = self.tabWidget
         self.pageTab.currentChanged.connect(self.populatePage)
@@ -141,7 +147,7 @@ class MultiPageMainWindow(QMainWindow):
         self.actionInfo.triggered.connect(self.openInfoDialog)
 
         # Signals other than emitted by UI elements
-        self.populateAllPages()
+        self.populateSummaryPage()
 
     # SLOTS
 
@@ -606,12 +612,11 @@ class MultiPageMainWindow(QMainWindow):
 
     
     def populateMaintenancePage(self):
-        cbOptionsList = ["Kaikki jäsenet"]
-
-        self.maintenanceCB.addItems(cbOptionsList)
+        
 
         optionDict = {
-            "Kaikki jäsenet": "public.jasen_tila"
+            "Kaikki jäsenet": "public.jasen_tila",
+            "Ryhmät jäsenillä": "public.ryhmat_jasenilla"
         }
 
         tableToShow = optionDict[self.maintenanceCB.currentText()]
