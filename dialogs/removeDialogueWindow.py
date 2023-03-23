@@ -135,7 +135,6 @@ class Group(DialogFrame):
                 databaseOperation, self.removeGroupCB, 2, 0)
     
     def removeGroup(self):
-        # TODO: dbConnection...deleteRow...try/catch...
         try:
             groupChosenItemIx = self.removeGroupCB.currentIndex()
             groupId = self.groupIdList[groupChosenItemIx]

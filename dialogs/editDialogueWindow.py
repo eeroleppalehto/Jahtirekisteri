@@ -14,7 +14,6 @@ from datetime import date
 
 class Company(DialogFrame):
     """Creates a dialog to edit company in database"""
-    # TODO: Check for possible errors
     # Constructor
     def __init__(self):
 
