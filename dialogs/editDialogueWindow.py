@@ -109,7 +109,7 @@ class Company(DialogFrame):
                 if data != self.companyInfo[j]:
                     databaseOperation = pgModule.DatabaseOperation()
                     databaseOperation.updateTable(self.connectionArguments, table,
-                    columnList[i], f"'{data}'", limit)
+                    columnList[i], f"{data!r}", limit)
                     if databaseOperation.errorCode != 0:
                         self.alert(
                             'Vakava virhe',
@@ -307,7 +307,7 @@ class Member(DialogFrame):
             if data != self.member[j]:
                 databaseOperation = pgModule.DatabaseOperation()
                 databaseOperation.updateTable(self.connectionArguments, table,
-                columnList[i], f"'{data}'", limit)
+                columnList[i], f"{data!r}", limit)
                 if databaseOperation.errorCode != 0:
                     self.alert(
                         'Vakava virhe',
@@ -541,7 +541,7 @@ class Membership(DialogFrame):
             if data != self.membership[i]:
                 databaseOperation = pgModule.DatabaseOperation()
                 databaseOperation.updateTable(self.connectionArguments, table,
-                columnList[i], f"'{data}'", limit)
+                columnList[i], f"{data!r}", limit)
                 if databaseOperation.errorCode != 0:
                     self.alert(
                         'Vakava virhe',
@@ -709,7 +709,7 @@ class Group(DialogFrame):
             if data != self.uneditedData[i]:
                 databaseOperation = pgModule.DatabaseOperation()
                 databaseOperation.updateTable(self.connectionArguments, table,
-                columnList[i], f"'{data}'", limit)
+                columnList[i], f"{data!r}", limit)
                 if databaseOperation.errorCode != 0:
                     self.alert(
                         'Vakava virhe',
@@ -877,7 +877,7 @@ class Party(DialogFrame):
             if data != self.uneditedData[i]:
                 databaseOperation = pgModule.DatabaseOperation()
                 databaseOperation.updateTable(self.connectionArguments, table,
-                columnList[i], f"'{data}'", limit)
+                columnList[i], f"{data!r}", limit)
                 if databaseOperation.errorCode != 0:
                     self.alert(
                         'Vakava virhe',
