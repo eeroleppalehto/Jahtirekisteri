@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="summaryPage">
      <attribute name="title">
@@ -401,6 +401,19 @@
       </property>
       <property name="text">
        <string>Käytetty Luvat</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="editShotsPushButton">
+      <property name="geometry">
+       <rect>
+        <x>720</x>
+        <y>530</y>
+        <width>130</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Muokkaa kaatoja</string>
       </property>
      </widget>
     </widget>

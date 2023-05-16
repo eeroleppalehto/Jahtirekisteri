@@ -17,6 +17,7 @@ import dialogs.dialogueWindow as dialogueWindow
 import dialogs.addDialogueWindow as addDialogueWindow
 import dialogs.removeDialogueWindow as removeDialogueWindow
 import dialogs.editDialogueWindow as editDialogueWindow
+import dialogs.editShotDialog as editShotDialog
 import figures
 import party
 
@@ -76,6 +77,8 @@ class MultiPageMainWindow(QMainWindow):
         self.shotSavePushBtn.clicked.connect(self.saveShot) # Signal
         self.shotKillsTW = self.killsKillsTableWidget
         self.shotLicenseTW = self.shotLicenseTableWidget
+        self.editShotsPushBtn = self.editShotsPushButton
+        self.editShotsPushBtn.clicked.connect(self.openEditShotDialog) # Signal
 
         # Share page (Lihanjako)
         self.shareKillsTW = self.shareKillsTableWidget
@@ -875,6 +878,10 @@ class MultiPageMainWindow(QMainWindow):
 
     def openEditPartyDialog(self):
         dialog = editDialogueWindow.Party()
+        dialog.exec()
+
+    def openEditShotDialog(self):
+        dialog = editShotDialog.EditShot()
         dialog.exec()
 
 # APPLICATION CREATION AND STARTING
