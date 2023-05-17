@@ -1,1 +1,1 @@
-{"server": "localhost", "port": "5432", "database": "metsastys", "user": "application", "password": "Q2werty"}
+{"server": "localhost", "port": "5432", "database": "ussi_metsastys_test", "user": "application", "password": "Q2werty"}
