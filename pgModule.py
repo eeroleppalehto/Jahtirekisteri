@@ -128,7 +128,7 @@ class DatabaseOperation():
 
     # Method to insert a row to a given table
 
-    def insertRowToTable(self, connectionArgs, sqlClause):
+    def insertRowToTable(self, connectionArgs, sqlClause, returnId=False):
         """Inserts a row to table according to a SQL clause
 
         Args:
@@ -153,7 +153,8 @@ class DatabaseOperation():
             # Create a cursor to retrieve data from the table
             with dbconnection.cursor() as cursor:
                 cursor.execute(sqlClause)
-
+                if returnId == True:
+                    self.resultId = cursor.fetchone()[0]
                 # Set error values
                 self.errorCode = 0
                 self.errorMessage = 'Lisättiin tietue onnistuneesti'
