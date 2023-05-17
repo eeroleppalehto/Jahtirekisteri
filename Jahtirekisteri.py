@@ -71,12 +71,24 @@ class MultiPageMainWindow(QMainWindow):
         self.shotAgeGroupCB = self.ageGroupComboBox
         self.shotGenderCB = self.genderComboBox
         self.shotWeightLE = self.weightLineEdit
-        self.shotUsageCB = self.usageComboBox
         self.shotAddInfoTE = self.additionalInfoTextEdit
         self.shotSavePushBtn = self.saveShotPushButton
-        self.shotSavePushBtn.clicked.connect(self.saveShot) # Signal
+        self.shotSavePushBtn.clicked.connect(self.saveShotAndUsage) # Signal
         self.shotKillsTW = self.killsKillsTableWidget
         self.shotLicenseTW = self.shotLicenseTableWidget
+
+        self.shotUsageCB = self.usageComboBox
+        self.shotUsagePortionSB = self.usagePortionSpinBox
+
+        self.shotUsage2CheckB = self.usage2CheckBox
+        self.shotUsage2CheckB.stateChanged.connect(self.toggleUsage2) # Signal
+
+        self.shotUsage2CB = self.usage2ComboBox
+        self.shotUsage2CB.setEnabled(False)
+
+        self.shotUsage2PortionSB = self.usage2PortionSpinBox
+        self.shotUsage2PortionSB.setEnabled(False)
+
         self.editShotsPushBtn = self.editShotsPushButton
         self.editShotsPushBtn.clicked.connect(self.openEditShotDialog) # Signal
 
@@ -382,6 +394,8 @@ class MultiPageMainWindow(QMainWindow):
         else:
             self.shotUsageIdList = prepareData.prepareComboBox(
                 databaseOperation6, self.shotUsageCB, 1, 0)
+            prepareData.prepareComboBox(
+                databaseOperation6, self.shotUsage2CB, 1, 0)
             
         databaseOperation7 = pgModule.DatabaseOperation()
         databaseOperation7.getAllRowsFromTable(
@@ -540,7 +554,7 @@ class MultiPageMainWindow(QMainWindow):
                             animal = row[1]
                             sharedPortions += portionDict[row[2]]
                             amount += row[3]
-                    sharedPortions = f"{sharedPortions}/4"
+                    sharedPortions = f"{int(sharedPortions/4)*100}%"
                     newData.append((id, animal, sharedPortions, amount))
                 
                 # Replace resultSet with new data
@@ -685,17 +699,17 @@ class MultiPageMainWindow(QMainWindow):
             ageGroup = self.shotAgeGroupCB.currentText() # Selected value of the combo box
             gender = self.shotGenderCB.currentText() # Selected value of the combo box
             weight = float(self.shotWeightLE.text()) # Convert line edit value into float (real in the DB)
-            useIx = self.shotUsageCB.currentIndex() # Row index of the selected row
-            use = self.shotUsageIdList[useIx] # Id value of the selected row
+            # useIx = self.shotUsageCB.currentIndex() # Row index of the selected row
+            # use = self.shotUsageIdList[useIx] # Id value of the selected row
             additionalInfo = self.shotAddInfoTE.toPlainText() # Convert multiline text edit into plain text
 
             if shootingPlace == '' or self.shotWeightLE.text() == '':
                 errorCode = 1
             # Insert data into kaato table
             # Create a SQL clause to insert element values to the DB
-            sqlClauseBeginning = "INSERT INTO public.kaato(jasen_id, kaatopaiva, ruhopaino, paikka_teksti, kasittelyid, elaimen_nimi, sukupuoli, ikaluokka, lisatieto) VALUES("
-            sqlClauseValues = f"{shotById}, '{shootingDay}', {weight}, '{shootingPlace}', {use}, '{animal}', '{gender}', '{ageGroup}', '{additionalInfo}'"
-            sqlClauseEnd = ");"
+            sqlClauseBeginning = "INSERT INTO public.kaato(jasen_id, kaatopaiva, ruhopaino, paikka_teksti, elaimen_nimi, sukupuoli, ikaluokka, lisatieto) VALUES("
+            sqlClauseValues = f"{shotById}, '{shootingDay}', {weight}, '{shootingPlace}', '{animal}', '{gender}', '{ageGroup}', '{additionalInfo}')"
+            sqlClauseEnd = "RETURNING kaato_id;"
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
@@ -708,7 +722,7 @@ class MultiPageMainWindow(QMainWindow):
             return
         
         databaseOperation = pgModule.DatabaseOperation()
-        databaseOperation.insertRowToTable(self.connectionArguments, sqlClause)
+        databaseOperation.insertRowToTable(self.connectionArguments, sqlClause, returnId=True)
         if databaseOperation.errorCode != 0:
             self.alert(
                 'Vakava virhe',
@@ -717,11 +731,61 @@ class MultiPageMainWindow(QMainWindow):
                 databaseOperation.detailedMessage
                 )
         else:
-            # Update the page to show new data and clear 
-            self.populateKillPage()
+            # Update the page to show new data and clear
             self.shotLocationLE.clear()
             self.shotWeightLE.clear()
             self.shotAddInfoTE.clear()
+            return databaseOperation.resultId
+        
+
+    def saveUsage(self, shotId, usageId, usagePortion):
+        """_summary_
+
+        Args:
+            shotId (int): _description_
+            usageId (int): _description_
+            usagePortion (int): _description_
+        """
+        errorCode = 0
+        try:
+            sqlClauseBeginning = "INSERT INTO public.kaadon_kasittely(kaato_id, kasittelyid, kasittely_maara) VALUES("
+            sqlClauseValues = f"{shotId!r}, {usageId!r}, {usagePortion!r})"
+            sqlClauseEnd = ""
+            sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
+        except:
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            return
+        
+        # create DatabaseOperation object to execute the SQL clause
+
+        databaseOperation = pgModule.DatabaseOperation()
+        databaseOperation.insertRowToTable(self.connectionArguments, sqlClause, returnId=False)
+        if databaseOperation.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation.errorMessage,
+                databaseOperation.detailedMessage
+                )
+
+
+    def saveShotAndUsage(self):
+        shotId = self.saveShot()
+        if shotId != None:
+            useIx = self.shotUsageCB.currentIndex() # Row index of the selected row
+            use = self.shotUsageIdList[useIx] # Id value of the selected row
+            usagePortion = self.shotUsagePortionSB.value()
+
+            self.saveUsage(shotId, use, usagePortion)
+
+            if self.shotUsage2CheckB.isChecked():
+                use2Ix = self.shotUsage2CB.currentIndex()
+                use2 = self.shotUsageIdList[use2Ix]
+                usage2Portion = self.shotUsage2PortionSB.value()
+
+                self.saveUsage(shotId, use2, usage2Portion)
+            
+
 
     def saveShare(self):
         errorCode = 0
@@ -815,6 +879,14 @@ class MultiPageMainWindow(QMainWindow):
             self.populateLicensePage()
             self.licenseYearLE.clear()
             self.licenseAmountLE.clear()
+
+    def toggleUsage2(self):
+        if self.shotUsage2CheckB.isChecked():
+            self.shotUsage2CB.setEnabled(True)
+            self.shotUsage2PortionSB.setEnabled(True)
+        else:
+            self.shotUsage2CB.setEnabled(False)
+            self.shotUsage2PortionSB.setEnabled(False)
 
     def onShareKillTableClick(self, item):
         selectedRow = item.row()
