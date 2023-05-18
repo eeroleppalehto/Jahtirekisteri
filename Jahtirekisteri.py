@@ -92,6 +92,26 @@ class MultiPageMainWindow(QMainWindow):
         self.editShotsPushBtn = self.editShotsPushButton
         self.editShotsPushBtn.clicked.connect(self.openEditShotDialog) # Signal
 
+        self.shotLicenseYearCB = self.licenseYearComboBox
+
+        databaseOperation8 = pgModule.DatabaseOperation()
+        databaseOperation8.getAllRowsFromTable(
+            self.connectionArguments, 'public.lupa')
+        if databaseOperation8.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation8.errorMessage,
+                databaseOperation8.detailedMessage
+                )
+        else:
+            self.shotLicenseYearCB.clear()
+            yearList = [row[2] for row in databaseOperation8.resultSet]
+            yearList = list(set(yearList))
+            self.shotLicenseYearCB.addItems(yearList)
+        
+        self.shotLicenseYearCB.currentIndexChanged.connect(self.populateShotLicenceTW) # Signal
+
         # Share page (Lihanjako)
         self.shareKillsTW = self.shareKillsTableWidget
         self.shareDE = self.shareDateEdit
@@ -395,11 +415,11 @@ class MultiPageMainWindow(QMainWindow):
             self.shotUsageIdList = prepareData.prepareComboBox(
                 databaseOperation6, self.shotUsageCB, 1, 0)
             prepareData.prepareComboBox(
-                databaseOperation6, self.shotUsage2CB, 1, 0)
-            
+                databaseOperation6, self.shotUsage2CB, 1, 0)  
+
         databaseOperation7 = pgModule.DatabaseOperation()
-        databaseOperation7.getAllRowsFromTable(
-            self.connectionArguments, 'public.luvat_kayttamatta_kpl_pros')
+        databaseOperation7.callFunction(
+            self.connectionArguments, 'public.get_used_licences', int(self.shotLicenseYearCB.currentText()))
         if databaseOperation7.errorCode != 0:
             self.alert(
                 'Vakava virhe',
@@ -410,6 +430,23 @@ class MultiPageMainWindow(QMainWindow):
         else:
             prepareData.prepareTable(
                 databaseOperation7, self.shotLicenseTW)
+
+    def populateShotLicenceTW(self):
+        year = int(self.shotLicenseYearCB.currentText())
+
+        databaseOperation = pgModule.DatabaseOperation()
+        databaseOperation.callFunction(
+            self.connectionArguments, 'public.get_used_licences', year)
+        if databaseOperation.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation.errorMessage,
+                databaseOperation.detailedMessage
+                )
+        else:
+            prepareData.prepareTable(
+                databaseOperation, self.shotLicenseTW)
 
     def populateSharePage(self):
         # Set default date to current date
