@@ -36,17 +36,37 @@ class EditShot(DialogFrame):
         self.editShotGenderCB = self.editShotGenderComboBox
         self.editShotAgeCB = self.editShotAgeComboBox
         self.editShotWeightLE = self.editShotWeightLineEdit
-        self.editShotUsageCB = self.editShotUsageComboBox
         self.editShotAdditionalnfoPT = self.editShotAdditionalInfoPlainTextEdit
+        
+        self.editShotUsageCB = self.editShotUsageComboBox
+        self.editShotUsageSB = self.editShotUsagePortionSpinBox
+
+        self.editShotUsage2CB = self.editShotUsage2ComboBox
+        self.editShotUsage2CB.setEnabled(False)
+
+        self.editShotUsage2SB = self.editShotUsage2PortionSpinBox
+        self.editShotUsage2SB.setEnabled(False)
+
+        self.editShotUsage2CheckB = self.editShotUsage2CheckBox
+        self.editShotUsage2CheckB.clicked.connect(self.toggleUsage2)
 
         self.editShotSavePB = self.editShotSavePushButton
         self.editShotSavePB.clicked.connect(self.editShot)
         self.editShotCancelPB = self.editShotCancelPushButton
 
+
+
         self.state = 0
 
         self.populateEditShotDialog()
 
+    def toggleUsage2(self):
+        if self.editShotUsage2CheckB.isChecked():
+            self.editShotUsage2CB.setEnabled(True)
+            self.editShotUsage2SB.setEnabled(True)
+        else:
+            self.editShotUsage2CB.setEnabled(False)
+            self.editShotUsage2SB.setEnabled(False)
         
     def populateEditShotDialog(self):
         
@@ -127,6 +147,23 @@ class EditShot(DialogFrame):
             )
         else:
             self.shotUsageIdList = prepareData.prepareComboBox(databaseOperation6, self.editShotUsageCB, 1, 0)
+            prepareData.prepareComboBox(databaseOperation6, self.editShotUsage2CB, 1, 0)
+
+        # databaseOperation6 = pgModule.DatabaseOperation()
+        # databaseOperation6.getAllRowsFromTable(
+        #     self.connectionArguments, 'public.kasittely')
+        # if databaseOperation6.errorCode != 0:
+        #     self.alert(
+        #         'Vakava virhe',
+        #         'Tietokantaoperaatio epäonnistui',
+        #         databaseOperation6.errorMessage,
+        #         databaseOperation6.detailedMessage
+        #         )
+        # else:
+        #     self.shotUsageIdList = prepareData.prepareComboBox(
+        #         databaseOperation6, self.shotUsageCB, 1, 0)
+        #     prepareData.prepareComboBox(
+        #         databaseOperation6, self.shotUsage2CB, 1, 0) 
         
     def populateFields(self):
         memberIx = self.editShotByCB.findText(self.shooter, Qt.MatchFixedString)
@@ -180,21 +217,47 @@ class EditShot(DialogFrame):
         
         self.editShotWeightLE.setText(str(self.shotWeight))
 
-        usageIx = self.editShotUsageCB.findText(self.shotUsage, Qt.MatchFixedString)
-        if usageIx >= 0:
-            self.editShotUsageCB.setCurrentIndex(usageIx)
-        else:
-            self.alert(
-                'Virhe',
-                'Virhe',
-                'Valitse käsittely',
-                ''
-            )
+        # usageIx = self.editShotUsageCB.findText(self.shotUsage, Qt.MatchFixedString)
+        # if usageIx >= 0:
+        #     self.editShotUsageCB.setCurrentIndex(usageIx)
+        # else:
+        #     self.alert(
+        #         'Virhe',
+        #         'Virhe',
+        #         'Valitse käsittely',
+        #         ''
+        #     )
         
 
         # TODO: Add ability to edit additional info
         self.editShotAdditionalnfoPT.setPlainText(self.shotInfo)
 
+        databaseOperation = pgModule.DatabaseOperation()
+        databaseOperation.getAllRowsFromTableWithLimit(
+            self.connectionArguments, 'public.kaadon_kasittely', f"kaato_id = {self.shotId}")
+        if databaseOperation.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantavirhe',
+                databaseOperation.errorMessage,
+                databaseOperation.detailedMessage
+            )
+        else:
+            self.usages = databaseOperation.resultSet
+            self.editShotUsageCB.setCurrentIndex(
+                self.shotUsageIdList.index(databaseOperation.resultSet[0][1]))
+            self.editShotUsageSB.setValue(databaseOperation.resultSet[0][3])
+            if len(databaseOperation.resultSet) > 1:
+                self.editShotUsage2CB.setEnabled(True)
+                self.editShotUsage2CB.setCurrentIndex(
+                    self.shotUsageIdList.index(databaseOperation.resultSet[1][1]))
+                self.editShotUsage2SB.setEnabled(True)
+                self.editShotUsage2SB.setValue(databaseOperation.resultSet[1][3])
+                self.editShotUsage2CheckB.setChecked(True)
+            else:
+                self.editShotUsage2CB.setEnabled(False)
+                self.editShotUsage2SB.setEnabled(False)
+                self.editShotUsage2CheckB.setChecked(False)
 
 
 
@@ -272,7 +335,24 @@ class EditShot(DialogFrame):
                     databaseOperation.detailedMessage
                 )
         # TODO: Remove prints and add error handling
-    
+        
+
+    def editUsage(self):
+        try:
+            useIx = self.editShotUsageCB.currentIndex()
+            use = self.shotUsageIdList[useIx]
+
+            useAmount = self.editShotUsageSB.value()
+
+            use2Ix = self.editShotUsage2CB.currentIndex()
+            use2 = self.shotUsageIdList[use2Ix]
+
+            use2Amount = self.editShotUsage2SB.value()
+            # TODO: Finish editUsage method
+
+
+        except Exception as e:
+            raise e
 
     def onTableItemClicked(self, item):
         selectedRow = item.row()
@@ -283,11 +363,9 @@ class EditShot(DialogFrame):
         self.shotAnimal = self.editShotTW.item(selectedRow, 4).text()
         self.shotAge = self.editShotTW.item(selectedRow, 5).text()
         self.shotGender = self.editShotTW.item(selectedRow, 6).text()
-        self.shotUsageId = self.editShotTW.item(selectedRow, 7).text()
-        self.shotUsage = self.editShotTW.item(selectedRow, 8).text()
-        self.shotWeight = self.editShotTW.item(selectedRow, 9).text()
-        self.shotInfo = self.editShotTW.item(selectedRow, 10).text()
-        self.shotId = int(self.editShotTW.item(selectedRow, 11).text())
+        self.shotWeight = self.editShotTW.item(selectedRow, 7).text()
+        self.shotInfo = self.editShotTW.item(selectedRow, 8).text()
+        self.shotId = int(self.editShotTW.item(selectedRow, 9).text())
 
         originalList = [
             self.shooterId,
@@ -297,7 +375,6 @@ class EditShot(DialogFrame):
             self.shotAnimal,
             self.shotAge,
             self.shotGender,
-            self.shotUsageId,
             self.shotInfo
         ]
 
