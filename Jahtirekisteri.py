@@ -736,16 +736,16 @@ class MultiPageMainWindow(QMainWindow):
             ageGroup = self.shotAgeGroupCB.currentText() # Selected value of the combo box
             gender = self.shotGenderCB.currentText() # Selected value of the combo box
             weight = float(self.shotWeightLE.text()) # Convert line edit value into float (real in the DB)
-            # useIx = self.shotUsageCB.currentIndex() # Row index of the selected row
-            # use = self.shotUsageIdList[useIx] # Id value of the selected row
             additionalInfo = self.shotAddInfoTE.toPlainText() # Convert multiline text edit into plain text
 
             if shootingPlace == '' or self.shotWeightLE.text() == '':
                 errorCode = 1
             # Insert data into kaato table
             # Create a SQL clause to insert element values to the DB
-            sqlClauseBeginning = "INSERT INTO public.kaato(jasen_id, kaatopaiva, ruhopaino, paikka_teksti, elaimen_nimi, sukupuoli, ikaluokka, lisatieto) VALUES("
-            sqlClauseValues = f"{shotById}, '{shootingDay}', {weight}, '{shootingPlace}', '{animal}', '{gender}', '{ageGroup}', '{additionalInfo}')"
+            sqlCaluseAdditionalInfo = '' if additionalInfo == '' else f", lisatieto"
+            sqlCaluseAdditionalInfoData = '' if additionalInfo == '' else f", '{additionalInfo}'"
+            sqlClauseBeginning = f"INSERT INTO public.kaato(jasen_id, kaatopaiva, ruhopaino, paikka_teksti, elaimen_nimi, sukupuoli, ikaluokka{sqlCaluseAdditionalInfo}) VALUES("
+            sqlClauseValues = f"{shotById}, '{shootingDay}', {weight}, '{shootingPlace}', '{animal}', '{gender}', '{ageGroup}'{sqlCaluseAdditionalInfoData})"
             sqlClauseEnd = "RETURNING kaato_id;"
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
         except:
@@ -821,6 +821,7 @@ class MultiPageMainWindow(QMainWindow):
                 usage2Portion = self.shotUsage2PortionSB.value()
 
                 self.saveUsage(shotId, use2, usage2Portion)
+        self.populateKillPage()
             
 
 
