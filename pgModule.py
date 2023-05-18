@@ -430,7 +430,11 @@ class DatabaseOperation():
                 command = f"SELECT * FROM {function}({params});"
                 cursor.execute(command)
 
-                self.resultSet = cursor.fetchone()
+                 # Set object properties
+                self.rows = cursor.rowcount
+                self.resultSet = cursor.fetchall()
+                self.columnHeaders = [cname[0] for cname in cursor.description]
+                self.columns = len(self.columnHeaders)
 
                 # Set error values
                 self.errorCode = 0
@@ -457,7 +461,7 @@ if __name__ == "__main__":
     testOperation = DatabaseOperation()
     # Create a dictionary for connection settings using defaults
     dictionary = testOperation.createConnectionArgumentDict(
-        'metsastys', 'application', 'Q2werty')
+        'uusi_metsastys', 'application', 'Q2werty')
     
     # Save those settings to file
     testOperation.saveDatabaseSettingsToFile('settings.dat', dictionary)
@@ -468,6 +472,6 @@ if __name__ == "__main__":
     # print(readedSettings)
     #testOperation.getAllRowsFromTable(readedSettings, 'public.jasen')
 
-    testOperation.callFunction(readedSettings, 'public.get_party', 1)
+    testOperation.callFunction(readedSettings, 'public.get_used_licences', 2022)
 
-    print(testOperation.resultSet)
+    print(testOperation.resultSet, testOperation.columnHeaders)
