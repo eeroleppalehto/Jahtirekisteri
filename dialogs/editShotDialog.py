@@ -402,21 +402,48 @@ class EditShot(DialogFrame):
                 )
         print('Usage added')
 
+    def editShotAndUsage(self):
+        self.editShot()
         try:
             useIx = self.editShotUsageCB.currentIndex()
             use = self.shotUsageIdList[useIx]
-
             useAmount = self.editShotUsageSB.value()
+        except:
+            self.alert(
+                'Virhe',
+                'Virhe',
+                'Tarkista syöte',
+                ''
+            )
 
-            use2Ix = self.editShotUsage2CB.currentIndex()
-            use2 = self.shotUsageIdList[use2Ix]
+        self.editUsage(self.usages[0][0], use, useAmount)
+        if self.editShotUsage2CheckB.isChecked() and len(self.usages) > 1:
+            try:
+                useIx2 = self.editShotUsage2CB.currentIndex()
+                use2 = self.shotUsageIdList[useIx2]
+                use2Amount = self.editShotUsage2SB.value()
+                self.editUsage(self.usages[1][0], use2, use2Amount)
+            except:
+                self.alert(
+                    'Virhe',
+                    'Virhe',
+                    'Tarkista syöte',
+                    ''
+                )
+        elif self.editShotUsage2CheckB.isChecked() and len(self.usages) == 1:
+            try:
+                useIx2 = self.editShotUsage2CB.currentIndex()
+                use2 = self.shotUsageIdList[useIx2]
+                use2Amount = self.editShotUsage2SB.value()
+                self.addNewusage(self.shotId, use2, use2Amount)
+            except:
+                self.alert(
+                    'Virhe',
+                    'Virhe',
+                    'Tarkista syöte',
+                    ''
+                )
 
-            use2Amount = self.editShotUsage2SB.value()
-            # TODO: Finish editUsage method
-
-
-        except Exception as e:
-            raise e
 
     def onTableItemClicked(self, item):
         selectedRow = item.row()
