@@ -29,3 +29,5 @@
 
 * [] Tee uusi julkaisu versiolle 1.1:lle
 * [] Listaa uudet ominaisuudet, ja laadi uusi tietokanta skeema
+
+8 Naaras, 9 Uros, 16 Vasa
