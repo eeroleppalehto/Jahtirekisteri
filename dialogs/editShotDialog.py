@@ -275,19 +275,15 @@ class EditShot(DialogFrame):
             shotByChosenItemIx = self.editShotByCB.currentIndex()
             shotById = self.shotByIdList[shotByChosenItemIx]
 
-            useIx = self.editShotUsageCB.currentIndex()
-            use = self.shotUsageIdList[useIx]
-
             updateList = [
                 shotById,
                 str(self.editShotDE.date().toPyDate()),
                 float(self.editShotWeightLE.text()),
                 self.editShotLocationLE.text(),
-                use,
                 self.editShotAnimalCB.currentText(),
                 self.editShotGenderCB.currentText(),
                 self.editShotAgeCB.currentText(),
-                self.editShotAdditionalnfoPT.toPlainText(),
+                self.editShotAdditionalnfoPT.toPlainText()
             ]
             print(updateList)
 
@@ -296,7 +292,6 @@ class EditShot(DialogFrame):
                 'kaatopaiva',
                 'ruhopaino',
                 'paikka_teksti',
-                'kasittelyid',
                 'elaimen_nimi',
                 'sukupuoli',
                 'ikaluokka',
