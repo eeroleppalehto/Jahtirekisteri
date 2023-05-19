@@ -332,7 +332,38 @@ class EditShot(DialogFrame):
         # TODO: Remove prints and add error handling
         
 
-    def editUsage(self):
+    def addNewusage(self, shotId, usageId, usageAmount):
+        """_summary_
+
+        Args:
+            shotId (int): _description_
+            usageId (int): _description_
+            usagePortion (int): _description_
+        """
+        errorCode = 0
+        # FIXME: Is the try-except block necessary?
+        try:
+            sqlClauseBeginning = "INSERT INTO public.kaadon_kasittely(kaato_id, kasittelyid, kasittely_maara) VALUES("
+            sqlClauseValues = f"{shotId!r}, {usageId!r}, {usageAmount!r})"
+            sqlClauseEnd = ""
+            sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
+        except:
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            return
+        
+        # create DatabaseOperation object to execute the SQL clause
+
+        databaseOperation = pgModule.DatabaseOperation()
+        databaseOperation.insertRowToTable(self.connectionArguments, sqlClause, returnId=False)
+        if databaseOperation.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation.errorMessage,
+                databaseOperation.detailedMessage
+                )
+        print('Usage added')
+
         try:
             useIx = self.editShotUsageCB.currentIndex()
             use = self.shotUsageIdList[useIx]
