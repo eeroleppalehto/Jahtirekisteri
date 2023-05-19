@@ -51,7 +51,7 @@ class EditShot(DialogFrame):
         self.editShotUsage2CheckB.clicked.connect(self.toggleUsage2)
 
         self.editShotSavePB = self.editShotSavePushButton
-        self.editShotSavePB.clicked.connect(self.editShot)
+        self.editShotSavePB.clicked.connect(self.editShotAndUsage)
         self.editShotCancelPB = self.editShotCancelPushButton
 
 
@@ -245,14 +245,14 @@ class EditShot(DialogFrame):
         else:
             self.usages = databaseOperation.resultSet
             self.editShotUsageCB.setCurrentIndex(
-                self.shotUsageIdList.index(databaseOperation.resultSet[0][1]))
-            self.editShotUsageSB.setValue(databaseOperation.resultSet[0][3])
-            if len(databaseOperation.resultSet) > 1:
+                self.shotUsageIdList.index(self.usages[0][1]))
+            self.editShotUsageSB.setValue(self.usages[0][3])
+            if len(self.usages) > 1:
                 self.editShotUsage2CB.setEnabled(True)
                 self.editShotUsage2CB.setCurrentIndex(
-                    self.shotUsageIdList.index(databaseOperation.resultSet[1][1]))
+                    self.shotUsageIdList.index(self.usages[1][1]))
                 self.editShotUsage2SB.setEnabled(True)
-                self.editShotUsage2SB.setValue(databaseOperation.resultSet[1][3])
+                self.editShotUsage2SB.setValue(self.usages[1][3])
                 self.editShotUsage2CheckB.setChecked(True)
             else:
                 self.editShotUsage2CB.setEnabled(False)
@@ -481,7 +481,6 @@ class EditShot(DialogFrame):
             self.shotAnimal,
             self.shotAge,
             self.shotGender,
-            int(self.shotUsageId),
             self.shotInfo
         ]
         
