@@ -166,7 +166,7 @@ class MultiPageMainWindow(QMainWindow):
         self.maintenanceTW = self.maintenanceTableWidget
         self.maintenanceCB = self.maintenanceComboBox
 
-        cbOptionsList = ["Kaikki jäsenet", "Ryhmät jäsenillä"]
+        cbOptionsList = ["Kaikki jäsenet", "Ryhmät jäsenillä", "Seurue ryhmillä"]
 
         self.maintenanceCB.addItems(cbOptionsList)
 
@@ -586,18 +586,22 @@ class MultiPageMainWindow(QMainWindow):
                     animal = ""
                     sharedPortions = 0
                     amount = 0
+                    shotUsagePortion = 0
+
                     for row in sharedPortionsData:
                         if row[0] == id:
                             animal = row[1]
                             sharedPortions += portionDict[row[2]]
                             amount += row[3]
-                    sharedPortions = f"{int(sharedPortions/4)*100}%"
+                            shotUsagePortion += row[4]/100
+                    sharedPortions = f"{int(sharedPortions*100/(4*shotUsagePortion))}%"
                     newData.append((id, animal, sharedPortions, amount))
                 
                 # Replace resultSet with new data
                 databaseOperation6.resultSet = newData
                 prepareData.prepareTable(databaseOperation6, self.sharedPortionsTW)
-            except Exception as e:
+                self.sharedPortionsTW.setColumnHidden(4, True)
+            except:
                 self.alert(
                 'Vakava virhe',
                 'Jaetut taulukon luonti epäonnistui',
@@ -670,7 +674,8 @@ class MultiPageMainWindow(QMainWindow):
 
         optionDict = {
             "Kaikki jäsenet": "public.jasen_tila",
-            "Ryhmät jäsenillä": "public.ryhmat_jasenilla"
+            "Ryhmät jäsenillä": "public.ryhmat_jasenilla",
+            "Seurue ryhmillä": "public.seurue_ryhmilla",
         }
 
         tableToShow = optionDict[self.maintenanceCB.currentText()]
@@ -687,6 +692,9 @@ class MultiPageMainWindow(QMainWindow):
                 )
         else:
             prepareData.prepareTable(databaseOperation1, self.maintenanceTW)
+
+            if tableToShow == "public.ryhma":
+                pass
         
 
 
@@ -784,6 +792,7 @@ class MultiPageMainWindow(QMainWindow):
             usagePortion (int): _description_
         """
         errorCode = 0
+        # FIXME: Is the try-except block necessary?
         try:
             sqlClauseBeginning = "INSERT INTO public.kaadon_kasittely(kaato_id, kasittelyid, kasittely_maara) VALUES("
             sqlClauseValues = f"{shotId!r}, {usageId!r}, {usagePortion!r})"
@@ -828,22 +837,22 @@ class MultiPageMainWindow(QMainWindow):
     def saveShare(self):
         errorCode = 0
         try:
-            shareKillId = int(self.shareKillId)
+            shotUsageId = int(self.shotUsageId)
             shareDay = self.shareDE.date().toPyDate()
             portion = self.sharePortionCB.currentText()
             weight = float(self.shareAmountLE.text())
             shareGroupChosenItemIx = self.shareGroupCB.currentIndex()
             shareGroup = self.shareGroupIdList[shareGroupChosenItemIx]
             
-            if self.shareKillId == '':
+            if self.shotUsageId == '':
                 errorCode = 1
             
             if self.shareAmountLE.text() == '':
                 errorCode = 2
             # Insert data into kaato table
             # Create a SQL clause to insert element values to the DB
-            sqlClauseBeginning = "INSERT INTO public.jakotapahtuma(paiva, ryhma_id, osnimitys, maara, kaato_id) VALUES("
-            sqlClauseValues = f"'{shareDay}', {shareGroup}, '{portion}', {weight}, {shareKillId}"
+            sqlClauseBeginning = "INSERT INTO public.jakotapahtuma(paiva, ryhma_id, osnimitys, maara, kaadon_kasittely_id) VALUES("
+            sqlClauseValues = f"'{shareDay}', {shareGroup}, '{portion}', {weight}, {shotUsageId}"
             sqlClauseEnd = ");"
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
         except:
@@ -928,7 +937,7 @@ class MultiPageMainWindow(QMainWindow):
 
     def onShareKillTableClick(self, item):
         selectedRow = item.row()
-        self.shareKillId = self.shareKillsTW.item(selectedRow, 0).text()
+        self.shotUsageId = self.shareKillsTW.item(selectedRow, 10).text()
         
     def openSettingsDialog(self):
         dialog = dialogueWindow.SaveDBSettingsDialog()
