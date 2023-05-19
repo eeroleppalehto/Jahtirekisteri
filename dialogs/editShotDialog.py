@@ -332,6 +332,44 @@ class EditShot(DialogFrame):
         # TODO: Remove prints and add error handling
         
 
+    def editUsage(self, shotUsageId, usageId, usageAmount):
+        try:
+            # useIx = self.editShotUsageCB.currentIndex()
+            # use = self.shotUsageIdList[useIx]
+
+            # useAmount = self.editShotUsageSB.value()
+
+            # use2Ix = self.editShotUsage2CB.currentIndex()
+            # use2 = self.shotUsageIdList[use2Ix]
+
+            # use2Amount = self.editShotUsage2SB.value()
+            # TODO: Finish editUsage method
+            table = 'public.kaadon_kasittely'
+            columnValueString = f"kasittelyid = {usageId!r}, kasittely_maara = {usageAmount!r}"
+            limit = f"kaato_id = {self.shotId} AND kaadon_kasittely_id = {shotUsageId}"
+
+
+        except:
+            self.alert(
+                'Virhe',
+                'Virhe',
+                'Tarkista syöte',
+                ''
+            )
+
+        databaseOperation = pgModule.DatabaseOperation()
+        databaseOperation.updateManyValuesInRow(
+            self.connectionArguments, table, columnValueString, limit)
+        if databaseOperation.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantavirhe',
+                databaseOperation.errorMessage,
+                databaseOperation.detailedMessage
+            )
+        else:
+            print('Usage edited')
+
     def addNewusage(self, shotId, usageId, usageAmount):
         """_summary_
 
