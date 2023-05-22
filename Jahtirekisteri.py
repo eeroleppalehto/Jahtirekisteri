@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QMessageBox, QWidget, QT
 QLabel, QPushButton, QPlainTextEdit, QComboBox, QLineEdit, QDateEdit, QMenuBar, QMenu, QAction, QStatusBar)  # All widgets
 from PyQt5 import QtWebEngineWidgets, QtCore # For showing html content
 from PyQt5.uic import loadUi
-from PyQt5.QtCore import * # FIXME: Everything,  change to individual components
+from PyQt5.QtCore import * # FIXME: Imports everything,  change to individual components
 from datetime import date
 import pgModule
 import prepareData
@@ -56,9 +56,6 @@ class MultiPageMainWindow(QMainWindow):
         self.currentDate = date.today()
 
         # Summary page (Yhteenveto)
-        self.summaryRefreshBtn = self.summaryRefreshPushButton
-        self.summaryRefreshBtn.clicked.connect(
-            self.populateSummaryPage)  # Signal
         self.summaryMeatSharedTW = self.meatSharedTableWidget
         self.summaryGroupSummaryTW = self.groupSummaryTableWidget
         self.sankeyWebV = self.sankeyWebEngineView
@@ -664,6 +661,7 @@ class MultiPageMainWindow(QMainWindow):
                 databaseOperation4.detailedMessage
                 )
         else:
+            databaseOperation4.columnHeaders = [ "LupaID", "SeuraID", "Lupavuosi", "Eläin", "Sukupuoli", "Ikäluokka", "Lupamäärä"]
             prepareData.prepareTable(databaseOperation4, self.licenseSummaryTW)
             self.licenseSummaryTW.setColumnHidden(0, True)
             self.licenseSummaryTW.setColumnHidden(1, True)

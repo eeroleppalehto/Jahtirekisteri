@@ -4,8 +4,10 @@
 
 * [x] Ota varmuuskopio uudesta tietokannasta ja lisää se GitHub-repoon
 * [x] Poista HTML-tiedostot reposta
-* [] Päivitä talujen sarakkeiden nimet ihmisluettavaksi
-* [] Päivitä ohje-ja tietodialogit vastaamaan muokatun reposition nimeä
+* [x] Päivitä talujen sarakkeiden nimet ihmisluettavaksi
+* [x] Päivitä ohje-ja tietodialogit vastaamaan muokatun reposition nimeä
+* [] Jäsenen ja jäsenyyden poisto muuttaa jäsen-taulun tila-kentän poistuneeksi
+* [] Laita "Toisen käytön osuus"-SpinBox riippuvaiseksi ensimmäisen arvosta
 
 ### Kaato-välilehti
 
@@ -20,9 +22,13 @@
 * [x] Korjaa Lihanjako tallentaminen vastaamaan uutta skeemaa
 * [x] Muokkaa Jaetut ruhon osat taulukko vastaamaan 'käsittelyn määrää'
 
+### Luvat
+
+* [x] Muokkaa sivun taulun sarakkeiden nimet manuaalisesti
+
 ### Ylläpito
 
-* [] Tarkista onko tarvittavat taulukot
+* [x] Tarkista onko tarvittavat taulukot
 * [] Tarkasta Poista dialogien paikkaansapitävyys
 
 ### Julkaisu

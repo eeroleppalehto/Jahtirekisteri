@@ -53,6 +53,7 @@ class EditShot(DialogFrame):
         self.editShotSavePB = self.editShotSavePushButton
         self.editShotSavePB.clicked.connect(self.editShotAndUsage)
         self.editShotCancelPB = self.editShotCancelPushButton
+        self.editShotCancelPB.clicked.connect(self.closeDialog)
 
 
 
@@ -488,6 +489,9 @@ class EditShot(DialogFrame):
             if updateList[i] != originalList[i]:
                 return False
         return True
+    
+    def closeDialog(self):
+        self.close()
 
 
 class TestMainWindow(QMainWindow):

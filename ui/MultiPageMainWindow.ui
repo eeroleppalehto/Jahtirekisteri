@@ -14,1135 +14,1143 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTabWidget" name="tabWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>951</width>
-      <height>791</height>
-     </rect>
-    </property>
-    <property name="currentIndex">
-     <number>1</number>
-    </property>
-    <widget class="QWidget" name="summaryPage">
-     <attribute name="title">
-      <string>Yhteenveto</string>
-     </attribute>
-     <widget class="QTableWidget" name="meatSharedTableWidget">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>50</y>
-        <width>231</width>
-        <height>192</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-     </widget>
-     <widget class="QTableWidget" name="groupSummaryTableWidget">
-      <property name="geometry">
-       <rect>
-        <x>260</x>
-        <y>50</y>
-        <width>321</width>
-        <height>192</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="sharedMeatLabel">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>30</y>
-        <width>151</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Jaetut lihat ryhmittäin</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="groupSummarylabel">
-      <property name="geometry">
-       <rect>
-        <x>260</x>
-        <y>30</y>
-        <width>151</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Ryhmän tiedot</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="summaryRefreshPushButton">
-      <property name="geometry">
-       <rect>
-        <x>840</x>
-        <y>20</y>
-        <width>75</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Päivitä</string>
-      </property>
-     </widget>
-     <widget class="QWebEngineView" name="sankeyWebEngineView">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>250</y>
-        <width>901</width>
-        <height>481</height>
-       </rect>
-      </property>
-      <property name="url">
-       <url>
-        <string>about:blank</string>
-       </url>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="killPage">
-     <attribute name="title">
-      <string>Kaato</string>
-     </attribute>
-     <widget class="QComboBox" name="shotByComboBox">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>40</y>
-        <width>191</width>
-        <height>22</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotByLabel">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>47</width>
-        <height>13</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Kaataja</string>
-      </property>
-     </widget>
-     <widget class="QDateEdit" name="shotDateEdit">
-      <property name="geometry">
-       <rect>
-        <x>220</x>
-        <y>40</y>
-        <width>121</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="locale">
-       <locale language="Finnish" country="Finland"/>
-      </property>
-      <property name="displayFormat">
-       <string>dd.MM.yyyy</string>
-      </property>
-      <property name="calendarPopup">
-       <bool>true</bool>
-      </property>
-      <property name="date">
-       <date>
-        <year>2022</year>
-        <month>11</month>
-        <day>15</day>
-       </date>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotDateLabel">
-      <property name="geometry">
-       <rect>
-        <x>220</x>
-        <y>20</y>
-        <width>101</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Kaatopäivä</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="animalComboBox">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>90</y>
-        <width>191</width>
-        <height>22</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="ageGroupComboBox">
-      <property name="geometry">
-       <rect>
-        <x>220</x>
-        <y>90</y>
-        <width>121</width>
-        <height>22</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="genderComboBox">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>90</y>
-        <width>121</width>
-        <height>22</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotByLabel_2">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>70</y>
-        <width>47</width>
-        <height>13</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Eläin</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotByLabel_3">
-      <property name="geometry">
-       <rect>
-        <x>220</x>
-        <y>70</y>
-        <width>61</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Ikäryhmä</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotByLabel_4">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>70</y>
-        <width>61</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Sukupuoli</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="usageComboBox">
-      <property name="geometry">
-       <rect>
-        <x>90</x>
-        <y>140</y>
-        <width>111</width>
-        <height>22</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="weightLineEdit">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>140</y>
-        <width>61</width>
-        <height>20</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotByLabel_5">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>120</y>
-        <width>47</width>
-        <height>13</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Paino (kg)</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotByLabel_6">
-      <property name="geometry">
-       <rect>
-        <x>90</x>
-        <y>120</y>
-        <width>47</width>
-        <height>13</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Käyttö</string>
-      </property>
-     </widget>
-     <widget class="QPlainTextEdit" name="additionalInfoTextEdit">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>140</y>
-        <width>220</width>
-        <height>70</height>
-       </rect>
-      </property>
-      <property name="toolTip">
-       <string>Tähän vieraan kaatajan nimi tai havaintoja eläimestä</string>
-      </property>
-      <property name="toolTipDuration">
-       <number>10000</number>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotByLabel_7">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>120</y>
-        <width>51</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Lisätietoja</string>
-      </property>
-     </widget>
-     <widget class="QTableWidget" name="killsKillsTableWidget">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>270</y>
-        <width>841</width>
-        <height>211</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotByLabel_8">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>240</y>
-        <width>80</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Kaadot</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="saveShotPushButton">
-      <property name="geometry">
-       <rect>
-        <x>500</x>
-        <y>220</y>
-        <width>75</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Tallenna</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="locationLineEdit">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>40</y>
-        <width>221</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="toolTip">
-       <string>Karttaan merkitty paikannimi</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotDateLabel_2">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>20</y>
-        <width>101</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Paikka</string>
-      </property>
-     </widget>
-     <widget class="QTableWidget" name="shotLicenseTableWidget">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>570</y>
-        <width>521</width>
-        <height>181</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotByLabel_14">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>540</y>
-        <width>110</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Käytetyt Luvat</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="editShotsPushButton">
-      <property name="geometry">
-       <rect>
-        <x>720</x>
-        <y>490</y>
-        <width>130</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Muokkaa kaatoja...</string>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="usagePortionSpinBox">
-      <property name="geometry">
-       <rect>
-        <x>210</x>
-        <y>140</y>
-        <width>42</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <number>100</number>
-      </property>
-      <property name="singleStep">
-       <number>25</number>
-      </property>
-      <property name="value">
-       <number>100</number>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="usage2PortionSpinBox">
-      <property name="geometry">
-       <rect>
-        <x>210</x>
-        <y>190</y>
-        <width>42</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <number>100</number>
-      </property>
-      <property name="singleStep">
-       <number>25</number>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="usage2ComboBox">
-      <property name="geometry">
-       <rect>
-        <x>90</x>
-        <y>190</y>
-        <width>111</width>
-        <height>22</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="usage2CheckBox">
-      <property name="geometry">
-       <rect>
-        <x>90</x>
-        <y>170</y>
-        <width>110</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Toinen Käyttö</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotByLabel_16">
-      <property name="geometry">
-       <rect>
-        <x>210</x>
-        <y>120</y>
-        <width>80</width>
-        <height>13</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Käytön osuus</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotByLabel_17">
-      <property name="geometry">
-       <rect>
-        <x>210</x>
-        <y>170</y>
-        <width>130</width>
-        <height>13</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Toisen käytön osuus</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="licenseYearComboBox">
-      <property name="geometry">
-       <rect>
-        <x>450</x>
-        <y>540</y>
-        <width>80</width>
-        <height>22</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_11">
-      <property name="geometry">
-       <rect>
-        <x>380</x>
-        <y>540</y>
-        <width>60</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
-      </property>
-      <property name="autoFillBackground">
-       <bool>false</bool>
-      </property>
-      <property name="text">
-       <string>Vuosi</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="sharePage">
-     <attribute name="title">
-      <string>Lihanjako</string>
-     </attribute>
-     <widget class="QTableWidget" name="shareKillsTableWidget">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>30</y>
-        <width>920</width>
-        <height>192</height>
-       </rect>
-      </property>
-      <property name="toolTip">
-       <string>Valitse kaato, jonka lihoja jaetaan</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotByLabel_9">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>47</width>
-        <height>13</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Kaadot</string>
-      </property>
-     </widget>
-     <widget class="QDateEdit" name="shareDateEdit">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>250</y>
-        <width>121</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="locale">
-       <locale language="Finnish" country="Finland"/>
-      </property>
-      <property name="displayFormat">
-       <string>dd.MM.yyyy</string>
-      </property>
-      <property name="calendarPopup">
-       <bool>true</bool>
-      </property>
-      <property name="date">
-       <date>
-        <year>2022</year>
-        <month>11</month>
-        <day>15</day>
-       </date>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="portionComboBox">
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>250</y>
-        <width>121</width>
-        <height>22</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="amountLineEdit">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>250</y>
-        <width>113</width>
-        <height>20</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotByLabel_10">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>230</y>
-        <width>47</width>
-        <height>13</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Jakopäivä</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotByLabel_11">
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>230</y>
-        <width>61</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Ruhon osa</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotByLabel_12">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>230</y>
-        <width>61</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Määrä (kg)</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotByLabel_13">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>230</y>
-        <width>61</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Jakoryhmä</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="groupComboBox">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>250</y>
-        <width>161</width>
-        <height>22</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="shareSavePushButton">
-      <property name="geometry">
-       <rect>
-        <x>500</x>
-        <y>280</y>
-        <width>75</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Tallenna</string>
-      </property>
-     </widget>
-     <widget class="QWebEngineView" name="shareSankeyWebEngineView">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>370</y>
-        <width>500</width>
-        <height>361</height>
-       </rect>
-      </property>
-      <property name="url">
-       <url>
-        <string>about:blank</string>
-       </url>
-      </property>
-     </widget>
-     <widget class="QTableWidget" name="shareSharedPortionsTableWidget">
-      <property name="geometry">
-       <rect>
-        <x>520</x>
-        <y>370</y>
-        <width>420</width>
-        <height>361</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="shotByLabel_15">
-      <property name="geometry">
-       <rect>
-        <x>520</x>
-        <y>350</y>
-        <width>100</width>
-        <height>13</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Jaetut ruhon osat</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="licensePage">
-     <attribute name="title">
-      <string>Luvat</string>
-     </attribute>
-     <widget class="QLineEdit" name="licenseYearLineEdit">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>30</y>
-        <width>113</width>
-        <height>20</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>47</width>
-        <height>13</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Lupavuosi</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="licenseAnimalComboBox">
-      <property name="geometry">
-       <rect>
-        <x>130</x>
-        <y>30</y>
-        <width>141</width>
-        <height>22</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_2">
-      <property name="geometry">
-       <rect>
-        <x>130</x>
-        <y>10</y>
-        <width>47</width>
-        <height>13</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Eläin</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="licenseAgeGroupComboBox">
-      <property name="geometry">
-       <rect>
-        <x>280</x>
-        <y>30</y>
-        <width>111</width>
-        <height>22</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_3">
-      <property name="geometry">
-       <rect>
-        <x>280</x>
-        <y>10</y>
-        <width>47</width>
-        <height>13</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Ikäryhmä</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="licenseGenderComboBox">
-      <property name="geometry">
-       <rect>
-        <x>400</x>
-        <y>30</y>
-        <width>81</width>
-        <height>22</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_4">
-      <property name="geometry">
-       <rect>
-        <x>400</x>
-        <y>10</y>
-        <width>47</width>
-        <height>13</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Sukupuoli</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="licenseAmountLineEdit">
-      <property name="geometry">
-       <rect>
-        <x>490</x>
-        <y>30</y>
-        <width>61</width>
-        <height>20</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_5">
-      <property name="geometry">
-       <rect>
-        <x>490</x>
-        <y>10</y>
-        <width>47</width>
-        <height>13</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Määrä</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="licenseSavePushButton">
-      <property name="geometry">
-       <rect>
-        <x>480</x>
-        <y>60</y>
-        <width>75</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Tallenna</string>
-      </property>
-     </widget>
-     <widget class="QTableWidget" name="licenseSummaryTableWidget">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>120</y>
-        <width>521</width>
-        <height>371</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_6">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>100</y>
-        <width>131</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Myönnetyt luvat</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="maintenancePage">
-     <attribute name="title">
-      <string>Ylläpito</string>
-     </attribute>
-     <widget class="QPushButton" name="maintenanceAddMemberPushButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>50</y>
-        <width>131</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Lisää jäsen...</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="maintenanceRemoveMemberPushButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>460</y>
-        <width>131</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Poista jäsen...</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="maintenanceAddMembershipPushButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>80</y>
-        <width>131</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Lisää jäsen ryhmään...</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="maintenanceAddGroupPushButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>110</y>
-        <width>130</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Lisää ryhmä...</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="maintenanceRemoveGroupPushButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>490</y>
-        <width>130</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Poista ryhmä...</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="maintenanceAddPartyPushButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>140</y>
-        <width>130</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Lisää seurue...</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="maintenanceRemovePartyPushButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>520</y>
-        <width>130</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Poista seurue...</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="maintenanceEditCompanyPushButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>170</y>
-        <width>130</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Lisää/muokkaa seuraa...</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="maintenanceEditMemberPushButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>270</y>
-        <width>150</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Muokkaa jäsen tietoja...</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="maintenanceEditMembershipPushButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>300</y>
-        <width>150</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Muokkaa jäsenyys tietoja...</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="maintenanceEditGroupPushButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>330</y>
-        <width>150</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Muokkaa ryhmä tietoja...</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="maintenanceEditPartyPushButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>360</y>
-        <width>150</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Muokkaa seurue tietoja...</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_7">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>70</width>
-        <height>30</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>16</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Lisää</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_8">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>230</y>
-        <width>80</width>
-        <height>30</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>16</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Muokkaa</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_9">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>420</y>
-        <width>70</width>
-        <height>30</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>16</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Poista</string>
-      </property>
-     </widget>
-     <widget class="QTableWidget" name="maintenanceTableWidget">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>80</y>
-        <width>640</width>
-        <height>670</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="maintenanceComboBox">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>50</y>
-        <width>170</width>
-        <height>22</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_10">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>20</y>
-        <width>100</width>
-        <height>30</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>16</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Taulukot</string>
-      </property>
-     </widget>
-    </widget>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="summaryPage">
+       <attribute name="title">
+        <string>Yhteenveto</string>
+       </attribute>
+       <widget class="QTableWidget" name="meatSharedTableWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>50</y>
+          <width>231</width>
+          <height>192</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+       </widget>
+       <widget class="QTableWidget" name="groupSummaryTableWidget">
+        <property name="geometry">
+         <rect>
+          <x>260</x>
+          <y>50</y>
+          <width>321</width>
+          <height>192</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="sharedMeatLabel">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>200</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Jaetut lihat ryhmittäin</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="groupSummarylabel">
+        <property name="geometry">
+         <rect>
+          <x>260</x>
+          <y>20</y>
+          <width>151</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Ryhmän tiedot</string>
+        </property>
+       </widget>
+       <widget class="QWebEngineView" name="sankeyWebEngineView">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>250</y>
+          <width>901</width>
+          <height>481</height>
+         </rect>
+        </property>
+        <property name="url">
+         <url>
+          <string>about:blank</string>
+         </url>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="killPage">
+       <attribute name="title">
+        <string>Kaato</string>
+       </attribute>
+       <widget class="QComboBox" name="shotByComboBox">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>40</y>
+          <width>191</width>
+          <height>22</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotByLabel">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>47</width>
+          <height>13</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Kaataja</string>
+        </property>
+       </widget>
+       <widget class="QDateEdit" name="shotDateEdit">
+        <property name="geometry">
+         <rect>
+          <x>220</x>
+          <y>40</y>
+          <width>121</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="locale">
+         <locale language="Finnish" country="Finland"/>
+        </property>
+        <property name="displayFormat">
+         <string>dd.MM.yyyy</string>
+        </property>
+        <property name="calendarPopup">
+         <bool>true</bool>
+        </property>
+        <property name="date">
+         <date>
+          <year>2022</year>
+          <month>11</month>
+          <day>15</day>
+         </date>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotDateLabel">
+        <property name="geometry">
+         <rect>
+          <x>220</x>
+          <y>20</y>
+          <width>101</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Kaatopäivä</string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="animalComboBox">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>90</y>
+          <width>191</width>
+          <height>22</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="ageGroupComboBox">
+        <property name="geometry">
+         <rect>
+          <x>220</x>
+          <y>90</y>
+          <width>121</width>
+          <height>22</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="genderComboBox">
+        <property name="geometry">
+         <rect>
+          <x>360</x>
+          <y>90</y>
+          <width>121</width>
+          <height>22</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotByLabel_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>70</y>
+          <width>47</width>
+          <height>13</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Eläin</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotByLabel_3">
+        <property name="geometry">
+         <rect>
+          <x>220</x>
+          <y>70</y>
+          <width>61</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Ikäryhmä</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotByLabel_4">
+        <property name="geometry">
+         <rect>
+          <x>360</x>
+          <y>70</y>
+          <width>61</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Sukupuoli</string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="usageComboBox">
+        <property name="geometry">
+         <rect>
+          <x>90</x>
+          <y>140</y>
+          <width>111</width>
+          <height>22</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="weightLineEdit">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>140</y>
+          <width>61</width>
+          <height>20</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotByLabel_5">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>120</y>
+          <width>47</width>
+          <height>13</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Paino (kg)</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotByLabel_6">
+        <property name="geometry">
+         <rect>
+          <x>90</x>
+          <y>120</y>
+          <width>47</width>
+          <height>13</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Käyttö</string>
+        </property>
+       </widget>
+       <widget class="QPlainTextEdit" name="additionalInfoTextEdit">
+        <property name="geometry">
+         <rect>
+          <x>360</x>
+          <y>140</y>
+          <width>220</width>
+          <height>70</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>Tähän vieraan kaatajan nimi tai havaintoja eläimestä</string>
+        </property>
+        <property name="toolTipDuration">
+         <number>10000</number>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotByLabel_7">
+        <property name="geometry">
+         <rect>
+          <x>360</x>
+          <y>120</y>
+          <width>51</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Lisätietoja</string>
+        </property>
+       </widget>
+       <widget class="QTableWidget" name="killsKillsTableWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>270</y>
+          <width>841</width>
+          <height>211</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotByLabel_8">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>240</y>
+          <width>80</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Kaadot</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="saveShotPushButton">
+        <property name="geometry">
+         <rect>
+          <x>500</x>
+          <y>220</y>
+          <width>75</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Tallenna</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="locationLineEdit">
+        <property name="geometry">
+         <rect>
+          <x>360</x>
+          <y>40</y>
+          <width>221</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>Karttaan merkitty paikannimi</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotDateLabel_2">
+        <property name="geometry">
+         <rect>
+          <x>360</x>
+          <y>20</y>
+          <width>101</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Paikka</string>
+        </property>
+       </widget>
+       <widget class="QTableWidget" name="shotLicenseTableWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>570</y>
+          <width>521</width>
+          <height>181</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotByLabel_14">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>540</y>
+          <width>110</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Käytetyt Luvat</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="editShotsPushButton">
+        <property name="geometry">
+         <rect>
+          <x>720</x>
+          <y>490</y>
+          <width>130</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Muokkaa kaatoja...</string>
+        </property>
+       </widget>
+       <widget class="QSpinBox" name="usagePortionSpinBox">
+        <property name="geometry">
+         <rect>
+          <x>210</x>
+          <y>140</y>
+          <width>42</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="singleStep">
+         <number>25</number>
+        </property>
+        <property name="value">
+         <number>100</number>
+        </property>
+       </widget>
+       <widget class="QSpinBox" name="usage2PortionSpinBox">
+        <property name="geometry">
+         <rect>
+          <x>210</x>
+          <y>190</y>
+          <width>42</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="singleStep">
+         <number>25</number>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="usage2ComboBox">
+        <property name="geometry">
+         <rect>
+          <x>90</x>
+          <y>190</y>
+          <width>111</width>
+          <height>22</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="usage2CheckBox">
+        <property name="geometry">
+         <rect>
+          <x>90</x>
+          <y>170</y>
+          <width>110</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Toinen Käyttö</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotByLabel_16">
+        <property name="geometry">
+         <rect>
+          <x>210</x>
+          <y>120</y>
+          <width>80</width>
+          <height>13</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Käytön osuus</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotByLabel_17">
+        <property name="geometry">
+         <rect>
+          <x>210</x>
+          <y>170</y>
+          <width>130</width>
+          <height>13</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Toisen käytön osuus</string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="licenseYearComboBox">
+        <property name="geometry">
+         <rect>
+          <x>450</x>
+          <y>540</y>
+          <width>80</width>
+          <height>22</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_11">
+        <property name="geometry">
+         <rect>
+          <x>380</x>
+          <y>540</y>
+          <width>60</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Vuosi</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="sharePage">
+       <attribute name="title">
+        <string>Lihanjako</string>
+       </attribute>
+       <widget class="QTableWidget" name="shareKillsTableWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>920</width>
+          <height>192</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>Valitse kaato, jonka lihoja jaetaan</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotByLabel_9">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>0</y>
+          <width>80</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Kaadot</string>
+        </property>
+       </widget>
+       <widget class="QDateEdit" name="shareDateEdit">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>250</y>
+          <width>121</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="locale">
+         <locale language="Finnish" country="Finland"/>
+        </property>
+        <property name="displayFormat">
+         <string>dd.MM.yyyy</string>
+        </property>
+        <property name="calendarPopup">
+         <bool>true</bool>
+        </property>
+        <property name="date">
+         <date>
+          <year>2022</year>
+          <month>11</month>
+          <day>15</day>
+         </date>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="portionComboBox">
+        <property name="geometry">
+         <rect>
+          <x>150</x>
+          <y>250</y>
+          <width>121</width>
+          <height>22</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="amountLineEdit">
+        <property name="geometry">
+         <rect>
+          <x>290</x>
+          <y>250</y>
+          <width>113</width>
+          <height>20</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotByLabel_10">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>230</y>
+          <width>47</width>
+          <height>13</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Jakopäivä</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotByLabel_11">
+        <property name="geometry">
+         <rect>
+          <x>150</x>
+          <y>230</y>
+          <width>61</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Ruhon osa</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotByLabel_12">
+        <property name="geometry">
+         <rect>
+          <x>290</x>
+          <y>230</y>
+          <width>61</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Määrä (kg)</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotByLabel_13">
+        <property name="geometry">
+         <rect>
+          <x>420</x>
+          <y>230</y>
+          <width>61</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Jakoryhmä</string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="groupComboBox">
+        <property name="geometry">
+         <rect>
+          <x>420</x>
+          <y>250</y>
+          <width>161</width>
+          <height>22</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="shareSavePushButton">
+        <property name="geometry">
+         <rect>
+          <x>500</x>
+          <y>280</y>
+          <width>75</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Tallenna</string>
+        </property>
+       </widget>
+       <widget class="QWebEngineView" name="shareSankeyWebEngineView">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>370</y>
+          <width>500</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="url">
+         <url>
+          <string>about:blank</string>
+         </url>
+        </property>
+       </widget>
+       <widget class="QTableWidget" name="shareSharedPortionsTableWidget">
+        <property name="geometry">
+         <rect>
+          <x>520</x>
+          <y>370</y>
+          <width>420</width>
+          <height>361</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="shotByLabel_15">
+        <property name="geometry">
+         <rect>
+          <x>520</x>
+          <y>340</y>
+          <width>160</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Jaetut ruhon osat</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="licensePage">
+       <attribute name="title">
+        <string>Luvat</string>
+       </attribute>
+       <widget class="QLineEdit" name="licenseYearLineEdit">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>30</y>
+          <width>113</width>
+          <height>20</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>47</width>
+          <height>13</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Lupavuosi</string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="licenseAnimalComboBox">
+        <property name="geometry">
+         <rect>
+          <x>130</x>
+          <y>30</y>
+          <width>141</width>
+          <height>22</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_2">
+        <property name="geometry">
+         <rect>
+          <x>130</x>
+          <y>10</y>
+          <width>47</width>
+          <height>13</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Eläin</string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="licenseAgeGroupComboBox">
+        <property name="geometry">
+         <rect>
+          <x>280</x>
+          <y>30</y>
+          <width>111</width>
+          <height>22</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_3">
+        <property name="geometry">
+         <rect>
+          <x>280</x>
+          <y>10</y>
+          <width>47</width>
+          <height>13</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Ikäryhmä</string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="licenseGenderComboBox">
+        <property name="geometry">
+         <rect>
+          <x>400</x>
+          <y>30</y>
+          <width>81</width>
+          <height>22</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_4">
+        <property name="geometry">
+         <rect>
+          <x>400</x>
+          <y>10</y>
+          <width>47</width>
+          <height>13</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Sukupuoli</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="licenseAmountLineEdit">
+        <property name="geometry">
+         <rect>
+          <x>490</x>
+          <y>30</y>
+          <width>61</width>
+          <height>20</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_5">
+        <property name="geometry">
+         <rect>
+          <x>490</x>
+          <y>10</y>
+          <width>47</width>
+          <height>13</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Määrä</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="licenseSavePushButton">
+        <property name="geometry">
+         <rect>
+          <x>480</x>
+          <y>60</y>
+          <width>75</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Tallenna</string>
+        </property>
+       </widget>
+       <widget class="QTableWidget" name="licenseSummaryTableWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>120</y>
+          <width>521</width>
+          <height>371</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_6">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>90</y>
+          <width>140</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Myönnetyt luvat</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="maintenancePage">
+       <attribute name="title">
+        <string>Ylläpito</string>
+       </attribute>
+       <widget class="QPushButton" name="maintenanceAddMemberPushButton">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>50</y>
+          <width>131</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Lisää jäsen...</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="maintenanceRemoveMemberPushButton">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>460</y>
+          <width>131</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Poista jäsen...</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="maintenanceAddMembershipPushButton">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>80</y>
+          <width>131</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Lisää jäsen ryhmään...</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="maintenanceAddGroupPushButton">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>110</y>
+          <width>130</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Lisää ryhmä...</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="maintenanceRemoveGroupPushButton">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>490</y>
+          <width>130</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Poista ryhmä...</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="maintenanceAddPartyPushButton">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>140</y>
+          <width>130</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Lisää seurue...</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="maintenanceRemovePartyPushButton">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>520</y>
+          <width>130</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Poista seurue...</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="maintenanceEditCompanyPushButton">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>170</y>
+          <width>130</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Lisää/muokkaa seuraa...</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="maintenanceEditMemberPushButton">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>270</y>
+          <width>150</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Muokkaa jäsen tietoja...</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="maintenanceEditMembershipPushButton">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>300</y>
+          <width>150</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Muokkaa jäsenyys tietoja...</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="maintenanceEditGroupPushButton">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>330</y>
+          <width>150</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Muokkaa ryhmä tietoja...</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="maintenanceEditPartyPushButton">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>360</y>
+          <width>150</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Muokkaa seurue tietoja...</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_7">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>70</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Lisää</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_8">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>230</y>
+          <width>80</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Muokkaa</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_9">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>420</y>
+          <width>70</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Poista</string>
+        </property>
+       </widget>
+       <widget class="QTableWidget" name="maintenanceTableWidget">
+        <property name="geometry">
+         <rect>
+          <x>290</x>
+          <y>80</y>
+          <width>640</width>
+          <height>670</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="maintenanceComboBox">
+        <property name="geometry">
+         <rect>
+          <x>290</x>
+          <y>50</y>
+          <width>170</width>
+          <height>22</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_10">
+        <property name="geometry">
+         <rect>
+          <x>290</x>
+          <y>20</y>
+          <width>100</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Taulukot</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -1201,7 +1209,6 @@
   <tabstop>tabWidget</tabstop>
   <tabstop>meatSharedTableWidget</tabstop>
   <tabstop>groupSummaryTableWidget</tabstop>
-  <tabstop>summaryRefreshPushButton</tabstop>
   <tabstop>shotByComboBox</tabstop>
   <tabstop>shotDateEdit</tabstop>
   <tabstop>locationLineEdit</tabstop>
