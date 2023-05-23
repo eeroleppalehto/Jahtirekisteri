@@ -414,19 +414,28 @@ class MultiPageMainWindow(QMainWindow):
             prepareData.prepareComboBox(
                 databaseOperation6, self.shotUsage2CB, 1, 0)  
 
-        databaseOperation7 = pgModule.DatabaseOperation()
-        databaseOperation7.callFunction(
-            self.connectionArguments, 'public.get_used_licences', int(self.shotLicenseYearCB.currentText()))
-        if databaseOperation7.errorCode != 0:
+        if self.shotLicenseYearCB.currentText() != '':
+            databaseOperation7 = pgModule.DatabaseOperation()
+            databaseOperation7.callFunction(
+                self.connectionArguments, 'public.get_used_licences', int(self.shotLicenseYearCB.currentText()))
+            if databaseOperation7.errorCode != 0:
+                self.alert(
+                    'Vakava virhe',
+                    'Tietokantaoperaatio epäonnistui',
+                    databaseOperation7.errorMessage,
+                    databaseOperation7.detailedMessage
+                    )
+            else:
+                prepareData.prepareTable(
+                    databaseOperation7, self.shotLicenseTW)
+        else:
             self.alert(
                 'Vakava virhe',
                 'Tietokantaoperaatio epäonnistui',
-                databaseOperation7.errorMessage,
-                databaseOperation7.detailedMessage
+                'Ei löytynyt vuotta, jolta hakea lupatietoja',
+                'Could not find year to fetch licence data from, try adding a license in the license page first'
                 )
-        else:
-            prepareData.prepareTable(
-                databaseOperation7, self.shotLicenseTW)
+        
 
     def populateShotLicenceTW(self):
         year = int(self.shotLicenseYearCB.currentText())
