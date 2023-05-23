@@ -6,6 +6,7 @@
 # import pgModule
 # from PyQt5.QtWidgets import *  Remove this line when ready
 from PyQt5.QtWidgets import QTableWidgetItem  # For handling a single table cell
+from PyQt5.QtCore import Qt  # For handling a single table cell
 
 '''
 # Temporary object to get help about object properties
@@ -44,6 +45,7 @@ def prepareTable(resultObject, tableWidget):
 
             for cell in tupleIx: # Cycle through values in the tuple
                 cellData = QTableWidgetItem(str(cell)) # Format cell data
+                cellData.setFlags(Qt.ItemIsEnabled) # Disable editing of the cell
                 tableWidget.setItem(rowIndex, columnIndex, cellData) # Set cell
 
                 columnIndex +=1
