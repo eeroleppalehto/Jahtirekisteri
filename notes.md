@@ -7,7 +7,8 @@
 * [x] Päivitä talujen sarakkeiden nimet ihmisluettavaksi
 * [x] Päivitä ohje-ja tietodialogit vastaamaan muokatun reposition nimeä
 * [] Jäsenen ja jäsenyyden poisto muuttaa jäsen-taulun tila-kentän poistuneeksi
-* [] Laita "Toisen käytön osuus"-SpinBox riippuvaiseksi ensimmäisen arvosta
+* [x] Laita "Toisen käytön osuus"-SpinBox riippuvaiseksi ensimmäisen arvosta
+* [x] Korjaa: Taulujen arvot on muokattavissa ennen "täydennyksiä", mikä altistaa virheille
 
 ### Kaato-välilehti
 
@@ -30,6 +31,8 @@
 
 * [x] Tarkista onko tarvittavat taulukot
 * [] Tarkasta Poista dialogien paikkaansapitävyys
+* [] Poista jäsen muuttaa tilan postuneeksi ja laittaa jäsenyyksiin poistumispäivät
+* [] Poista jäsenyys lisää poistumis päivän
 
 ### Julkaisu
 
