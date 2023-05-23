@@ -58,7 +58,7 @@ class EditShot(DialogFrame):
 
 
 
-        self.state = 0
+        self.state = -1
 
         self.populateEditShotDialog()
 
@@ -153,28 +153,15 @@ class EditShot(DialogFrame):
         else:
             self.shotUsageIdList = prepareData.prepareComboBox(databaseOperation6, self.editShotUsageCB, 1, 0)
             prepareData.prepareComboBox(databaseOperation6, self.editShotUsage2CB, 1, 0)
-
-        # databaseOperation6 = pgModule.DatabaseOperation()
-        # databaseOperation6.getAllRowsFromTable(
-        #     self.connectionArguments, 'public.kasittely')
-        # if databaseOperation6.errorCode != 0:
-        #     self.alert(
-        #         'Vakava virhe',
-        #         'Tietokantaoperaatio epäonnistui',
-        #         databaseOperation6.errorMessage,
-        #         databaseOperation6.detailedMessage
-        #         )
-        # else:
-        #     self.shotUsageIdList = prepareData.prepareComboBox(
-        #         databaseOperation6, self.shotUsageCB, 1, 0)
-        #     prepareData.prepareComboBox(
-        #         databaseOperation6, self.shotUsage2CB, 1, 0) 
         
     def populateFields(self):
+        errorCode = 0
+
         memberIx = self.editShotByCB.findText(self.shooter, Qt.MatchFixedString)
         if memberIx >= 0:
             self.editShotByCB.setCurrentIndex(memberIx)
         else:
+            errorCode = 1
             self.alert(
                 'Virhe',
                 'Virhe',
@@ -186,6 +173,7 @@ class EditShot(DialogFrame):
         if animalIx >= 0:
             self.editShotAnimalCB.setCurrentIndex(animalIx)
         else:
+            errorCode = 2
             self.alert(
                 'Virhe',
                 'Virhe',
@@ -197,6 +185,7 @@ class EditShot(DialogFrame):
         if ageIx >= 0:
             self.editShotAgeCB.setCurrentIndex(ageIx)
         else:
+            errorCode = 3
             self.alert(
                 'Virhe',
                 'Virhe',
@@ -213,6 +202,7 @@ class EditShot(DialogFrame):
         if genderIx >= 0:
             self.editShotGenderCB.setCurrentIndex(genderIx)
         else:
+            errorCode = 4
             self.alert(
                 'Virhe',
                 'Virhe',
@@ -221,26 +211,14 @@ class EditShot(DialogFrame):
             )
         
         self.editShotWeightLE.setText(str(self.shotWeight))
-
-        # usageIx = self.editShotUsageCB.findText(self.shotUsage, Qt.MatchFixedString)
-        # if usageIx >= 0:
-        #     self.editShotUsageCB.setCurrentIndex(usageIx)
-        # else:
-        #     self.alert(
-        #         'Virhe',
-        #         'Virhe',
-        #         'Valitse käsittely',
-        #         ''
-        #     )
-        
-
-        # TODO: Add ability to edit additional info
+    
         self.editShotAdditionalnfoPT.setPlainText(self.shotInfo)
 
         databaseOperation = pgModule.DatabaseOperation()
         databaseOperation.getAllRowsFromTableWithLimit(
             self.connectionArguments, 'public.kaadon_kasittely', f"kaato_id = {self.shotId}")
         if databaseOperation.errorCode != 0:
+            errorCode = 5
             self.alert(
                 'Vakava virhe',
                 'Tietokantavirhe',
@@ -263,6 +241,7 @@ class EditShot(DialogFrame):
                 self.editShotUsage2CB.setEnabled(False)
                 self.editShotUsage2SB.setEnabled(False)
                 self.editShotUsage2CheckB.setChecked(False)
+            self.state = 0 if errorCode == 0 else -1
 
 
 
@@ -290,7 +269,7 @@ class EditShot(DialogFrame):
                 self.editShotAgeCB.currentText(),
                 self.editShotAdditionalnfoPT.toPlainText()
             ]
-            print(updateList)
+            # print(updateList)
 
             columnNames = [
                 'jasen_id',
@@ -321,8 +300,8 @@ class EditShot(DialogFrame):
                 ''
             )
         
-        print(self.compareUpdates(updateList))
-        print(table, columnValueString, limit)
+        # print(self.compareUpdates(updateList))
+        # print(table, columnValueString, limit)
         if self.compareUpdates(updateList) == False:
             databaseOperation = pgModule.DatabaseOperation()
             databaseOperation.updateManyValuesInRow(
@@ -334,26 +313,15 @@ class EditShot(DialogFrame):
                     databaseOperation.errorMessage,
                     databaseOperation.detailedMessage
                 )
-        # TODO: Remove prints and add error handling
+            else:
+                self.state = -1
         
 
     def editUsage(self, shotUsageId, usageId, usageAmount):
         try:
-            # useIx = self.editShotUsageCB.currentIndex()
-            # use = self.shotUsageIdList[useIx]
-
-            # useAmount = self.editShotUsageSB.value()
-
-            # use2Ix = self.editShotUsage2CB.currentIndex()
-            # use2 = self.shotUsageIdList[use2Ix]
-
-            # use2Amount = self.editShotUsage2SB.value()
-            # TODO: Finish editUsage method
             table = 'public.kaadon_kasittely'
             columnValueString = f"kasittelyid = {usageId!r}, kasittely_maara = {usageAmount!r}"
             limit = f"kaato_id = {self.shotId} AND kaadon_kasittely_id = {shotUsageId}"
-
-
         except:
             self.alert(
                 'Virhe',
@@ -373,7 +341,8 @@ class EditShot(DialogFrame):
                 databaseOperation.detailedMessage
             )
         else:
-            print('Usage edited')
+            pass
+            #print('Usage edited')
 
     def addNewusage(self, shotId, usageId, usageAmount):
         """_summary_
@@ -405,7 +374,7 @@ class EditShot(DialogFrame):
                 databaseOperation.errorMessage,
                 databaseOperation.detailedMessage
                 )
-        print('Usage added')
+        # print('Usage added')
 
     def editShotAndUsage(self):
         self.editShot()
@@ -420,6 +389,7 @@ class EditShot(DialogFrame):
                 'Tarkista syöte',
                 ''
             )
+            return
 
         self.editUsage(self.usages[0][0], use, useAmount)
         if self.editShotUsage2CheckB.isChecked() and len(self.usages) > 1:
@@ -435,6 +405,7 @@ class EditShot(DialogFrame):
                     'Tarkista syöte',
                     ''
                 )
+                return
         elif self.editShotUsage2CheckB.isChecked() and len(self.usages) == 1:
             try:
                 useIx2 = self.editShotUsage2CB.currentIndex()
@@ -463,18 +434,18 @@ class EditShot(DialogFrame):
         self.shotInfo = self.editShotTW.item(selectedRow, 8).text()
         self.shotId = int(self.editShotTW.item(selectedRow, 9).text())
 
-        originalList = [
-            self.shooterId,
-            self.shotDate,
-            self.shotWeight,
-            self.shotLocation,
-            self.shotAnimal,
-            self.shotAge,
-            self.shotGender,
-            self.shotInfo
-        ]
+        # originalList = [
+        #     self.shooterId,
+        #     self.shotDate,
+        #     self.shotWeight,
+        #     self.shotLocation,
+        #     self.shotAnimal,
+        #     self.shotAge,
+        #     self.shotGender,
+        #     self.shotInfo
+        # ]
 
-        print(originalList)
+        # print(originalList)
 
 
     def compareUpdates(self, updateList):

@@ -421,10 +421,13 @@ class Membership(DialogFrame):
                 databaseOperation3, self.editMembershipGroupCB, 2, 0)
     
     def populateFields(self):
+        errorCode = 0
+
         memberCBIx = self.editMembershipMemberCB.findText(self.nameValue, Qt.MatchFixedString)
         if memberCBIx >= 0:
             self.editMembershipMemberCB.setCurrentIndex(memberCBIx)
         else:
+            errorCode = 1
             self.alert(
                 'Vakava virhe',
                 'Jäsentä ei löytynyt valikosta',
@@ -437,6 +440,7 @@ class Membership(DialogFrame):
         if groupCBIx >= 0:
             self.editMembershipGroupCB.setCurrentIndex(groupCBIx)
         else:
+            errorCode = 2
             self.alert(
                 'Vakava virhe',
                 'Ryhmää ei löytynyt valikosta',
@@ -451,8 +455,8 @@ class Membership(DialogFrame):
             int(self.joinDate[5:7]),
             int(self.joinDate[8:])
         )
-
-        self.state = 0
+        
+        self.state = 0 if errorCode == 0 else -1
         self.editMembershipShareSB.setValue(int(self.shareValue))
         self.editMembershipJoinedDE.setDate(joinDate)
         self.membershipIdInt = int(self.membershipId)
