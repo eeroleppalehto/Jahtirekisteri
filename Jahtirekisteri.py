@@ -76,6 +76,7 @@ class MultiPageMainWindow(QMainWindow):
 
         self.shotUsageCB = self.usageComboBox
         self.shotUsagePortionSB = self.usagePortionSpinBox
+        self.shotUsagePortionSB.valueChanged.connect(self.calculateUsage2Value) # Signal
 
         self.shotUsage2CheckB = self.usage2CheckBox
         self.shotUsage2CheckB.stateChanged.connect(self.toggleUsage2) # Signal
@@ -90,6 +91,7 @@ class MultiPageMainWindow(QMainWindow):
         self.editShotsPushBtn.clicked.connect(self.openEditShotDialog) # Signal
 
         self.shotLicenseYearCB = self.licenseYearComboBox
+        #print(f"valinta:'{self.shotLicenseYearCB.currentText()}'")
 
         databaseOperation8 = pgModule.DatabaseOperation()
         databaseOperation8.getAllRowsFromTable(
@@ -937,10 +939,14 @@ class MultiPageMainWindow(QMainWindow):
     def toggleUsage2(self):
         if self.shotUsage2CheckB.isChecked():
             self.shotUsage2CB.setEnabled(True)
-            self.shotUsage2PortionSB.setEnabled(True)
+            # self.shotUsage2PortionSB.setEnabled(True)
         else:
             self.shotUsage2CB.setEnabled(False)
-            self.shotUsage2PortionSB.setEnabled(False)
+            # self.shotUsage2PortionSB.setEnabled(False)
+    
+    def calculateUsage2Value(self):
+        value = self.shotUsagePortionSB.value()
+        self.shotUsage2PortionSB.setValue(100 - value)
 
     def onShareKillTableClick(self, item):
         selectedRow = item.row()

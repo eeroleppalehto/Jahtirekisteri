@@ -40,6 +40,7 @@ class EditShot(DialogFrame):
         
         self.editShotUsageCB = self.editShotUsageComboBox
         self.editShotUsageSB = self.editShotUsagePortionSpinBox
+        self.editShotUsageSB.valueChanged.connect(self.calculateUsage2Value)
 
         self.editShotUsage2CB = self.editShotUsage2ComboBox
         self.editShotUsage2CB.setEnabled(False)
@@ -64,10 +65,13 @@ class EditShot(DialogFrame):
     def toggleUsage2(self):
         if self.editShotUsage2CheckB.isChecked():
             self.editShotUsage2CB.setEnabled(True)
-            self.editShotUsage2SB.setEnabled(True)
+            #self.editShotUsage2SB.setEnabled(True)
         else:
             self.editShotUsage2CB.setEnabled(False)
-            self.editShotUsage2SB.setEnabled(False)
+            #self.editShotUsage2SB.setEnabled(False)
+    
+    def calculateUsage2Value(self):
+        self.editShotUsage2SB.setValue(100 - self.editShotUsageSB.value())
         
     def populateEditShotDialog(self):
         
