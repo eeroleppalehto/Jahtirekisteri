@@ -115,8 +115,8 @@ def test_deleteFromTable():
 
 def test_callFunction():
     connectionSettings = databaseOperation.readDatabaseSettingsFromFile('testSettings.dat')
-    func = 'public.get_party'
-    params = 1
+    func = 'public.get_used_licences'
+    params = 2023
 
     databaseOperation.callFunction(connectionSettings, func, params)
     message = databaseOperation.detailedMessage
