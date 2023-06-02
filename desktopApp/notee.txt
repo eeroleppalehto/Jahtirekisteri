@@ -1,2 +1,0 @@
-datas=[('pgModule.py','.'), ('prepareData.py','.'), ('connectionSettings.dat','.'), ('figures.py','.'),
-    ('Party.py','.'),('ui/*.ui','ui'), ('dialogs/*.py','dialogs')]
