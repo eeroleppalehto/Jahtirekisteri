@@ -1,4 +1,6 @@
 import sys
+# Add parent directory to the path
+sys.path.append('../desktopApp')
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import (QDialog, QMessageBox, QTextBrowser, QLabel, QPushButton, QSpinBox,
 QLineEdit, QTextEdit, QComboBox, QDateEdit, QTableWidget, QMainWindow, QApplication)
