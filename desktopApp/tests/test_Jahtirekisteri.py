@@ -6,7 +6,7 @@ import sys
 from PyQt5.QtWidgets import QApplication
 from PyQt5 import QtCore
 # Add parent directory to the path
-sys.path.append('../Jahtirekisteri_Eero')
+sys.path.append('../desktopApp')
 
 import Jahtirekisteri
 

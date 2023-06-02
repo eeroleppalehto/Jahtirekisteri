@@ -4,7 +4,7 @@
 
 import sys
 # Add parent directory to the path
-sys.path.append('../Jahtirekisteri_Eero')
+sys.path.append('../desktopApp')
 
 import prepareData
 import pgModule
