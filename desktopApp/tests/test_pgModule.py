@@ -5,7 +5,7 @@
 import sys
 import json
 # Add parent directory to the path
-sys.path.append('../Jahtirekisteri_Eero')
+sys.path.append('../desktopApp')
 
 import pgModule
 
