@@ -2,6 +2,8 @@
 
 This document contains logs of procedures when setting up the server enviroment.
 
+## Work done in branch *12-initialize-the-server*
+
 * Initialize the node project by running `npm init`.
 * Run command `npm install typescript --save-dev` to save TypeScript as a dependency for the duration of the development cycle.
 * Add "tsc": "tsc" script under the packege.json file. This will allow us to run the TypeScript compiler by running `npm run tsc`.
@@ -29,4 +31,14 @@ app.get('/ping', (_req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+```
+
+* To allow cross-origin resource sharing (CORS) install cors by running `npm install cors`.
+* Add types for cors by running `npm install --save-dev @types/cors`.
+* Add the following code to the index.ts file to allow CORS:
+
+```javascript
+import cors from 'cors';
+// ...
+app.use(cors());
 ```
