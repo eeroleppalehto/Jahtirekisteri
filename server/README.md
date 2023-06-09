@@ -8,7 +8,16 @@ To get this project up and running on your local machine, follow these steps:
 
 * Install Node.js from <https://nodejs.org/en/download/>
 * To check that Node.js is installed, run the following command in your terminal: `node -v`. If you see a version number, Node.js is installed.
-* Once Node.js is installed, run the following command to install the dependencies for the project `npm install`
+* Add *.env* file under the server folder and add the following connection string to it: `DATABASE_URL="postgresql://<username>:<password>@<host>:<port>/<database>?schema=<schema>"`. Replace:
+
+  * `<username>` with your username for the database.
+  * `<password>` with your password for the database.
+  * `<host>` with the host for the database.
+  * `<port>` with the port for the database.
+  * `<database>` with the name of the database.
+  * `<schema>` with the name of the schema.
+
+* Once previous steps have been done, run the following command to install the dependencies for the project `npm install`
 
 ## Manual
 
