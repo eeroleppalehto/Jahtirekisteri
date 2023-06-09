@@ -5,9 +5,13 @@
 // =======================================
 import express from 'express';
 import cors from 'cors';
+import { PrismaClient } from '@prisma/client';
 
 // Initialize express app
 const app = express();
+
+// Initialize prisma client
+const prisma = new PrismaClient();
 
 // Middleware
 app.use(cors());
@@ -20,6 +24,12 @@ const PORT = 3000;
 app.get('/ping', (_req, res) => {
     console.log('someone pinged here');
     res.send('pong');
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+app.get('/api/members', async (_req, res) => {
+    const members = await prisma.jasen.findMany();
+    res.json(members);
 });
 
 // Start the server
