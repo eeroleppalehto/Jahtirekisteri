@@ -42,3 +42,5 @@ import cors from 'cors';
 // ...
 app.use(cors());
 ```
+
+## Work done in branch 16-initialize-connection-between-prisma-and-the-backend-server
