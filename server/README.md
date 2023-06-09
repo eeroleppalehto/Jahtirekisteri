@@ -25,6 +25,12 @@ To get this project up and running on your local machine, follow these steps:
 
 To start the server, run the following command: `npm run dev`. Now you can try to access the server by going to <http://localhost:3000/ping> in your browser. If you see the text "pong" in your browser, the server is working.
 
+### Prisma Studio
+
+To start Prisma Studio, run the following command: `npx prisma studio`. Now you can try to access Prisma Studio by going to <http://localhost:5555> in your browser.
+
+Prisma Studio is a visual editor for your database. You can use it to browse and edit data in your database. You can also use it to test your database queries.
+
 ## Extensions
 
 This section contains recomendations for extensions for VS Code.
