@@ -4,15 +4,11 @@
 // IMPORTS
 // =======================================
 import express from 'express';
-import { RequestHandler } from 'express';
 import cors from 'cors';
-import { PrismaClient } from '@prisma/client';
+import jasenRouter from './routers/jasenRouter';
 
 // Initialize express app
 const app = express();
-
-// Initialize prisma client
-const prisma = new PrismaClient();
 
 // Middleware
 app.use(cors());
@@ -27,11 +23,8 @@ app.get('/ping', (_req, res) => {
     res.send('pong');
 });
 
-// Get all members
-app.get('/api/members', (async (_req, res) => {
-    const members = await prisma.jasen.findMany();
-    res.json(members);
-}) as RequestHandler);
+// Mount the jasenRouter to the /api/jasenet route
+app.use('/api/members', jasenRouter);
 
 // Start the server
 app.listen(PORT, () => {
