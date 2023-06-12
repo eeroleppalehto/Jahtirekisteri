@@ -42,3 +42,16 @@ import cors from 'cors';
 // ...
 app.use(cors());
 ```
+
+## Work done in branch 16-initialize-connection-between-prisma-and-the-backend-server
+
+The following steps can be found with more details in <https://www.prisma.io/docs/getting-started/setup-prisma/add-to-existing-project/relational-databases-typescript-postgresql>
+
+* Run command `npm install prisma --save-dev` to install prisma as a development dependency.
+* Next run command `npx prisma init` to initialize prisma. This will create a prisma folder with a schema.prisma file.
+* Next add connection string to *.env* file for connecting to the database. The connection string is in the following format: `postgresql://<username>:<password>@<host>:<port>/<database>?schema=<schema>`.
+* Next pull the database schema from the existing database by running `npx prisma db pull`.
+* Run command `mkdir -p prisma/migrations/0_init` to create a migrations folder.
+* Next generate the migration file by running `npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma/migrations/0_init/migration.sql`
+* Run the migration with command `npx prisma migrate resolve --applied 0_init`.
+* Finally install the prisma client by running `npm install @prisma/client` and generate the prisma client by running `npx prisma generate`.
