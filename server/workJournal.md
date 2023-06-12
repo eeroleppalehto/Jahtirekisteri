@@ -55,3 +55,13 @@ The following steps can be found with more details in <https://www.prisma.io/doc
 * Next generate the migration file by running `npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma/migrations/0_init/migration.sql`
 * Run the migration with command `npx prisma migrate resolve --applied 0_init`.
 * Finally install the prisma client by running `npm install @prisma/client` and generate the prisma client by running `npx prisma generate`.
+
+## Work done in branch 23-router-and-service-modules-for-member-table
+
+* Create *client.ts* file for generating the prisma client.
+* Create routers, services, and zodSchema folders for organizing the code.
+* Install zod by running `npm install zod`.
+* Create zod schema for member input by creating *member.ts* file in the zodSchema folder.
+* Next create *member.ts* file in the services folder where CRUD operations for the member table will be implemented.
+* Last create *member.ts* file in the routers folder where the routes for the member table will be implemented.
+* Import the member router in the index.ts file to allow the routes to be used.
