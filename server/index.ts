@@ -4,6 +4,7 @@
 // IMPORTS
 // =======================================
 import express from 'express';
+import { RequestHandler } from 'express';
 import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
 
@@ -26,11 +27,11 @@ app.get('/ping', (_req, res) => {
     res.send('pong');
 });
 
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
-app.get('/api/members', async (_req, res) => {
+// Get all members
+app.get('/api/members', (async (_req, res) => {
     const members = await prisma.jasen.findMany();
     res.json(members);
-});
+}) as RequestHandler);
 
 // Start the server
 app.listen(PORT, () => {
