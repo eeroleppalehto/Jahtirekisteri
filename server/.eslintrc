@@ -22,7 +22,6 @@
         { "argsIgnorePattern": "^_" }
       ],
       "indent": ["error", 4],
-      "camelcase": 1,
       "no-case-declarations": "off"
     },
     "parser": "@typescript-eslint/parser",
