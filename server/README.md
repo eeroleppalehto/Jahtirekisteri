@@ -8,6 +8,7 @@ To get this project up and running on your local machine, follow these steps:
 
 * Install Node.js from <https://nodejs.org/en/download/>
 * To check that Node.js is installed, run the following command in your terminal: `node -v`. If you see a version number, Node.js is installed.
+* To run the server, you need to have a PostgreSQL database. You can get PostgreSQL from <https://www.postgresql.org/download/> or you can use the docker compose file in the postgresDocker folder to create a PostgreSQL database. If you use the docker compose file, you need to have Docker installed. Check for more instruction in the README.md file in the postgresDocker folder.
 * Add *.env* file under the server folder and add the following connection string to it: `DATABASE_URL="postgresql://<username>:<password>@<host>:<port>/<database>?schema=<schema>"`. Replace:
 
   * `<username>` with your username for the database.
