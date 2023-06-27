@@ -14,12 +14,17 @@ from datetime import date
 import pgModule
 import prepareData
 import dialogs.dialogueWindow as dialogueWindow
-import dialogs.addDialogueWindow as addDialogueWindow
 
 # imports _remove_ Dialogue Window modules
 import dialogs.removeDialogues.Group as removeDialogueWindowGroup
 import dialogs.removeDialogues.Member as removeDialogueWindowMember
 import dialogs.removeDialogues.Party as removeDialogueWindowParty
+
+# imports _add_ Dialogue Window modules
+import dialogs.addDialogues.Group as addDialogueWindowGroup
+import dialogs.addDialogues.Member as addDialogueWindowMember
+import dialogs.addDialogues.Membership as addDialogueWindowMembership
+import dialogs.addDialogues.Party as addDialogueWindowParty
 
 import dialogs.editDialogueWindow as editDialogueWindow
 import dialogs.editShotDialog as editShotDialog
@@ -970,7 +975,7 @@ class MultiPageMainWindow(QMainWindow):
         dialog.exec()
     
     def openAddMemberDialog(self):
-        dialog = addDialogueWindow.Member()
+        dialog = addDialogueWindowMember.Member()
         dialog.exec()
     
     def openRemoveMemberDialog(self):
@@ -978,11 +983,11 @@ class MultiPageMainWindow(QMainWindow):
         dialog.exec()
     
     def openAddMembershipDialog(self):
-        dialog = addDialogueWindow.Membership()
+        dialog = addDialogueWindowMembership.Membership()
         dialog.exec()
     
     def openAddGroupDialog(self):
-        dialog = addDialogueWindow.Group()
+        dialog = addDialogueWindowGroup.Group()
         dialog.exec()
 
     def openRemoveGroupDialog(self):
@@ -990,7 +995,7 @@ class MultiPageMainWindow(QMainWindow):
         dialog.exec()
 
     def openAddMPartyDialog(self):
-        dialog = addDialogueWindow.Party()
+        dialog = addDialogueWindowParty.Party()
         dialog.exec()
     
     def openRemovePartyDialog(self):
