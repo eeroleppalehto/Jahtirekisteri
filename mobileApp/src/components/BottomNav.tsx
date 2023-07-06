@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { Text, BottomNavigation } from "react-native-paper"
+import ShotPage from './ShotPage';
+import SharePage from './SharePage';
 
 const ChartRoute = () => <Text>Yhteenvetosivu</Text>
 
-const ShotRoute = () => <Text>Kaatosivu</Text>
+const ShotRoute = () => <ShotPage />
 
-const ShareRoute = () => <Text>Jakosivu</Text>
+const ShareRoute = () => <SharePage />
 
 const ManagementRoute = () => <Text>Ylläpitosivu</Text>
 
@@ -14,7 +16,7 @@ const BottomNav = () => {
     const [index, setIndex] = useState(0)
     const [routes] = useState([
         { key: 'summary', title: 'Yhteenveto', focusedIcon: 'chart-box' },
-        { key: 'shots', title: 'Kaadot', focusedIcon: 'crosshairs' },
+        { key: 'shots', title: 'Kaadot', focusedIcon: 'bullseye-arrow' },
         { key: 'share', title: 'Jako', focusedIcon: 'share-circle' },
         { key: 'management', title: 'Ylläpito', focusedIcon: 'account-supervisor-circle' },
     ])
