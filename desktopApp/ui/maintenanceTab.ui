@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>maintenancePage</class>
+ <widget class="QWidget" name="maintenancePage">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>940</width>
+    <height>760</height>
+   </rect>
+  </property>
+  <widget class="QScrollArea" name="scrollArea">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>941</width>
+     <height>761</height>
+    </rect>
+   </property>
+   <property name="widgetResizable">
+    <bool>true</bool>
+   </property>
+   <widget class="QWidget" name="scrollAreaWidgetContents">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>939</width>
+      <height>759</height>
+     </rect>
+    </property>
+    <widget class="QPushButton" name="maintenanceAddMembershipPushButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>80</y>
+       <width>131</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Lisää jäsen ryhmään...</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="maintenanceEditMembershipPushButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>300</y>
+       <width>150</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Muokkaa jäsenyys tietoja...</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>420</y>
+       <width>70</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Poista</string>
+     </property>
+    </widget>
+    <widget class="QTableWidget" name="maintenanceTableWidget">
+     <property name="geometry">
+      <rect>
+       <x>290</x>
+       <y>80</y>
+       <width>640</width>
+       <height>670</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="maintenanceEditCompanyPushButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>170</y>
+       <width>130</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Lisää/muokkaa seuraa...</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="maintenanceRemoveMemberPushButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>460</y>
+       <width>131</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Poista jäsen...</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="maintenanceAddGroupPushButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>110</y>
+       <width>130</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Lisää ryhmä...</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="maintenanceRemoveGroupPushButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>490</y>
+       <width>130</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Poista ryhmä...</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="maintenanceAddPartyPushButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>140</y>
+       <width>130</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Lisää seurue...</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_10">
+     <property name="geometry">
+      <rect>
+       <x>290</x>
+       <y>20</y>
+       <width>100</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Taulukot</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="maintenanceAddMemberPushButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>131</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Lisää jäsen...</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="maintenanceEditMemberPushButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>270</y>
+       <width>150</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Muokkaa jäsen tietoja...</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="maintenanceEditGroupPushButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>330</y>
+       <width>150</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Muokkaa ryhmä tietoja...</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_8">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>230</y>
+       <width>80</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Muokkaa</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="maintenanceRemovePartyPushButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>520</y>
+       <width>130</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Poista seurue...</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="maintenanceComboBox">
+     <property name="geometry">
+      <rect>
+       <x>290</x>
+       <y>50</y>
+       <width>170</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="maintenanceEditPartyPushButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>360</y>
+       <width>150</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Muokkaa seurue tietoja...</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>70</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Lisää</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
