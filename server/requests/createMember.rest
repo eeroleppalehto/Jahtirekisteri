@@ -1,0 +1,11 @@
+POST http://localhost:3000/api/members
+Content-Type: application/json
+
+{
+"etunimi": "Eero",
+"sukunimi": "Leppis",
+"jakeluosoite": "Eerokatu 3a",
+"postinumero": "12345",
+"postitoimipaikka": "Raisio",
+"tila": "aktiivinen"
+}

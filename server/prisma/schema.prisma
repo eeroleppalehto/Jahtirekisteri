@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model aikuinenvasa {
+  ikaluokka String  @id(map: "aikuinenvasa_pk") @db.VarChar(20)
+  kaato     kaato[]
+  lupa      lupa[]
+}
+
+model elain {
+  elaimen_nimi String  @id(map: "elain_pk") @db.VarChar(20)
+  kaato        kaato[]
+  lupa         lupa[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model jakoryhma {
+  ryhma_id      Int             @id(map: "jakoryhma_pk") @default(autoincrement())
+  seurue_id     Int
+  ryhman_nimi   String          @db.VarChar(50)
+  seurue        seurue          @relation(fields: [seurue_id], references: [seurue_id], onDelete: NoAction, onUpdate: NoAction, map: "seurue_ryhma_fk")
+  jakotapahtuma jakotapahtuma[]
+  jasenyys      jasenyys[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model jakotapahtuma {
+  tapahtuma_id        Int              @id(map: "jakotapahtuma_pk") @default(autoincrement())
+  paiva               DateTime         @db.Date
+  ryhma_id            Int
+  osnimitys           String           @db.VarChar(20)
+  kaadon_kasittely_id Int
+  maara               Float            @db.Real
+  kaadon_kasittely    kaadon_kasittely @relation(fields: [kaadon_kasittely_id], references: [kaadon_kasittely_id], onDelete: NoAction, onUpdate: NoAction, map: "kaadon_kasittely_jakotapahtuma_fk")
+  ruhonosa            ruhonosa         @relation(fields: [osnimitys], references: [osnimitys], onDelete: NoAction, onUpdate: NoAction, map: "ruhonosa_jakotapahtuma_fk")
+  jakoryhma           jakoryhma        @relation(fields: [ryhma_id], references: [ryhma_id], onDelete: NoAction, onUpdate: NoAction, map: "ryhma_jakotapahtuma_fk")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model jasen {
+  jasen_id         Int        @id(map: "jasen_pk") @default(autoincrement())
+  etunimi          String     @db.VarChar(50)
+  sukunimi         String     @db.VarChar(50)
+  jakeluosoite     String     @db.VarChar(30)
+  postinumero      String     @db.VarChar(10)
+  postitoimipaikka String     @db.VarChar(30)
+  tila             String?    @default("aktiivinen") @db.VarChar(20)
+  jasenyys         jasenyys[]
+  kaato            kaato[]
+  seurue           seurue[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model jasenyys {
+  jasenyys_id Int       @id(map: "jasenyys_pk") @default(autoincrement())
+  ryhma_id    Int
+  jasen_id    Int
+  osuus       Int
+  liittyi     DateTime  @db.Date
+  poistui     DateTime? @db.Date
+  jasen       jasen     @relation(fields: [jasen_id], references: [jasen_id], onDelete: NoAction, onUpdate: NoAction, map: "jasen_jasenyys_fk")
+  jakoryhma   jakoryhma @relation(fields: [ryhma_id], references: [ryhma_id], onDelete: NoAction, onUpdate: NoAction, map: "ryhma_jasenyys_fk")
+}
+
+model kaadon_kasittely {
+  kaadon_kasittely_id Int             @id(map: "kaadon_kasittely_pk") @default(autoincrement())
+  kasittelyid         Int
+  kaato_id            Int
+  kasittely_maara     Int
+  jakotapahtuma       jakotapahtuma[]
+  kaato               kaato           @relation(fields: [kaato_id], references: [kaato_id], onDelete: NoAction, onUpdate: NoAction, map: "kaato_kaadon_kasittely_fk")
+  kasittely           kasittely       @relation(fields: [kasittelyid], references: [kasittelyid], onDelete: NoAction, onUpdate: NoAction, map: "kasittely_kaadon_kasittely_fk")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model kaato {
+  kaato_id                             Int                @id(map: "kaato_pk") @default(autoincrement())
+  jasen_id                             Int
+  kaatopaiva                           DateTime           @db.Date
+  ruhopaino                            Float              @db.Real
+  paikka_teksti                        String             @db.VarChar(100)
+  paikka_koordinaatti                  String?            @db.VarChar(100)
+  elaimen_nimi                         String             @db.VarChar(20)
+  sukupuoli                            String             @db.VarChar(20)
+  ikaluokka                            String             @db.VarChar(20)
+  lisatieto                            String?            @db.VarChar(255)
+  kaadon_kasittely                     kaadon_kasittely[]
+  aikuinenvasa                         aikuinenvasa       @relation(fields: [ikaluokka], references: [ikaluokka], onDelete: NoAction, onUpdate: NoAction, map: "aikuinen_vasa_kaato_fk")
+  elain                                elain              @relation(fields: [elaimen_nimi], references: [elaimen_nimi], onDelete: NoAction, onUpdate: NoAction, map: "elain_kaato_fk")
+  jasen                                jasen              @relation(fields: [jasen_id], references: [jasen_id], onDelete: NoAction, onUpdate: NoAction, map: "jasen_kaato_fk")
+  sukupuoli_kaato_sukupuoliTosukupuoli sukupuoli          @relation("kaato_sukupuoliTosukupuoli", fields: [sukupuoli], references: [sukupuoli], onDelete: NoAction, onUpdate: NoAction, map: "sukupuoli_kaato_fk")
+}
+
+model kasittely {
+  kasittelyid      Int                @id(map: "kasittely_pk") @default(autoincrement())
+  kasittely_teksti String             @db.VarChar(50)
+  kaadon_kasittely kaadon_kasittely[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model lupa {
+  luparivi_id                         Int          @id(map: "lupa_pk") @default(autoincrement())
+  seura_id                            Int
+  lupavuosi                           String       @db.VarChar(4)
+  elaimen_nimi                        String       @db.VarChar(20)
+  sukupuoli                           String       @db.VarChar(20)
+  ikaluokka                           String       @db.VarChar(20)
+  maara                               Int
+  aikuinenvasa                        aikuinenvasa @relation(fields: [ikaluokka], references: [ikaluokka], onDelete: NoAction, onUpdate: NoAction, map: "aikuinen_vasa_lupa_fk")
+  elain                               elain        @relation(fields: [elaimen_nimi], references: [elaimen_nimi], onDelete: NoAction, onUpdate: NoAction, map: "elain_lupa_fk")
+  seura                               seura        @relation(fields: [seura_id], references: [seura_id], onDelete: NoAction, onUpdate: NoAction, map: "seura_lupa_fk")
+  sukupuoli_lupa_sukupuoliTosukupuoli sukupuoli    @relation("lupa_sukupuoliTosukupuoli", fields: [sukupuoli], references: [sukupuoli], onDelete: NoAction, onUpdate: NoAction, map: "sukupuoli_lupa_fk")
+}
+
+model ruhonosa {
+  osnimitys     String          @id(map: "ruhonosa_pk") @db.VarChar(20)
+  jakotapahtuma jakotapahtuma[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model seura {
+  seura_id         Int      @id(map: "seura_pk") @default(autoincrement())
+  seuran_nimi      String   @db.VarChar(50)
+  jakeluosoite     String   @db.VarChar(30)
+  postinumero      String   @db.VarChar(10)
+  postitoimipaikka String   @db.VarChar(30)
+  lupa             lupa[]
+  seurue           seurue[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model seurue {
+  seurue_id     Int         @id(map: "seurue_pk") @default(autoincrement())
+  seura_id      Int
+  seurueen_nimi String      @db.VarChar(50)
+  jasen_id      Int
+  jakoryhma     jakoryhma[]
+  jasen         jasen       @relation(fields: [jasen_id], references: [jasen_id], onDelete: NoAction, onUpdate: NoAction, map: "jasen_seurue_fk")
+  seura         seura       @relation(fields: [seura_id], references: [seura_id], onDelete: NoAction, onUpdate: NoAction, map: "seura_seurue_fk")
+}
+
+model sukupuoli {
+  sukupuoli                        String  @id(map: "sukupuoli_pk") @db.VarChar(20)
+  kaato_kaato_sukupuoliTosukupuoli kaato[] @relation("kaato_sukupuoliTosukupuoli")
+  lupa_lupa_sukupuoliTosukupuoli   lupa[]  @relation("lupa_sukupuoliTosukupuoli")
+}
