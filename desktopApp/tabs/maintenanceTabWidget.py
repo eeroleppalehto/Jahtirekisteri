@@ -6,8 +6,11 @@ import prepareData
 
 import dialogs.dialogueWindow as dialogueWindow
 import dialogs.addDialogueWindow as addDialogueWindow
-import dialogs.removeDialogueWindow as removeDialogueWindow
 import dialogs.editDialogueWindow as editDialogueWindow
+
+import dialogs.removeDialogues.Group as removeDialogueWindowGroup
+import dialogs.removeDialogues.Member as removeDialogueWindowMember
+import dialogs.removeDialogues.Party as removeDialogueWindowParty
 
 
 class Ui_maintenanceTabWidget(QScrollArea, QWidget):
@@ -114,7 +117,7 @@ class Ui_maintenanceTabWidget(QScrollArea, QWidget):
         dialog.exec()
     
     def openRemoveMemberDialog(self):
-        dialog = removeDialogueWindow.Member()
+        dialog = removeDialogueWindowMember.Member()
         dialog.exec()
     
     def openAddMembershipDialog(self):
@@ -126,7 +129,7 @@ class Ui_maintenanceTabWidget(QScrollArea, QWidget):
         dialog.exec()
 
     def openRemoveGroupDialog(self):
-        dialog = removeDialogueWindow.Group()
+        dialog = removeDialogueWindowGroup.Group()
         dialog.exec()
 
     def openAddMPartyDialog(self):
@@ -134,7 +137,7 @@ class Ui_maintenanceTabWidget(QScrollArea, QWidget):
         dialog.exec()
     
     def openRemovePartyDialog(self):
-        dialog = removeDialogueWindow.Party()
+        dialog = removeDialogueWindowParty.Party()
         dialog.exec()
     
     def openEditCompanyDialog(self):
