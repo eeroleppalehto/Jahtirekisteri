@@ -42,6 +42,8 @@ class MultiPageMainWindow(QMainWindow):
         self.tab.addTab(Ui_licenseTabWidget(), 'Luvat')
         self.tab.addTab(Ui_maintenanceTabWidget(), 'Ylläpito')
 
+        self.tab.currentChanged.connect(self.tabChanged)
+
         # Read database connection arguments from the settings file
         try:
             databaseOperation = pgModule.DatabaseOperation()
@@ -88,6 +90,19 @@ class MultiPageMainWindow(QMainWindow):
         alertDialog.setStandardButtons(QMessageBox.Ok) # Only OK is needed to close the dialog
         alertDialog.exec_() # Open the message box
         
+    def tabChanged(self):
+        tabIndex = self.tab.currentIndex()
+        if tabIndex == 0:
+            self.tab.currentWidget().populateSummaryPage()
+        elif tabIndex == 1:
+            self.tab.currentWidget().populateKillPage()
+        elif tabIndex == 2:
+            self.tab.currentWidget().populateSharePage()
+        elif tabIndex == 3:
+            self.tab.currentWidget().populateLicensePage()
+        elif tabIndex == 4:
+            self.tab.currentWidget().populateMaintenancePage()
+
     def openManualDialog(self):
         dialog = dialogueWindow.ManualDialog()
         dialog.exec()
