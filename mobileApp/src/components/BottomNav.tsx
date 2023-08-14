@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Text, BottomNavigation } from "react-native-paper"
-import ShotPage from './ShotPage';
+import ShotStack from './ShotPage';
 import SharePage from './SharePage';
 
 const ChartRoute = () => <Text>Yhteenvetosivu</Text>
 
-const ShotRoute = () => <ShotPage />
+const ShotRoute = () => <ShotStack />
 
 const ShareRoute = () => <SharePage />
 
