@@ -1,0 +1,12 @@
+POST http://localhost:3000/api/shots
+Content-Type: application/json
+
+{
+"jasen_id": 3,
+"kaatopaiva": "2023-08-22T00:00:00.000Z",
+"ruhopaino": 100,
+"paikka_teksti": "Mynämäki",
+"elaimen_nimi": "Hirvi",
+"sukupuoli": "Naaras",
+"ikaluokka": "Aikuinen"
+}
