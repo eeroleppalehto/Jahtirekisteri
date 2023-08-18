@@ -1,42 +1,28 @@
-import { useState } from 'react';
-import { Text, BottomNavigation } from "react-native-paper"
-import ShotStack from './ShotPage';
-import SharePage from './SharePage';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { Text } from 'react-native-paper';
 
-const ChartRoute = () => <Text>Yhteenvetosivu</Text>
+import MemberScreen from '../screens/MemberScreen';
+import MaintenanceNav from './MaintenanceNav';
 
-const ShotRoute = () => <ShotStack />
+const Tab = createMaterialBottomTabNavigator();
 
-const ShareRoute = () => <SharePage />
+const Placeholder = () => {
+    return <Text>Placeholder</Text>;
+};
 
-const ManagementRoute = () => <Text>Ylläpitosivu</Text>
-
-
-const BottomNav = () => {
-    const [index, setIndex] = useState(0)
-    const [routes] = useState([
-        { key: 'summary', title: 'Yhteenveto', focusedIcon: 'chart-box' },
-        { key: 'shots', title: 'Kaadot', focusedIcon: 'bullseye-arrow' },
-        { key: 'share', title: 'Jako', focusedIcon: 'share-circle' },
-        { key: 'management', title: 'Ylläpito', focusedIcon: 'account-supervisor-circle' },
-    ])
-
-    const renderScene = BottomNavigation.SceneMap({
-        summary: ChartRoute,
-        shots: ShotRoute,
-        share: ShareRoute,
-        management: ManagementRoute,
-    })
-
-    return (
-        <>
-            <BottomNavigation
-                navigationState={{ index, routes }}
-                onIndexChange={setIndex}
-                renderScene={renderScene}
-            />
-        </>
-    )
+// TODO: Fix Props type
+interface Props {
+    navigation: any;
 }
 
-export default BottomNav
+function BottomNav({ navigation }: Props) {
+    return (
+        <Tab.Navigator>
+            <Tab.Screen name="Grafiikka" component={Placeholder} />
+            <Tab.Screen name="Kaadot" component={Placeholder} />
+            <Tab.Screen name="Ylläpito" component={MaintenanceNav} />
+        </Tab.Navigator>
+    );
+}
+
+export default BottomNav;
