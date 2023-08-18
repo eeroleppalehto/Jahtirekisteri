@@ -1,15 +1,13 @@
 import { StatusBar } from "expo-status-bar"
-import BottomNav from "./BottomNav";
-import TopAppBar from "./TopAppBar";
+import DrawerNav from "./DrawerNav";
 
-const Main = () => {
+function Main() {
     return (
         <>
             <StatusBar style="auto" />
-            <TopAppBar />
-            <BottomNav />
+            <DrawerNav />
         </>
     )
-};
+}
 
 export default Main;
