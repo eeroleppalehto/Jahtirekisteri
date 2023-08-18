@@ -11,3 +11,11 @@ To get this project up and running on your local machine, follow these steps:
 ## Manual
 
 To run the app, run the following command: `npm start`. Press `a` to run the app on an Android emulator or `i` to run the app on an iOS simulator. If you want to run the app on your phone, you need to install the Expo Go app from either Play Store or App Store and scan the QR code that appears in the terminal. Note on iOS: You need to read the QR code with the camera app and then open the link.
+
+For server requests to work, you need create a file called `baseUrl.ts` in the `src` folder. The file should contain the following code:
+
+```typescript
+export const BASE_URL = 'http://<your-ip-address>:3000';
+```
+
+Replace `<your-ip-address>` with your IP address. You can find your IP address by running the following command in the terminal: `ipconfig` on Windows or `ifconfig` on Mac. You can also find the IP address when running the app in the terminal between the `exp://` and `:19000` in the URL.
