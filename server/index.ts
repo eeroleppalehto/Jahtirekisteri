@@ -6,6 +6,7 @@
 import express from 'express';
 import cors from 'cors';
 import jasenRouter from './routers/jasenRouter';
+import kaatoRouter from './routers/kaatoRouter';
 
 // Initialize express app
 const app = express();
@@ -23,8 +24,9 @@ app.get('/ping', (_req, res) => {
     res.send('pong');
 });
 
-// Mount the jasenRouter to the /api/jasenet route
+// Mount the jasenRouter, kaatoRouter to the /api/ path
 app.use('/api/members', jasenRouter);
+app.use('/api/shots', kaatoRouter);
 
 // Start the server
 app.listen(PORT, () => {
