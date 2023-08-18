@@ -16,8 +16,13 @@ import {
   Switch,
 } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { DrawerContentComponentProps, DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
 
-function DrawerContent() {
+interface Props {
+    navigation: DrawerNavigationHelpers;
+}
+
+function DrawerContent({ navigation }: Props) {
   return (
     <DrawerContentScrollView >
       <View style={styles.drawerContent}>
@@ -25,20 +30,6 @@ function DrawerContent() {
           <Avatar.Icon size={50} icon={"account"} />
           <Title style={styles.title}>Mika Hiivola</Title>
           <Caption style={styles.caption}>Käyttäjänimi</Caption>
-          {/* <View style={styles.row}>
-            <View style={styles.section}>
-              <Paragraph style={[styles.paragraph, styles.caption]}>
-                202
-              </Paragraph>
-              <Caption style={styles.caption}>Following</Caption>
-            </View>
-            <View style={styles.section}>
-              <Paragraph style={[styles.paragraph, styles.caption]}>
-                159
-              </Paragraph>
-              <Caption style={styles.caption}>Followers</Caption>
-            </View>
-          </View> */}
         </View>
         <Drawer.Section style={styles.drawerSection}>
           <DrawerItem
@@ -50,7 +41,7 @@ function DrawerContent() {
               />
             )}
             label="Profile"
-            onPress={() => {}}
+            onPress={() => navigation.navigate('Profile')}
           />
           <DrawerItem
             icon={({ color, size }) => (
