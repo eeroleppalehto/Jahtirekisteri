@@ -3,7 +3,7 @@ import { getHeaderTitle } from "@react-navigation/elements";
 
 import BottomNav from "./BottomNav";
 import DetailsScreen from "./DetailsScreen";
-import { CustomNavigationBar } from "./CustomNavigationBar";
+import { CustomAppBar } from "./CustomAppBar";
 
 import { RootStackParamList } from "../NavigationTypes";
 
@@ -14,7 +14,7 @@ function RootStack() {
         <Stack.Navigator
             initialRouteName="BottomNavigation"
             screenOptions={{
-                header: (props) => <CustomNavigationBar {...props} />,
+                header: (props) => <CustomAppBar {...props} />,
             }}
         >
             <Stack.Screen name="BottomNavigation" component={BottomNav} />

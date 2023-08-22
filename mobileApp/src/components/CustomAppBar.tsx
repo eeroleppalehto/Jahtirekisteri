@@ -26,12 +26,7 @@ type NavigationBarProps =
 
 type Props = NativeStackHeaderProps;
 
-export function CustomNavigationBar({
-    navigation,
-    route,
-    options,
-    back,
-}: Props) {
+export function CustomAppBar({ navigation, route, options, back }: Props) {
     //const title = getHeaderTitle(options, route.name);
     const drawerNavigation = useNavigation<NavigationBarProps>();
 
