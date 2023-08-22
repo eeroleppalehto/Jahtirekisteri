@@ -1,11 +1,14 @@
 import { List, Menu, Divider } from "react-native-paper";
 
-import jasenService from "../../service/jasenService";
 import { Jasen } from "../../types";
+
+import { MaintenanceTabScreenProps } from "../../NavigationTypes";
+
+type navigationProps = MaintenanceTabScreenProps<"Jäsenet">["navigation"];
 
 interface Props {
     jasen: Jasen;
-    navigation: any;
+    navigation: navigationProps;
 }
 
 function MemberListItem({ jasen, navigation }: Props) {
@@ -14,15 +17,17 @@ function MemberListItem({ jasen, navigation }: Props) {
 
     return (
         <>
-            <List.Item 
+            <List.Item
                 title={title}
                 descriptionNumberOfLines={3}
                 description={description}
-                onPress={() => navigation.navigate('Details', {
-                    type: 'Jäsen',
-                    jasen
-                })}
-                />
+                onPress={() =>
+                    navigation.navigate("Details", {
+                        type: "Jäsen",
+                        data: jasen,
+                    })
+                }
+            />
             <Divider />
         </>
     );
