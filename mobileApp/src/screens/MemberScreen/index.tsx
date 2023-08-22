@@ -8,7 +8,11 @@ import { Jasen } from "../../types";
 
 import MemberListItem from "./MemberListItem";
 
-function MemberScreen({ navigation }: { navigation: any }) {
+import { MaintenanceTabScreenProps } from "../../NavigationTypes";
+
+type Props = MaintenanceTabScreenProps<"Jäsenet">;
+
+function MemberScreen({ navigation }: Props) {
     const [members, setMembers] = useState<Jasen[]>([]);
 
     useEffect(() => {
@@ -16,13 +20,19 @@ function MemberScreen({ navigation }: { navigation: any }) {
             const members = await jasenService.getAll();
             setMembers(members);
         };
-        void fetchMembers(); 
+        void fetchMembers();
     }, []);
 
     return (
         <ScrollView>
             <List.Section>
-                {members.map((member) => (<MemberListItem key={member.jasen_id} jasen={member} navigation={navigation} />))}
+                {members.map((member) => (
+                    <MemberListItem
+                        key={member.jasen_id}
+                        jasen={member}
+                        navigation={navigation}
+                    />
+                ))}
             </List.Section>
         </ScrollView>
     );
