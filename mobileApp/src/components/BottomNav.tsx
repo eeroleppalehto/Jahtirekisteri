@@ -10,12 +10,7 @@ const Placeholder = () => {
     return <Text>Placeholder</Text>;
 };
 
-// TODO: Fix Props type
-interface Props {
-    navigation: any;
-}
-
-function BottomNav({ navigation }: Props) {
+function BottomNav() {
     return (
         <Tab.Navigator>
             <Tab.Screen name="Grafiikka" component={Placeholder} />
