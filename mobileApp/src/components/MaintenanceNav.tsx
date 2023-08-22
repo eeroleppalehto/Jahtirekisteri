@@ -2,15 +2,19 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import MemberScreen from "../screens/MemberScreen";
 import { View, Text } from "react-native";
 
-const TopTab = createMaterialTopTabNavigator();
+import { MaintenanceTabParamList } from "../NavigationTypes";
+
+const TopTab = createMaterialTopTabNavigator<MaintenanceTabParamList>();
 
 const Empty = () => {
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        >
             <Text>Empty</Text>
         </View>
-    )
-}
+    );
+};
 
 function MaintenanceNav() {
     return (
@@ -19,7 +23,7 @@ function MaintenanceNav() {
             <TopTab.Screen name="Ryhmät" component={Empty} />
             <TopTab.Screen name="Seurueet" component={Empty} />
         </TopTab.Navigator>
-    )
+    );
 }
 
 export default MaintenanceNav;
