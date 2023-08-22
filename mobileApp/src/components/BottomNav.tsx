@@ -1,10 +1,10 @@
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { Text } from 'react-native-paper';
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { Text } from "react-native-paper";
 
-import MemberScreen from '../screens/MemberScreen';
-import MaintenanceNav from './MaintenanceNav';
+import MaintenanceNav from "./MaintenanceNav";
+import { BottomNavParamList } from "../NavigationTypes";
 
-const Tab = createMaterialBottomTabNavigator();
+const Tab = createMaterialBottomTabNavigator<BottomNavParamList>();
 
 const Placeholder = () => {
     return <Text>Placeholder</Text>;
