@@ -22,6 +22,12 @@ function MemberScreen({ navigation }: Props) {
         };
         void fetchMembers();
     }, []);
+    useEffect(() => {
+        if (route.params?.data) {
+            const newMember = route.params.data;
+            setMembers([...members, newMember]);
+        }
+    }, [route.params?.data]);
 
     return (
         <ScrollView>
