@@ -25,7 +25,7 @@ function DrawerContent({ navigation }: Props) {
             <View style={styles.drawerContent}>
                 <View style={styles.userInfoSection}>
                     <Avatar.Icon size={50} icon={"account"} />
-                    <Title style={styles.title}>Mika Hiivola</Title>
+                    <Title style={styles.title}>Miika Hiivola</Title>
                     <Caption style={styles.caption}>Käyttäjänimi</Caption>
                 </View>
                 <Drawer.Section style={styles.drawerSection}>
