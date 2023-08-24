@@ -16,12 +16,10 @@ const ErrorScreen = () => {
     );
 };
 
-type Props =
-    | RootStackScreenProps<"Details">
-    | MaintenanceTabScreenProps<"Jäsenet">;
+type Props = RootStackScreenProps<"Details">;
 
 function DetailsScreen({ route }: Props) {
-    if (!route.params) return <ErrorScreen />;
+    if (!route.params?.type) return <ErrorScreen />;
     try {
         const { type } = route.params;
         let navigation;
