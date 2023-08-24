@@ -1,4 +1,4 @@
-import { Jasen } from "../types";
+import { Jasen, JasenForm } from "../types";
 import { BASE_URL } from "../baseUrl";
 
 const baseUrl = BASE_URL;
@@ -15,8 +15,7 @@ async function getAll(): Promise<Jasen[]> {
     return json;
 } */
 
-async function create(jasen: Jasen): Promise<Jasen> {
-    // TODO: reading .env variables was not working, so I hardcoded the url here
+async function create(jasen: JasenForm): Promise<Jasen> {
     const response = await fetch(`${baseUrl}/api/members`, {
         method: 'POST',
         headers: {
