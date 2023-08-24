@@ -7,7 +7,7 @@ import { Route } from "@react-navigation/native";
 import { RootStackScreenProps } from "../NavigationTypes";
 
 function myGetHeaderTitle(route: Route<string>) {
-    const routeName = getFocusedRouteNameFromRoute(route) ?? "Jäsen";
+    const routeName = getFocusedRouteNameFromRoute(route) ?? "Main";
 
     switch (routeName) {
         case "Ylläpito":
@@ -18,6 +18,8 @@ function myGetHeaderTitle(route: Route<string>) {
             return "Grafiikka";
         case "Jäsen":
             return "Jäsen";
+        default:
+            return routeName;
     }
 }
 

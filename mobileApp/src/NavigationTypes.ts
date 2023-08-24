@@ -20,7 +20,7 @@ export type MyDrawerScreenProps<T extends keyof DrawerParamList> =
 export type RootStackParamList = {
     BottomNavigation: NavigatorScreenParams<BottomNavParamList>;
     Details: { type: string, data: any};
-    // PostDetails: { id: string };
+    Forms: { type: string };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
@@ -28,8 +28,6 @@ export type RootStackScreenProps<T extends keyof RootStackParamList> =
         NativeStackScreenProps<RootStackParamList, T>,
         DrawerScreenProps<DrawerParamList>
     >;
-
-
 
 // Bottom tab types
 export type BottomNavParamList = {
@@ -46,7 +44,7 @@ export type BottomTabScreenProps<T extends keyof BottomNavParamList> =
 
 // Maintenance tab types
 export type MaintenanceTabParamList = {
-    Jäsenet: undefined;
+    Jäsenet: { data: any } | undefined;
     Ryhmät: undefined;
     Seurueet: undefined;
 };
@@ -58,16 +56,16 @@ export type MaintenanceTabScreenProps<T extends keyof MaintenanceTabParamList> =
     >;
 
 ///////////////////////////
-export type HomeTabParamList = {
-    Popular: undefined;
-    Latest: undefined;
-};
+// export type HomeTabParamList = {
+//     Popular: undefined;
+//     Latest: undefined;
+// };
 
-export type HomeTabScreenProps<T extends keyof HomeTabParamList> =
-    CompositeScreenProps<
-        MaterialBottomTabScreenProps<HomeTabParamList, T>,
-        RootStackScreenProps<keyof RootStackParamList>
-    >;
+// export type HomeTabScreenProps<T extends keyof HomeTabParamList> =
+//     CompositeScreenProps<
+//         MaterialBottomTabScreenProps<HomeTabParamList, T>,
+//         RootStackScreenProps<keyof RootStackParamList>
+//     >;
 ///////////////////////////
 declare global {
     namespace ReactNavigation {
