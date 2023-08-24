@@ -1,19 +1,19 @@
 import { List } from "react-native-paper";
 import { useState, useEffect } from "react";
-
 import { ScrollView } from "react-native-gesture-handler";
 
 import jasenService from "../../service/jasenService";
 import { Jasen } from "../../types";
-
 import MemberListItem from "./MemberListItem";
-
 import { MaintenanceTabScreenProps } from "../../NavigationTypes";
+import FloatingActionButton from "../../components/FloatingActionButton";
+import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 
 type Props = MaintenanceTabScreenProps<"Jäsenet">;
 
-function MemberScreen({ navigation }: Props) {
+function MemberScreen({ navigation, route }: Props) {
     const [members, setMembers] = useState<Jasen[]>([]);
+    const [scrollValue, setScrollValue] = useState(0);
 
     useEffect(() => {
         const fetchMembers = async () => {
@@ -22,6 +22,7 @@ function MemberScreen({ navigation }: Props) {
         };
         void fetchMembers();
     }, []);
+
     useEffect(() => {
         if (route.params?.data) {
             const newMember = route.params.data;
@@ -29,18 +30,34 @@ function MemberScreen({ navigation }: Props) {
         }
     }, [route.params?.data]);
 
+    const onScroll = ({
+        nativeEvent,
+    }: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const currentScrollPosition =
+            Math.floor(nativeEvent?.contentOffset?.y) ?? 0;
+
+        setScrollValue(currentScrollPosition);
+    };
+
     return (
-        <ScrollView>
-            <List.Section>
-                {members.map((member) => (
-                    <MemberListItem
-                        key={member.jasen_id}
-                        jasen={member}
-                        navigation={navigation}
-                    />
-                ))}
-            </List.Section>
-        </ScrollView>
+        <>
+            <ScrollView onScroll={onScroll}>
+                <List.Section>
+                    {members.map((member) => (
+                        <MemberListItem
+                            key={member.jasen_id}
+                            jasen={member}
+                            navigation={navigation}
+                        />
+                    ))}
+                </List.Section>
+            </ScrollView>
+            <FloatingActionButton
+                scrollValue={scrollValue}
+                type="jäsen"
+                label="Lisää jäsen  "
+            />
+        </>
     );
 }
 
