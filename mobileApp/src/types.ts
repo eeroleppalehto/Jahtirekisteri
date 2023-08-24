@@ -7,3 +7,5 @@ export interface Jasen {
     postitoimipaikka: string;
     tila: string;
 };
+
+export type JasenForm = Omit<Jasen, 'jasen_id'>;
