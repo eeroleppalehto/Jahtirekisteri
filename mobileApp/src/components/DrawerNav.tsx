@@ -19,6 +19,7 @@ function DrawerNav() {
     return (
         <Drawer.Navigator
             id="DrawerNav"
+            initialRouteName="RootStack"
             drawerContent={({ navigation }) => (
                 <DrawerContent navigation={navigation} />
             )}
