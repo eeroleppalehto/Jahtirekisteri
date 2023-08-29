@@ -7,7 +7,7 @@ import { Route } from "@react-navigation/native";
 import { RootStackScreenProps } from "../NavigationTypes";
 
 function myGetHeaderTitle(route: Route<string>) {
-    const routeName = getFocusedRouteNameFromRoute(route) ?? "Main";
+    const routeName = getFocusedRouteNameFromRoute(route) ?? "Grafiikka";
 
     switch (routeName) {
         case "Ylläpito":
