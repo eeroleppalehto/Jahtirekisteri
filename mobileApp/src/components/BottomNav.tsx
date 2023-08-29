@@ -4,6 +4,9 @@ import { Text } from "react-native-paper";
 import MaintenanceNav from "./MaintenanceNav";
 import { BottomNavParamList } from "../NavigationTypes";
 
+import VictoryTest from "../screens/GraphScreen/VictoryChart";
+import VictoryGroupChart from "../screens/GraphScreen/VictoryGroupChart";
+
 const Tab = createMaterialBottomTabNavigator<BottomNavParamList>();
 
 const Placeholder = () => {
@@ -13,7 +16,7 @@ const Placeholder = () => {
 function BottomNav() {
     return (
         <Tab.Navigator>
-            <Tab.Screen name="Grafiikka" component={Placeholder} />
+            <Tab.Screen name="Grafiikka" component={VictoryGroupChart} />
             <Tab.Screen name="Kaadot" component={Placeholder} />
             <Tab.Screen name="Ylläpito" component={MaintenanceNav} />
         </Tab.Navigator>
