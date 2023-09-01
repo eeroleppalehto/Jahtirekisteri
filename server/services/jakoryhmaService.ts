@@ -1,11 +1,12 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { JakoryhmaSchema } from "../zodSchemas/jakoryhmaZod";
 
-export const createJakoryhma = async (data: any) => {
+export const createJakoryhma = async (data: unknown) => {
+    const parsedData = JakoryhmaSchema.parse(data);
+
   return await prisma.jakoryhma.create({
     data: {
-      seurue_id: data.seurue_id,
-      ryhman_nimi: data.ryhman_nimi,
+            seurue_id: parsedData.seurue_id,
+            ryhman_nimi: parsedData.ryhman_nimi,
     },
   });
 };
@@ -22,14 +23,16 @@ export const readJakoryhma = async (id: number) => {
   });
 };
 
-export const updateJakoryhma = async (id: number, data: any) => {
+export const updateJakoryhma = async (id: number, data: unknown) => {
+    const parsedData = JakoryhmaSchema.parse(data);
+
   return await prisma.jakoryhma.update({
     where: {
       ryhma_id: id,
     },
     data: {
-      seurue_id: data.seurue_id,
-      ryhman_nimi: data.ryhman_nimi,
+            seurue_id: parsedData.seurue_id,
+            ryhman_nimi: parsedData.ryhman_nimi,
     },
   });
 };
