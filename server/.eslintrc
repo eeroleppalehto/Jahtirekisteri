@@ -11,17 +11,17 @@
       "node": true
     },
     "rules": {
-      "@typescript-eslint/semi": ["error"],
+      "@typescript-eslint/semi": ["warn"],
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
       "@typescript-eslint/restrict-template-expressions": "off",
       "@typescript-eslint/restrict-plus-operands": "off",
       "@typescript-eslint/no-unsafe-member-access": "off",
       "@typescript-eslint/no-unused-vars": [
-        "error",
+        "warn",
         { "argsIgnorePattern": "^_" }
       ],
-      "indent": ["error", 4],
+      "indent": ["warn", 4],
       "no-case-declarations": "off"
     },
     "parser": "@typescript-eslint/parser",

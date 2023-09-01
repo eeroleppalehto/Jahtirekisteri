@@ -1,74 +1,48 @@
 // Import required modules and services
-import express from 'express';
-import * as JakoryhmaService from '../services/jakoryhmaService';
+import express from "express";
+import * as JakoryhmaService from "../services/jakoryhmaService";
 // Import Zod schema for data validation
-import { JakoryhmaSchema } from '../zodSchemas/jakoryhmaZod';
-// Import a utility function for safe error handling
-import { safeHandler } from '../utils/safeHandler';
+// import { JakoryhmaSchema } from "../zodSchemas/jakoryhmaZod";
 
 // Initialize the router
 const jakoryhmaRouter = express.Router();
 
 // Endpoint to GET all jakoryhmat (groups)
-// Using safeHandler for automatic error handling
-jakoryhmaRouter.get('/', safeHandler(async (_, res) => {
-  // Fetch all groups from the service layer
-  const jakoryhmat = await JakoryhmaService.getAllJakoryhma();
-  // Send the result as JSON
-  res.json(jakoryhmat);
-}));
+jakoryhmaRouter.get("/", (async (_, res) => {
+    const jakoryhmat = await JakoryhmaService.getAllJakoryhma();
+    res.json(jakoryhmat);
+}) as express.RequestHandler);
 
 // Endpoint to GET a jakoryhma by its ID
-jakoryhmaRouter.get('/:id', safeHandler(async (req, res) => {
-  // Parse ID from the URL parameter and convert it to a number
-  const id = parseInt(req.params.id);
-  // Fetch the group by its ID
-  const jakoryhma = await JakoryhmaService.readJakoryhma(id);
-  // Send the result as JSON
-  res.json(jakoryhma);
-}));
+jakoryhmaRouter.get("/:id", (async (req, res) => {
+    const id = parseInt(req.params.id);
+    const jakoryhma = await JakoryhmaService.readJakoryhma(id);
+    res.json(jakoryhma);
+}) as express.RequestHandler);
 
 // Endpoint to POST (create) a new jakoryhma
-jakoryhmaRouter.post('/', safeHandler(async (req, res) => {
-  // Validate the incoming data against the Zod schema
-  const parsedData = JakoryhmaSchema.safeParse(req.body);
-  // If validation fails, return a 400 status
-  if (!parsedData.success) {
-    res.status(400).send("Invalid data");
-    return;
-  }
-  // Create the new group
-  const newJakoryhma = await JakoryhmaService.createJakoryhma(parsedData.data);
-  // Send the result as JSON
-  res.json(newJakoryhma);
-}));
+jakoryhmaRouter.post("/", (async (req, res) => {
+    const newJakoryhma = await JakoryhmaService.createJakoryhma(req.body);
+    res.json(newJakoryhma);
+}) as express.RequestHandler);
 
 // Endpoint to PUT (update) a jakoryhma by its ID
-jakoryhmaRouter.put('/:id', safeHandler(async (req, res) => {
-  // Parse ID from the URL parameter and convert it to a number
-  const id = parseInt(req.params.id);
-  // Validate the incoming data against the Zod schema
-  const parsedData = JakoryhmaSchema.safeParse(req.body);
-  // If validation fails, return a 400 status
-  if (!parsedData.success) {
-    res.status(400).send("Invalid data");
-    return;
-  }
-  // Update the group
-  const updatedJakoryhma = await JakoryhmaService.updateJakoryhma(id, parsedData.data);
-  // Send the result as JSON
-  res.json(updatedJakoryhma);
-}));
+jakoryhmaRouter.put("/:id", (async (req, res) => {
+    const id = parseInt(req.params.id);
+
+    const updatedJakoryhma = await JakoryhmaService.updateJakoryhma(
+        id,
+        req.body
+    );
+    res.json(updatedJakoryhma);
+}) as express.RequestHandler);
 
 // Endpoint to DELETE a jakoryhma by its ID
-jakoryhmaRouter.delete('/:id', safeHandler(async (req, res) => {
-  // Parse ID from the URL parameter and convert it to a number
-  const id = parseInt(req.params.id);
-  // Delete the group
-  await JakoryhmaService.deleteJakoryhma(id);
-  // Send a 204 status to indicate successful deletion
-  res.status(204).send();
-}));
+jakoryhmaRouter.delete("/:id", (async (req, res) => {
+    const id = parseInt(req.params.id);
+    await JakoryhmaService.deleteJakoryhma(id);
+    res.status(204).send();
+}) as express.RequestHandler);
 
 // Export the router to be used in other parts of the application
 export default jakoryhmaRouter;
