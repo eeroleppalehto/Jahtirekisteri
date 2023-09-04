@@ -186,37 +186,14 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         else:
             # Process data to be shown in sharedPortionsTableWidget
             try:
-                sharedPortionsData = databaseOperation6.resultSet
-
-                # Generate id to new list and remove duplicates
-                sharedKillsListID = [ row[0] for row in sharedPortionsData ]
-                sharedKillsListID = list(dict.fromkeys(sharedKillsListID))
-
-                # Modify database attributes to accommodate for edited table
-                databaseOperation6.columnHeaders[2] = 'Jaettu'
-                databaseOperation6.rows = len(sharedKillsListID)
-
-                portionDict = {'Koko': 4, 'Puolikas': 2, 'Neljännes': 1}
-
-                # Iterate through result set and sum amounts and portions for each id
-                newData = []
-                for id in sharedKillsListID:
-                    animal = ""
-                    sharedPortions = 0
-                    amount = 0
-                    shotUsagePortion = 0
-
-                    for row in sharedPortionsData:
-                        if row[0] == id:
-                            animal = row[1]
-                            sharedPortions += portionDict[row[2]]
-                            amount += row[3]
-                            shotUsagePortion += row[4]/100
-                    sharedPortions = f"{int(sharedPortions*100/(4*shotUsagePortion))}%"
-                    newData.append((id, animal, sharedPortions, amount))
+                # parse the data from the view to readable format
+                tableData = prepareData.parseSharedPortionOfShot(databaseOperation6.resultSet)
                 
-                # Replace resultSet with new data
-                databaseOperation6.resultSet = newData
+                # Set row count and column headers to match the data
+                databaseOperation6.rows = len(tableData)
+                databaseOperation6.columnHeaders[2] = 'Jaettu'
+                databaseOperation6.resultSet = tableData
+                
                 prepareData.prepareTable(databaseOperation6, self.sharedPortionsTW)
                 self.sharedPortionsTW.setColumnHidden(4, True)
             except:

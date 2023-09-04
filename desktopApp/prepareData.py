@@ -79,3 +79,42 @@ def prepareComboBox(resultObject, comboBox, ixToShow, ixToReturn):
     
     comboBox.addItems(cBItems) # Populate the combo box
     return cBValuesOfInterest       
+
+def parseSharedPortionOfShot(tableData):
+    """Function that parses data from table data to be view in the shared portion of shot table
+
+    Args:
+        tableData (list): Contains list of tuples containing (id, animal, portion, amount, usagePortion)
+
+    Returns:
+        list: Contains list of tuples containing (id, animal, sharedPortion, amount)
+    """
+    
+    # Generate ids to new list and remove duplicates
+    sharedKillsListId = [ row[0] for row in tableData ]
+    sharedKillsListId = list(dict.fromkeys(sharedKillsListId))
+    
+    portionDict = {'Koko': 4, 'Puolikas': 2, 'Neljännes': 1}
+    
+    resultTableData = []
+    # Iterate through ids
+    for id in sharedKillsListId:
+        # Initialize variables
+        animal = ""
+        sharedPortions = 0
+        amount = 0
+        shotUsagePortion = 0
+
+        # Iterate through table data
+        for row in tableData:
+            if row[0] == id:
+                animal = row[1]
+                sharedPortions += portionDict[row[2]]
+                amount += row[3]
+                shotUsagePortion = row[4]/100
+                
+        # Calculate shared portions and append values to result table data
+        sharedPortions = f"{int(sharedPortions*100/(4*shotUsagePortion))}%"
+        resultTableData.append((id, animal, sharedPortions, amount))
+    
+    return resultTableData
