@@ -111,6 +111,7 @@ def parseSharedPortionOfShot(tableData):
                 animal = row[1]
                 sharedPortions += portionDict[row[2]]
                 amount += row[3]
+                shotUsagePortion = row[4]/100
                 
         # Calculate shared portions and append values to result table data
         sharedPortions = f"{int(sharedPortions*100/(4*shotUsagePortion))}%"
