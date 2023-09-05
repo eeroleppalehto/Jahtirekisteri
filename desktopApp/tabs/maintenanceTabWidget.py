@@ -6,11 +6,16 @@ import prepareData
 
 import dialogs.dialogueWindow as dialogueWindow
 import dialogs.addDialogueWindow as addDialogueWindow
-import dialogs.editDialogueWindow as editDialogueWindow
 
 import dialogs.removeDialogues.Group as removeDialogueWindowGroup
 import dialogs.removeDialogues.Member as removeDialogueWindowMember
 import dialogs.removeDialogues.Party as removeDialogueWindowParty
+
+import dialogs.editDialogues.Company as editDialogueWindowCompany
+import dialogs.editDialogues.Group as editDialogueWindowGroup
+import dialogs.editDialogues.Member as editDialogueWindowMember
+import dialogs.editDialogues.Membership as editDialogueWindowMembership
+import dialogs.editDialogues.Party as editDialogueWindowParty
 
 
 class Ui_maintenanceTabWidget(QScrollArea, QWidget):
@@ -141,21 +146,21 @@ class Ui_maintenanceTabWidget(QScrollArea, QWidget):
         dialog.exec()
     
     def openEditCompanyDialog(self):
-        dialog = editDialogueWindow.Company()
+        dialog = editDialogueWindowCompany.Company()
         dialog.exec()
 
     def openEditMemberDialog(self):
-        dialog = editDialogueWindow.Member()
+        dialog = editDialogueWindowMember.Member()
         dialog.exec()
 
     def openEditMembershipDialog(self):
-        dialog = editDialogueWindow.Membership()
+        dialog = editDialogueWindowMembership.Membership()
         dialog.exec()
     
     def openEditGroupDialog(self):
-        dialog = editDialogueWindow.Group()
+        dialog = editDialogueWindowGroup.Group()
         dialog.exec()
 
     def openEditPartyDialog(self):
-        dialog = editDialogueWindow.Party()
+        dialog = editDialogueWindowParty.Party()
         dialog.exec()
