@@ -207,19 +207,22 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
             
     def saveShare(self):
         errorCode = 0
+        portionDict = {
+            "Neljännes": 0.25,
+            "Puolikas": 0.5,
+            "Koko": 1,
+        }
         try:
             shotUsageId = int(self.shotUsageId)
             shareDay = self.shareDE.date().toPyDate()
             portion = self.sharePortionCB.currentText()
-            weight = float(self.shareAmountLE.text())
+            weight = portionDict[portion]*float(self.shotWeight)
             shareGroupChosenItemIx = self.shareGroupCB.currentIndex()
             shareGroup = self.shareGroupIdList[shareGroupChosenItemIx]
             
             if self.shotUsageId == '':
                 errorCode = 1
             
-            if self.shareAmountLE.text() == '':
-                errorCode = 2
             # Insert data into kaato table
             # Create a SQL clause to insert element values to the DB
             sqlClauseBeginning = "INSERT INTO public.jakotapahtuma(paiva, ryhma_id, osnimitys, maara, kaadon_kasittely_id) VALUES("
@@ -234,9 +237,6 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
 
         if errorCode == 1:
             self.alert('Virheellinen syöte', 'Valitse jaettava kaato', '','Valitse jaettava kaato yllä olevasta taulukosta' )
-            return
-        elif errorCode == 2:
-            self.alert('Virheellinen syöte', 'Tarvittavat kentät ei ole täytetty', '','Täytä paino kenttä' )
             return
 
         databaseOperation = pgModule.DatabaseOperation()
@@ -257,6 +257,7 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
     def onShareKillTableClick(self, item):
         selectedRow = item.row()
         self.shotUsageId = self.shareKillsTW.item(selectedRow, 10).text()
+        self.shotWeight = float(self.shareKillsTW.item(selectedRow, 9).text())
 
 
     def openSettingsDialog(self):
