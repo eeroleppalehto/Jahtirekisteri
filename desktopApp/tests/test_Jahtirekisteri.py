@@ -17,7 +17,7 @@ def test_defaulTabIndex(qtbot):
     qtbot.addWidget(app)
 
     
-    tabIndex = app.pageTab.currentIndex()
+    tabIndex = app.tab.currentIndex()
 
     assert tabIndex == 0
 
