@@ -21,7 +21,6 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         self.shareKillsTW = self.shareKillsTableWidget
         self.shareDE = self.shareDateEdit
         self.sharePortionCB = self.portionComboBox
-        self.shareAmountLE = self.amountLineEdit
         self.shareGroupCB = self.groupComboBox
         self.shareSavePushBtn = self.shareSavePushButton
         self.shareSavePushBtn.clicked.connect(self.saveShare) # Signal
@@ -252,7 +251,6 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
             
             # Update the page to show new data and clear 
             self.populateSharePage()
-            self.shareAmountLE.clear()
 
     def onShareKillTableClick(self, item):
         selectedRow = item.row()
