@@ -215,6 +215,7 @@ class Ui_killTabWidget(QScrollArea, QWidget):
             self.shotLicenseYearCB.clear()
             yearList = [row[2] for row in databaseOperation8.resultSet]
             yearList = list(set(yearList))
+            yearList.sort(reverse=True)
             self.shotLicenseYearCB.addItems(yearList)
 
     def populateShotLicenceTW(self):
