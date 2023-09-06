@@ -210,12 +210,14 @@ class Ui_killTabWidget(QScrollArea, QWidget):
                 databaseOperation8.detailedMessage
                 )
         else:
-            self.shotLicenseYearCB.clear() # FIXME: As this is called in populateKillPage, it clears the combo box every time the page is opened which sends a signal that crashes the app
+            self.shotLicenseYearCB.clear()
             yearList = [row[2] for row in databaseOperation8.resultSet]
             yearList = list(set(yearList))
             self.shotLicenseYearCB.addItems(yearList)
 
     def populateShotLicenceTW(self):
+        if self.shotLicenseYearCB.currentText() == '':
+            return
         year = int(self.shotLicenseYearCB.currentText())
 
         databaseOperation = pgModule.DatabaseOperation()
