@@ -175,6 +175,8 @@ class Ui_killTabWidget(QScrollArea, QWidget):
             prepareData.prepareComboBox(
                 databaseOperation6, self.shotUsage2CB, 1, 0)  
 
+        self.populateLicenceCB()
+
         if self.shotLicenseYearCB.currentText() != '':
             databaseOperation7 = pgModule.DatabaseOperation()
             databaseOperation7.callFunction(
