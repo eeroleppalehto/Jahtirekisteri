@@ -57,22 +57,6 @@ class Ui_killTabWidget(QScrollArea, QWidget):
             databaseOperation = pgModule.DatabaseOperation()
             self.connectionArguments = databaseOperation.readDatabaseSettingsFromFile('connectionSettings.dat')
 
-        databaseOperation8 = pgModule.DatabaseOperation()
-        databaseOperation8.getAllRowsFromTable(
-            self.connectionArguments, 'public.lupa')
-        if databaseOperation8.errorCode != 0:
-            self.alert(
-                'Vakava virhe',
-                'Tietokantaoperaatio epäonnistui',
-                databaseOperation8.errorMessage,
-                databaseOperation8.detailedMessage
-                )
-        else:
-            self.shotLicenseYearCB.clear()
-            yearList = [row[2] for row in databaseOperation8.resultSet]
-            yearList = list(set(yearList))
-            self.shotLicenseYearCB.addItems(yearList)
-        
         self.shotLicenseYearCB.currentIndexChanged.connect(self.populateShotLicenceTW) # Signal
 
         self.populateKillPage()
@@ -191,6 +175,8 @@ class Ui_killTabWidget(QScrollArea, QWidget):
             prepareData.prepareComboBox(
                 databaseOperation6, self.shotUsage2CB, 1, 0)  
 
+        self.populateLicenceCB()
+
         if self.shotLicenseYearCB.currentText() != '':
             databaseOperation7 = pgModule.DatabaseOperation()
             databaseOperation7.callFunction(
@@ -212,9 +198,29 @@ class Ui_killTabWidget(QScrollArea, QWidget):
                 'Ei löytynyt vuotta, jolta hakea lupatietoja',
                 'Could not find year to fetch licence data from, try adding a license in the license page first'
                 )
+            
         
+    def populateLicenceCB(self):
+        databaseOperation8 = pgModule.DatabaseOperation()
+        databaseOperation8.getAllRowsFromTable(
+            self.connectionArguments, 'public.lupa')
+        if databaseOperation8.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation8.errorMessage,
+                databaseOperation8.detailedMessage
+                )
+        else:
+            self.shotLicenseYearCB.clear()
+            yearList = [row[2] for row in databaseOperation8.resultSet]
+            yearList = list(set(yearList))
+            yearList.sort(reverse=True)
+            self.shotLicenseYearCB.addItems(yearList)
 
     def populateShotLicenceTW(self):
+        if self.shotLicenseYearCB.currentText() == '':
+            return
         year = int(self.shotLicenseYearCB.currentText())
 
         databaseOperation = pgModule.DatabaseOperation()
