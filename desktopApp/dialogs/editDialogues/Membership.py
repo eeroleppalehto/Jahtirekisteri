@@ -187,13 +187,15 @@ class Membership(DialogFrame):
             groupChosenItemIx = self.editMembershipGroupCB.currentIndex()
             groupId = self.groupIdList[groupChosenItemIx]
 
+            # Get values from widgets and add them to a list
             updateList = [
                 groupId,
                 memberId,
-                self.editMembershipJoinedDE.date().toPyDate(),
+                str(self.editMembershipJoinedDE.date().toPyDate()),
                 self.editMembershipShareSB.value()
             ]
 
+            # Check if any of the values are empty
             for item in updateList:
                     if item == '':
                         errorCode = 1
@@ -201,13 +203,16 @@ class Membership(DialogFrame):
                 'ryhma_id',
                 'jasen_id',
                 'liittyi',
-                'osuus'
+                'osuus',
+                'poistui'
             ]
 
-            # Check if the exit check box is selected
+            # Check if the exit check box is selected and add the exit date or NULL value to the update list
             if self.editMembershipExitCheck.isChecked() == True:
-                updateList.append(self.editMembershipExitDE.date().toPyDate())
-                columnList.append('poistui')
+                updateList.append(str(self.editMembershipExitDE.date().toPyDate()))
+            else:
+                updateList.append('NULL')
+                
 
             table = 'public.jasenyys'
             limit = f"public.jasenyys.jasenyys_id = {self.membershipIdInt}"
