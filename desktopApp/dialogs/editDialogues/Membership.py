@@ -238,6 +238,21 @@ class Membership(DialogFrame):
             else:
                 columnValueString += f"{columnList[i]} = {updateList[i]!r}"
 
+        # Execute the update operation
+        dataBaseOperation = pgModule.DatabaseOperation()
+        dataBaseOperation.updateManyValuesInRow(self.connectionArguments, table, columnValueString, limit)
+        if dataBaseOperation.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                dataBaseOperation.errorMessage,
+                dataBaseOperation.detailedMessage
+                )
+        else:
+            success = SuccessfulOperationDialog()
+            success.exec()
+            self.state = -1
+            self.populateMembershipTW()
 
     def closeDialog(self):
             self.close()
