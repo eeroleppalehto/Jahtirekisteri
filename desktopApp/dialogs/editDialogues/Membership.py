@@ -187,13 +187,15 @@ class Membership(DialogFrame):
             groupChosenItemIx = self.editMembershipGroupCB.currentIndex()
             groupId = self.groupIdList[groupChosenItemIx]
 
+            # Get values from widgets and add them to a list
             updateList = [
                 groupId,
                 memberId,
-                self.editMembershipJoinedDE.date().toPyDate(),
+                str(self.editMembershipJoinedDE.date().toPyDate()),
                 self.editMembershipShareSB.value()
             ]
 
+            # Check if any of the values are empty
             for item in updateList:
                     if item == '':
                         errorCode = 1
@@ -201,13 +203,16 @@ class Membership(DialogFrame):
                 'ryhma_id',
                 'jasen_id',
                 'liittyi',
-                'osuus'
+                'osuus',
+                'poistui'
             ]
 
-            # Check if the exit check box is selected
+            # Check if the exit check box is selected and add the exit date or NULL value to the update list
             if self.editMembershipExitCheck.isChecked() == True:
-                updateList.append(self.editMembershipExitDE.date().toPyDate())
-                columnList.append('poistui')
+                updateList.append(str(self.editMembershipExitDE.date().toPyDate()))
+            else:
+                updateList.append('NULL')
+                
 
             table = 'public.jasenyys'
             limit = f"public.jasenyys.jasenyys_id = {self.membershipIdInt}"
@@ -222,26 +227,32 @@ class Membership(DialogFrame):
                 '-'
                 )
                 return
+        
+        # Create a string of column names and values for the update operation
+        columnValueString = ''
+        for i in range(len(updateList)):
+            if columnList[i] != 'poistui':
+                columnValueString += f"{columnList[i]} = {updateList[i]!r}, "
+            elif columnList[i] == 'poistui' and updateList[i] == 'NULL':
+                columnValueString += f"{columnList[i]} = {updateList[i]}"
+            else:
+                columnValueString += f"{columnList[i]} = {updateList[i]!r}"
 
-        i = 0
-        for data in updateList: # Check for empty list
-            if data != self.membership[i]:
-                databaseOperation = pgModule.DatabaseOperation()
-                databaseOperation.updateTable(self.connectionArguments, table,
-                columnList[i], f"{data!r}", limit)
-                if databaseOperation.errorCode != 0:
-                    self.alert(
-                        'Vakava virhe',
-                        'Tietokantaoperaatio epäonnistui',
-                        databaseOperation.errorMessage,
-                        databaseOperation.detailedMessage
-                        )
-            i += 1
-
-        success = SuccessfulOperationDialog()
-        success.exec()
-        self.state = -1
-        self.populateMembershipTW()
+        # Execute the update operation
+        dataBaseOperation = pgModule.DatabaseOperation()
+        dataBaseOperation.updateManyValuesInRow(self.connectionArguments, table, columnValueString, limit)
+        if dataBaseOperation.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                dataBaseOperation.errorMessage,
+                dataBaseOperation.detailedMessage
+                )
+        else:
+            success = SuccessfulOperationDialog()
+            success.exec()
+            self.state = -1
+            self.populateMembershipTW()
 
     def closeDialog(self):
             self.close()
