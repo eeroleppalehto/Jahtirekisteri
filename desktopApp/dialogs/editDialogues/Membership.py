@@ -227,26 +227,17 @@ class Membership(DialogFrame):
                 '-'
                 )
                 return
+        
+        # Create a string of column names and values for the update operation
+        columnValueString = ''
+        for i in range(len(updateList)):
+            if columnList[i] != 'poistui':
+                columnValueString += f"{columnList[i]} = {updateList[i]!r}, "
+            elif columnList[i] == 'poistui' and updateList[i] == 'NULL':
+                columnValueString += f"{columnList[i]} = {updateList[i]}"
+            else:
+                columnValueString += f"{columnList[i]} = {updateList[i]!r}"
 
-        i = 0
-        for data in updateList: # Check for empty list
-            if data != self.membership[i]:
-                databaseOperation = pgModule.DatabaseOperation()
-                databaseOperation.updateTable(self.connectionArguments, table,
-                columnList[i], f"{data!r}", limit)
-                if databaseOperation.errorCode != 0:
-                    self.alert(
-                        'Vakava virhe',
-                        'Tietokantaoperaatio epäonnistui',
-                        databaseOperation.errorMessage,
-                        databaseOperation.detailedMessage
-                        )
-            i += 1
-
-        success = SuccessfulOperationDialog()
-        success.exec()
-        self.state = -1
-        self.populateMembershipTW()
 
     def closeDialog(self):
             self.close()
