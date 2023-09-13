@@ -58,7 +58,7 @@ class EditShot(DialogFrame):
         self.editShotCancelPB = self.editShotCancelPushButton
         self.editShotCancelPB.clicked.connect(self.closeDialog)
 
-
+        self.editShotPopulatePB.setEnabled(False)
 
         self.state = -1
 
@@ -439,19 +439,7 @@ class EditShot(DialogFrame):
         self.shotInfo = self.editShotTW.item(selectedRow, 8).text()
         self.shotId = int(self.editShotTW.item(selectedRow, 9).text())
 
-        # originalList = [
-        #     self.shooterId,
-        #     self.shotDate,
-        #     self.shotWeight,
-        #     self.shotLocation,
-        #     self.shotAnimal,
-        #     self.shotAge,
-        #     self.shotGender,
-        #     self.shotInfo
-        # ]
-
-        # print(originalList)
-
+        self.editShotPopulatePB.setEnabled(True)
 
     def compareUpdates(self, updateList):
         originalList = [
