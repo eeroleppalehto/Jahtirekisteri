@@ -67,10 +67,8 @@ class EditShot(DialogFrame):
     def toggleUsage2(self):
         if self.editShotUsage2CheckB.isChecked():
             self.editShotUsage2CB.setEnabled(True)
-            #self.editShotUsage2SB.setEnabled(True)
         else:
             self.editShotUsage2CB.setEnabled(False)
-            #self.editShotUsage2SB.setEnabled(False)
     
     def calculateUsage2Value(self):
         self.editShotUsage2SB.setValue(100 - self.editShotUsageSB.value())
@@ -271,7 +269,6 @@ class EditShot(DialogFrame):
                 self.editShotAgeCB.currentText(),
                 self.editShotAdditionalnfoPT.toPlainText()
             ]
-            # print(updateList)
 
             columnNames = [
                 'jasen_id',
@@ -302,8 +299,6 @@ class EditShot(DialogFrame):
                 ''
             )
         
-        # print(self.compareUpdates(updateList))
-        # print(table, columnValueString, limit)
         if self.compareUpdates(updateList) == False:
             databaseOperation = pgModule.DatabaseOperation()
             databaseOperation.updateManyValuesInRow(
@@ -344,7 +339,6 @@ class EditShot(DialogFrame):
             )
         else:
             pass
-            #print('Usage edited')
 
     def addNewusage(self, shotId, usageId, usageAmount):
         """_summary_
@@ -372,7 +366,6 @@ class EditShot(DialogFrame):
                 databaseOperation.errorMessage,
                 databaseOperation.detailedMessage
                 )
-        # print('Usage added')
 
     def editShotAndUsage(self):
         self.editShot()
