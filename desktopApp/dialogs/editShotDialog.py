@@ -355,15 +355,11 @@ class EditShot(DialogFrame):
             usagePortion (int): _description_
         """
         errorCode = 0
-        # FIXME: Is the try-except block necessary?
-        try:
-            sqlClauseBeginning = "INSERT INTO public.kaadon_kasittely(kaato_id, kasittelyid, kasittely_maara) VALUES("
-            sqlClauseValues = f"{shotId!r}, {usageId!r}, {usageAmount!r})"
-            sqlClauseEnd = ""
-            sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
-        except:
-            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
-            return
+
+        sqlClauseBeginning = "INSERT INTO public.kaadon_kasittely(kaato_id, kasittelyid, kasittely_maara) VALUES("
+        sqlClauseValues = f"{shotId!r}, {usageId!r}, {usageAmount!r})"
+        sqlClauseEnd = ""
+        sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
         
         # create DatabaseOperation object to execute the SQL clause
 
