@@ -421,7 +421,10 @@ class EditShot(DialogFrame):
                     'Tarkista syöte',
                     ''
                 )
-
+        self.editShotLocationLE.clear()
+        self.editShotWeightLE.clear()
+        self.editShotAdditionalnfoPT.clear()
+        self.editShotUsageSB.setValue(100)
 
     def onTableItemClicked(self, item):
         selectedRow = item.row()
