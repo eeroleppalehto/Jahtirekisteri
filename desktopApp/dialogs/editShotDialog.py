@@ -58,7 +58,7 @@ class EditShot(DialogFrame):
         self.editShotCancelPB = self.editShotCancelPushButton
         self.editShotCancelPB.clicked.connect(self.closeDialog)
 
-
+        self.editShotPopulatePB.setEnabled(False)
 
         self.state = -1
 
@@ -67,10 +67,8 @@ class EditShot(DialogFrame):
     def toggleUsage2(self):
         if self.editShotUsage2CheckB.isChecked():
             self.editShotUsage2CB.setEnabled(True)
-            #self.editShotUsage2SB.setEnabled(True)
         else:
             self.editShotUsage2CB.setEnabled(False)
-            #self.editShotUsage2SB.setEnabled(False)
     
     def calculateUsage2Value(self):
         self.editShotUsage2SB.setValue(100 - self.editShotUsageSB.value())
@@ -271,7 +269,6 @@ class EditShot(DialogFrame):
                 self.editShotAgeCB.currentText(),
                 self.editShotAdditionalnfoPT.toPlainText()
             ]
-            # print(updateList)
 
             columnNames = [
                 'jasen_id',
@@ -302,8 +299,6 @@ class EditShot(DialogFrame):
                 ''
             )
         
-        # print(self.compareUpdates(updateList))
-        # print(table, columnValueString, limit)
         if self.compareUpdates(updateList) == False:
             databaseOperation = pgModule.DatabaseOperation()
             databaseOperation.updateManyValuesInRow(
@@ -344,7 +339,6 @@ class EditShot(DialogFrame):
             )
         else:
             pass
-            #print('Usage edited')
 
     def addNewusage(self, shotId, usageId, usageAmount):
         """_summary_
@@ -355,15 +349,11 @@ class EditShot(DialogFrame):
             usagePortion (int): _description_
         """
         errorCode = 0
-        # FIXME: Is the try-except block necessary?
-        try:
-            sqlClauseBeginning = "INSERT INTO public.kaadon_kasittely(kaato_id, kasittelyid, kasittely_maara) VALUES("
-            sqlClauseValues = f"{shotId!r}, {usageId!r}, {usageAmount!r})"
-            sqlClauseEnd = ""
-            sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
-        except:
-            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
-            return
+
+        sqlClauseBeginning = "INSERT INTO public.kaadon_kasittely(kaato_id, kasittelyid, kasittely_maara) VALUES("
+        sqlClauseValues = f"{shotId!r}, {usageId!r}, {usageAmount!r})"
+        sqlClauseEnd = ""
+        sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
         
         # create DatabaseOperation object to execute the SQL clause
 
@@ -376,7 +366,6 @@ class EditShot(DialogFrame):
                 databaseOperation.errorMessage,
                 databaseOperation.detailedMessage
                 )
-        # print('Usage added')
 
     def editShotAndUsage(self):
         self.editShot()
@@ -439,19 +428,7 @@ class EditShot(DialogFrame):
         self.shotInfo = self.editShotTW.item(selectedRow, 8).text()
         self.shotId = int(self.editShotTW.item(selectedRow, 9).text())
 
-        # originalList = [
-        #     self.shooterId,
-        #     self.shotDate,
-        #     self.shotWeight,
-        #     self.shotLocation,
-        #     self.shotAnimal,
-        #     self.shotAge,
-        #     self.shotGender,
-        #     self.shotInfo
-        # ]
-
-        # print(originalList)
-
+        self.editShotPopulatePB.setEnabled(True)
 
     def compareUpdates(self, updateList):
         originalList = [
