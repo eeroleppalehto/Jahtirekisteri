@@ -14,6 +14,8 @@ import pgModule as pgModule
 import prepareData as prepareData
 from datetime import date
 
+from dialogs.messageModule import PopupMessages as msg
+
 class EditShot(DialogFrame):
     """docstring for ClassName."""
     def __init__(self):
@@ -60,11 +62,10 @@ class EditShot(DialogFrame):
         self.editShotCancelPB = self.editShotCancelPushButton
         self.editShotCancelPB.clicked.connect(self.closeDialog)
 
-        self.editShotPopulatePB.setEnabled(False)
-
         self.state = -1
 
         self.populateEditShotDialog()
+
 
     def toggleUsage2(self):
         if self.editShotUsage2CheckB.isChecked():
@@ -416,6 +417,7 @@ class EditShot(DialogFrame):
         self.editShotWeightLE.clear()
         self.editShotAdditionalInfoPT.clear()
         self.editShotUsageSB.setValue(100)
+        msg().successMessage("Muutokset tallennettu")
 
     def onTableItemClicked(self, item):
         selectedRow = item.row()
