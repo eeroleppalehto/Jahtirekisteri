@@ -38,7 +38,7 @@ class EditShot(DialogFrame):
         self.editShotGenderCB = self.editShotGenderComboBox
         self.editShotAgeCB = self.editShotAgeComboBox
         self.editShotWeightLE = self.editShotWeightLineEdit
-        self.editShotAdditionalnfoPT = self.editShotAdditionalInfoPlainTextEdit
+        self.editShotAdditionalInfoPT = self.editShotAdditionalInfoPlainTextEdit
         
         self.editShotUsageCB = self.editShotUsageComboBox
         self.editShotUsageSB = self.editShotUsagePortionSpinBox
@@ -212,7 +212,7 @@ class EditShot(DialogFrame):
         
         self.editShotWeightLE.setText(str(self.shotWeight))
     
-        self.editShotAdditionalnfoPT.setPlainText(self.shotInfo)
+        self.editShotAdditionalInfoPT.setPlainText(self.shotInfo)
 
         databaseOperation = pgModule.DatabaseOperation()
         databaseOperation.getAllRowsFromTableWithLimit(
@@ -267,7 +267,7 @@ class EditShot(DialogFrame):
                 self.editShotAnimalCB.currentText(),
                 self.editShotGenderCB.currentText(),
                 self.editShotAgeCB.currentText(),
-                self.editShotAdditionalnfoPT.toPlainText()
+                self.editShotAdditionalInfoPT.toPlainText()
             ]
 
             columnNames = [
@@ -412,7 +412,7 @@ class EditShot(DialogFrame):
                 )
         self.editShotLocationLE.clear()
         self.editShotWeightLE.clear()
-        self.editShotAdditionalnfoPT.clear()
+        self.editShotAdditionalInfoPT.clear()
         self.editShotUsageSB.setValue(100)
 
     def onTableItemClicked(self, item):
