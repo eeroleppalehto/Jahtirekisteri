@@ -31,6 +31,8 @@ class EditShot(DialogFrame):
         self.editShotTW.itemClicked.connect(self.onTableItemClicked)
         self.editShotPopulatePB = self.editShotPopulatePushButton
         self.editShotPopulatePB.clicked.connect(self.populateFields)
+        self.editShotPopulatePB.setEnabled(False)
+
         self.editShotByCB = self.editShotByComboBox
         self.editShotAnimalCB = self.editShotAnimalComboBox
         self.editShotDE = self.editShotDateEdit
