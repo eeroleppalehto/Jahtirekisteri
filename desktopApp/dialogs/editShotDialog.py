@@ -14,6 +14,8 @@ import pgModule as pgModule
 import prepareData as prepareData
 from datetime import date
 
+from dialogs.messageModule import PopupMessages as msg
+
 class EditShot(DialogFrame):
     """docstring for ClassName."""
     def __init__(self):
@@ -31,6 +33,8 @@ class EditShot(DialogFrame):
         self.editShotTW.itemClicked.connect(self.onTableItemClicked)
         self.editShotPopulatePB = self.editShotPopulatePushButton
         self.editShotPopulatePB.clicked.connect(self.populateFields)
+        self.editShotPopulatePB.setEnabled(False)
+
         self.editShotByCB = self.editShotByComboBox
         self.editShotAnimalCB = self.editShotAnimalComboBox
         self.editShotDE = self.editShotDateEdit
@@ -38,7 +42,7 @@ class EditShot(DialogFrame):
         self.editShotGenderCB = self.editShotGenderComboBox
         self.editShotAgeCB = self.editShotAgeComboBox
         self.editShotWeightLE = self.editShotWeightLineEdit
-        self.editShotAdditionalnfoPT = self.editShotAdditionalInfoPlainTextEdit
+        self.editShotAdditionalInfoPT = self.editShotAdditionalInfoPlainTextEdit
         
         self.editShotUsageCB = self.editShotUsageComboBox
         self.editShotUsageSB = self.editShotUsagePortionSpinBox
@@ -58,11 +62,10 @@ class EditShot(DialogFrame):
         self.editShotCancelPB = self.editShotCancelPushButton
         self.editShotCancelPB.clicked.connect(self.closeDialog)
 
-        self.editShotPopulatePB.setEnabled(False)
-
         self.state = -1
 
         self.populateEditShotDialog()
+
 
     def toggleUsage2(self):
         if self.editShotUsage2CheckB.isChecked():
@@ -212,7 +215,7 @@ class EditShot(DialogFrame):
         
         self.editShotWeightLE.setText(str(self.shotWeight))
     
-        self.editShotAdditionalnfoPT.setPlainText(self.shotInfo)
+        self.editShotAdditionalInfoPT.setPlainText(self.shotInfo)
 
         databaseOperation = pgModule.DatabaseOperation()
         databaseOperation.getAllRowsFromTableWithLimit(
@@ -267,7 +270,7 @@ class EditShot(DialogFrame):
                 self.editShotAnimalCB.currentText(),
                 self.editShotGenderCB.currentText(),
                 self.editShotAgeCB.currentText(),
-                self.editShotAdditionalnfoPT.toPlainText()
+                self.editShotAdditionalInfoPT.toPlainText()
             ]
 
             columnNames = [
@@ -412,8 +415,9 @@ class EditShot(DialogFrame):
                 )
         self.editShotLocationLE.clear()
         self.editShotWeightLE.clear()
-        self.editShotAdditionalnfoPT.clear()
+        self.editShotAdditionalInfoPT.clear()
         self.editShotUsageSB.setValue(100)
+        msg().successMessage("Muutokset tallennettu")
 
     def onTableItemClicked(self, item):
         selectedRow = item.row()
