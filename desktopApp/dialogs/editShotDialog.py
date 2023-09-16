@@ -346,7 +346,7 @@ class EditShot(DialogFrame):
         else:
             pass
 
-    def addNewusage(self, shotId, usageId, usageAmount):
+    def addNewUsage(self, shotId, usageId, usageAmount):
         """_summary_
 
         Args:
@@ -415,7 +415,7 @@ class EditShot(DialogFrame):
                 useIx2 = self.editShotUsage2CB.currentIndex()
                 use2 = self.shotUsageIdList[useIx2]
                 use2Amount = self.editShotUsage2SB.value()
-                self.addNewusage(self.shotId, use2, use2Amount)
+                self.addNewUsage(self.shotId, use2, use2Amount)
             except:
                 self.alert(
                     'Virhe',
