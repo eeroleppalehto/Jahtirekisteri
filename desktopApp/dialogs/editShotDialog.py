@@ -39,9 +39,11 @@ class EditShot(DialogFrame):
         self.editShotAnimalCB = self.editShotAnimalComboBox
         self.editShotDE = self.editShotDateEdit
         self.editShotLocationLE = self.editShotLocationLineEdit
+        self.editShotLocationLE.textChanged.connect(self.validateLineEdits)
         self.editShotGenderCB = self.editShotGenderComboBox
         self.editShotAgeCB = self.editShotAgeComboBox
         self.editShotWeightLE = self.editShotWeightLineEdit
+        self.editShotWeightLE.textChanged.connect(self.validateLineEdits)
         self.editShotAdditionalInfoPT = self.editShotAdditionalInfoPlainTextEdit
         
         self.editShotUsageCB = self.editShotUsageComboBox
@@ -58,6 +60,7 @@ class EditShot(DialogFrame):
         self.editShotUsage2CheckB.clicked.connect(self.toggleUsage2)
 
         self.editShotSavePB = self.editShotSavePushButton
+        self.editShotSavePB.setEnabled(False)
         self.editShotSavePB.clicked.connect(self.editShotAndUsage)
         self.editShotCancelPB = self.editShotCancelPushButton
         self.editShotCancelPB.clicked.connect(self.closeDialog)
@@ -370,6 +373,13 @@ class EditShot(DialogFrame):
                 databaseOperation.detailedMessage
                 )
 
+
+    def validateLineEdits(self):
+        if self.editShotLocationLE.text().strip() and self.editShotWeightLE.text().strip():
+            self.editShotSavePB.setEnabled(True)
+        else:
+            self.editShotSavePB.setEnabled(False)
+    
     def editShotAndUsage(self):
         self.editShot()
         try:
