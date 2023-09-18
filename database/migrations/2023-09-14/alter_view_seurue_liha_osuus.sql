@@ -1,4 +1,4 @@
--- Update the view seurue_lihat_osuus to check wheather the poistui field is null.
+-- Update the view seurue_lihat_osuus to check whether the poistui field is null.
 
 CREATE OR REPLACE VIEW public.seurue_lihat_osuus
     AS
