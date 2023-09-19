@@ -128,7 +128,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>490</y>
+       <y>520</y>
        <width>130</width>
        <height>23</height>
       </rect>
@@ -229,7 +229,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>520</y>
+       <y>550</y>
        <width>130</width>
        <height>23</height>
       </rect>
@@ -277,6 +277,19 @@
      </property>
      <property name="text">
       <string>Lisää</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="maintenanceRemoveMembershipPushButton">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>490</y>
+       <width>130</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Poista jäsenyys...</string>
      </property>
     </widget>
    </widget>
