@@ -14,6 +14,8 @@ import pgModule as pgModule
 import prepareData as prepareData
 from datetime import date
 
+from dialogs.messageModule import PopupMessages as msg
+
 class EditShot(DialogFrame):
     """docstring for ClassName."""
     def __init__(self):
@@ -31,14 +33,18 @@ class EditShot(DialogFrame):
         self.editShotTW.itemClicked.connect(self.onTableItemClicked)
         self.editShotPopulatePB = self.editShotPopulatePushButton
         self.editShotPopulatePB.clicked.connect(self.populateFields)
+        self.editShotPopulatePB.setEnabled(False)
+
         self.editShotByCB = self.editShotByComboBox
         self.editShotAnimalCB = self.editShotAnimalComboBox
         self.editShotDE = self.editShotDateEdit
         self.editShotLocationLE = self.editShotLocationLineEdit
+        self.editShotLocationLE.textChanged.connect(self.validateLineEdits)
         self.editShotGenderCB = self.editShotGenderComboBox
         self.editShotAgeCB = self.editShotAgeComboBox
         self.editShotWeightLE = self.editShotWeightLineEdit
-        self.editShotAdditionalnfoPT = self.editShotAdditionalInfoPlainTextEdit
+        self.editShotWeightLE.textChanged.connect(self.validateLineEdits)
+        self.editShotAdditionalInfoPT = self.editShotAdditionalInfoPlainTextEdit
         
         self.editShotUsageCB = self.editShotUsageComboBox
         self.editShotUsageSB = self.editShotUsagePortionSpinBox
@@ -54,23 +60,21 @@ class EditShot(DialogFrame):
         self.editShotUsage2CheckB.clicked.connect(self.toggleUsage2)
 
         self.editShotSavePB = self.editShotSavePushButton
+        self.editShotSavePB.setEnabled(False)
         self.editShotSavePB.clicked.connect(self.editShotAndUsage)
         self.editShotCancelPB = self.editShotCancelPushButton
         self.editShotCancelPB.clicked.connect(self.closeDialog)
-
-
 
         self.state = -1
 
         self.populateEditShotDialog()
 
+
     def toggleUsage2(self):
         if self.editShotUsage2CheckB.isChecked():
             self.editShotUsage2CB.setEnabled(True)
-            #self.editShotUsage2SB.setEnabled(True)
         else:
             self.editShotUsage2CB.setEnabled(False)
-            #self.editShotUsage2SB.setEnabled(False)
     
     def calculateUsage2Value(self):
         self.editShotUsage2SB.setValue(100 - self.editShotUsageSB.value())
@@ -214,7 +218,7 @@ class EditShot(DialogFrame):
         
         self.editShotWeightLE.setText(str(self.shotWeight))
     
-        self.editShotAdditionalnfoPT.setPlainText(self.shotInfo)
+        self.editShotAdditionalInfoPT.setPlainText(self.shotInfo)
 
         databaseOperation = pgModule.DatabaseOperation()
         databaseOperation.getAllRowsFromTableWithLimit(
@@ -269,9 +273,8 @@ class EditShot(DialogFrame):
                 self.editShotAnimalCB.currentText(),
                 self.editShotGenderCB.currentText(),
                 self.editShotAgeCB.currentText(),
-                self.editShotAdditionalnfoPT.toPlainText()
+                self.editShotAdditionalInfoPT.toPlainText()
             ]
-            # print(updateList)
 
             columnNames = [
                 'jasen_id',
@@ -302,8 +305,6 @@ class EditShot(DialogFrame):
                 ''
             )
         
-        # print(self.compareUpdates(updateList))
-        # print(table, columnValueString, limit)
         if self.compareUpdates(updateList) == False:
             databaseOperation = pgModule.DatabaseOperation()
             databaseOperation.updateManyValuesInRow(
@@ -344,9 +345,8 @@ class EditShot(DialogFrame):
             )
         else:
             pass
-            #print('Usage edited')
 
-    def addNewusage(self, shotId, usageId, usageAmount):
+    def addNewUsage(self, shotId, usageId, usageAmount):
         """_summary_
 
         Args:
@@ -355,15 +355,11 @@ class EditShot(DialogFrame):
             usagePortion (int): _description_
         """
         errorCode = 0
-        # FIXME: Is the try-except block necessary?
-        try:
-            sqlClauseBeginning = "INSERT INTO public.kaadon_kasittely(kaato_id, kasittelyid, kasittely_maara) VALUES("
-            sqlClauseValues = f"{shotId!r}, {usageId!r}, {usageAmount!r})"
-            sqlClauseEnd = ""
-            sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
-        except:
-            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
-            return
+
+        sqlClauseBeginning = "INSERT INTO public.kaadon_kasittely(kaato_id, kasittelyid, kasittely_maara) VALUES("
+        sqlClauseValues = f"{shotId!r}, {usageId!r}, {usageAmount!r})"
+        sqlClauseEnd = ""
+        sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
         
         # create DatabaseOperation object to execute the SQL clause
 
@@ -376,8 +372,14 @@ class EditShot(DialogFrame):
                 databaseOperation.errorMessage,
                 databaseOperation.detailedMessage
                 )
-        # print('Usage added')
 
+
+    def validateLineEdits(self):
+        if self.editShotLocationLE.text().strip() and self.editShotWeightLE.text().strip():
+            self.editShotSavePB.setEnabled(True)
+        else:
+            self.editShotSavePB.setEnabled(False)
+    
     def editShotAndUsage(self):
         self.editShot()
         try:
@@ -413,7 +415,7 @@ class EditShot(DialogFrame):
                 useIx2 = self.editShotUsage2CB.currentIndex()
                 use2 = self.shotUsageIdList[useIx2]
                 use2Amount = self.editShotUsage2SB.value()
-                self.addNewusage(self.shotId, use2, use2Amount)
+                self.addNewUsage(self.shotId, use2, use2Amount)
             except:
                 self.alert(
                     'Virhe',
@@ -421,7 +423,11 @@ class EditShot(DialogFrame):
                     'Tarkista syöte',
                     ''
                 )
-
+        self.editShotLocationLE.clear()
+        self.editShotWeightLE.clear()
+        self.editShotAdditionalInfoPT.clear()
+        self.editShotUsageSB.setValue(100)
+        msg().successMessage("Muutokset tallennettu")
 
     def onTableItemClicked(self, item):
         selectedRow = item.row()
@@ -436,19 +442,7 @@ class EditShot(DialogFrame):
         self.shotInfo = self.editShotTW.item(selectedRow, 8).text()
         self.shotId = int(self.editShotTW.item(selectedRow, 9).text())
 
-        # originalList = [
-        #     self.shooterId,
-        #     self.shotDate,
-        #     self.shotWeight,
-        #     self.shotLocation,
-        #     self.shotAnimal,
-        #     self.shotAge,
-        #     self.shotGender,
-        #     self.shotInfo
-        # ]
-
-        # print(originalList)
-
+        self.editShotPopulatePB.setEnabled(True)
 
     def compareUpdates(self, updateList):
         originalList = [
