@@ -7,6 +7,7 @@ import prepareData
 
 import dialogs.dialogueWindow as dialogueWindow
 import dialogs.editShotDialog as editShotDialog
+import dialogs.removeDialogues.Shot as removeShotDialog
 
 
 class Ui_killTabWidget(QScrollArea, QWidget):
@@ -44,6 +45,9 @@ class Ui_killTabWidget(QScrollArea, QWidget):
 
         self.editShotsPushBtn = self.editShotsPushButton
         self.editShotsPushBtn.clicked.connect(self.openEditShotDialog) # Signal
+        
+        self.removeShotsPB = self.removeShotsPushButton
+        self.removeShotsPB.clicked.connect(self.opeRemoveShotDialog) # Signal
 
         self.shotLicenseYearCB = self.licenseYearComboBox
         #print(f"valinta:'{self.shotLicenseYearCB.currentText()}'")
@@ -353,4 +357,8 @@ class Ui_killTabWidget(QScrollArea, QWidget):
 
     def openEditShotDialog(self):
         dialog = editShotDialog.EditShot()
+        dialog.exec()
+        
+    def opeRemoveShotDialog(self):
+        dialog = removeShotDialog.Shot()
         dialog.exec()
