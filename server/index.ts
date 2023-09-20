@@ -1,40 +1,44 @@
+// Import required libraries and modules
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import "express-async-errors";
 import jasenRouter from "./routers/jasenRouter";
 import kaatoRouter from "./routers/kaatoRouter";
 import jakoryhmaRouter from "./routers/jakoryhmaRouter";
+import jakotapahtumaRouter from "./routers/jakotapahtumaRouter"; 
+import kaadonkasittelyRouter from "./routers/kaadonkasittelyRouter";
 import { ZodError } from "zod";
 
 // Initialize the Express application
 const app = express();
 
 // Middleware configurations
-// Enable CORS (Cross-Origin Resource Sharing) to allow frontend to connect
-app.use(cors());
-// Enable the parsing of incoming JSON payloads in request bodies
-app.use(express.json());
+app.use(cors()); // Enable CORS
+app.use(express.json()); // Parse JSON payloads
 
 // Routes
-app.get("/ping", (_req, res) => {
+app.get("/ping", (_req, res) => {  // Ping route for checking
     console.log("someone pinged here");
     res.send("pong");
 });
 
-// Mount the jasenRouter, kaatoRouter to the /api/ path
+// Attach routers to the /api/ path
 app.use("/api/members", jasenRouter);
 app.use("/api/jakoryhma", jakoryhmaRouter);
 app.use("/api/shots", kaatoRouter);
+app.use("/api/jakotapahtuma", jakotapahtumaRouter); 
+app.use("/api/kaadonkasittely", kaadonkasittelyRouter); // New router added
 
 // Custom error handler
 const errorHandler = (
-    error: any,
+    error: unknown,
     _req: Request,
     res: Response,
     next: NextFunction
 ) => {
     let errorMessage = "Error occurred: ";
 
+    // Conditional error handling
     if (error instanceof Error) {
         errorMessage += error.message;
         return res.status(400).send({ error: errorMessage });
@@ -49,10 +53,10 @@ const errorHandler = (
 // Centralized error handling
 app.use(errorHandler);
 
-// Set the port to listen on
+// Set the port
 const PORT = 3000;
 
-// Start the Express server and listen for incoming requests
+// Start the Express server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
