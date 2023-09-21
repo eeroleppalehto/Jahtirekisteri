@@ -1,26 +1,26 @@
-// Import Zod for schema validation
+// Import the Zod library for schema validation
 import { z } from 'zod';
 
-// Define Zod schema for jakotapahtuma object
+// Define the Zod schema for the split event object
 const jakotapahtumaZod = z.object({
-    // Numeric identifier for the event
-    tapahtuma_id: z.number(),
+    // The numeric identifier of the event, which is an integer
+    tapahtuma_id: z.number().int(),
     
-    // Date of the event as a string
-    paiva: z.string(),
+    // Event date as a string in ISO datetime format
+    paiva: z.string().datetime(),
 
-    // Numeric identifier for the group
-    ryhma_id: z.number(),
+    // The numeric identifier of the group, which is an integer
+    ryhma_id: z.number().int(),
     
     // Short description or title, limited to 20 characters
     osnimitys: z.string().max(20),
 
-    // Numeric identifier for kaadon_kasittely (handling of the game)
-    kaadon_kasittely_id: z.number(),
+    // Numeric identifier of dump_handling, which is an integer
+    kaadon_kasittely_id: z.number().int(),
 
-    // Numeric value indicating the quantity
-    maara: z.number(),
+    // A numeric value that indicates a quantity and is an integer
+    maara: z.number().int(),
 });
 
-// Export the schema for use in other modules
+// Export the schema so it can be used in other modules
 export default jakotapahtumaZod;
