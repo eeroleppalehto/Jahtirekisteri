@@ -1,20 +1,20 @@
-// Import Zod library for schema validation
+// Import the Zod library for schema validation
 import { z } from "zod";
 
-// Define Zod schema for kaadonkasittely object
+// Define the Zod schema for the dump handling object
 const kaadonkasittelySchema = z.object({
-    // Numeric identifier for the kaadon_kasittely
-    kaadon_kasittely_id: z.number(),
+    // Numeric identifier of dump_handling, which is an integer
+    kaadon_kasittely_id: z.number().int(),
     
-    // Numeric identifier for the type of handling
-    kasittelyid: z.number(),
+    // Numeric identifier of the processing type, which is an integer
+    kasittelyid: z.number().int(),
 
-    // Numeric identifier for the kaato (game)
-    kaato_id: z.number(),
+    // Numeric identifier of the dump, which is an integer
+    kaato_id: z.number().int(),
     
-    // Numeric value indicating the amount of handling
-    kasittely_maara: z.number()
+    // A numeric value that indicates the amount of processing and is an integer
+    kasittely_maara: z.number().int(),
 });
 
-// Export the schema to make it accessible in other modules
+// Export the schema so it can be used in other modules
 export default kaadonkasittelySchema;
