@@ -1,51 +1,62 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-
-// Import required libraries and modules
 import express from 'express';
-import * as jakotapahtumaService from '../services/jakotapahtumaService';
-import jakotapahtumaZod from '../zodSchemas/jakotapahtumaZod';
-import { z } from 'zod';
+import {
+    createJakotapahtuma,
+    readJakotapahtumaById,
+    updateJakotapahtumaById,
+    deleteJakotapahtumaById,
+    getAllJakotapahtumat
+} from '../services/jakotapahtumaService';
 
-// Initialize a new router
 const router = express.Router();
 
-// Define data type for jakotapahtuma based on Zod schema
-type jakotapahtumaType = z.infer<typeof jakotapahtumaZod>;
-
-// Fetch all jakotapahtuma entries
 router.get('/', async (_req, res) => {
-    const result = await jakotapahtumaService.getAll();
-    res.json(result);
+    try {
+        const result = await getAllJakotapahtumat();
+        res.json(result);
+    } catch (error) {
+        res.status(500).send('Internal server error');
+    }
 });
 
-// Create a new jakotapahtuma entry
 router.post('/', async (req, res) => {
-    const data: jakotapahtumaType = jakotapahtumaZod.parse(req.body);
-    const result = await jakotapahtumaService.create(data);
-    res.json(result);
+    try {
+        const result = await createJakotapahtuma(req.body);
+        res.json(result);
+    } catch (error) {
+        res.status(400).send('Invalid data');
+    }
 });
 
-// Fetch a single jakotapahtuma entry by ID
 router.get('/:id', async (req, res) => {
-    const id = parseInt(req.params.id, 10);
-    const result = await jakotapahtumaService.read(id);
-    res.json(result);
+    try {
+        const id = parseInt(req.params.id, 10);
+        const result = await readJakotapahtumaById(id);
+        res.json(result);
+    } catch (error) {
+        res.status(400).send('Invalid ID');
+    }
 });
 
-// Update a jakotapahtuma entry by ID
 router.put('/:id', async (req, res) => {
-    const id = parseInt(req.params.id, 10);
-    const data: Partial<jakotapahtumaType> = jakotapahtumaZod.parse(req.body);
-    const result = await jakotapahtumaService.update(id, data);
-    res.json(result);
+    try {
+        const id = parseInt(req.params.id, 10);
+        const result = await updateJakotapahtumaById(id, req.body);
+        res.json(result);
+    } catch (error) {
+        res.status(400).send('Invalid data or ID');
+    }
 });
 
-// Delete a jakotapahtuma entry by ID
 router.delete('/:id', async (req, res) => {
-    const id = parseInt(req.params.id, 10);
-    const result = await jakotapahtumaService.del(id);
-    res.json(result);
+    try {
+        const id = parseInt(req.params.id, 10);
+        const result = await deleteJakotapahtumaById(id);
+        res.json(result);
+    } catch (error) {
+        res.status(400).send('Invalid ID');
+    }
 });
 
-// Export the router for use in other modules
 export default router;
