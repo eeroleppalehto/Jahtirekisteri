@@ -1,51 +1,40 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-import express from 'express';
+import express from "express";
 import {
     createJakotapahtuma,
     readJakotapahtumaById,
     updateJakotapahtumaById,
-    deleteJakotapahtumaById,
-    getAllJakotapahtumat
-} from '../services/jakotapahtumaService';
+    deleteJakotapahtumaById
+} from "../services/jakotapahtumaService";
 
 const router = express.Router();
 
-router.get('/', async (_req, res) => {
-    const result = await getAllJakotapahtumat();
-    res.json(result);
+router.post("/", async (req, res) => {
+    const newJakotapahtuma = await createJakotapahtuma(req.body);
+    res.json(newJakotapahtuma);
 });
 
-router.post('/', async (req, res) => {
-    const result = await createJakotapahtuma(req.body);
-    res.json(result);
-});
-
-router.get('/:id', async (req, res) => {
-    const id = parseInt(req.params.id, 10);
-    if (Number.isNaN(id)) {
-        throw new Error('Invalid Id');
+router.get("/:id", async (req, res) => {
+    if (Number.isNaN(Number(req.params.id))) {
+        return res.status(400).send("Invalid ID");
     }
-    const result = await readJakotapahtumaById(id);
-    res.json(result);
+    const jakotapahtuma = await readJakotapahtumaById(Number(req.params.id));
+    res.json(jakotapahtuma);
 });
 
-router.put('/:id', async (req, res) => {
-    const id = parseInt(req.params.id, 10);
-    if (Number.isNaN(id)) {
-        throw new Error('Invalid Id');
+router.put("/:id", async (req, res) => {
+    if (Number.isNaN(Number(req.params.id))) {
+        return res.status(400).send("Invalid ID");
     }
-    const result = await updateJakotapahtumaById(id, req.body);
-    res.json(result);
+    const updatedJakotapahtuma = await updateJakotapahtumaById(Number(req.params.id), req.body);
+    res.json(updatedJakotapahtuma);
 });
 
-router.delete('/:id', async (req, res) => {
-    const id = parseInt(req.params.id, 10);
-    if (Number.isNaN(id)) {
-        throw new Error('Invalid Id');
+router.delete("/:id", async (req, res) => {
+    if (Number.isNaN(Number(req.params.id))) {
+        return res.status(400).send("Invalid ID");
     }
-    const result = await deleteJakotapahtumaById(id);
-    res.json(result);
+    const deletedJakotapahtuma = await deleteJakotapahtumaById(Number(req.params.id));
+    res.json(deletedJakotapahtuma);
 });
 
 export default router;
