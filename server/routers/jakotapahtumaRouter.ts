@@ -12,51 +12,40 @@ import {
 const router = express.Router();
 
 router.get('/', async (_req, res) => {
-    try {
-        const result = await getAllJakotapahtumat();
-        res.json(result);
-    } catch (error) {
-        res.status(500).send('Internal server error');
-    }
+    const result = await getAllJakotapahtumat();
+    res.json(result);
 });
 
 router.post('/', async (req, res) => {
-    try {
-        const result = await createJakotapahtuma(req.body);
-        res.json(result);
-    } catch (error) {
-        res.status(400).send('Invalid data');
-    }
+    const result = await createJakotapahtuma(req.body);
+    res.json(result);
 });
 
 router.get('/:id', async (req, res) => {
-    try {
-        const id = parseInt(req.params.id, 10);
-        const result = await readJakotapahtumaById(id);
-        res.json(result);
-    } catch (error) {
-        res.status(400).send('Invalid ID');
+    const id = parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) {
+        throw new Error('Invalid Id');
     }
+    const result = await readJakotapahtumaById(id);
+    res.json(result);
 });
 
 router.put('/:id', async (req, res) => {
-    try {
-        const id = parseInt(req.params.id, 10);
-        const result = await updateJakotapahtumaById(id, req.body);
-        res.json(result);
-    } catch (error) {
-        res.status(400).send('Invalid data or ID');
+    const id = parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) {
+        throw new Error('Invalid Id');
     }
+    const result = await updateJakotapahtumaById(id, req.body);
+    res.json(result);
 });
 
 router.delete('/:id', async (req, res) => {
-    try {
-        const id = parseInt(req.params.id, 10);
-        const result = await deleteJakotapahtumaById(id);
-        res.json(result);
-    } catch (error) {
-        res.status(400).send('Invalid ID');
+    const id = parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) {
+        throw new Error('Invalid Id');
     }
+    const result = await deleteJakotapahtumaById(id);
+    res.json(result);
 });
 
 export default router;
