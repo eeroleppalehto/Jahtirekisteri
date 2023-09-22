@@ -5,7 +5,12 @@ import pgModule
 import prepareData
 
 import dialogs.dialogueWindow as dialogueWindow
-import dialogs.addDialogueWindow as addDialogueWindow
+
+# import dialogs.addDialogueWindow as addDialogueWindow
+import dialogs.addDialogues.Member as addDialogueWindowMember
+import dialogs.addDialogues.Membership as addDialogueWindowMembership
+import dialogs.addDialogues.Group as addDialogueWindowGroup
+import dialogs.addDialogues.Party as addDialogueWindowParty
 
 import dialogs.removeDialogues.Group as removeDialogueWindowGroup
 import dialogs.removeDialogues.Member as removeDialogueWindowMember
@@ -123,7 +128,7 @@ class Ui_maintenanceTabWidget(QScrollArea, QWidget):
         dialog.exec()
 
     def openAddMemberDialog(self):
-        dialog = addDialogueWindow.Member()
+        dialog = addDialogueWindowMember.Member()
         dialog.exec()
     
     def openRemoveMemberDialog(self):
@@ -131,11 +136,11 @@ class Ui_maintenanceTabWidget(QScrollArea, QWidget):
         dialog.exec()
     
     def openAddMembershipDialog(self):
-        dialog = addDialogueWindow.Membership()
+        dialog = addDialogueWindowMembership.Membership()
         dialog.exec()
     
     def openAddGroupDialog(self):
-        dialog = addDialogueWindow.Group()
+        dialog = addDialogueWindowGroup.Group()
         dialog.exec()
 
     def openRemoveGroupDialog(self):
@@ -147,7 +152,7 @@ class Ui_maintenanceTabWidget(QScrollArea, QWidget):
         dialog.exec()
 
     def openAddMPartyDialog(self):
-        dialog = addDialogueWindow.Party()
+        dialog = addDialogueWindowParty.Party()
         dialog.exec()
     
     def openRemovePartyDialog(self):
