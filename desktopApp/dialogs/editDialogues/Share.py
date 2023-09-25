@@ -130,3 +130,78 @@ class Share(DialogFrame):
                 str(e),
                 str(e)
             )
+    
+    def saveEdit(self):
+        """ Method for saving the changes made to the share
+        """
+        
+        # Generate the dictionary to be saved and construct columnValueString and limit
+        try:
+            self.editToSave = {
+                "tapahtuma_id": self.selectedShareDict["tapahtuma_id"],
+                "paiva": self.editShareDE.date().toString("yyyy-MM-dd"),
+                "ryhma_id": self.shareGroupsIdList[self.editShareGroupCB.currentIndex()],
+                "osnimitys": self.sharePortions[self.editSharePortionCB.currentIndex()],
+                "kaadon_kasittely_id": self.selectedShareDict["kaadon_kasittely_id"],
+                "maara": self.selectedShareDict["maara"]
+            }
+            
+            # Generate the update column and value string and the limit string
+            columnValueString = ""
+            for key in self.editToSave:
+                if key == "tapahtuma_id":
+                    continue
+                columnValueString += f"{key} = {self.editToSave[key]!r}"
+                if key != "maara":
+                    columnValueString += ", "
+            limit = f"public.jakotapahtuma.tapahtuma_id = {self.editToSave['tapahtuma_id']}"
+        except Exception as e:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                str(e),
+                str(e)
+            )
+        
+        # Check if there are changes in the data and if not, throw warning and return
+        compare = self.compareEdit()
+        if compare == True:
+            msg().warningMessage('Muutoksia ei ole tehty')
+            return
+        
+        databaseOperation = pgModule.DatabaseOperation()
+        databaseOperation.updateManyValuesInRow(self.connectionArguments, 'public.jakotapahtuma', columnValueString, limit)
+        if databaseOperation.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation.errorMessage,
+                databaseOperation.detailedMessage
+                )
+        else:
+            # Update the page to show new data and clear
+            msg().successMessage('Muokkaus onnistui')
+            self.editShareChosenLbl.setText("Ei valittua jakoa")
+            self.editShareSavePushBtn.setEnabled(False)
+            self.populateEditShareDialog()
+    
+    def compareEdit(self):
+        """Method for comparing the data in the edit fields to the original data
+
+        Returns:
+            boolean: return true if there are no changes in the data
+        """
+        
+        if (self.editToSave["tapahtuma_id"] == self.selectedShareDict["tapahtuma_id"]
+            and self.editToSave["paiva"] == self.selectedShareDict["paiva"]
+            and self.editToSave["ryhma_id"] == self.selectedShareDict["ryhma_id"]
+            and self.editToSave["osnimitys"] == self.selectedShareDict["osnimitys"]
+            and self.editToSave["kaadon_kasittely_id"] == self.selectedShareDict["kaadon_kasittely_id"]
+            and self.editToSave["maara"] == self.selectedShareDict["maara"]):
+            return True
+        else:
+            return False
+        
+    def closeDialog(self):
+        return self.close()
+        
