@@ -5,9 +5,10 @@ import "express-async-errors";
 import jasenRouter from "./routers/jasenRouter";
 import kaatoRouter from "./routers/kaatoRouter";
 import jakoryhmaRouter from "./routers/jakoryhmaRouter";
-import jakotapahtumaRouter from "./routers/jakotapahtumaRouter"; 
+import jakotapahtumaRouter from "./routers/jakotapahtumaRouter";
 import kaadonkasittelyRouter from "./routers/kaadonkasittelyRouter";
 import { ZodError } from "zod";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 // Initialize the Express application
 const app = express();
@@ -17,7 +18,8 @@ app.use(cors()); // Enable CORS
 app.use(express.json()); // Parse JSON payloads
 
 // Routes
-app.get("/ping", (_req, res) => {  // Ping route for checking
+app.get("/ping", (_req, res) => {
+    // Ping route for checking
     console.log("someone pinged here");
     res.send("pong");
 });
@@ -26,8 +28,15 @@ app.get("/ping", (_req, res) => {  // Ping route for checking
 app.use("/api/members", jasenRouter);
 app.use("/api/jakoryhma", jakoryhmaRouter);
 app.use("/api/shots", kaatoRouter);
-app.use("/api/jakotapahtuma", jakotapahtumaRouter); 
+app.use("/api/jakotapahtuma", jakotapahtumaRouter);
 app.use("/api/kaadonkasittely", kaadonkasittelyRouter); // New router added
+
+type ErrorType = {
+    success: boolean;
+    errorType: string;
+    errorMessage: string;
+    errorDetails: string[] | unknown[];
+};
 
 // Custom error handler
 const errorHandler = (
@@ -36,15 +45,36 @@ const errorHandler = (
     res: Response,
     next: NextFunction
 ) => {
-    let errorMessage = "Error occurred: ";
-
     // Conditional error handling
-    if (error instanceof Error) {
-        errorMessage += error.message;
-        return res.status(400).send({ error: errorMessage });
-    } else if (error instanceof ZodError) {
-        errorMessage += error.flatten();
-        return res.status(400).json({ error: errorMessage });
+    if (error instanceof ZodError) {
+        const returnObject: ErrorType = {
+            success: false,
+            errorType: "ZodError",
+            errorMessage: "Invalid input",
+            errorDetails: [],
+        };
+
+        error.issues.forEach((issue) => {
+            returnObject.errorDetails.push(`${issue.path}: ${issue.message}`);
+        });
+
+        return res.status(400).json(returnObject);
+    } else if (error instanceof PrismaClientKnownRequestError) {
+        const returnObject: ErrorType = {
+            success: false,
+            errorType: "PrismaClientKnownRequestError",
+            errorMessage: "Error in database query",
+            errorDetails: [error.code, error.meta],
+        };
+        return res.status(400).send(returnObject);
+    } else if (error instanceof Error) {
+        const returnObject: ErrorType = {
+            success: false,
+            errorType: "Error",
+            errorMessage: error.message,
+            errorDetails: [],
+        };
+        return res.status(400).send(returnObject);
     }
 
     next(error);
