@@ -48,3 +48,46 @@ class Share(DialogFrame):
         self.editSharePopulatePushBtn.setEnabled(False)
         
         self.populateEditShareDialog()
+    
+    
+    def populateEditShareDialog(self):
+        """Method for populating the edit share dialog with data from the database
+        """
+        databaseOperation1 = pgModule.DatabaseOperation()
+        databaseOperation1.getAllRowsFromTable(self.connectionArguments, 'public.jakotapahtuma_ryhman_nimella')
+        if databaseOperation1.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation1.errorMessage,
+                databaseOperation1.detailedMessage
+                )
+        else:
+            prepareData.prepareTable(databaseOperation1, self.editShareTW)
+            self.editShareTW.setColumnHidden(2, True)
+            self.editShareTW.setColumnHidden(5, True)
+            
+        databaseOperation2 = pgModule.DatabaseOperation()
+        databaseOperation2.getAllRowsFromTable(self.connectionArguments, 'public.ruhonosa')
+        if databaseOperation2.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation2.errorMessage,
+                databaseOperation2.detailedMessage
+                )
+        else:
+            self.sharePortions = prepareData.prepareComboBox(databaseOperation2, self.editSharePortionCB, 0, 0)
+            
+        databaseOperation3 = pgModule.DatabaseOperation()
+        databaseOperation3.getAllRowsFromTable(self.connectionArguments, 'public.jakoryhma')
+        if databaseOperation3.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation3.errorMessage,
+                databaseOperation3.detailedMessage
+                )
+        else:
+            self.shareGroupsIdList = prepareData.prepareComboBox(databaseOperation3, self.editShareGroupCB, 2, 0)
+    
