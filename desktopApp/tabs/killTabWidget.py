@@ -49,6 +49,8 @@ class Ui_killTabWidget(QScrollArea, QWidget):
             'Paino \u2191',
             ]
         self.shotSortShotsCB.addItems(shotSortOptions)
+        self.shotSortShotsCB.currentIndexChanged.connect(self.sortShots) # Signal
+
         self.shotUsageCB = self.usageComboBox
         self.shotUsagePortionSB = self.usagePortionSpinBox
         self.shotUsagePortionSB.valueChanged.connect(self.calculateUsage2Value) # Signal
@@ -218,6 +220,8 @@ class Ui_killTabWidget(QScrollArea, QWidget):
                 'Ei löytynyt vuotta, jolta hakea lupatietoja',
                 'Could not find year to fetch licence data from, try adding a license in the license page first'
                 )
+        self.sortShots()        
+    
             
         
     def populateLicenceCB(self):
@@ -366,6 +370,46 @@ class Ui_killTabWidget(QScrollArea, QWidget):
         value = self.shotUsagePortionSB.value()
         self.shotUsage2PortionSB.setValue(100 - value)
 
+    def sortShots(self):
+        """Sorts the shot table based on the selected combo box value
+            the /u2191 and /u2193 are unicode characters for up and down arrows
+        """
+        # Check the current text of the combo box and sort the table based on that
+        if self.shotSortShotsCB.currentText() == 'Kaataja \u2191':
+            self.shotKillsTW.sortItems(0, order=Qt.DescendingOrder)
+        elif self.shotSortShotsCB.currentText() == 'Kaataja \u2193':
+            self.shotKillsTW.sortItems(0, order=Qt.AscendingOrder)
+            
+        elif self.shotSortShotsCB.currentText() == 'Kaatopäivä \u2191':
+            self.shotKillsTW.sortItems(1, order=Qt.AscendingOrder)
+        elif self.shotSortShotsCB.currentText() == 'Kaatopäivä \u2193':
+            self.shotKillsTW.sortItems(1, order=Qt.DescendingOrder)
+            
+        elif self.shotSortShotsCB.currentText() == 'Paikka \u2191':
+            self.shotKillsTW.sortItems(2, order=Qt.DescendingOrder)
+        elif self.shotSortShotsCB.currentText() == 'Paikka \u2193':
+            self.shotKillsTW.sortItems(2, order=Qt.AscendingOrder)
+            
+        elif self.shotSortShotsCB.currentText() == 'Eläin \u2191':
+            self.shotKillsTW.sortItems(3, order=Qt.DescendingOrder)
+        elif self.shotSortShotsCB.currentText() == 'Eläin \u2193':
+            self.shotKillsTW.sortItems(3, order=Qt.AscendingOrder)
+            
+        elif self.shotSortShotsCB.currentText() == 'Ikäluokka \u2191':
+            self.shotKillsTW.sortItems(4, order=Qt.DescendingOrder)
+        elif self.shotSortShotsCB.currentText() == 'Ikäluokka \u2193':
+            self.shotKillsTW.sortItems(4, order=Qt.AscendingOrder)
+            
+        elif self.shotSortShotsCB.currentText() == 'Sukupuoli \u2191':
+            self.shotKillsTW.sortItems(5, order=Qt.DescendingOrder)
+        elif self.shotSortShotsCB.currentText() == 'Sukupuoli \u2193':
+            self.shotKillsTW.sortItems(5, order=Qt.AscendingOrder)
+            
+        elif self.shotSortShotsCB.currentText() == 'Paino \u2191':
+            self.sortNumericCells(6, False)
+        elif self.shotSortShotsCB.currentText() == 'Paino \u2193':
+            self.sortNumericCells(6, True)
+    
     #SIGNALS
     def openSettingsDialog(self):
         dialog = dialogueWindow.SaveDBSettingsDialog()
