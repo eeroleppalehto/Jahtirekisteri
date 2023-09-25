@@ -1,5 +1,5 @@
 
-from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox
+from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox, QPushButton
 from PyQt5 import QtCore
 from PyQt5.uic import loadUi
 from datetime import date
@@ -9,6 +9,7 @@ import figures
 import party
 
 import dialogs.dialogueWindow as dialogueWindow
+import dialogs.editDialogues.Share as editShareDialog
 
 
 class Ui_shareTabWidget(QScrollArea, QWidget):
@@ -24,7 +25,10 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         self.shareGroupCB = self.groupComboBox
         self.shareSavePushBtn = self.shareSavePushButton
         self.shareSavePushBtn.clicked.connect(self.saveShare) # Signal
+        self.shareEditPushBtn: QPushButton = self.shareEditPushButton
+        self.shareEditPushBtn.clicked.connect(self.openEditShareDialog) # Signal
         self.sharedPortionsTW = self.shareSharedPortionsTableWidget
+        
 
         self.shareSankeyWebView = self.shareSankeyWebEngineView
 
@@ -256,6 +260,10 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         selectedRow = item.row()
         self.shotUsageId = self.shareKillsTW.item(selectedRow, 10).text()
         self.shotWeight = float(self.shareKillsTW.item(selectedRow, 9).text())
+        
+    def openEditShareDialog(self):
+        dialog = editShareDialog.Share()
+        dialog.exec()
 
 
     def openSettingsDialog(self):
