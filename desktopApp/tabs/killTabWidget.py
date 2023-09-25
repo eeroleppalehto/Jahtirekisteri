@@ -106,6 +106,7 @@ class Ui_killTabWidget(QScrollArea, QWidget):
     def populateKillPage(self):
         # Set default date to current date
         self.shotDateDE.setDate(self.currentDate)
+        
         # Read data from view kaatoluettelo
         databaseOperation1 = pgModule.DatabaseOperation()
         databaseOperation1.getAllRowsFromTable(
@@ -118,6 +119,7 @@ class Ui_killTabWidget(QScrollArea, QWidget):
                 databaseOperation1.detailedMessage
                 )
         else:
+            self.shotKillData = databaseOperation1
             prepareData.prepareTable(databaseOperation1, self.shotKillsTW)
 
         # Read data from view nimivalinta
@@ -410,6 +412,23 @@ class Ui_killTabWidget(QScrollArea, QWidget):
         elif self.shotSortShotsCB.currentText() == 'Paino \u2193':
             self.sortNumericCells(6, True)
     
+    def sortNumericCells(self, columnNumber: int, reverse: bool):
+        """
+            As the sortItems() method does not work with numeric values,
+            we need to sort the data manually
+            
+            Args:
+                columnNumber (int): the column number of the table to sort
+                reverse (bool): reverse the order of the sort if True
+        """
+        
+        self.shotKillData.resultSet.sort(reverse=reverse, key=lambda x: float(x[columnNumber]))
+        
+        # Mount the data back to the TableWidget
+        prepareData.prepareTable(self.shotKillData, self.shotKillsTW)
+        
+        
+
     #SIGNALS
     def openSettingsDialog(self):
         dialog = dialogueWindow.SaveDBSettingsDialog()
