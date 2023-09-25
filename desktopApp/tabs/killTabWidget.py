@@ -68,7 +68,6 @@ class Ui_killTabWidget(QScrollArea, QWidget):
         self.editShotsPushBtn.clicked.connect(self.openEditShotDialog) # Signal
 
         self.shotLicenseYearCB = self.licenseYearComboBox
-        #print(f"valinta:'{self.shotLicenseYearCB.currentText()}'")
 
         # Read database connection arguments from the settings file
         try:
