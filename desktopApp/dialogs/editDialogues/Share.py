@@ -91,3 +91,42 @@ class Share(DialogFrame):
         else:
             self.shareGroupsIdList = prepareData.prepareComboBox(databaseOperation3, self.editShareGroupCB, 2, 0)
     
+    def onTableClick(self, item: QTableWidgetItem):
+        """Method for handling the click event on the table
+
+        Args:
+            item (QTableWidgetItem): Item clicked in the table
+        """
+        selectedRow = item.row()
+        self.itemToPopulate = {
+            "tapahtuma_id": int(self.editShareTW.item(selectedRow, 0).text()),
+            "paiva": self.editShareTW.item(selectedRow, 1).text(),
+            "ryhma_id": int(self.editShareTW.item(selectedRow, 2).text()),
+            "ryhma_nimi": self.editShareTW.item(selectedRow, 3).text(),
+            "osnimitys": self.editShareTW.item(selectedRow, 4).text(),
+            "kaadon_kasittely_id": int(self.editShareTW.item(selectedRow, 5).text()),
+            "maara": float(self.editShareTW.item(selectedRow, 6).text()),
+            "kaato_id": int(self.editShareTW.item(selectedRow, 7).text())
+        }
+        self.editSharePopulatePushBtn.setEnabled(True)
+    
+    def populateFields(self):
+        """ Method for populating the fields in the edit share dialog once the populate button is clicked
+        """
+        try:
+            self.editShareDE.setDate(QDate.fromString(self.itemToPopulate["paiva"], "yyyy-MM-dd"))
+            self.editSharePortionCB.setCurrentIndex(self.sharePortions.index(self.itemToPopulate["osnimitys"]))
+            self.editShareGroupCB.setCurrentIndex(self.shareGroupsIdList.index(self.itemToPopulate["ryhma_id"]))
+            
+            self.selectedShareDict = self.itemToPopulate
+            self.editSharePopulatePushBtn.setEnabled(False)
+            self.editShareSavePushBtn.setEnabled(True)
+            self.editShareChosenLbl.setText(f"Valittu Jako ID: {self.itemToPopulate['tapahtuma_id']}, Kaato ID: {self.itemToPopulate['kaato_id']}")
+            
+        except Exception as e:
+            self.alert(
+                'Vakava virhe',
+                'Kenttien täyttö epäonnistui',
+                str(e),
+                str(e)
+            )
