@@ -1,5 +1,6 @@
 
-from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox
+from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox, QComboBox
+from PyQt5.QtCore import Qt
 from PyQt5.uic import loadUi
 from datetime import date
 import pgModule
@@ -28,7 +29,26 @@ class Ui_killTabWidget(QScrollArea, QWidget):
         self.shotSavePushBtn.clicked.connect(self.saveShotAndUsage) # Signal
         self.shotKillsTW = self.killsKillsTableWidget
         self.shotLicenseTW = self.shotLicenseTableWidget
-
+        
+        # Combo boxes for sorting the shot table
+        self.shotSortShotsCB: QComboBox = self.sortKillsComboBox
+        shotSortOptions = [
+            'Kaataja \u2193',
+            'Kaataja \u2191',
+            'Kaatopäivä \u2193',
+            'Kaatopäivä \u2191',
+            'Paikka \u2193',
+            'Paikka \u2191',
+            'Eläin \u2193',
+            'Eläin \u2191',
+            'Ikäluokka \u2193',
+            'Ikäluokka \u2191',
+            'Sukupuoli \u2193',
+            'Sukupuoli \u2191',
+            'Paino \u2193',
+            'Paino \u2191',
+            ]
+        self.shotSortShotsCB.addItems(shotSortOptions)
         self.shotUsageCB = self.usageComboBox
         self.shotUsagePortionSB = self.usagePortionSpinBox
         self.shotUsagePortionSB.valueChanged.connect(self.calculateUsage2Value) # Signal
