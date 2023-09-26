@@ -1,5 +1,5 @@
 
-from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox, QComboBox
+from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox, QComboBox, QDateEdit, QTableWidget, QSpinBox, QCheckBox, QPlainTextEdit, QLineEdit, QPushButton, QGridLayout
 from PyQt5.QtCore import Qt
 from PyQt5.uic import loadUi
 from datetime import date
@@ -17,18 +17,18 @@ class Ui_killTabWidget(QScrollArea, QWidget):
         
         self.currentDate = date.today()
         
-        self.shotByCB = self.shotByComboBox
-        self.shotDateDE = self.shotDateEdit
-        self.shotLocationLE = self.locationLineEdit
-        self.shotAnimalCB = self.animalComboBox
-        self.shotAgeGroupCB = self.ageGroupComboBox
-        self.shotGenderCB = self.genderComboBox
-        self.shotWeightLE = self.weightLineEdit
-        self.shotAddInfoTE = self.additionalInfoTextEdit
-        self.shotSavePushBtn = self.saveShotPushButton
+        self.shotByCB: QComboBox = self.shotByComboBox
+        self.shotDateDE: QDateEdit = self.shotDateEdit
+        self.shotLocationLE: QLineEdit = self.locationLineEdit
+        self.shotAnimalCB: QComboBox = self.animalComboBox
+        self.shotAgeGroupCB: QComboBox = self.ageGroupComboBox
+        self.shotGenderCB: QComboBox = self.genderComboBox
+        self.shotWeightLE: QLineEdit = self.weightLineEdit
+        self.shotAddInfoTE: QPlainTextEdit = self.additionalInfoTextEdit
+        self.shotSavePushBtn: QPushButton = self.saveShotPushButton
         self.shotSavePushBtn.clicked.connect(self.saveShotAndUsage) # Signal
-        self.shotKillsTW = self.killsKillsTableWidget
-        self.shotLicenseTW = self.shotLicenseTableWidget
+        self.shotKillsTW: QTableWidget = self.killsKillsTableWidget
+        self.shotLicenseTW: QTableWidget = self.shotLicenseTableWidget
         
         # Combo boxes for sorting the shot table
         self.shotSortShotsCB: QComboBox = self.sortKillsComboBox
@@ -51,23 +51,23 @@ class Ui_killTabWidget(QScrollArea, QWidget):
         self.shotSortShotsCB.addItems(shotSortOptions)
         self.shotSortShotsCB.currentIndexChanged.connect(self.sortShots) # Signal
 
-        self.shotUsageCB = self.usageComboBox
-        self.shotUsagePortionSB = self.usagePortionSpinBox
+        self.shotUsageCB: QComboBox = self.usageComboBox
+        self.shotUsagePortionSB: QSpinBox = self.usagePortionSpinBox
         self.shotUsagePortionSB.valueChanged.connect(self.calculateUsage2Value) # Signal
 
-        self.shotUsage2CheckB = self.usage2CheckBox
+        self.shotUsage2CheckB: QCheckBox = self.usage2CheckBox
         self.shotUsage2CheckB.stateChanged.connect(self.toggleUsage2) # Signal
 
-        self.shotUsage2CB = self.usage2ComboBox
+        self.shotUsage2CB: QComboBox = self.usage2ComboBox
         self.shotUsage2CB.setEnabled(False)
 
-        self.shotUsage2PortionSB = self.usage2PortionSpinBox
+        self.shotUsage2PortionSB: QSpinBox = self.usage2PortionSpinBox
         self.shotUsage2PortionSB.setEnabled(False)
 
-        self.editShotsPushBtn = self.editShotsPushButton
+        self.editShotsPushBtn: QPushButton = self.editShotsPushButton
         self.editShotsPushBtn.clicked.connect(self.openEditShotDialog) # Signal
 
-        self.shotLicenseYearCB = self.licenseYearComboBox
+        self.shotLicenseYearCB: QComboBox = self.licenseYearComboBox
 
         # Read database connection arguments from the settings file
         try:
