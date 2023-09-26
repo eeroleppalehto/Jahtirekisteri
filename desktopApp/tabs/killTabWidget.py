@@ -47,6 +47,8 @@ class Ui_killTabWidget(QScrollArea, QWidget):
             'Sukupuoli \u2191',
             'Paino \u2193',
             'Paino \u2191',
+            'Kaato ID \u2193',
+            'Kaato ID \u2191'
             ]
         self.shotSortShotsCB.addItems(shotSortOptions)
         self.shotSortShotsCB.currentIndexChanged.connect(self.sortShots) # Signal
@@ -410,6 +412,11 @@ class Ui_killTabWidget(QScrollArea, QWidget):
             self.sortNumericCells(6, False)
         elif self.shotSortShotsCB.currentText() == 'Paino \u2193':
             self.sortNumericCells(6, True)
+            
+        elif self.shotSortShotsCB.currentText() == 'Kaato ID \u2191':
+            self.sortNumericCells(7, False)
+        elif self.shotSortShotsCB.currentText() == 'Kaato ID \u2193':
+            self.sortNumericCells(7, True)
     
     def sortNumericCells(self, columnNumber: int, reverse: bool):
         """
