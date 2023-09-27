@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 // Import necessary modules and services
 import express from "express";
 import {
     createLupa,
     readLupaById,
     updateLupaById,
-    deleteLupaById
+    deleteLupaById,
+    readAllLupas
 } from "../services/lupaService";
 
 // Initialize the Express router
@@ -15,6 +15,12 @@ const router = express.Router();
 router.post("/", async (req, res) => {
     const newLupa = await createLupa(req.body);
     res.json(newLupa);
+});
+
+// GET endpoint to fetch all 'lupa' records
+router.get("/", async (req, res) => {
+    const allLupas = await readAllLupas();
+    res.json(allLupas);
 });
 
 // GET endpoint to fetch a 'lupa' by its ID
