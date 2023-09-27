@@ -9,6 +9,11 @@ export const createLupa = async (data: unknown) => {
     return await prisma.lupa.create({ data: parsedData });  // Create a new record in the database
 };
 
+// Function to read all 'lupa' records from the database
+export const readAllLupas = async () => {
+    return await prisma.lupa.findMany();  // Fetch all records
+};
+
 // Function to read a 'lupa' record from the database by its ID
 export const readLupaById = async (id: number) => {
     return await prisma.lupa.findUnique({ where: { luparivi_id: id } });  // Fetch the record based on its ID
