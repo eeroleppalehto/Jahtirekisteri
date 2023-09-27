@@ -7,6 +7,7 @@ import kaatoRouter from "./routers/kaatoRouter";
 import jakoryhmaRouter from "./routers/jakoryhmaRouter";
 import jakotapahtumaRouter from "./routers/jakotapahtumaRouter";
 import kaadonkasittelyRouter from "./routers/kaadonkasittelyRouter";
+import lupaRouter from "./routers/lupaRouter";
 import { ZodError } from "zod";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
@@ -30,6 +31,7 @@ app.use("/api/jakoryhma", jakoryhmaRouter);
 app.use("/api/shots", kaatoRouter);
 app.use("/api/jakotapahtuma", jakotapahtumaRouter);
 app.use("/api/kaadonkasittely", kaadonkasittelyRouter); // New router added
+app.use("/api/lupa", lupaRouter);
 
 type ErrorType = {
     success: boolean;
