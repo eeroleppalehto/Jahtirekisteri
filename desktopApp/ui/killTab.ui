@@ -461,6 +461,7 @@
       <string>Käytön osuus</string>
      </property>
     </widget>
+
     <widget class="QComboBox" name="sortKillsComboBox">
      <property name="geometry">
       <rect>
@@ -482,6 +483,17 @@
      </property>
      <property name="text">
       <string>Lajittele</string>
+    <widget class="QPushButton" name="removeShotsPushButton">
+     <property name="geometry">
+      <rect>
+       <x>580</x>
+       <y>480</y>
+       <width>130</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Poista kaato...</string>
      </property>
     </widget>
    </widget>

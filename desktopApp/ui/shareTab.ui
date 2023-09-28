@@ -203,6 +203,19 @@
       <string>Jaetut ruhon osat</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="shareEditPushButton">
+     <property name="geometry">
+      <rect>
+       <x>790</x>
+       <y>250</y>
+       <width>140</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Muokkaa jakoja...</string>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>
