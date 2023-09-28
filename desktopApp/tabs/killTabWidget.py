@@ -1,5 +1,6 @@
 
-from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox
+from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox, QComboBox, QDateEdit, QTableWidget, QSpinBox, QCheckBox, QPlainTextEdit, QLineEdit, QPushButton, QGridLayout
+from PyQt5.QtCore import Qt
 from PyQt5.uic import loadUi
 from datetime import date
 import pgModule
@@ -17,40 +18,62 @@ class Ui_killTabWidget(QScrollArea, QWidget):
         
         self.currentDate = date.today()
         
-        self.shotByCB = self.shotByComboBox
-        self.shotDateDE = self.shotDateEdit
-        self.shotLocationLE = self.locationLineEdit
-        self.shotAnimalCB = self.animalComboBox
-        self.shotAgeGroupCB = self.ageGroupComboBox
-        self.shotGenderCB = self.genderComboBox
-        self.shotWeightLE = self.weightLineEdit
-        self.shotAddInfoTE = self.additionalInfoTextEdit
-        self.shotSavePushBtn = self.saveShotPushButton
+        self.shotByCB: QComboBox = self.shotByComboBox
+        self.shotDateDE: QDateEdit = self.shotDateEdit
+        self.shotLocationLE: QLineEdit = self.locationLineEdit
+        self.shotAnimalCB: QComboBox = self.animalComboBox
+        self.shotAgeGroupCB: QComboBox = self.ageGroupComboBox
+        self.shotGenderCB: QComboBox = self.genderComboBox
+        self.shotWeightLE: QLineEdit = self.weightLineEdit
+        self.shotAddInfoTE: QPlainTextEdit = self.additionalInfoTextEdit
+        self.shotSavePushBtn: QPushButton = self.saveShotPushButton
         self.shotSavePushBtn.clicked.connect(self.saveShotAndUsage) # Signal
-        self.shotKillsTW = self.killsKillsTableWidget
-        self.shotLicenseTW = self.shotLicenseTableWidget
+        self.shotKillsTW: QTableWidget = self.killsKillsTableWidget
+        self.shotLicenseTW: QTableWidget = self.shotLicenseTableWidget
+        
+        # Combo boxes for sorting the shot table
+        self.shotSortShotsCB: QComboBox = self.sortKillsComboBox
+        shotSortOptions = [
+            'Kaataja \u2193',
+            'Kaataja \u2191',
+            'Kaatopäivä \u2193',
+            'Kaatopäivä \u2191',
+            'Paikka \u2193',
+            'Paikka \u2191',
+            'Eläin \u2193',
+            'Eläin \u2191',
+            'Ikäluokka \u2193',
+            'Ikäluokka \u2191',
+            'Sukupuoli \u2193',
+            'Sukupuoli \u2191',
+            'Paino \u2193',
+            'Paino \u2191',
+            'Kaato ID \u2193',
+            'Kaato ID \u2191'
+            ]
+        self.shotSortShotsCB.addItems(shotSortOptions)
+        self.shotSortShotsCB.currentIndexChanged.connect(self.sortShots) # Signal
 
-        self.shotUsageCB = self.usageComboBox
-        self.shotUsagePortionSB = self.usagePortionSpinBox
+        self.shotUsageCB: QComboBox = self.usageComboBox
+        self.shotUsagePortionSB: QSpinBox = self.usagePortionSpinBox
         self.shotUsagePortionSB.valueChanged.connect(self.calculateUsage2Value) # Signal
 
-        self.shotUsage2CheckB = self.usage2CheckBox
+        self.shotUsage2CheckB: QCheckBox = self.usage2CheckBox
         self.shotUsage2CheckB.stateChanged.connect(self.toggleUsage2) # Signal
 
-        self.shotUsage2CB = self.usage2ComboBox
+        self.shotUsage2CB: QComboBox = self.usage2ComboBox
         self.shotUsage2CB.setEnabled(False)
 
-        self.shotUsage2PortionSB = self.usage2PortionSpinBox
+        self.shotUsage2PortionSB: QSpinBox = self.usage2PortionSpinBox
         self.shotUsage2PortionSB.setEnabled(False)
 
-        self.editShotsPushBtn = self.editShotsPushButton
+        self.editShotsPushBtn: QPushButton = self.editShotsPushButton
         self.editShotsPushBtn.clicked.connect(self.openEditShotDialog) # Signal
         
         self.removeShotsPB = self.removeShotsPushButton
         self.removeShotsPB.clicked.connect(self.opeRemoveShotDialog) # Signal
 
-        self.shotLicenseYearCB = self.licenseYearComboBox
-        #print(f"valinta:'{self.shotLicenseYearCB.currentText()}'")
+        self.shotLicenseYearCB: QComboBox = self.licenseYearComboBox
 
         # Read database connection arguments from the settings file
         try:
@@ -88,6 +111,7 @@ class Ui_killTabWidget(QScrollArea, QWidget):
     def populateKillPage(self):
         # Set default date to current date
         self.shotDateDE.setDate(self.currentDate)
+        
         # Read data from view kaatoluettelo
         databaseOperation1 = pgModule.DatabaseOperation()
         databaseOperation1.getAllRowsFromTable(
@@ -100,6 +124,7 @@ class Ui_killTabWidget(QScrollArea, QWidget):
                 databaseOperation1.detailedMessage
                 )
         else:
+            self.shotKillData = databaseOperation1
             prepareData.prepareTable(databaseOperation1, self.shotKillsTW)
 
         # Read data from view nimivalinta
@@ -202,6 +227,8 @@ class Ui_killTabWidget(QScrollArea, QWidget):
                 'Ei löytynyt vuotta, jolta hakea lupatietoja',
                 'Could not find year to fetch licence data from, try adding a license in the license page first'
                 )
+        self.sortShots()        
+    
             
         
     def populateLicenceCB(self):
@@ -349,6 +376,68 @@ class Ui_killTabWidget(QScrollArea, QWidget):
     def calculateUsage2Value(self):
         value = self.shotUsagePortionSB.value()
         self.shotUsage2PortionSB.setValue(100 - value)
+
+    def sortShots(self):
+        """Sorts the shot table based on the selected combo box value
+            the /u2191 and /u2193 are unicode characters for up and down arrows
+        """
+        # Check the current text of the combo box and sort the table based on that
+        if self.shotSortShotsCB.currentText() == 'Kaataja \u2191':
+            self.shotKillsTW.sortItems(0, order=Qt.DescendingOrder)
+        elif self.shotSortShotsCB.currentText() == 'Kaataja \u2193':
+            self.shotKillsTW.sortItems(0, order=Qt.AscendingOrder)
+            
+        elif self.shotSortShotsCB.currentText() == 'Kaatopäivä \u2191':
+            self.shotKillsTW.sortItems(1, order=Qt.AscendingOrder)
+        elif self.shotSortShotsCB.currentText() == 'Kaatopäivä \u2193':
+            self.shotKillsTW.sortItems(1, order=Qt.DescendingOrder)
+            
+        elif self.shotSortShotsCB.currentText() == 'Paikka \u2191':
+            self.shotKillsTW.sortItems(2, order=Qt.DescendingOrder)
+        elif self.shotSortShotsCB.currentText() == 'Paikka \u2193':
+            self.shotKillsTW.sortItems(2, order=Qt.AscendingOrder)
+            
+        elif self.shotSortShotsCB.currentText() == 'Eläin \u2191':
+            self.shotKillsTW.sortItems(3, order=Qt.DescendingOrder)
+        elif self.shotSortShotsCB.currentText() == 'Eläin \u2193':
+            self.shotKillsTW.sortItems(3, order=Qt.AscendingOrder)
+            
+        elif self.shotSortShotsCB.currentText() == 'Ikäluokka \u2191':
+            self.shotKillsTW.sortItems(4, order=Qt.DescendingOrder)
+        elif self.shotSortShotsCB.currentText() == 'Ikäluokka \u2193':
+            self.shotKillsTW.sortItems(4, order=Qt.AscendingOrder)
+            
+        elif self.shotSortShotsCB.currentText() == 'Sukupuoli \u2191':
+            self.shotKillsTW.sortItems(5, order=Qt.DescendingOrder)
+        elif self.shotSortShotsCB.currentText() == 'Sukupuoli \u2193':
+            self.shotKillsTW.sortItems(5, order=Qt.AscendingOrder)
+            
+        elif self.shotSortShotsCB.currentText() == 'Paino \u2191':
+            self.sortNumericCells(6, False)
+        elif self.shotSortShotsCB.currentText() == 'Paino \u2193':
+            self.sortNumericCells(6, True)
+            
+        elif self.shotSortShotsCB.currentText() == 'Kaato ID \u2191':
+            self.sortNumericCells(7, False)
+        elif self.shotSortShotsCB.currentText() == 'Kaato ID \u2193':
+            self.sortNumericCells(7, True)
+    
+    def sortNumericCells(self, columnNumber: int, reverse: bool):
+        """
+            As the sortItems() method does not work with numeric values,
+            we need to sort the data manually
+            
+            Args:
+                columnNumber (int): the column number of the table to sort
+                reverse (bool): reverse the order of the sort if True
+        """
+        
+        self.shotKillData.resultSet.sort(reverse=reverse, key=lambda x: float(x[columnNumber]))
+        
+        # Mount the data back to the TableWidget
+        prepareData.prepareTable(self.shotKillData, self.shotKillsTW)
+        
+        
 
     #SIGNALS
     def openSettingsDialog(self):

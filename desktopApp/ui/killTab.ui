@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>861</width>
-    <height>771</height>
+    <height>792</height>
    </rect>
   </property>
   <widget class="QScrollArea" name="scrollArea">
@@ -149,7 +149,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>260</y>
+       <y>280</y>
        <width>841</width>
        <height>211</height>
       </rect>
@@ -228,7 +228,7 @@
      <property name="geometry">
       <rect>
        <x>720</x>
-       <y>480</y>
+       <y>500</y>
        <width>130</width>
        <height>23</height>
       </rect>
@@ -254,7 +254,7 @@
      <property name="geometry">
       <rect>
        <x>380</x>
-       <y>530</y>
+       <y>550</y>
        <width>60</width>
        <height>20</height>
       </rect>
@@ -360,7 +360,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>560</y>
+       <y>580</y>
        <width>521</width>
        <height>181</height>
       </rect>
@@ -383,7 +383,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>530</y>
+       <y>550</y>
        <width>110</width>
        <height>20</height>
       </rect>
@@ -401,7 +401,7 @@
      <property name="geometry">
       <rect>
        <x>450</x>
-       <y>530</y>
+       <y>550</y>
        <width>80</width>
        <height>22</height>
       </rect>
@@ -411,7 +411,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>230</y>
+       <y>250</y>
        <width>80</width>
        <height>20</height>
       </rect>
@@ -461,6 +461,28 @@
       <string>Käytön osuus</string>
      </property>
     </widget>
+
+    <widget class="QComboBox" name="sortKillsComboBox">
+     <property name="geometry">
+      <rect>
+       <x>720</x>
+       <y>240</y>
+       <width>130</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>720</x>
+       <y>217</y>
+       <width>130</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Lajittele</string>
     <widget class="QPushButton" name="removeShotsPushButton">
      <property name="geometry">
       <rect>
