@@ -20,7 +20,7 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
     
         self.currentDate = date.today()
 
-        self.shareKillsMemberTW: QTableWidget= self.shareKillsTableWidget
+        self.shareKillsMemberTW: QTableWidget = self.shareKillsTableWidget
         self.shareDE: QDateEdit = self.shareDateEdit
         self.sharePortionCB: QComboBox = self.portionComboBox
         self.shareMemberCB: QComboBox = self.memberComboBox
@@ -33,7 +33,7 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
         self.shareSankeyWebView: QWebEngineView = self.shareSankeyWebEngineView
 
         # Signal when the user clicks an item on shareKillsTW
-        # self.shareKillsMemberTW.itemClicked.connect(self.onShareKillTableClick)
+        self.shareKillsMemberTW.itemClicked.connect(self.onShareKillTableClick)
 
                 # Read database connection arguments from the settings file
         try:
@@ -146,3 +146,16 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
         
         # Disable the save button
         self.shareSavePushBtn.setEnabled(False)
+    
+    def onShareKillTableClick(self, item: QTableWidgetItem):
+        """Method for handling the click event on the table
+
+        Args:
+            item (QTableWidgetItem): Item clicked in the table
+        """
+        selectedRow = item.row()
+        self.shotUsageId = int(self.shareKillsMemberTW.item(selectedRow, 10).text())
+        self.shotWeight = float(self.shareKillsMemberTW.item(selectedRow, 9).text())
+        self.chosenItemLbl.setText(f"Valittu Kaato ID: {self.shareKillsMemberTW.item(selectedRow, 0).text()}")
+        self.shareSavePushBtn.setEnabled(True)
+           
