@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 // Import necessary modules and services
 import express from "express";
 import {
@@ -18,7 +19,7 @@ router.post("/", async (req, res) => {
 });
 
 // GET endpoint to fetch all 'lupa' records
-router.get("/", async (req, res) => {
+router.get("/", async (_req, res) => {
     const allLupas = await readAllLupas();
     res.json(allLupas);
 });
