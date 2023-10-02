@@ -100,7 +100,9 @@ class MultiPageMainWindow(QMainWindow):
             self.tab.currentWidget().populateKillPage()
         elif tabIndex == 2:
             self.tab.currentWidget().populateSharePage()
-        elif tabIndex == 4:#TODO. Remember to update this when adding new tabs
+        elif tabIndex == 3:
+            self.tab.currentWidget().populateSharePage()
+        elif tabIndex == 4:
             self.tab.currentWidget().populateLicensePage()
         elif tabIndex == 5:
             self.tab.currentWidget().populateMaintenancePage()
