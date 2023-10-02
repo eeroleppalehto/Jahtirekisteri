@@ -25,7 +25,7 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
         self.sharePortionCB: QComboBox = self.portionComboBox
         self.shareMemberCB: QComboBox = self.memberComboBox
         self.shareSavePushBtn: QPushButton = self.shareSavePushButton
-        # self.shareSavePushBtn.clicked.connect(self.saveShare) # Signal
+        self.shareSavePushBtn.clicked.connect(self.saveShare) # Signal
         self.sharedPortionsTW: QTableWidget = self.shareSharedPortionsTableWidget
 
         self.chosenItemLbl: QLabel = self.chosenItemLabel
@@ -159,3 +159,55 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
         self.chosenItemLbl.setText(f"Valittu Kaato ID: {self.shareKillsMemberTW.item(selectedRow, 0).text()}")
         self.shareSavePushBtn.setEnabled(True)
            
+    def saveShare(self):
+        """Method for saving the member share to the database
+        """
+        
+        # Dictionary for converting portion names to relevant multipliers
+        portionDict = {
+            "Neljännes": 0.25,
+            "Puolikas": 0.5,
+            "Koko": 1,
+        }
+        
+        try:
+            # Read data from the widgets and data stored when the user clicked the table
+            shotUsageId = int(self.shotUsageId)
+            shareDay = self.shareDE.date().toPyDate()
+            portion = self.sharePortionCB.currentText()
+            weight = portionDict[portion] * self.shotWeight
+            shareMemberChosenItemIx = self.shareMemberCB.currentIndex()
+            shareMemberId = self.shareMemberIdList[shareMemberChosenItemIx]
+            
+            # Create SQL query
+            sqlClauseBeginning = f"INSERT INTO public.jakotapahtuma_jasen(paiva, kaadon_kasittely_id, osnimitys, jasen_id, maara) VALUES("
+            sqlClauseValues = f"'{shareDay}', {shotUsageId!r}, {portion!r}, {shareMemberId!r}, {weight!r}"
+            sqlClauseEnd = ");"
+            
+            # Assemble the query
+            sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
+        except:
+            self.alert(
+                'Vakava virhe',
+                'Tietojen lukeminen epäonnistui',
+                'Tarkista, että olet valinnut kaadon ja jäsenen',
+                ''
+                )
+            return
+        
+        # Execute the query
+        databaseOperation = pgModule.DatabaseOperation()
+        databaseOperation.insertRowToTable(self.connectionArguments, sqlClause)
+        if databaseOperation.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation.errorMessage,
+                databaseOperation.detailedMessage
+                )
+        else:
+            # Update the table
+            self.populateSharePage()
+            self.shareSavePushBtn.setEnabled(False)
+   
+         
