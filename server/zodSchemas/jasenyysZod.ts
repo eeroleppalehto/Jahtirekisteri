@@ -13,16 +13,11 @@ const jasenyysZod = z.object({
     // Integer representing the share of the member in the group
     osuus: z.number().int(),
 
-    // DateTime for when the member joined the group; accepts both Date object and string that can be parsed into a Date
-    liittyi: z.union([
-        z.date(),
-        z.string().refine(str => !isNaN(Date.parse(str)), {
-            message: "Must be a valid date string",
-        }),
-    ]),
+    // DateTime for when the member joined the group
+    liittyi: z.string().datetime(),
 
     // Optional DateTime for when the member left the group
-    poistui: z.date().optional(),
+    poistui: z.string().datetime().optional(),
 });
 
 export default jasenyysZod;
