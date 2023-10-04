@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>697</width>
-    <height>528</height>
+    <height>554</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,7 +30,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>360</y>
+     <y>400</y>
      <width>110</width>
      <height>22</height>
     </rect>
@@ -39,8 +39,8 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>290</y>
+     <x>160</x>
+     <y>330</y>
      <width>60</width>
      <height>13</height>
     </rect>
@@ -52,8 +52,8 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>290</y>
+     <x>30</x>
+     <y>280</y>
      <width>60</width>
      <height>13</height>
     </rect>
@@ -66,7 +66,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>340</y>
+     <y>380</y>
      <width>60</width>
      <height>13</height>
     </rect>
@@ -79,7 +79,7 @@
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>360</y>
+     <y>400</y>
      <width>110</width>
      <height>22</height>
     </rect>
@@ -89,7 +89,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>410</y>
+     <y>450</y>
      <width>42</width>
      <height>22</height>
     </rect>
@@ -108,7 +108,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>390</y>
+     <y>430</y>
      <width>60</width>
      <height>13</height>
     </rect>
@@ -121,7 +121,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>450</y>
+     <y>490</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -137,7 +137,7 @@
    <property name="geometry">
     <rect>
      <x>120</x>
-     <y>450</y>
+     <y>490</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -149,8 +149,8 @@
   <widget class="QComboBox" name="editMembershipGroupComboBox">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>310</y>
+     <x>160</x>
+     <y>350</y>
      <width>110</width>
      <height>22</height>
     </rect>
@@ -159,8 +159,8 @@
   <widget class="QComboBox" name="editMembershipMemberComboBox">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>310</y>
+     <x>30</x>
+     <y>300</y>
      <width>110</width>
      <height>22</height>
     </rect>
@@ -193,13 +193,36 @@
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>340</y>
+     <y>380</y>
      <width>70</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
     <string>Poistuu</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>330</y>
+     <width>60</width>
+     <height>13</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Seurue</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="editMembershipPartyComboBox">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>350</y>
+     <width>110</width>
+     <height>22</height>
+    </rect>
    </property>
   </widget>
  </widget>
