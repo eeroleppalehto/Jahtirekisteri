@@ -25,17 +25,21 @@ class Party(DialogFrame):
         self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
 
         # Elements
-        self.addPartyNameLE = self.addPartyNameLineEdit
-        self.addPartyLeaderCB = self.addPartyLeaderComboBox
+        self.addPartyNameLE: QLineEdit = self.addPartyNameLineEdit
+        self.addPartyLeaderCB: QComboBox = self.addPartyLeaderComboBox
+        self.addPartyTypeCB: QComboBox = self.addPartyTypeComboBox
         
-        self.addPartyAddPushBtn = self.addPartyAddPushButton
+        self.addPartyAddPushBtn: QPushButton = self.addPartyAddPushButton
         self.addPartyAddPushBtn.clicked.connect(self.addParty) # Signal
-        self.addPartyCancelPushBtn = self.addPartyCancelPushButton
+        self.addPartyCancelPushBtn: QPushButton = self.addPartyCancelPushButton
         self.addPartyCancelPushBtn.clicked.connect(self.closeDialog) # Signal
 
         self.populateAddPartyDialog()
     
     def populateAddPartyDialog(self):
+        """Method for populating the dialog windows combo boxes with data from the database
+        """
+        
         databaseOperation2 = pgModule.DatabaseOperation()
         databaseOperation2.getAllRowsFromTable(
             self.connectionArguments, 'public.nimivalinta')
@@ -49,48 +53,68 @@ class Party(DialogFrame):
         else:
             self.memberIdList = prepareData.prepareComboBox(
                 databaseOperation2, self.addPartyLeaderCB, 1, 0)
+            
+        databaseOperation3 = pgModule.DatabaseOperation()
+        databaseOperation3.getAllRowsFromTable(
+            self.connectionArguments, 'public.seurue_tyyppi')
+        if databaseOperation3.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation3.errorMessage,
+                databaseOperation3.detailedMessage
+                )
+        else:
+            self.partyTypeList = prepareData.prepareComboBox(
+                databaseOperation3, self.addPartyTypeCB, 1, 0)
 
     def addParty(self):
+        """Method for adding a party to the database when the push button is clicked on the dialog window
+        """
+        
         try:
             companyId = 1
             partyName = self.addPartyNameLE.text()
 
             memberChosenItemIx = self.addPartyLeaderCB.currentIndex()
             partyLeaderId = self.memberIdList[memberChosenItemIx]
+            
+            chosenPartyTypeIx = self.addPartyTypeCB.currentIndex()
+            partyTypeId = self.partyTypeList[chosenPartyTypeIx]
 
-            errorCode = 0
+            
             if partyName == '':
-                errorCode = 1
+                self.alert(
+                    'Vakava virhe',
+                    'Et voi lisätä tyhjää kenttää',
+                    'Täytä seurueen nimi kenttä lisätäksesi seurueen',
+                    '-'
+                    )
+                return
 
-            sqlClauseBeginning = "INSERT INTO public.seurue(seura_id, seurueen_nimi, jasen_id) VALUES("
-            sqlClauseValues = f"{companyId}, '{partyName}', {partyLeaderId}"
+            sqlClauseBeginning = "INSERT INTO public.seurue(seura_id, seurueen_nimi, jasen_id, seurue_tyyppi_id) VALUES("
+            sqlClauseValues = f"{companyId}, '{partyName}', {partyLeaderId}, {partyTypeId}"
             sqlClauseEnd = ");"
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            return
 
-        if errorCode == 1:
+        
+        databaseOperation = pgModule.DatabaseOperation()
+        databaseOperation.insertRowToTable(self.connectionArguments, sqlClause)
+        if databaseOperation.errorCode != 0:
             self.alert(
                 'Vakava virhe',
-                'Et voi lisätä tyhjää kenttää',
-                'Täytä seurueen nimi kenttä lisätäksesi seurueen',
-                '-'
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation.errorMessage,
+                databaseOperation.detailedMessage
                 )
         else:
-            databaseOperation = pgModule.DatabaseOperation()
-            databaseOperation.insertRowToTable(self.connectionArguments, sqlClause)
-            if databaseOperation.errorCode != 0:
-                self.alert(
-                    'Vakava virhe',
-                    'Tietokantaoperaatio epäonnistui',
-                    databaseOperation.errorMessage,
-                    databaseOperation.detailedMessage
-                    )
-            else:
-                # Update the page to show new data and clear 
-                success = SuccessfulOperationDialog()
-                success.exec()
-                self.addPartyNameLE.clear()
+            # Update the page to show new data and clear the line edit
+            success = SuccessfulOperationDialog()
+            success.exec()
+            self.addPartyNameLE.clear()
 
     def closeDialog(self):
         self.close()
