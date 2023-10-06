@@ -29,6 +29,8 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         self.shareEditPushBtn.clicked.connect(self.openEditShareDialog) # Signal
         self.sharedPortionsTW: QTableWidget = self.shareSharedPortionsTableWidget
         
+        self.chosenShotLbl: QLabel = self.chosenShotLabel
+        
         self.sortKillsCB: QComboBox = self.sortKillsComboBox
         self.sortKillsCB.currentIndexChanged.connect(self.sortKills)
         self.sortSharesCB: QComboBox = self.sortSharesComboBox
@@ -90,6 +92,7 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
                 )
         else:
             # sharekills = databaseOperation1.resultSet
+            self.shotKillDatabaseOperation = databaseOperation1
             self.shareKillIdList = prepareData.prepareTable(databaseOperation1, self.shareKillsTW)
         
         # Read data fom table ruhonosa and populate the combo box
@@ -193,6 +196,7 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         else:
             # Process data to be shown in sharedPortionsTableWidget
             try:
+                self.sharedPortionsDatabaseOperation = databaseOperation6
                 # parse the data from the view to readable format
                 tableData = prepareData.parseSharedPortionOfShot(databaseOperation6.resultSet)
                 
@@ -246,6 +250,9 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         self.sortKillsCB.addItems(sortKillsOptions)
         self.sortSharesCB.clear()
         self.sortSharesCB.addItems(sortSharesOptions)
+        
+        # Disable save button on page load
+        self.shareSavePushBtn.setEnabled(False)
             
     def saveShare(self):
         portionDict = {
@@ -291,9 +298,18 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
             
             # Update the page to show new data and clear 
             self.populateSharePage()
+            self.chosenShotLbl.setText('Ei valittua kaatoa')
 
     def onShareKillTableClick(self, item):
         selectedRow = item.row()
+        
+        # Set the chosen shot label to show the selected shot 
+        self.chosenShotLbl.setText(f'Valittu Kaato ID: {self.shareKillsTW.item(selectedRow, 0).text()}')
+        
+        # Enable save button
+        self.shareSavePushBtn.setEnabled(True)
+        
+        # Save the shot usage id and weight to properties for later use
         self.shotUsageId = self.shareKillsTW.item(selectedRow, 10).text()
         self.shotWeight = float(self.shareKillsTW.item(selectedRow, 9).text())
         
