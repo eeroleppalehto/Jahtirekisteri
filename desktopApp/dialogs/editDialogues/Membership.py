@@ -5,7 +5,7 @@ import sys
 # Add parent directory to the path
 sys.path.append('../desktopApp')
 from PyQt5.QtCore import *
-from PyQt5.QtWidgets import (QDialog, QLabel, QPushButton,
+from PyQt5.QtWidgets import (QDialog, QLabel, QPushButton, QTableWidgetItem,
                              QComboBox, QTableWidget, QSpinBox, QDateEdit, QCheckBox,
                              QMainWindow, QApplication)
 from PyQt5.uic import loadUi
@@ -15,10 +15,9 @@ import prepareData as prepareData
 from datetime import date
 
 class Membership(DialogFrame):
-    """docstring for EditMemberDialog(DialogFrame
-    def __init__(self, arg):
-        super(EditMemberDialog(DialogFrame).__init__()
-    arg"""
+    """
+        Dialog window for editing memberships
+    """
 
     def __init__(self):
 
@@ -30,35 +29,49 @@ class Membership(DialogFrame):
         self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
 
         self.setWindowTitle('Muokkaa jäsenyys tietoja')
-
-        # TODO: Set current date on date edit widgets as default value
         
         # Elements
-        self.editMembershipTW = self.editMembershipTableWidget
-        self.editMembershipGroupCB = self.editMembershipGroupComboBox
-        self.editMembershipMemberCB = self.editMembershipMemberComboBox
-        self.editMembershipJoinedDE = self.editMembershipJoinedDateEdit
-        self.editMembershipExitDE = self.editMembershipExitDateEdit
-        self.editMembershipExitCheck = self.editMembershipExitCheckBox
-        self.editMembershipShareSB = self.editMembershipShareSpinBox
-        self.editMembershipCancelPushBtn = self.editMembershipCancelPushButton
+        
+        self.editMembershipTW: QTableWidget = self.editMembershipTableWidget
+        
+        self.editMembershipGroupCB: QComboBox = self.editMembershipGroupComboBox
+        self.editMembershipMemberCB: QComboBox = self.editMembershipMemberComboBox
+        self.editMembershipPartyCB: QComboBox = self.editMembershipPartyComboBox
+        self.editMembershipPartyCB.currentIndexChanged.connect(self.handlePartyCBChange)
+        
+        self.editMembershipJoinedDE: QDateEdit = self.editMembershipJoinedDateEdit
+        self.editMembershipJoinedDE.setDate(self.currentDate)
+        
+        self.editMembershipExitDE: QDateEdit = self.editMembershipExitDateEdit
+        self.editMembershipExitDE.setDate(self.currentDate)
+        self.editMembershipExitDE.setEnabled(False)
+        
+        self.editMembershipExitCheck: QCheckBox = self.editMembershipExitCheckBox
+        self.editMembershipExitCheck.stateChanged.connect(self.handleCheckBoxChange)
+        
+        self.editMembershipShareSB: QSpinBox = self.editMembershipShareSpinBox
+        
+        self.editMembershipCancelPushBtn: QPushButton = self.editMembershipCancelPushButton
         self.editMembershipCancelPushBtn.clicked.connect(self.closeDialog)
-        self.editMembershipSavePushBtn = self.editMembershipSavePushButton
+        
+        self.editMembershipSavePushBtn: QPushButton = self.editMembershipSavePushButton
         self.editMembershipSavePushBtn.clicked.connect(self.editMembership)
-        self.editMembershipPopulatePushBtn = self.editMembershipPopulatePushButton
+        self.editMembershipSavePushBtn.setEnabled(False)
+        
+        self.editMembershipPopulatePushBtn: QPushButton = self.editMembershipPopulatePushButton
         self.editMembershipPopulatePushBtn.clicked.connect(self.populateFields)
+        self.editMembershipPopulatePushBtn.setEnabled(False)
 
         # Signal when the user clicks an item on the table widget
         self.editMembershipTW.itemClicked.connect(self.onTableItemClick)
 
-        # State to track whether user has selected membership to edit
-        self.state = -1 
-
         self.populateMembershipTW()
 
     def populateMembershipTW(self):
-        self.editMembershipExitDE.setDate(self.currentDate)
-
+        """
+            Populates the widgets in the dialog window with data from the database
+        """
+        
         databaseOperation1 = pgModule.DatabaseOperation()
         databaseOperation1.getAllRowsFromTable(
             self.connectionArguments, 'public.jasenyys_nimella_ryhmalla')
@@ -72,9 +85,13 @@ class Membership(DialogFrame):
         else:
             self.membershipTable = prepareData.prepareTable(
                 databaseOperation1, self.editMembershipTW)
+            
+            # Hide the columns with id values
             self.editMembershipTW.setColumnHidden(1, True)
             self.editMembershipTW.setColumnHidden(2, True)
             self.editMembershipTW.setColumnHidden(3, True)
+            self.editMembershipTW.setColumnHidden(8, True)
+            self.editMembershipTW.setColumnHidden(10, True)
 
         databaseOperation2 = pgModule.DatabaseOperation()
         databaseOperation2.getAllRowsFromTable(
@@ -89,6 +106,10 @@ class Membership(DialogFrame):
         else:
             self.memberIdList = prepareData.prepareComboBox(
                 databaseOperation2, self.editMembershipMemberCB, 1, 0)
+            
+            # Save the id data of the members to the combo box items
+            for i in range(len(self.memberIdList)):
+                self.editMembershipMemberCB.setItemData(i, databaseOperation2.resultSet[i][0])
 
         databaseOperation3 = pgModule.DatabaseOperation()
         databaseOperation3.getAllRowsFromTable(
@@ -103,140 +124,143 @@ class Membership(DialogFrame):
         else:
             self.groupIdList = prepareData.prepareComboBox(
                 databaseOperation3, self.editMembershipGroupCB, 2, 0)
+            
+            # Save the id data of the groups to the combo box items
+            for i in range(len(self.groupIdList)):
+                self.editMembershipGroupCB.setItemData(i, databaseOperation3.resultSet[i][0])
+        
+        databaseOperation4 = pgModule.DatabaseOperation()
+        databaseOperation4.getAllRowsFromTable(
+            self.connectionArguments, 'public.seurue')
+        if databaseOperation4.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation4.errorMessage,
+                databaseOperation4.detailedMessage
+            )
+        else:
+            self.partyIdList = prepareData.prepareComboBox(
+                databaseOperation4, self.editMembershipPartyCB, 2, 0)
+            # Save the data of seurue table row to the combo box items
+            # (seurue_id, seura_id, seurueen_nim, jasen_id, seurue_tyyppi_id)
+            for i in range(len(self.partyIdList)):
+                self.editMembershipPartyCB.setItemData(i, databaseOperation4.resultSet[i])
     
     def populateFields(self):
-        errorCode = 0
-
-        memberCBIx = self.editMembershipMemberCB.findText(self.nameValue, Qt.MatchFixedString)
-        if memberCBIx >= 0:
-            self.editMembershipMemberCB.setCurrentIndex(memberCBIx)
-        else:
-            errorCode = 1
-            self.alert(
-                'Vakava virhe',
-                'Jäsentä ei löytynyt valikosta',
-                '-',
-                '-'
-                )
-            return
+        """
+            Populates the widgets based on the row selected on the table widget
+        """
         
-        groupCBIx = self.editMembershipGroupCB.findText(self.groupName, Qt.MatchFixedString)
-        if groupCBIx >= 0:
-            self.editMembershipGroupCB.setCurrentIndex(groupCBIx)
-        else:
-            errorCode = 2
-            self.alert(
-                'Vakava virhe',
-                'Ryhmää ei löytynyt valikosta',
-                '-',
-                '-'
-                )
-            return
-
-        # Parse join date from self.joinDate and set it to the associated DateEdit object
-        joinDate = QDate(
-            int(self.joinDate[:4]), 
-            int(self.joinDate[5:7]),
-            int(self.joinDate[8:])
-        )
-        
-        self.state = 0 if errorCode == 0 else -1
-        self.editMembershipShareSB.setValue(int(self.shareValue))
-        self.editMembershipJoinedDE.setDate(joinDate)
-        self.membershipIdInt = int(self.membershipId)
-        self.membership = [self.groupIdList[groupCBIx], self.memberIdList[memberCBIx], joinDate, int(self.shareValue)]
-
-        # Check if exit date exists and parse the date from self.exitDate and set it to the associated DateEdit object
-        if self.exitDate=="None" :
-            self.editMembershipExitCheck.setChecked(False)
-        else:
-            exitDate = QDate(
-                int(self.exitDate[:4]), 
-                int(self.exitDate[5:7]),
-                int(self.exitDate[8:])
-            )
-            self.editMembershipExitDE.setDate(exitDate)
-            self.editMembershipExitCheck.setChecked(True)
-            self.membership.append(exitDate)
-
-    def onTableItemClick(self, item): #NOTE: Working as intented!
-        selectedRow = item.row() # The row of the selection
-        self.nameValue = self.editMembershipTW.item(selectedRow, 0).text() # text value of the id field
-        self.membershipId = self.editMembershipTW.item(selectedRow, 1).text()
-        self.groupName = self.editMembershipTW.item(selectedRow, 4).text()
-        self.joinDate = self.editMembershipTW.item(selectedRow, 5).text()
-        self.exitDate = self.editMembershipTW.item(selectedRow, 6).text()
-        self.shareValue = self.editMembershipTW.item(selectedRow, 7).text()
-
-    def editMembership(self):
-        errorCode = 0
-        if self.state == -1:
-            self.alert(
-                'Vakava virhe',
-                'Et ole valinnut muokattaavaa jäsenyyttä',
-                'Valitse jäsenyys valikosta ja paina täytä painiketta',
-                '-'
-                )
-            return
         try:
-            # Get memberId from the member combo box
-            memberChosenItemIx = self.editMembershipMemberCB.currentIndex()
-            memberId = self.memberIdList[memberChosenItemIx]
-
-            # Get groupId from the group combo box
-            groupChosenItemIx = self.editMembershipGroupCB.currentIndex()
-            groupId = self.groupIdList[groupChosenItemIx]
-
-            # Get values from widgets and add them to a list
-            updateList = [
-                groupId,
-                memberId,
-                str(self.editMembershipJoinedDE.date().toPyDate()),
-                self.editMembershipShareSB.value()
-            ]
-
-            # Check if any of the values are empty
-            for item in updateList:
-                    if item == '':
-                        errorCode = 1
-            columnList = [
-                'ryhma_id',
-                'jasen_id',
-                'liittyi',
-                'osuus',
-                'poistui'
-            ]
-
-            # Check if the exit check box is selected and add the exit date or NULL value to the update list
-            if self.editMembershipExitCheck.isChecked() == True:
-                updateList.append(str(self.editMembershipExitDE.date().toPyDate()))
-            else:
-                updateList.append('NULL')
+            # Store the values for later use
+            self.membershipToEditDict = self.tempDataDict
+            
+            # Change the value of the member combo box to the member id of the selected row
+            self.editMembershipMemberCB.setCurrentIndex(self.editMembershipMemberCB.findData(self.membershipToEditDict['jasen_id']))
+            
+            # Change the value of the party combo box to the party id of the selected row
+            partIdIx = self.partyIdList.index(self.membershipToEditDict['seurue_id'])
+            self.editMembershipPartyCB.setCurrentIndex(partIdIx)
+            
+            # Check
+            noGroupIdValue = -1
+            if self.membershipToEditDict['ryhma_id'] != noGroupIdValue:
+                self.editMembershipGroupCB.setCurrentIndex(self.editMembershipGroupCB.findData(self.membershipToEditDict['ryhma_id']))
+            
+            joinDate =date.fromisoformat(self.membershipToEditDict['liittyi'])
+            
+            self.editMembershipJoinedDE.setDate(joinDate)
+            
+            if self.membershipToEditDict['poistui'] != "None":
+                exitDate = date.fromisoformat(self.membershipToEditDict['poistui'])
                 
+                self.editMembershipExitDE.setDate(exitDate)
+                self.editMembershipExitCheck.setChecked(True)
+            else:
+                self.editMembershipExitCheck.setChecked(False)
+            
+            self.editMembershipShareSB.setValue(self.membershipToEditDict['osuus'])
+            
+            self.editMembershipPopulatePushBtn.setEnabled(False)
+            self.editMembershipSavePushBtn.setEnabled(True)
+            
+            
+        except Exception as e:
+            self.alert(
+                'Kenttien täyttö epäonnistui',
+                'Tarkista antamasi tiedot',
+                'Error while populating fields',
+                str(e)
+            )
+        
+
+    def onTableItemClick(self, item: QTableWidgetItem): #NOTE: Working as intented!
+        """_summary_
+
+        Args:
+            item (QTableWidgetItem): the item clicked from QTableWidget
+        """
+        
+        selectedRow = item.row() # The row of the selection
+        
+        # As there might be no group id, check if it is None
+        groupId = self.editMembershipTW.item(selectedRow, 3).text()
+        noGroupIdValue = -1
+        
+        if groupId == "None":
+            groupId = noGroupIdValue
+        else:
+            groupId = int(groupId)
+        
+        self.tempDataDict = {
+            "jasenyys_id": int(self.editMembershipTW.item(selectedRow, 1).text()),
+            "jasen_id": int(self.editMembershipTW.item(selectedRow, 2).text()),
+            "ryhma_id": groupId,
+            "seurue_id": int(self.editMembershipTW.item(selectedRow, 8).text()),
+            "osuus": int(self.editMembershipTW.item(selectedRow, 7).text()),
+            "liittyi": self.editMembershipTW.item(selectedRow, 5).text(),
+            "poistui": self.editMembershipTW.item(selectedRow, 6).text()
+        }
+        
+        self.editMembershipPopulatePushBtn.setEnabled(True)
+
+    def editMembership(self):         
+        try:
+            editToSave = {
+                "jasen_id": self.editMembershipMemberCB.currentData(),
+                "seurue_id": self.editMembershipPartyCB.currentData()[4],
+                "osuus": self.editMembershipShareSB.value(),
+                "liittyi": self.editMembershipJoinedDE.date().toString(Qt.ISODate),
+            }
+            
+            if self.editMembershipGroupCB.isEnabled():
+                editToSave["ryhma_id"] = self.editMembershipGroupCB.currentData()
+            else:
+                editToSave["ryhma_id"] = None
+                
+            if self.editMembershipExitCheck.isChecked():
+                editToSave["poistui"] = self.editMembershipExitDE.date().toString(Qt.ISODate)
+            else:
+                editToSave["poistui"] = None
+            
+            # Create a string containing the column names and values needed for the update operation
+            columnValueString = ""
+            for key, value in editToSave.items():
+                if value == None:
+                    columnValueString += f"{key} = NULL"
+                else:
+                    columnValueString += f"{key} = {value!r}"
+                
+                if key != "poistui":
+                    columnValueString += ", " 
 
             table = 'public.jasenyys'
-            limit = f"public.jasenyys.jasenyys_id = {self.membershipIdInt}"
+            limit = f"public.jasenyys.jasenyys_id = {self.membershipToEditDict['jasenyys_id']}"
         except:
             self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
         
-        if errorCode == 1:
-                self.alert(
-                'Vakava virhe',
-                'Et voi päivittää tyhjää kenttää',
-                'Täytä tyhjät kentät päivittääksesi jäsenyyttä',
-                '-'
-                )
-                return
-        
-        # Create a string of column names and values for the update operation
-        columnValueString = ''
-        for i in range(len(updateList)):
-            if columnList[i] != 'poistui':
-                columnValueString += f"{columnList[i]} = {updateList[i]!r}, "
-            elif columnList[i] == 'poistui' and updateList[i] == 'NULL':
-                columnValueString += f"{columnList[i]} = {updateList[i]}"
-            else:
-                columnValueString += f"{columnList[i]} = {updateList[i]!r}"
+
 
         # Execute the update operation
         dataBaseOperation = pgModule.DatabaseOperation()
@@ -251,8 +275,28 @@ class Membership(DialogFrame):
         else:
             success = SuccessfulOperationDialog()
             success.exec()
-            self.state = -1
             self.populateMembershipTW()
+
+    def handlePartyCBChange(self):
+        """
+            Method to handle the change of the party combo box
+            and disable the group combo box if the party is member type
+        """
+        
+        # Check if data is None to avoid errors
+        if self.editMembershipPartyCB.currentData() == None:
+            return
+        # Check the party type and disable the group combo box if the party is group type
+        elif self.editMembershipPartyCB.currentData()[4] == 2:
+            self.editMembershipGroupCB.setEnabled(False)
+        else:
+            self.editMembershipGroupCB.setEnabled(True)
+
+    def handleCheckBoxChange(self):
+        if self.editMembershipExitCheck.isChecked() == True:
+            self.editMembershipExitDE.setEnabled(True)
+        else:
+            self.editMembershipExitDE.setEnabled(False)
 
     def closeDialog(self):
             self.close()

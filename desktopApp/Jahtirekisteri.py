@@ -19,6 +19,7 @@ from tabs.shareTabWidget import Ui_shareTabWidget
 from tabs.killTabWidget import Ui_killTabWidget
 from tabs.licenseTabWidget import Ui_licenseTabWidget
 from tabs.maintenanceTabWidget import Ui_maintenanceTabWidget
+from tabs.shareMemberTabWidget import Ui_shareMemberTabWidget
 
 # CLASS DEFINITIONS FOR THE APP
 # -----------------------------
@@ -39,6 +40,7 @@ class MultiPageMainWindow(QMainWindow):
         self.tab.addTab(Ui_summaryTabWidget(), 'Yhteenveto')
         self.tab.addTab(Ui_killTabWidget(), 'Kaato')
         self.tab.addTab(Ui_shareTabWidget(), 'Lihanjako')
+        self.tab.addTab(Ui_shareMemberTabWidget(), 'Jako jäsenille')
         self.tab.addTab(Ui_licenseTabWidget(), 'Luvat')
         self.tab.addTab(Ui_maintenanceTabWidget(), 'Ylläpito')
 
@@ -99,8 +101,10 @@ class MultiPageMainWindow(QMainWindow):
         elif tabIndex == 2:
             self.tab.currentWidget().populateSharePage()
         elif tabIndex == 3:
-            self.tab.currentWidget().populateLicensePage()
+            self.tab.currentWidget().populateSharePage()
         elif tabIndex == 4:
+            self.tab.currentWidget().populateLicensePage()
+        elif tabIndex == 5:
             self.tab.currentWidget().populateMaintenancePage()
 
     def openManualDialog(self):

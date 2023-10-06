@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>450</width>
     <height>223</height>
    </rect>
   </property>
@@ -39,8 +39,8 @@
   <widget class="QDateEdit" name="membershipJoinDateEdit">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>100</y>
+     <x>310</x>
+     <y>50</y>
      <width>110</width>
      <height>22</height>
     </rect>
@@ -49,8 +49,8 @@
   <widget class="QLabel" name="membershipJoinLabel">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>80</y>
+     <x>310</x>
+     <y>30</y>
      <width>91</width>
      <height>16</height>
     </rect>
@@ -63,7 +63,7 @@
    <property name="geometry">
     <rect>
      <x>210</x>
-     <y>50</y>
+     <y>110</y>
      <width>171</width>
      <height>22</height>
     </rect>
@@ -73,8 +73,8 @@
    <property name="geometry">
     <rect>
      <x>210</x>
-     <y>30</y>
-     <width>47</width>
+     <y>90</y>
+     <width>70</width>
      <height>13</height>
     </rect>
    </property>
@@ -85,8 +85,8 @@
   <widget class="QLabel" name="membershipShareLabel">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>80</y>
+     <x>210</x>
+     <y>30</y>
      <width>47</width>
      <height>13</height>
     </rect>
@@ -127,8 +127,8 @@
   <widget class="QSpinBox" name="membershipShareSpinBox">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>100</y>
+     <x>210</x>
+     <y>50</y>
      <width>80</width>
      <height>22</height>
     </rect>
@@ -141,6 +141,29 @@
    </property>
    <property name="value">
     <number>100</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="membershipGroupLabel_2">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>90</y>
+     <width>60</width>
+     <height>13</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Seurue</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="membershipPartyComboBox">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>110</y>
+     <width>171</width>
+     <height>22</height>
+    </rect>
    </property>
   </widget>
  </widget>
