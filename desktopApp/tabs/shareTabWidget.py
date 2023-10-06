@@ -304,6 +304,76 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         dialog = editShareDialog.Share()
         dialog.exec()
 
+    def sortKills(self):
+        """Sorts the shot table based on the selected combo box value
+            the /u2191 and /u2193 are unicode characters for up and down arrows
+        """
+        
+        if self.sortKillsCB.currentText() == 'Kaato ID \u2191':
+            self.sortNumericCells(self.shareKillsTW, 0, self.shotKillDatabaseOperation, False)
+        elif self.sortKillsCB.currentText() == 'Kaato ID \u2193':
+            self.sortNumericCells(self.shareKillsTW, 0, self.shotKillDatabaseOperation, True)
+        
+        elif self.sortKillsCB.currentText() == 'Kaataja \u2191':
+            self.shareKillsTW.sortItems(2, order=QtCore.Qt.DescendingOrder)
+        elif self.sortKillsCB.currentText() == 'Kaataja \u2193':
+            self.shareKillsTW.sortItems(2, order=QtCore.Qt.AscendingOrder)
+            
+        elif self.sortKillsCB.currentText() == 'Kaatopäivä \u2191':
+            self.shareKillsTW.sortItems(3, order=QtCore.Qt.AscendingOrder)
+        elif self.sortKillsCB.currentText() == 'Kaatopäivä \u2193':
+            self.shareKillsTW.sortItems(3, order=QtCore.Qt.DescendingOrder)
+            
+        elif self.sortKillsCB.currentText() == 'Paikka \u2191':
+            self.shareKillsTW.sortItems(4, order=QtCore.Qt.DescendingOrder)
+        elif self.sortKillsCB.currentText() == 'Paikka \u2193':
+            self.shareKillsTW.sortItems(4, order=QtCore.Qt.AscendingOrder)
+        
+        elif self.sortKillsCB.currentText() == 'Eläin \u2191':
+            self.shareKillsTW.sortItems(5, order=QtCore.Qt.DescendingOrder)
+        elif self.sortKillsCB.currentText() == 'Eläin \u2193':
+            self.shareKillsTW.sortItems(5, order=QtCore.Qt.AscendingOrder)
+            
+        elif self.sortKillsCB.currentText() == 'Ikäluokka \u2191':
+            self.shareKillsTW.sortItems(6, order=QtCore.Qt.DescendingOrder)
+        elif self.sortKillsCB.currentText() == 'Ikäluokka \u2193':
+            self.shareKillsTW.sortItems(6, order=QtCore.Qt.AscendingOrder)
+        
+        elif self.sortKillsCB.currentText() == 'Sukupuoli \u2191':
+            self.shareKillsTW.sortItems(7, order=QtCore.Qt.DescendingOrder)
+        elif self.sortKillsCB.currentText() == 'Sukupuoli \u2193':
+            self.shareKillsTW.sortItems(7, order=QtCore.Qt.AscendingOrder)
+            
+        elif self.sortKillsCB.currentText() == 'Paino \u2191':
+            self.sortNumericCells(self.shareKillsTW, 9, self.shotKillDatabaseOperation, False)
+        elif self.sortKillsCB.currentText() == 'Paino \u2193':
+            self.sortNumericCells(self.shareKillsTW, 9, self.shotKillDatabaseOperation, True)
+  
+    def sortShares(self):
+        """Sorts the share table based on the selected combo box value
+            the /u2191 and /u2193 are unicode characters for up and down arrows
+        """
+        
+        if self.sortSharesCB.currentText() == 'Kaato ID \u2191':
+            self.sortNumericCells(self.sharedPortionsTW, 0, self.sharedPortionsDatabaseOperation, False)
+        elif self.sortSharesCB.currentText() == 'Kaato ID \u2193':
+            self.sortNumericCells(self.sharedPortionsTW, 0, self.sharedPortionsDatabaseOperation, True)
+            
+        elif self.sortSharesCB.currentText() == 'Eläin \u2191':
+            self.sharedPortionsTW.sortItems(1, order=QtCore.Qt.DescendingOrder)
+        elif self.sortSharesCB.currentText() == 'Eläin \u2193':
+            self.sharedPortionsTW.sortItems(1, order=QtCore.Qt.AscendingOrder)
+        
+        elif self.sortSharesCB.currentText() == 'Jaettu \u2191':
+            self.sortPercentageCells(self.sharedPortionsTW, 2, self.sharedPortionsDatabaseOperation, False)
+        elif self.sortSharesCB.currentText() == 'Jaettu \u2193':
+            self.sortPercentageCells(self.sharedPortionsTW, 2, self.sharedPortionsDatabaseOperation, True)
+            
+        elif self.sortSharesCB.currentText() == 'Määrä \u2191':
+            self.sortNumericCells(self.sharedPortionsTW, 3, self.sharedPortionsDatabaseOperation, False)
+        elif self.sortSharesCB.currentText() == 'Määrä \u2193':
+            self.sortNumericCells(self.sharedPortionsTW, 3, self.sharedPortionsDatabaseOperation, True)         
+    
     def sortNumericCells(self, tableWidget: QTableWidget, columnNumber: int, databaseOperation: pgModule.DatabaseOperation, reverse: bool):
         """
             As the sortItems() method does not work with numeric values,
