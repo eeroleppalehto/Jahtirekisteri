@@ -29,6 +29,10 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         self.shareEditPushBtn.clicked.connect(self.openEditShareDialog) # Signal
         self.sharedPortionsTW: QTableWidget = self.shareSharedPortionsTableWidget
         
+        self.sortKillsCB: QComboBox = self.sortKillsComboBox
+        self.sortKillsCB.currentIndexChanged.connect(self.sortKills)
+        self.sortSharesCB: QComboBox = self.sortSharesComboBox
+        self.sortSharesCB.currentIndexChanged.connect(self.sortShares)
 
         self.shareSankeyWebView = self.shareSankeyWebEngineView
 
@@ -206,7 +210,42 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
                 'Shared kills failed to load on share page',
                 'Oops'
             )
+        
+        # Clear and populate sort combo boxes
+        sortKillsOptions = [
+            'Kaato ID \u2193',
+            'Kaato ID \u2191',
+            'Kaataja \u2193',
+            'Kaataja \u2191',
+            'Kaatopäivä \u2193',
+            'Kaatopäivä \u2191',
+            'Paikka \u2193',
+            'Paikka \u2191',
+            'Eläin \u2193',
+            'Eläin \u2191',
+            'Ikäluokka \u2193',
+            'Ikäluokka \u2191',
+            'Sukupuoli \u2193',
+            'Sukupuoli \u2191',
+            'Paino \u2193',
+            'Paino \u2191',
+        ]
+        
+        sortSharesOptions = [
+            'Kaato ID \u2193',
+            'Kaato ID \u2191',
+            'Eläin \u2193',
+            'Eläin \u2191',
+            'Jaettu \u2193',
+            'Jaettu \u2191',
+            'Määrä \u2193',
+            'Määrä \u2191',
+        ]
 
+        self.sortKillsCB.clear()
+        self.sortKillsCB.addItems(sortKillsOptions)
+        self.sortSharesCB.clear()
+        self.sortSharesCB.addItems(sortSharesOptions)
             
     def saveShare(self):
         errorCode = 0
