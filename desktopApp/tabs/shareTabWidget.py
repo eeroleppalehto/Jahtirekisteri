@@ -19,15 +19,15 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
 
         self.currentDate = date.today()
 
-        self.shareKillsTW = self.shareKillsTableWidget
-        self.shareDE = self.shareDateEdit
-        self.sharePortionCB = self.portionComboBox
-        self.shareGroupCB = self.groupComboBox
-        self.shareSavePushBtn = self.shareSavePushButton
+        self.shareKillsTW: QTableWidget = self.shareKillsTableWidget
+        self.shareDE: QDateEdit = self.shareDateEdit
+        self.sharePortionCB: QComboBox = self.portionComboBox
+        self.shareGroupCB: QComboBox = self.groupComboBox
+        self.shareSavePushBtn: QPushButton = self.shareSavePushButton
         self.shareSavePushBtn.clicked.connect(self.saveShare) # Signal
         self.shareEditPushBtn: QPushButton = self.shareEditPushButton
         self.shareEditPushBtn.clicked.connect(self.openEditShareDialog) # Signal
-        self.sharedPortionsTW = self.shareSharedPortionsTableWidget
+        self.sharedPortionsTW: QTableWidget = self.shareSharedPortionsTableWidget
         
 
         self.shareSankeyWebView = self.shareSankeyWebEngineView
