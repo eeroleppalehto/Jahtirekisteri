@@ -1,5 +1,5 @@
 
-from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox, QPushButton
+from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox, QPushButton, QTableWidget, QDateEdit, QComboBox, QLabel
 from PyQt5 import QtCore
 from PyQt5.uic import loadUi
 from datetime import date
@@ -248,7 +248,6 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         self.sortSharesCB.addItems(sortSharesOptions)
             
     def saveShare(self):
-        errorCode = 0
         portionDict = {
             "Neljännes": 0.25,
             "Puolikas": 0.5,
@@ -263,7 +262,9 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
             shareGroup = self.shareGroupIdList[shareGroupChosenItemIx]
             
             if self.shotUsageId == '':
-                errorCode = 1
+                self.alert('Virheellinen syöte', 'Valitse jaettava kaato', '','Valitse jaettava kaato yllä olevasta taulukosta')
+                return
+                
             
             # Insert data into kaato table
             # Create a SQL clause to insert element values to the DB
@@ -276,10 +277,6 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
             return
 
         # create DatabaseOperation object to execute the SQL clause
-
-        if errorCode == 1:
-            self.alert('Virheellinen syöte', 'Valitse jaettava kaato', '','Valitse jaettava kaato yllä olevasta taulukosta' )
-            return
 
         databaseOperation = pgModule.DatabaseOperation()
         databaseOperation.insertRowToTable(self.connectionArguments, sqlClause)
