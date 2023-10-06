@@ -322,6 +322,27 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         # Mount the data back to the TableWidget
         prepareData.prepareTable(databaseOperation, tableWidget)
         
+    def sortPercentageCells(self, tableWidget: QTableWidget, columnNumber: int, databaseOperation: pgModule.DatabaseOperation, reverse: bool):
+        """As the sortItems() method does not work with percentage values,
+            we need to sort the data manually
+
+        Args:
+            tableWidget (QTableWidget): table widget to sort
+            columnNumber (int): column number of the table to sort
+            databaseOperation (pgModule.DatabaseOperation): database operation object with the data
+            reverse (bool): reverse the order of the sort if True
+        """
+        
+        databaseOperation.resultSet.sort(reverse=reverse, key=lambda x: self.parsePercentage(x[columnNumber]))
+        
+        # Mount the data back to the TableWidget
+        prepareData.prepareTable(databaseOperation, tableWidget)
+
+    def parsePercentage(self, percentageString: str):
+        """
+            Parses a string like '50%' to float 0.5
+        """
+        return float(percentageString.strip('%'))/100
 
     def openSettingsDialog(self):
         dialog = dialogueWindow.SaveDBSettingsDialog()
