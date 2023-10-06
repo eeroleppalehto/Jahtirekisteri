@@ -304,6 +304,24 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         dialog = editShareDialog.Share()
         dialog.exec()
 
+    def sortNumericCells(self, tableWidget: QTableWidget, columnNumber: int, databaseOperation: pgModule.DatabaseOperation, reverse: bool):
+        """
+            As the sortItems() method does not work with numeric values,
+            we need to sort the data manually
+            
+            Args:
+                tableWidget (QTableWidget): the table widget to sort
+                columnNumber (int): the column number of the table to sort
+                databaseOperation (pgModule.DatabaseOperation): the database operation object
+                reverse (bool): reverse the order of the sort if True
+                
+        """
+        
+        databaseOperation.resultSet.sort(reverse=reverse, key=lambda x: float(x[columnNumber]))
+        
+        # Mount the data back to the TableWidget
+        prepareData.prepareTable(databaseOperation, tableWidget)
+        
 
     def openSettingsDialog(self):
         dialog = dialogueWindow.SaveDBSettingsDialog()
