@@ -1,5 +1,5 @@
 
-from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox
+from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox, QComboBox, QTableWidget, QPushButton, QLineEdit
 from PyQt5.uic import loadUi
 import pgModule
 import prepareData
@@ -13,14 +13,14 @@ class Ui_licenseTabWidget(QScrollArea, QWidget):
         super(Ui_licenseTabWidget, self).__init__()
         loadUi('ui/licenseTab.ui', self)
 
-        self.licenseYearLE = self.licenseYearLineEdit
-        self.licenseAnimalCB = self.licenseAnimalComboBox
-        self.licenseAgeGroupCB = self.licenseAgeGroupComboBox
-        self.licenseGenderCB = self.licenseGenderComboBox
-        self.licenseAmountLE = self.licenseAmountLineEdit
-        self.licenseSavePushBtn = self.licenseSavePushButton
+        self.licenseYearLE: QLineEdit = self.licenseYearLineEdit
+        self.licenseAnimalCB: QComboBox = self.licenseAnimalComboBox
+        self.licenseAgeGroupCB: QComboBox = self.licenseAgeGroupComboBox
+        self.licenseGenderCB: QComboBox = self.licenseGenderComboBox
+        self.licenseAmountLE: QLineEdit = self.licenseAmountLineEdit
+        self.licenseSavePushBtn: QPushButton = self.licenseSavePushButton
         self.licenseSavePushBtn.clicked.connect(self.saveLicense) # Signal
-        self.licenseSummaryTW = self.licenseSummaryTableWidget
+        self.licenseSummaryTW: QTableWidget = self.licenseSummaryTableWidget
 
             # Read database connection arguments from the settings file
         try:
