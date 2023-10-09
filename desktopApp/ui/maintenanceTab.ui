@@ -27,8 +27,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>939</width>
-      <height>759</height>
+      <width>937</width>
+      <height>757</height>
      </rect>
     </property>
     <widget class="QPushButton" name="maintenanceAddMembershipPushButton">
@@ -290,6 +290,29 @@
      </property>
      <property name="text">
       <string>Poista jäsenyys...</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="maintenanceSortComboBox">
+     <property name="geometry">
+      <rect>
+       <x>760</x>
+       <y>50</y>
+       <width>170</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>760</x>
+       <y>30</y>
+       <width>170</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Lajittele</string>
      </property>
     </widget>
    </widget>
