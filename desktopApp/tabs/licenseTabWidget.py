@@ -1,9 +1,9 @@
 
 from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox, QComboBox, QTableWidget, QPushButton, QLineEdit
 from PyQt5.uic import loadUi
+from PyQt5.QtCore import Qt
 import pgModule
 import prepareData
-
 
 import dialogs.dialogueWindow as dialogueWindow
 
@@ -23,6 +23,7 @@ class Ui_licenseTabWidget(QScrollArea, QWidget):
         self.licenseSummaryTW: QTableWidget = self.licenseSummaryTableWidget
 
         self.licenseSortCB: QComboBox = self.licenseSortComboBox
+        self.licenseSortCB.currentIndexChanged.connect(self.sortLicense) # Signal
 
             # Read database connection arguments from the settings file
         try:
@@ -111,6 +112,7 @@ class Ui_licenseTabWidget(QScrollArea, QWidget):
         else:
             databaseOperation4.columnHeaders = [ "LupaID", "SeuraID", "Lupavuosi", "Eläin", "Sukupuoli", "Ikäluokka", "Lupamäärä"]
             prepareData.prepareTable(databaseOperation4, self.licenseSummaryTW)
+            self.licenseDatabaseOperation = databaseOperation4
             self.licenseSummaryTW.setColumnHidden(0, True)
             self.licenseSummaryTW.setColumnHidden(1, True)
 
@@ -173,6 +175,52 @@ class Ui_licenseTabWidget(QScrollArea, QWidget):
             self.populateLicensePage()
             self.licenseYearLE.clear()
             self.licenseAmountLE.clear()
+
+    def sortLicense(self):
+        if self.licenseSortCB.currentText() == "Lupavuosi \u2191":
+            self.sortNumericCells(self.licenseSummaryTW, 2, self.licenseDatabaseOperation, False)
+        elif self.licenseSortCB.currentText() == "Lupavuosi \u2193":
+            self.sortNumericCells(self.licenseSummaryTW, 2, self.licenseDatabaseOperation, True)
+        
+        elif self.licenseSortCB.currentText() == "Eläin \u2191":
+            self.licenseSummaryTW.sortItems(3, order=Qt.DescendingOrder)
+        elif self.licenseSortCB.currentText() == "Eläin \u2193":
+            self.licenseSummaryTW.sortItems(3, order=Qt.AscendingOrder)
+        
+        elif self.licenseSortCB.currentText() == "Sukupuoli \u2191":
+            self.licenseSummaryTW.sortItems(4, order=Qt.DescendingOrder)
+        elif self.licenseSortCB.currentText() == "Sukupuoli \u2193":
+            self.licenseSummaryTW.sortItems(4, order=Qt.AscendingOrder)
+        
+        elif self.licenseSortCB.currentText() == "Ikäluokka \u2191":
+            self.licenseSummaryTW.sortItems(5, order=Qt.DescendingOrder)
+        elif self.licenseSortCB.currentText() == "Ikäluokka \u2193":
+            self.licenseSummaryTW.sortItems(5, order=Qt.AscendingOrder)
+        
+        elif self.licenseSortCB.currentText() == "Lupamäärä \u2191":
+            self.sortNumericCells(self.licenseSummaryTW, 6, self.licenseDatabaseOperation, False)
+        elif self.licenseSortCB.currentText() == "Lupamäärä \u2193":
+            self.sortNumericCells(self.licenseSummaryTW, 6, self.licenseDatabaseOperation, True)
+        
+        
+    
+    def sortNumericCells(self, tableWidget: QTableWidget, columnNumber: int, databaseOperation: pgModule.DatabaseOperation, reverse: bool):
+        """
+            As the sortItems() method does not work with numeric values,
+            we need to sort the data manually
+            
+            Args:
+                tableWidget (QTableWidget): the table widget to sort
+                columnNumber (int): the column number of the table to sort
+                databaseOperation (pgModule.DatabaseOperation): the database operation object
+                reverse (bool): reverse the order of the sort if True
+                
+        """
+        
+        databaseOperation.resultSet.sort(reverse=reverse, key=lambda x: float(x[columnNumber]))
+        
+        # Mount the data back to the TableWidget
+        prepareData.prepareTable(databaseOperation, tableWidget)
 
     #SIGNALS
     def openSettingsDialog(self):
