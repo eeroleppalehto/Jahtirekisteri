@@ -32,12 +32,17 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
 
         self.chosenItemLbl: QLabel = self.chosenItemLabel
 
+        self.sortKillsCB: QComboBox = self.sortKillsComboBox
+        self.sortKillsCB.currentIndexChanged.connect(self.sortKills)
+        self.sortSharesCB: QComboBox = self.sortSharesComboBox
+        self.sortSharesCB.currentIndexChanged.connect(self.sortShares)
+
         self.shareSankeyWebView: QWebEngineView = self.shareSankeyWebEngineView
 
         # Signal when the user clicks an item on shareKillsTW
         self.shareKillsMemberTW.itemClicked.connect(self.onShareKillTableClick)
 
-                # Read database connection arguments from the settings file
+        # Read database connection arguments from the settings file
         try:
             databaseOperation = pgModule.DatabaseOperation()
             self.connectionArguments = databaseOperation.readDatabaseSettingsFromFile('connectionSettings.dat')
@@ -78,6 +83,7 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
                 databaseOperation1.detailedMessage
                 )
         else:
+            self.membershareKillDatabaseOperation = databaseOperation1
             self.shareKillIdList = prepareData.prepareTable(databaseOperation1, self.shareKillsMemberTW)
 
         # Read data fom table ruhonosa and populate the combo box
@@ -108,6 +114,7 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
                 )
         else:
             try:
+                self.sharedPortionsDatabaseOperation = databaseOperation4
                 # parse the data from the view to readable format
                 tableData = prepareData.parseSharedPortionOfShot(databaseOperation4.resultSet)
                 
@@ -157,6 +164,42 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
         else:
             self.membershipData = databaseOperation6.resultSet
             self.handlePartyCBChange()
+            
+        # Clear and populate sort combo boxes
+        sortKillsOptions = [
+            'Kaato ID \u2193',
+            'Kaato ID \u2191',
+            'Kaataja \u2193',
+            'Kaataja \u2191',
+            'Kaatopäivä \u2193',
+            'Kaatopäivä \u2191',
+            'Paikka \u2193',
+            'Paikka \u2191',
+            'Eläin \u2193',
+            'Eläin \u2191',
+            'Ikäluokka \u2193',
+            'Ikäluokka \u2191',
+            'Sukupuoli \u2193',
+            'Sukupuoli \u2191',
+            'Paino \u2193',
+            'Paino \u2191',
+        ]
+
+        sortSharesOptions = [
+            'Kaato ID \u2193',
+            'Kaato ID \u2191',
+            'Eläin \u2193',
+            'Eläin \u2191',
+            'Jaettu \u2193',
+            'Jaettu \u2191',
+            'Määrä \u2193',
+            'Määrä \u2191',
+        ]
+
+        self.sortKillsCB.clear()
+        self.sortKillsCB.addItems(sortKillsOptions)
+        self.sortSharesCB.clear()
+        self.sortSharesCB.addItems(sortSharesOptions)
         
         
         # Set the chosen shot label to empty
