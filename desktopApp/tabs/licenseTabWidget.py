@@ -22,6 +22,8 @@ class Ui_licenseTabWidget(QScrollArea, QWidget):
         self.licenseSavePushBtn.clicked.connect(self.saveLicense) # Signal
         self.licenseSummaryTW: QTableWidget = self.licenseSummaryTableWidget
 
+        self.licenseSortCB: QComboBox = self.licenseSortComboBox
+
             # Read database connection arguments from the settings file
         try:
             databaseOperation = pgModule.DatabaseOperation()
@@ -111,6 +113,22 @@ class Ui_licenseTabWidget(QScrollArea, QWidget):
             prepareData.prepareTable(databaseOperation4, self.licenseSummaryTW)
             self.licenseSummaryTW.setColumnHidden(0, True)
             self.licenseSummaryTW.setColumnHidden(1, True)
+
+        # Populate the sort combobox
+        sortOptions = [
+            'Lupavuosi \u2193',
+            'Lupavuosi \u2191',
+            'Eläin \u2193',
+            'Eläin \u2191',
+            'Sukupuoli \u2193',
+            'Sukupuoli \u2191',
+            'Ikäluokka \u2193',
+            'Ikäluokka \u2191',
+            'Lupamäärä \u2193',
+            'Lupamäärä \u2191'
+        ]
+        self.licenseSortCB.clear()
+        self.licenseSortCB.addItems(sortOptions)
 
     def saveLicense(self):
         errorCode = 0
