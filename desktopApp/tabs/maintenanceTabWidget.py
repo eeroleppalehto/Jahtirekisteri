@@ -61,6 +61,8 @@ class Ui_maintenanceTabWidget(QScrollArea, QWidget):
 
         self.maintenanceTW: QTableWidget = self.maintenanceTableWidget
         self.maintenanceTableCB: QComboBox = self.maintenanceComboBox
+        
+        self.maintenanceSortCB: QComboBox = self.maintenanceSortComboBox
 
         cbOptionsList = ["Kaikki jäsenet", "Ryhmät jäsenillä", "Seurue ryhmillä"]
 
@@ -120,8 +122,61 @@ class Ui_maintenanceTabWidget(QScrollArea, QWidget):
         else:
             prepareData.prepareTable(databaseOperation1, self.maintenanceTW)
 
-            if tableToShow == "public.ryhma":
-                pass
+    
+    def handleTableOptionChange(self):
+        """
+            Handles the change of the table option combo box and changes
+            the sort options combo box accordingly and populates the table
+        """
+        
+        
+        memberTableOptions = [
+            "Nimi \u2193",
+            "Nimi \u2191",
+            "Osoite \u2193",
+            "Osoite \u2191",
+            "Postinumero \u2193",
+            "Postinumero \u2191",
+            "Postitoimipaikka \u2193",
+            "Postitoimipaikka \u2191",
+            "Tila \u2193",
+            "Tila \u2191"
+        ]
+        
+        groupTableOptions = [
+            "Ryhmän nimi \u2193",
+            "Ryhmän nimi \u2191",
+            "Nimi \u2193",
+            "Nimi \u2191",
+            "Liittynyt \u2193",
+            "Liittynyt \u2191",
+            "Poistunut \u2193",
+            "Poistunut \u2191",
+            "Osuus \u2193",
+            "Osuus \u2191"
+        ]
+        
+        partyTableOptions = [
+            "Seurueen nimi \u2193",
+            "Seurueen nimi \u2191",
+            "Ryhmän nimi \u2193",
+            "Ryhmän nimi \u2191"
+        ]
+        
+        # Check which table is selected and populate the sort options combo box accordingly
+        if self.maintenanceTableCB.currentText() == "Kaikki jäsenet":
+            self.maintenanceSortCB.clear()
+            self.maintenanceSortCB.addItems(memberTableOptions)
+            
+        elif self.maintenanceTableCB.currentText() == "Ryhmät jäsenillä":
+            self.maintenanceSortCB.clear()
+            self.maintenanceSortCB.addItems(groupTableOptions)
+            
+        elif self.maintenanceTableCB.currentText() == "Seurue ryhmillä":
+            self.maintenanceSortCB.clear()
+            self.maintenanceSortCB.addItems(partyTableOptions)
+        
+        self.populateMaintenancePage()
 
     #SIGNALS
     def openSettingsDialog(self):
