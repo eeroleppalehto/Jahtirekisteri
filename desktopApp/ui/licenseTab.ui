@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>565</width>
-    <height>501</height>
+    <height>536</height>
    </rect>
   </property>
   <widget class="QScrollArea" name="scrollArea">
@@ -16,7 +16,7 @@
      <x>0</x>
      <y>0</y>
      <width>571</width>
-     <height>501</height>
+     <height>531</height>
     </rect>
    </property>
    <property name="widgetResizable">
@@ -27,8 +27,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>569</width>
-      <height>499</height>
+      <width>567</width>
+      <height>527</height>
      </rect>
     </property>
     <widget class="QLineEdit" name="licenseYearLineEdit">
@@ -94,7 +94,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>90</y>
+       <y>120</y>
        <width>140</width>
        <height>30</height>
       </rect>
@@ -112,7 +112,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>120</y>
+       <y>150</y>
        <width>521</width>
        <height>371</height>
       </rect>
@@ -185,6 +185,29 @@
      </property>
      <property name="text">
       <string>Määrä</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>390</x>
+       <y>100</y>
+       <width>130</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Lajittele</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="licenseSortComboBox">
+     <property name="geometry">
+      <rect>
+       <x>390</x>
+       <y>120</y>
+       <width>141</width>
+       <height>22</height>
+      </rect>
      </property>
     </widget>
    </widget>
