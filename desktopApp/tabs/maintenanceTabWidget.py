@@ -1,5 +1,6 @@
 
-from PyQt5.QtWidgets import QWidget, QScrollArea, QFrame, QVBoxLayout, QMessageBox
+from PyQt5.QtWidgets import QWidget, QScrollArea, QFrame, QVBoxLayout, QMessageBox, QPushButton, QTableWidget, QComboBox
+from PyQt5.QtCore import Qt
 from PyQt5.uic import loadUi
 import pgModule
 import prepareData
@@ -29,37 +30,37 @@ class Ui_maintenanceTabWidget(QScrollArea, QWidget):
         super(Ui_maintenanceTabWidget, self).__init__()
         loadUi('ui/maintenanceTab.ui', self)
 
-        self.maintenanceAddMemberPushBtn = self.maintenanceAddMemberPushButton
+        self.maintenanceAddMemberPushBtn: QPushButton = self.maintenanceAddMemberPushButton
         self.maintenanceAddMemberPushBtn.clicked.connect(self.openAddMemberDialog) # Signal
-        self.maintenanceRemoveMemberPushBtn = self.maintenanceRemoveMemberPushButton
+        self.maintenanceRemoveMemberPushBtn: QPushButton = self.maintenanceRemoveMemberPushButton
         self.maintenanceRemoveMemberPushBtn.clicked.connect(self.openRemoveMemberDialog) # Signal
-        self.maintenanceAddMembershipPushBtn = self.maintenanceAddMembershipPushButton
+        self.maintenanceAddMembershipPushBtn: QPushButton = self.maintenanceAddMembershipPushButton
         self.maintenanceAddMembershipPushBtn.clicked.connect(self.openAddMembershipDialog) # Signal
-        self.maintenanceAddGroupPushBtn = self.maintenanceAddGroupPushButton
+        self.maintenanceAddGroupPushBtn: QPushButton = self.maintenanceAddGroupPushButton
         self.maintenanceAddGroupPushBtn.clicked.connect(self.openAddGroupDialog) # Signal
-        self.maintenanceRemoveGroupPushBtn = self.maintenanceRemoveGroupPushButton
+        self.maintenanceRemoveGroupPushBtn: QPushButton = self.maintenanceRemoveGroupPushButton
         self.maintenanceRemoveGroupPushBtn.clicked.connect(self.openRemoveGroupDialog) # Signal
-        self.maintenanceAddPartyPushBtn = self.maintenanceAddPartyPushButton
+        self.maintenanceAddPartyPushBtn: QPushButton = self.maintenanceAddPartyPushButton
         self.maintenanceAddPartyPushBtn.clicked.connect(self.openAddMPartyDialog) # Signal
-        self.maintenanceRemovePartyPushBtn = self.maintenanceRemovePartyPushButton
+        self.maintenanceRemovePartyPushBtn: QPushButton = self.maintenanceRemovePartyPushButton
         self.maintenanceRemovePartyPushBtn.clicked.connect(self.openRemovePartyDialog) # Signal
-        self.maintenanceEditCompanyPushBtn = self.maintenanceEditCompanyPushButton
+        self.maintenanceEditCompanyPushBtn: QPushButton = self.maintenanceEditCompanyPushButton
         self.maintenanceEditCompanyPushBtn.clicked.connect(self.openEditCompanyDialog) # Signal
-        self.maintenanceEditMemberPushBtn = self.maintenanceEditMemberPushButton
+        self.maintenanceEditMemberPushBtn: QPushButton = self.maintenanceEditMemberPushButton
         self.maintenanceEditMemberPushBtn.clicked.connect(self.openEditMemberDialog) # Signal
-        self.maintenanceEditMembershipPushBtn = self.maintenanceEditMembershipPushButton
+        self.maintenanceEditMembershipPushBtn: QPushButton = self.maintenanceEditMembershipPushButton
         self.maintenanceEditMembershipPushBtn.clicked.connect(self.openEditMembershipDialog) # Signal
-        self.maintenanceEditGroupPushBtn = self.maintenanceEditGroupPushButton
+        self.maintenanceEditGroupPushBtn: QPushButton = self.maintenanceEditGroupPushButton
         self.maintenanceEditGroupPushBtn.clicked.connect(self.openEditGroupDialog) # Signal
-        self.maintenanceEditPartyPushBtn = self.maintenanceEditPartyPushButton
+        self.maintenanceEditPartyPushBtn: QPushButton = self.maintenanceEditPartyPushButton
         self.maintenanceEditPartyPushBtn.clicked.connect(self.openEditPartyDialog) # Signal
         
-        self.maintenanceRemoveMembershipPB = self.maintenanceRemoveMembershipPushButton
+        self.maintenanceRemoveMembershipPB: QPushButton = self.maintenanceRemoveMembershipPushButton
         self.maintenanceRemoveMembershipPB.clicked.connect(self.openRemoveMembershipDialog)
         
 
-        self.maintenanceTW = self.maintenanceTableWidget
-        self.maintenanceCB = self.maintenanceComboBox
+        self.maintenanceTW: QTableWidget = self.maintenanceTableWidget
+        self.maintenanceTableCB: QComboBox = self.maintenanceComboBox
 
         cbOptionsList = ["Kaikki jäsenet", "Ryhmät jäsenillä", "Seurue ryhmillä"]
 
