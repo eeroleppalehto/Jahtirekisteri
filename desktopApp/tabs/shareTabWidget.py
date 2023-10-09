@@ -1,5 +1,5 @@
 
-from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox, QPushButton
+from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox, QPushButton, QTableWidget, QDateEdit, QComboBox, QLabel
 from PyQt5 import QtCore
 from PyQt5.uic import loadUi
 from datetime import date
@@ -19,16 +19,22 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
 
         self.currentDate = date.today()
 
-        self.shareKillsTW = self.shareKillsTableWidget
-        self.shareDE = self.shareDateEdit
-        self.sharePortionCB = self.portionComboBox
-        self.shareGroupCB = self.groupComboBox
-        self.shareSavePushBtn = self.shareSavePushButton
+        self.shareKillsTW: QTableWidget = self.shareKillsTableWidget
+        self.shareDE: QDateEdit = self.shareDateEdit
+        self.sharePortionCB: QComboBox = self.portionComboBox
+        self.shareGroupCB: QComboBox = self.groupComboBox
+        self.shareSavePushBtn: QPushButton = self.shareSavePushButton
         self.shareSavePushBtn.clicked.connect(self.saveShare) # Signal
         self.shareEditPushBtn: QPushButton = self.shareEditPushButton
         self.shareEditPushBtn.clicked.connect(self.openEditShareDialog) # Signal
-        self.sharedPortionsTW = self.shareSharedPortionsTableWidget
+        self.sharedPortionsTW: QTableWidget = self.shareSharedPortionsTableWidget
         
+        self.chosenShotLbl: QLabel = self.chosenShotLabel
+        
+        self.sortKillsCB: QComboBox = self.sortKillsComboBox
+        self.sortKillsCB.currentIndexChanged.connect(self.sortKills)
+        self.sortSharesCB: QComboBox = self.sortSharesComboBox
+        self.sortSharesCB.currentIndexChanged.connect(self.sortShares)
 
         self.shareSankeyWebView = self.shareSankeyWebEngineView
 
@@ -86,6 +92,7 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
                 )
         else:
             # sharekills = databaseOperation1.resultSet
+            self.shotKillDatabaseOperation = databaseOperation1
             self.shareKillIdList = prepareData.prepareTable(databaseOperation1, self.shareKillsTW)
         
         # Read data fom table ruhonosa and populate the combo box
@@ -189,6 +196,7 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         else:
             # Process data to be shown in sharedPortionsTableWidget
             try:
+                self.sharedPortionsDatabaseOperation = databaseOperation6
                 # parse the data from the view to readable format
                 tableData = prepareData.parseSharedPortionOfShot(databaseOperation6.resultSet)
                 
@@ -206,10 +214,47 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
                 'Shared kills failed to load on share page',
                 'Oops'
             )
+        
+        # Clear and populate sort combo boxes
+        sortKillsOptions = [
+            'Kaato ID \u2193',
+            'Kaato ID \u2191',
+            'Kaataja \u2193',
+            'Kaataja \u2191',
+            'Kaatopäivä \u2193',
+            'Kaatopäivä \u2191',
+            'Paikka \u2193',
+            'Paikka \u2191',
+            'Eläin \u2193',
+            'Eläin \u2191',
+            'Ikäluokka \u2193',
+            'Ikäluokka \u2191',
+            'Sukupuoli \u2193',
+            'Sukupuoli \u2191',
+            'Paino \u2193',
+            'Paino \u2191',
+        ]
+        
+        sortSharesOptions = [
+            'Kaato ID \u2193',
+            'Kaato ID \u2191',
+            'Eläin \u2193',
+            'Eläin \u2191',
+            'Jaettu \u2193',
+            'Jaettu \u2191',
+            'Määrä \u2193',
+            'Määrä \u2191',
+        ]
 
+        self.sortKillsCB.clear()
+        self.sortKillsCB.addItems(sortKillsOptions)
+        self.sortSharesCB.clear()
+        self.sortSharesCB.addItems(sortSharesOptions)
+        
+        # Disable save button on page load
+        self.shareSavePushBtn.setEnabled(False)
             
     def saveShare(self):
-        errorCode = 0
         portionDict = {
             "Neljännes": 0.25,
             "Puolikas": 0.5,
@@ -224,7 +269,9 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
             shareGroup = self.shareGroupIdList[shareGroupChosenItemIx]
             
             if self.shotUsageId == '':
-                errorCode = 1
+                self.alert('Virheellinen syöte', 'Valitse jaettava kaato', '','Valitse jaettava kaato yllä olevasta taulukosta')
+                return
+                
             
             # Insert data into kaato table
             # Create a SQL clause to insert element values to the DB
@@ -237,10 +284,6 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
             return
 
         # create DatabaseOperation object to execute the SQL clause
-
-        if errorCode == 1:
-            self.alert('Virheellinen syöte', 'Valitse jaettava kaato', '','Valitse jaettava kaato yllä olevasta taulukosta' )
-            return
 
         databaseOperation = pgModule.DatabaseOperation()
         databaseOperation.insertRowToTable(self.connectionArguments, sqlClause)
@@ -255,9 +298,18 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
             
             # Update the page to show new data and clear 
             self.populateSharePage()
+            self.chosenShotLbl.setText('Ei valittua kaatoa')
 
     def onShareKillTableClick(self, item):
         selectedRow = item.row()
+        
+        # Set the chosen shot label to show the selected shot 
+        self.chosenShotLbl.setText(f'Valittu Kaato ID: {self.shareKillsTW.item(selectedRow, 0).text()}')
+        
+        # Enable save button
+        self.shareSavePushBtn.setEnabled(True)
+        
+        # Save the shot usage id and weight to properties for later use
         self.shotUsageId = self.shareKillsTW.item(selectedRow, 10).text()
         self.shotWeight = float(self.shareKillsTW.item(selectedRow, 9).text())
         
@@ -265,6 +317,115 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         dialog = editShareDialog.Share()
         dialog.exec()
 
+    def sortKills(self):
+        """Sorts the shot table based on the selected combo box value
+            the /u2191 and /u2193 are unicode characters for up and down arrows
+        """
+        
+        if self.sortKillsCB.currentText() == 'Kaato ID \u2191':
+            self.sortNumericCells(self.shareKillsTW, 0, self.shotKillDatabaseOperation, False)
+        elif self.sortKillsCB.currentText() == 'Kaato ID \u2193':
+            self.sortNumericCells(self.shareKillsTW, 0, self.shotKillDatabaseOperation, True)
+        
+        elif self.sortKillsCB.currentText() == 'Kaataja \u2191':
+            self.shareKillsTW.sortItems(2, order=QtCore.Qt.DescendingOrder)
+        elif self.sortKillsCB.currentText() == 'Kaataja \u2193':
+            self.shareKillsTW.sortItems(2, order=QtCore.Qt.AscendingOrder)
+            
+        elif self.sortKillsCB.currentText() == 'Kaatopäivä \u2191':
+            self.shareKillsTW.sortItems(3, order=QtCore.Qt.AscendingOrder)
+        elif self.sortKillsCB.currentText() == 'Kaatopäivä \u2193':
+            self.shareKillsTW.sortItems(3, order=QtCore.Qt.DescendingOrder)
+            
+        elif self.sortKillsCB.currentText() == 'Paikka \u2191':
+            self.shareKillsTW.sortItems(4, order=QtCore.Qt.DescendingOrder)
+        elif self.sortKillsCB.currentText() == 'Paikka \u2193':
+            self.shareKillsTW.sortItems(4, order=QtCore.Qt.AscendingOrder)
+        
+        elif self.sortKillsCB.currentText() == 'Eläin \u2191':
+            self.shareKillsTW.sortItems(5, order=QtCore.Qt.DescendingOrder)
+        elif self.sortKillsCB.currentText() == 'Eläin \u2193':
+            self.shareKillsTW.sortItems(5, order=QtCore.Qt.AscendingOrder)
+            
+        elif self.sortKillsCB.currentText() == 'Ikäluokka \u2191':
+            self.shareKillsTW.sortItems(6, order=QtCore.Qt.DescendingOrder)
+        elif self.sortKillsCB.currentText() == 'Ikäluokka \u2193':
+            self.shareKillsTW.sortItems(6, order=QtCore.Qt.AscendingOrder)
+        
+        elif self.sortKillsCB.currentText() == 'Sukupuoli \u2191':
+            self.shareKillsTW.sortItems(7, order=QtCore.Qt.DescendingOrder)
+        elif self.sortKillsCB.currentText() == 'Sukupuoli \u2193':
+            self.shareKillsTW.sortItems(7, order=QtCore.Qt.AscendingOrder)
+            
+        elif self.sortKillsCB.currentText() == 'Paino \u2191':
+            self.sortNumericCells(self.shareKillsTW, 9, self.shotKillDatabaseOperation, False)
+        elif self.sortKillsCB.currentText() == 'Paino \u2193':
+            self.sortNumericCells(self.shareKillsTW, 9, self.shotKillDatabaseOperation, True)
+  
+    def sortShares(self):
+        """Sorts the share table based on the selected combo box value
+            the /u2191 and /u2193 are unicode characters for up and down arrows
+        """
+        
+        if self.sortSharesCB.currentText() == 'Kaato ID \u2191':
+            self.sortNumericCells(self.sharedPortionsTW, 0, self.sharedPortionsDatabaseOperation, False)
+        elif self.sortSharesCB.currentText() == 'Kaato ID \u2193':
+            self.sortNumericCells(self.sharedPortionsTW, 0, self.sharedPortionsDatabaseOperation, True)
+            
+        elif self.sortSharesCB.currentText() == 'Eläin \u2191':
+            self.sharedPortionsTW.sortItems(1, order=QtCore.Qt.DescendingOrder)
+        elif self.sortSharesCB.currentText() == 'Eläin \u2193':
+            self.sharedPortionsTW.sortItems(1, order=QtCore.Qt.AscendingOrder)
+        
+        elif self.sortSharesCB.currentText() == 'Jaettu \u2191':
+            self.sortPercentageCells(self.sharedPortionsTW, 2, self.sharedPortionsDatabaseOperation, False)
+        elif self.sortSharesCB.currentText() == 'Jaettu \u2193':
+            self.sortPercentageCells(self.sharedPortionsTW, 2, self.sharedPortionsDatabaseOperation, True)
+            
+        elif self.sortSharesCB.currentText() == 'Määrä \u2191':
+            self.sortNumericCells(self.sharedPortionsTW, 3, self.sharedPortionsDatabaseOperation, False)
+        elif self.sortSharesCB.currentText() == 'Määrä \u2193':
+            self.sortNumericCells(self.sharedPortionsTW, 3, self.sharedPortionsDatabaseOperation, True)         
+    
+    def sortNumericCells(self, tableWidget: QTableWidget, columnNumber: int, databaseOperation: pgModule.DatabaseOperation, reverse: bool):
+        """
+            As the sortItems() method does not work with numeric values,
+            we need to sort the data manually
+            
+            Args:
+                tableWidget (QTableWidget): the table widget to sort
+                columnNumber (int): the column number of the table to sort
+                databaseOperation (pgModule.DatabaseOperation): the database operation object
+                reverse (bool): reverse the order of the sort if True
+                
+        """
+        
+        databaseOperation.resultSet.sort(reverse=reverse, key=lambda x: float(x[columnNumber]))
+        
+        # Mount the data back to the TableWidget
+        prepareData.prepareTable(databaseOperation, tableWidget)
+        
+    def sortPercentageCells(self, tableWidget: QTableWidget, columnNumber: int, databaseOperation: pgModule.DatabaseOperation, reverse: bool):
+        """As the sortItems() method does not work with percentage values,
+            we need to sort the data manually
+
+        Args:
+            tableWidget (QTableWidget): table widget to sort
+            columnNumber (int): column number of the table to sort
+            databaseOperation (pgModule.DatabaseOperation): database operation object with the data
+            reverse (bool): reverse the order of the sort if True
+        """
+        
+        databaseOperation.resultSet.sort(reverse=reverse, key=lambda x: self.parsePercentage(x[columnNumber]))
+        
+        # Mount the data back to the TableWidget
+        prepareData.prepareTable(databaseOperation, tableWidget)
+
+    def parsePercentage(self, percentageString: str):
+        """
+            Parses a string like '50%' to float 0.5
+        """
+        return float(percentageString.strip('%'))/100
 
     def openSettingsDialog(self):
         dialog = dialogueWindow.SaveDBSettingsDialog()
