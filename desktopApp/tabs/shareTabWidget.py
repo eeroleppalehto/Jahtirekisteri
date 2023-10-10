@@ -10,6 +10,7 @@ import party
 
 import dialogs.dialogueWindow as dialogueWindow
 import dialogs.editDialogues.Share as editShareDialog
+import dialogs.removeDialogues.GroupShare as removeShareDialog
 
 
 class Ui_shareTabWidget(QScrollArea, QWidget):
@@ -27,6 +28,8 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         self.shareSavePushBtn.clicked.connect(self.saveShare) # Signal
         self.shareEditPushBtn: QPushButton = self.shareEditPushButton
         self.shareEditPushBtn.clicked.connect(self.openEditShareDialog) # Signal
+        self.shareRemovePushBtn: QPushButton = self.shareRemovePushButton
+        self.shareRemovePushBtn.clicked.connect(self.openRemoveShareDialog) # Signal
         self.sharedPortionsTW: QTableWidget = self.shareSharedPortionsTableWidget
         
         self.chosenShotLbl: QLabel = self.chosenShotLabel
@@ -316,6 +319,11 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
     def openEditShareDialog(self):
         dialog = editShareDialog.Share()
         dialog.exec()
+    
+    def openRemoveShareDialog(self):
+        dialog = removeShareDialog.GroupShare()
+        dialog.exec()
+        
 
     def sortKills(self):
         """Sorts the shot table based on the selected combo box value
