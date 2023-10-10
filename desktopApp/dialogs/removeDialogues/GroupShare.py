@@ -9,32 +9,32 @@ import pgModule as pgModule
 import prepareData as prepareData
 from dialogs.messageModule import PopupMessages as msg
 
-class Shot(DialogFrame):
+class GroupShare(DialogFrame):
     def __init__(self):
         super().__init__()
         
-        loadUi("ui/removeShotDialog.ui", self)
+        loadUi("ui/removeGroupShareDialog.ui", self)
         
-        self.setWindowTitle('Poista kaato')
+        self.setWindowTitle('Poista jako')
         
         databaseOperationConnections = pgModule.DatabaseOperation()
         self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
         
         # Elements
-        self.removeShotCB: QComboBox = self.removeShotComboBox
+        self.removeGroupShareCB: QComboBox = self.removeGroupShareComboBox
+        self.removeGroupShareCancelPushBtn: QPushButton = self.removeGroupShareCancelPushButton
+        self.removeGroupShareCancelPushBtn.clicked.connect(self.closeDialog) # Signal
+        self.removeGroupShareSaveBtn: QPushButton = self.removeGroupShareSaveButton
+        self.removeGroupShareSaveBtn.clicked.connect(self.removeGroupShare) # Signal
         
-        self.removeShotPushBtn: QPushButton = self.removeShotPushButton
-        self.removeShotPushBtn.clicked.connect(self.removeShot) # Signal
-        self.removeShotCancelPushBtn: QPushButton = self.removeShotCancelPushButton
-        self.removeShotCancelPushBtn.clicked.connect(self.closeDialog) # Signal
+        self.populateRemoveGroupShareDialog()
         
-        # Populate the shot combo box
-        self.populateRemoveShotDialog()
         
-    def populateRemoveShotDialog(self):
+    def populateRemoveGroupShareDialog(self):
+        # Populate the share combo box
         databaseOperation = pgModule.DatabaseOperation()
         databaseOperation.getAllRowsFromTable(
-            self.connectionArguments, 'public.kaatoluettelo_indeksilla')
+            self.connectionArguments, 'public.jakotapahtuma_ryhman_nimella')
         if databaseOperation.errorCode != 0:
             self.alert(
                 'Vakava virhe',
@@ -48,25 +48,31 @@ class Shot(DialogFrame):
             results = databaseOperation.resultSet
             newResults = []
             
-            # Read colums 0, 1, 2, 3, 4, 5, 6, 7, 9 from each row in the result set
+            # Read colums from the result set
             # and generate a string from them to be viewed in the combo box
             for row in results:
-                newResults.append((f"ID: {row[9]} | {row[1]} | {row[2]} | {row[3]} | {row[4]} | {row[5]} | {row[6]} | {row[7]}", row[9]))
+                newResults.append((f"Kaato ID: {row[7]} | {row[1]} | {row[3]} | {row[4]}", row[0]))
                 
             databaseOperation.resultSet = newResults
             
             self.shotIdList = prepareData.prepareComboBox(
-                databaseOperation, self.removeShotCB, 0, 1)
-        
-    def removeShot(self):
+                databaseOperation, self.removeGroupShareCB, 0, 1)
+    
+    def removeGroupShare(self):
         try:
-            shotChosenItemIx = self.removeShotCB.currentIndex()
-            shotId = self.shotIdList[shotChosenItemIx]
+            shareChosenItemIx = self.removeGroupShareCB.currentIndex()
+            shareId = self.shotIdList[shareChosenItemIx]
             
-            table = 'public.kaato'
-            limit = f"public.kaato.kaato_id = {shotId}"
-        except Exception:
-            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            table = 'public.jakotapahtuma'
+            limit = f"public.jakotapahtuma.tapahtuma_id = {shareId}"
+        except Exception as e:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                'Valitse poistettava jako',
+                str(e)
+                )
+            return
         
         databaseOperation = pgModule.DatabaseOperation()
         databaseOperation.deleteFromTable(self.connectionArguments, table, limit)
@@ -79,7 +85,8 @@ class Shot(DialogFrame):
                 )
         else:
             msg().successMessage('Kaato poistettu')
-            self.populateRemoveShotDialog()
-    
+            self.populateRemoveGroupShareDialog()
+        
     def closeDialog(self):
         self.close()
+        

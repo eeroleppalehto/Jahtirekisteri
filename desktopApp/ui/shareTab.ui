@@ -291,6 +291,19 @@
       <string>Ei valittua kaatoa</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="shareRemovePushButton">
+     <property name="geometry">
+      <rect>
+       <x>640</x>
+       <y>250</y>
+       <width>140</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Poista jakoja...</string>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>
