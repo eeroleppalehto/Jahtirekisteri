@@ -2,9 +2,9 @@ import sys
 # Add parent directory to the path
 sys.path.append('../desktopApp')
 from PyQt5.QtCore import *
-from PyQt5.QtWidgets import QDialog, QComboBox, QLabel, QPushButton
+from PyQt5.QtWidgets import QDialog, QComboBox, QPushButton
 from PyQt5.uic import loadUi
-from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
+from dialogs.dialogueWindow import DialogFrame
 import pgModule as pgModule
 import prepareData as prepareData
 from dialogs.messageModule import PopupMessages as msg
@@ -21,11 +21,11 @@ class Shot(DialogFrame):
         self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
         
         # Elements
-        self.removeShotCB = self.removeShotComboBox
+        self.removeShotCB: QComboBox = self.removeShotComboBox
         
-        self.removeShotPushBtn = self.removeShotPushButton
+        self.removeShotPushBtn: QPushButton = self.removeShotPushButton
         self.removeShotPushBtn.clicked.connect(self.removeShot) # Signal
-        self.removeShotCancelPushBtn = self.removeShotCancelPushButton
+        self.removeShotCancelPushBtn: QPushButton = self.removeShotCancelPushButton
         self.removeShotCancelPushBtn.clicked.connect(self.closeDialog) # Signal
         
         # Populate the shot combo box
