@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>950</width>
-    <height>731</height>
+    <height>772</height>
    </rect>
   </property>
   <widget class="QScrollArea" name="scrollArea">
@@ -16,7 +16,7 @@
      <x>0</x>
      <y>0</y>
      <width>951</width>
-     <height>731</height>
+     <height>761</height>
     </rect>
    </property>
    <property name="widgetResizable">
@@ -28,14 +28,14 @@
       <x>0</x>
       <y>0</y>
       <width>947</width>
-      <height>727</height>
+      <height>757</height>
      </rect>
     </property>
     <widget class="QLabel" name="shotByLabel_10">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>260</y>
+       <y>280</y>
        <width>100</width>
        <height>13</height>
       </rect>
@@ -48,7 +48,7 @@
      <property name="geometry">
       <rect>
        <x>520</x>
-       <y>360</y>
+       <y>380</y>
        <width>420</width>
        <height>361</height>
       </rect>
@@ -58,7 +58,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>0</y>
+       <y>20</y>
        <width>80</width>
        <height>30</height>
       </rect>
@@ -76,7 +76,7 @@
      <property name="geometry">
       <rect>
        <x>650</x>
-       <y>280</y>
+       <y>300</y>
        <width>75</width>
        <height>23</height>
       </rect>
@@ -89,7 +89,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>30</y>
+       <y>50</y>
        <width>920</width>
        <height>192</height>
       </rect>
@@ -102,7 +102,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>280</y>
+       <y>300</y>
        <width>121</width>
        <height>22</height>
       </rect>
@@ -128,7 +128,7 @@
      <property name="geometry">
       <rect>
        <x>470</x>
-       <y>280</y>
+       <y>300</y>
        <width>161</width>
        <height>22</height>
       </rect>
@@ -153,7 +153,7 @@
      <property name="geometry">
       <rect>
        <x>470</x>
-       <y>260</y>
+       <y>280</y>
        <width>61</width>
        <height>16</height>
       </rect>
@@ -166,7 +166,7 @@
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>260</y>
+       <y>280</y>
        <width>110</width>
        <height>16</height>
       </rect>
@@ -179,7 +179,7 @@
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>280</y>
+       <y>300</y>
        <width>121</width>
        <height>22</height>
       </rect>
@@ -207,7 +207,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>230</y>
+       <y>250</y>
        <width>280</width>
        <height>21</height>
       </rect>
@@ -236,7 +236,7 @@
      <property name="geometry">
       <rect>
        <x>290</x>
-       <y>260</y>
+       <y>280</y>
        <width>61</width>
        <height>16</height>
       </rect>
@@ -249,10 +249,56 @@
      <property name="geometry">
       <rect>
        <x>290</x>
-       <y>280</y>
+       <y>300</y>
        <width>161</width>
        <height>22</height>
       </rect>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="sortSharesComboBox">
+     <property name="geometry">
+      <rect>
+       <x>780</x>
+       <y>350</y>
+       <width>161</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="shotByLabel_16">
+     <property name="geometry">
+      <rect>
+       <x>780</x>
+       <y>330</y>
+       <width>90</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Lajittele</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="sortKillsComboBox">
+     <property name="geometry">
+      <rect>
+       <x>770</x>
+       <y>20</y>
+       <width>161</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="shotByLabel_17">
+     <property name="geometry">
+      <rect>
+       <x>770</x>
+       <y>0</y>
+       <width>90</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Lajittele</string>
      </property>
     </widget>
    </widget>
@@ -262,7 +308,7 @@
   <customwidget>
    <class>QWebEngineView</class>
    <extends>QWidget</extends>
-   <header location="global">QtWebEngineWidgets/QWebEngineView</header>
+   <header>qwebengineview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

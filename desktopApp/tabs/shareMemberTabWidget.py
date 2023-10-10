@@ -32,12 +32,17 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
 
         self.chosenItemLbl: QLabel = self.chosenItemLabel
 
+        self.sortKillsCB: QComboBox = self.sortKillsComboBox
+        self.sortKillsCB.currentIndexChanged.connect(self.sortKills)
+        self.sortSharesCB: QComboBox = self.sortSharesComboBox
+        self.sortSharesCB.currentIndexChanged.connect(self.sortShares)
+
         self.shareSankeyWebView: QWebEngineView = self.shareSankeyWebEngineView
 
         # Signal when the user clicks an item on shareKillsTW
         self.shareKillsMemberTW.itemClicked.connect(self.onShareKillTableClick)
 
-                # Read database connection arguments from the settings file
+        # Read database connection arguments from the settings file
         try:
             databaseOperation = pgModule.DatabaseOperation()
             self.connectionArguments = databaseOperation.readDatabaseSettingsFromFile('connectionSettings.dat')
@@ -78,6 +83,7 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
                 databaseOperation1.detailedMessage
                 )
         else:
+            self.membershareKillDatabaseOperation = databaseOperation1
             self.shareKillIdList = prepareData.prepareTable(databaseOperation1, self.shareKillsMemberTW)
 
         # Read data fom table ruhonosa and populate the combo box
@@ -108,6 +114,7 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
                 )
         else:
             try:
+                self.sharedPortionsDatabaseOperation = databaseOperation4
                 # parse the data from the view to readable format
                 tableData = prepareData.parseSharedPortionOfShot(databaseOperation4.resultSet)
                 
@@ -157,6 +164,42 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
         else:
             self.membershipData = databaseOperation6.resultSet
             self.handlePartyCBChange()
+            
+        # Clear and populate sort combo boxes
+        sortKillsOptions = [
+            'Kaato ID \u2193',
+            'Kaato ID \u2191',
+            'Kaataja \u2193',
+            'Kaataja \u2191',
+            'Kaatopäivä \u2193',
+            'Kaatopäivä \u2191',
+            'Paikka \u2193',
+            'Paikka \u2191',
+            'Eläin \u2193',
+            'Eläin \u2191',
+            'Ikäluokka \u2193',
+            'Ikäluokka \u2191',
+            'Sukupuoli \u2193',
+            'Sukupuoli \u2191',
+            'Paino \u2193',
+            'Paino \u2191',
+        ]
+
+        sortSharesOptions = [
+            'Kaato ID \u2193',
+            'Kaato ID \u2191',
+            'Eläin \u2193',
+            'Eläin \u2191',
+            'Jaettu \u2193',
+            'Jaettu \u2191',
+            'Määrä \u2193',
+            'Määrä \u2191',
+        ]
+
+        self.sortKillsCB.clear()
+        self.sortKillsCB.addItems(sortKillsOptions)
+        self.sortSharesCB.clear()
+        self.sortSharesCB.addItems(sortSharesOptions)
         
         
         # Set the chosen shot label to empty
@@ -241,3 +284,115 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
             if item[2] == currentPartyId:
                 # (member name, membership id)
                 self.shareMemberCB.addItem(item[1], item[0])
+    
+    
+    def sortKills(self):
+        """Sorts the shot table based on the selected combo box value
+            the /u2191 and /u2193 are unicode characters for up and down arrows
+        """
+
+        if self.sortKillsCB.currentText() == 'Kaato ID \u2191':
+            self.sortNumericCells(self.shareKillsMemberTW, 0, self.membershareKillDatabaseOperation, False)
+        elif self.sortKillsCB.currentText() == 'Kaato ID \u2193':
+            self.sortNumericCells(self.shareKillsMemberTW, 0, self.membershareKillDatabaseOperation, True)
+
+        elif self.sortKillsCB.currentText() == 'Kaataja \u2191':
+            self.shareKillsMemberTW.sortItems(2, order=QtCore.Qt.DescendingOrder)
+        elif self.sortKillsCB.currentText() == 'Kaataja \u2193':
+            self.shareKillsMemberTW.sortItems(2, order=QtCore.Qt.AscendingOrder)
+
+        elif self.sortKillsCB.currentText() == 'Kaatopäivä \u2191':
+            self.shareKillsMemberTW.sortItems(3, order=QtCore.Qt.AscendingOrder)
+        elif self.sortKillsCB.currentText() == 'Kaatopäivä \u2193':
+            self.shareKillsMemberTW.sortItems(3, order=QtCore.Qt.DescendingOrder)
+
+        elif self.sortKillsCB.currentText() == 'Paikka \u2191':
+            self.shareKillsMemberTW.sortItems(4, order=QtCore.Qt.DescendingOrder)
+        elif self.sortKillsCB.currentText() == 'Paikka \u2193':
+            self.shareKillsMemberTW.sortItems(4, order=QtCore.Qt.AscendingOrder)
+
+        elif self.sortKillsCB.currentText() == 'Eläin \u2191':
+            self.shareKillsMemberTW.sortItems(5, order=QtCore.Qt.DescendingOrder)
+        elif self.sortKillsCB.currentText() == 'Eläin \u2193':
+            self.shareKillsMemberTW.sortItems(5, order=QtCore.Qt.AscendingOrder)
+
+        elif self.sortKillsCB.currentText() == 'Ikäluokka \u2191':
+            self.shareKillsMemberTW.sortItems(6, order=QtCore.Qt.DescendingOrder)
+        elif self.sortKillsCB.currentText() == 'Ikäluokka \u2193':
+            self.shareKillsMemberTW.sortItems(6, order=QtCore.Qt.AscendingOrder)
+
+        elif self.sortKillsCB.currentText() == 'Sukupuoli \u2191':
+            self.shareKillsMemberTW.sortItems(7, order=QtCore.Qt.DescendingOrder)
+        elif self.sortKillsCB.currentText() == 'Sukupuoli \u2193':
+            self.shareKillsMemberTW.sortItems(7, order=QtCore.Qt.AscendingOrder)
+
+        elif self.sortKillsCB.currentText() == 'Paino \u2191':
+            self.sortNumericCells(self.shareKillsMemberTW, 9, self.membershareKillDatabaseOperation, False)
+        elif self.sortKillsCB.currentText() == 'Paino \u2193':
+            self.sortNumericCells(self.shareKillsMemberTW, 9, self.membershareKillDatabaseOperation, True)
+
+    def sortShares(self):
+        """Sorts the share table based on the selected combo box value
+            the /u2191 and /u2193 are unicode characters for up and down arrows
+        """
+
+        if self.sortSharesCB.currentText() == 'Kaato ID \u2191':
+            self.sortNumericCells(self.sharedPortionsTW, 0, self.sharedPortionsDatabaseOperation, False)
+        elif self.sortSharesCB.currentText() == 'Kaato ID \u2193':
+            self.sortNumericCells(self.sharedPortionsTW, 0, self.sharedPortionsDatabaseOperation, True)
+
+        elif self.sortSharesCB.currentText() == 'Eläin \u2191':
+            self.sharedPortionsTW.sortItems(1, order=QtCore.Qt.DescendingOrder)
+        elif self.sortSharesCB.currentText() == 'Eläin \u2193':
+            self.sharedPortionsTW.sortItems(1, order=QtCore.Qt.AscendingOrder)
+
+        elif self.sortSharesCB.currentText() == 'Jaettu \u2191':
+            self.sortPercentageCells(self.sharedPortionsTW, 2, self.sharedPortionsDatabaseOperation, False)
+        elif self.sortSharesCB.currentText() == 'Jaettu \u2193':
+            self.sortPercentageCells(self.sharedPortionsTW, 2, self.sharedPortionsDatabaseOperation, True)
+
+        elif self.sortSharesCB.currentText() == 'Määrä \u2191':
+            self.sortNumericCells(self.sharedPortionsTW, 3, self.sharedPortionsDatabaseOperation, False)
+        elif self.sortSharesCB.currentText() == 'Määrä \u2193':
+            self.sortNumericCells(self.sharedPortionsTW, 3, self.sharedPortionsDatabaseOperation, True)         
+
+    
+    def sortNumericCells(self, tableWidget: QTableWidget, columnNumber: int, databaseOperation: pgModule.DatabaseOperation, reverse: bool):
+        """
+            As the sortItems() method does not work with numeric values,
+            we need to sort the data manually
+            
+            Args:
+                tableWidget (QTableWidget): the table widget to sort
+                columnNumber (int): the column number of the table to sort
+                databaseOperation (pgModule.DatabaseOperation): the database operation object
+                reverse (bool): reverse the order of the sort if True
+                
+        """
+
+        databaseOperation.resultSet.sort(reverse=reverse, key=lambda x: float(x[columnNumber]))
+
+        # Mount the data back to the TableWidget
+        prepareData.prepareTable(databaseOperation, tableWidget)
+    
+    def sortPercentageCells(self, tableWidget: QTableWidget, columnNumber: int, databaseOperation: pgModule.DatabaseOperation, reverse: bool):
+        """As the sortItems() method does not work with percentage values,
+            we need to sort the data manually
+        Args:
+            tableWidget (QTableWidget): table widget to sort
+            columnNumber (int): column number of the table to sort
+            databaseOperation (pgModule.DatabaseOperation): database operation object with the data
+            reverse (bool): reverse the order of the sort if True
+        """
+
+        databaseOperation.resultSet.sort(reverse=reverse, key=lambda x: self.parsePercentage(x[columnNumber]))
+
+        # Mount the data back to the TableWidget
+        prepareData.prepareTable(databaseOperation, tableWidget)
+
+    def parsePercentage(self, percentageString: str):
+        """
+            Parses a string like '50%' to float 0.5
+        """
+        return float(percentageString.strip('%'))/100
+    
