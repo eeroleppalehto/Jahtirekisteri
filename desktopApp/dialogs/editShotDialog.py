@@ -268,6 +268,12 @@ class EditShot(DialogFrame):
             shotByChosenItemIx = self.editShotByCB.currentIndex()
             shotById = self.shotByIdList[shotByChosenItemIx]
 
+            # Check editShotAdditionalInfoPT to be set None if false and sent as NULL to the database
+            if not self.editShotAdditionalInfoPT.toPlainText() or self.editShotAdditionalInfoPT.toPlainText() == '':
+                additionalInfo = None
+            else:
+                additionalInfo = self.editShotAdditionalInfoPT.toPlainText()
+
             updateList = [
                 shotById,
                 str(self.editShotDE.date().toPyDate()),
@@ -276,7 +282,7 @@ class EditShot(DialogFrame):
                 self.editShotAnimalCB.currentText(),
                 self.editShotGenderCB.currentText(),
                 self.editShotAgeCB.currentText(),
-                self.editShotAdditionalInfoPT.toPlainText()
+                additionalInfo
             ]
 
             columnNames = [
@@ -292,7 +298,10 @@ class EditShot(DialogFrame):
 
             columnValueString = ''
             for i in range(len(columnNames)):
-                columnValueString += f"{columnNames[i]} = {updateList[i]!r}"
+                if updateList[i] is None:
+                    columnValueString += f"{columnNames[i]} = NULL"
+                else:
+                    columnValueString += f"{columnNames[i]} = {updateList[i]!r}"
                 if i != len(columnNames) - 1:
                     columnValueString += ', '
         
