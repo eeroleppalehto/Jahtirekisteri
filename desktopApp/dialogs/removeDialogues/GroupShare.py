@@ -84,7 +84,7 @@ class GroupShare(DialogFrame):
                 databaseOperation.detailedMessage
                 )
         else:
-            msg().successMessage('Kaato poistettu')
+            msg().successMessage('Jako poistettu')
             self.populateRemoveGroupShareDialog()
         
     def closeDialog(self):
