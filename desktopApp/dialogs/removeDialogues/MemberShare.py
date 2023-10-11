@@ -9,23 +9,23 @@ import pgModule as pgModule
 import prepareData as prepareData
 from dialogs.messageModule import PopupMessages as msg
 
-class GroupShare(DialogFrame):
+class MemberShare(DialogFrame):
     def __init__(self):
         super().__init__()
         
-        loadUi("ui/removeGroupShareDialog.ui", self)
+        loadUi("ui/removeMemberShareDialog.ui", self)
         
-        self.setWindowTitle('Poista jako')
+        self.setWindowTitle('Poista jäsen jako')
         
         databaseOperationConnections = pgModule.DatabaseOperation()
         self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
         
         # Elements
-        self.removeGroupShareCB: QComboBox = self.removeGroupShareComboBox
-        self.removeGroupShareCancelPushBtn: QPushButton = self.removeGroupShareCancelPushButton
-        self.removeGroupShareCancelPushBtn.clicked.connect(self.closeDialog) # Signal
-        self.removeGroupShareSaveBtn: QPushButton = self.removeGroupShareSaveButton
-        self.removeGroupShareSaveBtn.clicked.connect(self.removeGroupShare) # Signal
+        self.removeMemberShareCB: QComboBox = self.removeMemberShareComboBox
+        self.removeMemberShareCancelPushBtn: QPushButton = self.removeMemberShareCancelPushButton
+        self.removeMemberShareCancelPushBtn.clicked.connect(self.closeDialog) # Signal
+        self.removeMemberShareSaveBtn: QPushButton = self.removeMemberShareSaveButton
+        self.removeMemberShareSaveBtn.clicked.connect(self.removeMemberShare) # Signal
         
         self.populateRemoveGroupShareDialog()
         
@@ -34,7 +34,7 @@ class GroupShare(DialogFrame):
         # Populate the share combo box
         databaseOperation = pgModule.DatabaseOperation()
         databaseOperation.getAllRowsFromTable(
-            self.connectionArguments, 'public.jakotapahtuma_ryhman_nimella')
+            self.connectionArguments, 'public.jakotapahtuma_jasen_jasen_nimella')
         if databaseOperation.errorCode != 0:
             self.alert(
                 'Vakava virhe',
@@ -56,15 +56,15 @@ class GroupShare(DialogFrame):
             databaseOperation.resultSet = newResults
             
             self.shotIdList = prepareData.prepareComboBox(
-                databaseOperation, self.removeGroupShareCB, 0, 1)
+                databaseOperation, self.removeMemberShareCB, 0, 1)
     
-    def removeGroupShare(self):
+    def removeMemberShare(self):
         try:
-            shareChosenItemIx = self.removeGroupShareCB.currentIndex()
+            shareChosenItemIx = self.removeMemberShareCB.currentIndex()
             shareId = self.shotIdList[shareChosenItemIx]
             
-            table = 'public.jakotapahtuma'
-            limit = f"public.jakotapahtuma.tapahtuma_id = {shareId}"
+            table = 'public.jakotapahtuma_jasen'
+            limit = f"public.jakotapahtuma_jasen.tapahtuma_jasen_id = {shareId}"
         except Exception as e:
             self.alert(
                 'Vakava virhe',

@@ -193,6 +193,29 @@
     <string>Täytä</string>
    </property>
   </widget>
+  <widget class="QLineEdit" name="editMemberPhoneNumberLineEdit">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>210</y>
+     <width>113</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>190</y>
+     <width>90</width>
+     <height>13</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Puhelinnumero</string>
+   </property>
+  </widget>
  </widget>
  <tabstops>
   <tabstop>editMemberComboBox</tabstop>

@@ -11,6 +11,7 @@ services:
     restart: always
     volumes:
       - ./init:/docker-entrypoint-initdb.d
+      - ./data:/var/lib/postgresql
 
   pgadmin:
     container_name: pgadmin
