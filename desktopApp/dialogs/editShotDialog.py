@@ -218,7 +218,10 @@ class EditShot(DialogFrame):
         
         self.editShotWeightLE.setText(str(self.shotWeight))
     
-        self.editShotAdditionalInfoPT.setPlainText(self.shotInfo)
+        if not self.shotInfo or self.shotInfo == 'None':
+            self.editShotAdditionalInfoPT.setPlainText('')
+        else:
+            self.editShotAdditionalInfoPT.setPlainText(self.shotInfo)
 
         databaseOperation = pgModule.DatabaseOperation()
         databaseOperation.getAllRowsFromTableWithLimit(
