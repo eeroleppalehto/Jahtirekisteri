@@ -11,6 +11,7 @@ from PyQt5.uic import loadUi
 from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
 import pgModule as pgModule
 import prepareData as prepareData
+from dialogs.messageModule import PopupMessages as msg
 
 class Member(DialogFrame):
     """docstring for EditMemberDialog(DialogFrame
@@ -30,21 +31,19 @@ class Member(DialogFrame):
         self.setWindowTitle('Muokkaa jäsen tietoja')
 
         # Elements
-        self.editMemberCB = self.editMemberComboBox
-        self.editMemberFirstNameLE = self.editMemberFirstNameLineEdit
-        self.editMemberLastNameLE = self.editMemberLastNameLineEdit
-        self.editMemberPostalAddressLE = self.editMemberPostalAddressLineEdit
-        self.editMemberZipLE = self.editMemberZipLineEdit
-        self.editMemberCityLE = self.editMemberCityLineEdit
-        self.editMemberCancelPushBtn = self.editMemberCancelPushButton
+        self.editMemberCB: QComboBox = self.editMemberComboBox
+        self.editMemberFirstNameLE: QLineEdit = self.editMemberFirstNameLineEdit
+        self.editMemberLastNameLE: QLineEdit = self.editMemberLastNameLineEdit
+        self.editMemberPostalAddressLE: QLineEdit = self.editMemberPostalAddressLineEdit
+        self.editMemberZipLE: QLineEdit = self.editMemberZipLineEdit
+        self.editMemberCityLE: QLineEdit = self.editMemberCityLineEdit
+        self.editMemberPhoneNumberLE: QLineEdit = self.editMemberPhoneNumberLineEdit
+        self.editMemberCancelPushBtn: QPushButton = self.editMemberCancelPushButton
         self.editMemberCancelPushBtn.clicked.connect(self.closeDialog)
-        self.editMemberSavePushBtn = self.editMemberSavePushButton
+        self.editMemberSavePushBtn: QPushButton = self.editMemberSavePushButton
         self.editMemberSavePushBtn.clicked.connect(self.editMember)
-        self.editMemberPopulatePushBtn = self.editMemberPopulatePushButton
+        self.editMemberPopulatePushBtn: QPushButton = self.editMemberPopulatePushButton
         self.editMemberPopulatePushBtn.clicked.connect(self.populateFields)
-
-        # State to track whether user has selected member to edit
-        self.state = -1 
 
         self.populateMemberCB()
 
@@ -62,6 +61,12 @@ class Member(DialogFrame):
         else:
             self.memberIdList = prepareData.prepareComboBox(
                 databaseOperation, self.editMemberCB, 1, 0)
+            
+            for i in range(databaseOperation.rows):
+                self.editMemberCB.setItemData(i, databaseOperation.resultSet[i][0])
+        
+        self.editMemberSavePushBtn.setEnabled(False)
+            
     
     def populateFields(self):
         databaseOperation = pgModule.DatabaseOperation()
@@ -75,101 +80,145 @@ class Member(DialogFrame):
                 databaseOperation.detailedMessage
                 )
         else:
-            self.companyInfo = []
             if databaseOperation.resultSet != []:
-
-                memberChosenItemIx = self.editMemberCB.currentIndex()
-                memberId = self.memberIdList[memberChosenItemIx]
-
+                
+                memberId = self.editMemberCB.currentData()
+                
+                # Loop through the list of members and find the one that matches the member id
                 memberList = databaseOperation.resultSet
                 index = -1
                 i = 0
-
                 for member in memberList:
                     if member[0] == memberId:
                         index = i
                     i += 1
             
-                self.state = 0
+                # TODO: Use dictionary instead of list
                 self.member = memberList[index]
-                self.editMemberFirstNameLE.setText(self.member[1])
-                self.editMemberLastNameLE.setText(self.member[2])
-                self.editMemberPostalAddressLE.setText(self.member[3])
-                self.editMemberZipLE.setText(self.member[4])
-                self.editMemberCityLE.setText(self.member[5])
+                
+                
+                self.memberToEditDict = {
+                    "jasen_id": self.member[0],
+                    "etunimi": self.member[1],
+                    "sukunimi": self.member[2],
+                    "jakeluosoite": self.member[3] if self.member[3] != None else "",
+                    "postinumero": self.member[4] if self.member[4] != None else "",
+                    "postitoimipaikka": self.member[5] if self.member[5] != None else "",
+                    "puhelinnumero": self.member[7] if self.member[7] != None else ""
+                }
+                self.editMemberFirstNameLE.setText(self.memberToEditDict['etunimi'])
+                self.editMemberLastNameLE.setText(self.memberToEditDict['sukunimi'])
+                self.editMemberPostalAddressLE.setText(self.memberToEditDict['jakeluosoite'])
+                self.editMemberZipLE.setText(self.memberToEditDict['postinumero'])
+                self.editMemberCityLE.setText(self.memberToEditDict['postitoimipaikka'])
+                self.editMemberPhoneNumberLE.setText(self.memberToEditDict['puhelinnumero'])
+                
+                self.editMemberSavePushBtn.setEnabled(True)
 
     def editMember(self):
-        errorCode = 0
-        if self.state == -1:
-            self.alert(
-                'Vakava virhe',
-                'Et ole valinnut muokattaavaa jäsentä',
-                'Valitse jäsen valikosta ja paina täytä painiketta',
-                '-'
-                )
-            return
         try:
-            updateList = (
-                self.editMemberFirstNameLE.text(),
-                self.editMemberLastNameLE.text(),
-                self.editMemberPostalAddressLE.text(),
-                self.editMemberZipLE.text(),
-                self.editMemberCityLE.text()
-            )
-
-            for item in updateList:
-                    if item == '':
-                        errorCode = 1
-                
-            columnList = [
-                'etunimi',
-                'sukunimi',
-                'jakeluosoite',
-                'postinumero',
-                'postitoimipaikka'
+            memberEditToSaveDict = {
+                "jasen_id": self.memberToEditDict['jasen_id'],
+                "etunimi": self.editMemberFirstNameLE.text().strip(),
+                "sukunimi": self.editMemberLastNameLE.text().strip(),
+                "jakeluosoite": self.editMemberPostalAddressLE.text().strip(),
+                "postinumero": self.editMemberZipLE.text().strip(),
+                "postitoimipaikka": self.editMemberCityLE.text().strip(),
+                "puhelinnumero": self.editMemberPhoneNumberLE.text().strip()
+            }
+            
+            # Check if any of the required fields are empty and do a early return if they are 
+            if memberEditToSaveDict['etunimi'] == '' or memberEditToSaveDict['sukunimi'] == '':
+                self.alert(
+                    'Vakava virhe',
+                    'Et voi päivittää tyhjää kenttää',
+                    'Täytä etunimi ja sukunimi päivittääksesi jäsenen tietoja',
+                    '-'
+                    )
+                return
+            
+            # List of fields that are optional and can be empty
+            optionalFields = [
+                "jakeluosoite",
+                "postinumero",
+                "postitoimipaikka",
+                'puhelinnumero'
             ]
+            
+            # Generate the update column and value string and the limit string
+            columnValueString = ""
+            
+            for key in memberEditToSaveDict:
+                # Skip the jasen_id
+                if key == "jasen_id":
+                    continue
+                
+                # Check if the field is optional and if it is, check if it is empty
+                # and if it is empty, set the value to NULL
+                if key in optionalFields:
+                    if memberEditToSaveDict[key] == "":
+                        columnValueString += f"{key} = NULL"
+                    else:
+                        columnValueString += f"{key} = {memberEditToSaveDict[key]!r}"
+                else:
+                    columnValueString += f"{key} = {memberEditToSaveDict[key]!r}"
+                
+                # Add comma if the key is not the last one
+                if key != "puhelinnumero":
+                    columnValueString += ", "
+            
             table = 'public.jasen'
             limit = f"public.jasen.jasen_id = {self.member[0]}"
 
-        except:
-            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+        except Exception as e:
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen', str(e))
+            return
+    
         
-
-        if errorCode == 1:
-                self.alert(
+        if self.isEquals(memberEditToSaveDict, self.memberToEditDict) == True:
+            msg().warningMessage('Muutoksia ei ole tehty')
+            return
+        
+        databaseOperation = pgModule.DatabaseOperation()
+        databaseOperation.updateManyValuesInRow(self.connectionArguments, table, columnValueString, limit)
+        if databaseOperation.errorCode != 0:
+            self.alert(
                 'Vakava virhe',
-                'Et voi päivittää tyhjää kenttää',
-                'Täytä tyhjät kentät päivittääksesi jäsenen tietoja',
-                '-'
-                )
-                return
-        
-        i = 0
-        j = 1
-        for data in updateList:
-            if data != self.member[j]:
-                databaseOperation = pgModule.DatabaseOperation()
-                databaseOperation.updateTable(self.connectionArguments, table,
-                columnList[i], f"{data!r}", limit)
-                if databaseOperation.errorCode != 0:
-                    self.alert(
-                        'Vakava virhe',
-                        'Tietokantaoperaatio epäonnistui',
-                        databaseOperation.errorMessage,
-                        databaseOperation.detailedMessage
-                        )
-            i += 1
-            j += 1
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation.errorMessage,
+                databaseOperation.detailedMessage
+            )
+            return
 
-        success = SuccessfulOperationDialog()
-        success.exec()
+
+        # Clear fields and disable save button
+        msg().successMessage('Muokkaus onnistui')
         self.editMemberFirstNameLE.clear(),
         self.editMemberLastNameLE.clear(),
         self.editMemberPostalAddressLE.clear(),
         self.editMemberZipLE.clear(),
         self.editMemberCityLE.clear()
-        self.state = -1
+        self.editMemberPhoneNumberLE.clear()
+        self.editMemberSavePushBtn.setEnabled(False)
         self.populateMemberCB()
+
+    def isEquals(self, editToSaveDict, selectedDict):
+        """Compare the data in the edit fields to the original data
+        And return False if there are any changes
+        Otherwise return True
+
+        Args:
+            editToSaveDict (dict): dict of the data in the edit fields
+            selectedDict (dict): dict of the original data
+
+        Returns:
+            boolean: return true if there are no changes in the data
+        """
+        
+        for key in editToSaveDict:
+            if editToSaveDict[key] != selectedDict[key]:
+                return False
+        return True
 
     def closeDialog(self):
             self.close()
