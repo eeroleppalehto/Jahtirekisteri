@@ -27,8 +27,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>947</width>
-      <height>757</height>
+      <width>949</width>
+      <height>759</height>
      </rect>
     </property>
     <widget class="QLabel" name="shotByLabel_10">
@@ -299,6 +299,32 @@
      </property>
      <property name="text">
       <string>Lajittele</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="shareEditPushButton">
+     <property name="geometry">
+      <rect>
+       <x>790</x>
+       <y>250</y>
+       <width>140</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Muokkaa jakoja...</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="shareRemovePushButton">
+     <property name="geometry">
+      <rect>
+       <x>640</x>
+       <y>250</y>
+       <width>140</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Poista jakoja...</string>
      </property>
     </widget>
    </widget>

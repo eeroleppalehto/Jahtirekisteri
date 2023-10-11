@@ -10,7 +10,8 @@ import figures
 import party
 
 import dialogs.dialogueWindow as dialogueWindow
-
+import dialogs.editDialogues.MemberShare as editMemberShare
+import dialogs.removeDialogues.MemberShare as removeMemberShare
 
 class Ui_shareMemberTabWidget(QScrollArea, QWidget):
     def __init__(self):
@@ -37,6 +38,12 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
         self.sortSharesCB: QComboBox = self.sortSharesComboBox
         self.sortSharesCB.currentIndexChanged.connect(self.sortShares)
 
+        self.shareRemovePushBtn: QPushButton = self.shareRemovePushButton
+        self.shareRemovePushBtn.clicked.connect(self.openRemoveShareDialog)
+        
+        self.shareEditPushBtn: QPushButton = self.shareEditPushButton
+        self.shareEditPushBtn.clicked.connect(self.openEditShareDialog)
+    
         self.shareSankeyWebView: QWebEngineView = self.shareSankeyWebEngineView
 
         # Signal when the user clicks an item on shareKillsTW
@@ -395,4 +402,11 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
             Parses a string like '50%' to float 0.5
         """
         return float(percentageString.strip('%'))/100
+
+    def openEditShareDialog(self):
+        dialog = editMemberShare.MemberShare()
+        dialog.exec()
     
+    def openRemoveShareDialog(self):
+        dialog = removeMemberShare.MemberShare()
+        dialog.exec()
