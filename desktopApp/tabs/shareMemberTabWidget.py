@@ -208,6 +208,7 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
 
         self.shareSankeyCB.clear()
         self.shareSankeyCB.addItems(['Kilogrammat', 'Määrä'])
+        # self.handleSankeyCBChange()
         
         # Clear and populate sort combo boxes
         sortKillsOptions = [
@@ -464,7 +465,7 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
                 
                 htmlFileName = 'memberShareStreamsKg.html'
                 urlString = f'file:///{htmlFileName}'
-                sankeyFig = figures.createSankeyChart(databaseOperation.resultSet, [], [], [], 'Jasenjako')
+                sankeyFig = figures.createSankeyChart(databaseOperation.resultSet, [], [], [], 'Jako kiloina')
                 figures.createOfflineFile(sankeyFig, htmlFileName)
                 url = QtCore.QUrl(urlString)
                 self.shareSankeyWebView.load(url)
@@ -496,7 +497,7 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
                 
                 htmlFileName = 'memberShareStreamsKg.html'
                 urlString = f'file:///{htmlFileName}'
-                sankeyFig = figures.createSankeyChart(databaseOperation.resultSet, [], [], [], 'Jasenjako')
+                sankeyFig = figures.createSankeyChart(databaseOperation.resultSet, [], [], [], 'Jako lukumäärinä')
                 figures.createOfflineFile(sankeyFig, htmlFileName)
                 url = QtCore.QUrl(urlString)
                 self.shareSankeyWebView.load(url)
