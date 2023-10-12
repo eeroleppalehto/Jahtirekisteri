@@ -43,6 +43,9 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
         
         self.shareEditPushBtn: QPushButton = self.shareEditPushButton
         self.shareEditPushBtn.clicked.connect(self.openEditShareDialog)
+
+        self.shareSankeyCB: QComboBox = self.shareSankeyComboBox
+        self.shareSankeyCB.currentIndexChanged.connect(self.handleSankeyCBChange)
     
         self.shareSankeyWebView: QWebEngineView = self.shareSankeyWebEngineView
 
@@ -172,6 +175,40 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
             self.membershipData = databaseOperation6.resultSet
             self.handlePartyCBChange()
             
+        # # Populate the sankey chart
+        # databaseOperation7 = pgModule.DatabaseOperation()
+        # databaseOperation7.getAllRowsFromTable(
+        #     self.connectionArguments, 'public.sankey_jasen_jako_kg')
+        # if databaseOperation7.errorCode != 0:
+        #     self.alert(
+        #         'Vakava virhe',
+        #         'Tietokantaoperaatio epäonnistui',
+        #         databaseOperation7.errorMessage,
+        #         databaseOperation7.detailedMessage
+        #         )
+        # else:
+        #     try:
+        #         #sankeyData = prepareData.prepareSankeyData(databaseOperation7.resultSet)
+                
+        #         htmlFileName = 'memberShareStreamsKg.html'
+        #         urlString = f'file:///{htmlFileName}'
+        #         sankeyFig = figures.createSankeyChart(databaseOperation7.resultSet, [], [], [], 'Jasenjako')
+        #         figures.createOfflineFile(sankeyFig, htmlFileName)
+        #         url = QtCore.QUrl(urlString)
+        #         self.shareSankeyWebView.load(url)
+                
+        #         # self.shareSankeyWebView.setHtml(sankeyFig.to_html(include_plotlyjs='cdn'))
+        #     except:
+        #         self.alert(
+        #             'Vakava virhe',
+        #             'Sankey-kaavion luonti epäonnistui',
+        #             'Sankey chart failed to load on share page',
+        #             'Oops'
+        #         )
+
+        self.shareSankeyCB.clear()
+        self.shareSankeyCB.addItems(['Kilogrammat', 'Määrä'])
+        
         # Clear and populate sort combo boxes
         sortKillsOptions = [
             'Kaato ID \u2193',
@@ -402,6 +439,77 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
             Parses a string like '50%' to float 0.5
         """
         return float(percentageString.strip('%'))/100
+
+    def handleSankeyCBChange(self):
+        if self.shareSankeyCB.currentText() == 'Kilogrammat':
+            self.loadSankeyChartKG()
+        elif self.shareSankeyCB.currentText() == 'Määrä':
+            self.loadSankeyChartAmount()
+
+    def loadSankeyChartKG(self):
+        # Populate the sankey chart
+        databaseOperation = pgModule.DatabaseOperation()
+        databaseOperation.getAllRowsFromTable(
+            self.connectionArguments, 'public.sankey_jasen_jako_kg')
+        if databaseOperation.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation.errorMessage,
+                databaseOperation.detailedMessage
+                )
+        else:
+            try:
+                #sankeyData = prepareData.prepareSankeyData(databaseOperation7.resultSet)
+                
+                htmlFileName = 'memberShareStreamsKg.html'
+                urlString = f'file:///{htmlFileName}'
+                sankeyFig = figures.createSankeyChart(databaseOperation.resultSet, [], [], [], 'Jasenjako')
+                figures.createOfflineFile(sankeyFig, htmlFileName)
+                url = QtCore.QUrl(urlString)
+                self.shareSankeyWebView.load(url)
+                
+                # self.shareSankeyWebView.setHtml(sankeyFig.to_html(include_plotlyjs='cdn'))
+            except:
+                self.alert(
+                    'Vakava virhe',
+                    'Sankey-kaavion luonti epäonnistui',
+                    'Sankey chart failed to load on share page',
+                    'Oops'
+                )
+    
+    def loadSankeyChartAmount(self):
+        # Populate the sankey chart
+        databaseOperation = pgModule.DatabaseOperation()
+        databaseOperation.getAllRowsFromTable(
+            self.connectionArguments, 'public.sankey_jasen_jako_kpl')
+        if databaseOperation.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation.errorMessage,
+                databaseOperation.detailedMessage
+                )
+        else:
+            try:
+                #sankeyData = prepareData.prepareSankeyData(databaseOperation7.resultSet)
+                
+                htmlFileName = 'memberShareStreamsKg.html'
+                urlString = f'file:///{htmlFileName}'
+                sankeyFig = figures.createSankeyChart(databaseOperation.resultSet, [], [], [], 'Jasenjako')
+                figures.createOfflineFile(sankeyFig, htmlFileName)
+                url = QtCore.QUrl(urlString)
+                self.shareSankeyWebView.load(url)
+                
+                # self.shareSankeyWebView.setHtml(sankeyFig.to_html(include_plotlyjs='cdn'))
+            except:
+                self.alert(
+                    'Vakava virhe',
+                    'Sankey-kaavion luonti epäonnistui',
+                    'Sankey chart failed to load on share page',
+                    'Oops'
+                )
+
 
     def openEditShareDialog(self):
         dialog = editMemberShare.MemberShare()
