@@ -138,9 +138,9 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>370</y>
+       <y>400</y>
        <width>500</width>
-       <height>361</height>
+       <height>331</height>
       </rect>
      </property>
      <property name="url" stdset="0">
@@ -325,6 +325,29 @@
      </property>
      <property name="text">
       <string>Poista jakoja...</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="shotByLabel_12">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>350</y>
+       <width>110</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Diagrammi</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="shareSankeyComboBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>370</y>
+       <width>121</width>
+       <height>22</height>
+      </rect>
      </property>
     </widget>
    </widget>
