@@ -385,6 +385,21 @@ class EditShot(DialogFrame):
                 databaseOperation.detailedMessage
                 )
 
+    def deleteUsage(self, usageId, shotById):
+        try:
+            limit = f"kaadon_kasittely_id = {usageId!r} AND kaato_id = {shotById!r}"
+        except Exception as e:
+            self.alert(
+                'Virhe',
+                'Virhe',
+                'Virhe poisto-operaatiossa',
+                f'{str(e)}'
+            )
+        databaseOperation = pgModule.DatabaseOperation()
+        databaseOperation.deleteFromTable(self.connectionArguments, 'kaadon_kasittely', limit)
+        if databaseOperation.errorCode != 0:
+            self.alert('Vakava virhe', 'Tietokantaoperaatio epäonnistui', databaseOperation.errorMessage, databaseOperation.detailedMessage)
+
 
     def validateLineEdits(self):
         if self.editShotLocationLE.text().strip() and self.editShotWeightLE.text().strip():
@@ -435,6 +450,12 @@ class EditShot(DialogFrame):
                     'Tarkista syöte',
                     ''
                 )
+
+        # Check for second usage to delete
+        if not self.editShotUsage2CheckB.isChecked() and len(self.usages) > 1:
+            secondUsageId = self.usages[1][0]
+            self.deleteUsage(secondUsageId, self.shotId)
+
         self.editShotLocationLE.clear()
         self.editShotWeightLE.clear()
         self.editShotAdditionalInfoPT.clear()
