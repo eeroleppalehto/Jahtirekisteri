@@ -1,30 +1,23 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+
 // Import Prisma client and Zod schema
-import prisma from '../client';
-import viewValidationZod from '../zodSchemas/viewValidationZod';
+import prisma from "../client";
+import viewValidationZod from "../zodSchemas/viewValidationZod";
 
 /**
  * Get view data from the database.
  * @param {string} viewName - The name of the view.
- * @returns {Promise<any>} - The data related to the view.
+ * @returns {Promise<object[]>} - The data related to the view.
  */
-export const getViewData = async (viewName: string): Promise<any> => {
+export const getViewData = async (viewName: string): Promise<object[] | []> => {
+    // Validate the view name
     const parsedViewName = viewValidationZod.parse(viewName);
     
-    // Fetch the existing tables from the database
-    const existingTables: { table_name: string }[] = await prisma.$queryRaw`SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';`;
-    
-    // Log the existing tables for debugging
-    console.log("Existing tables:", existingTables);
-
-    // Check if the table/view exists in the database
-    if (!existingTables.some(table => table.table_name === parsedViewName)) {
-        throw new Error(`Table/View ${parsedViewName} does not exist.`);
-    }
+    // Construct the query
+    const query = `SELECT * FROM ${parsedViewName}`;
 
     // Execute the query
-    const data = await prisma.$executeRawUnsafe(`SELECT * FROM ${parsedViewName}`);
-    return data;
+    const data = await prisma.$queryRawUnsafe<object[]>(query);
+
 };
