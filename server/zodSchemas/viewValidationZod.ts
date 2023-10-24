@@ -9,21 +9,38 @@ import { z } from "zod";
  */
 const validateView = (view: string) => {
     // Predefined map of valid view names
-    const viewMap = new Map<string, string>(
+    const viewMap = new Map<string, string>([
+        ["jaetut_lihat", "jaetut_lihat"],
+        ["jaetut_ruhon_osat", "jaetut_ruhon_osat"],
+        ["jaetut_ruhon_osat_jasenille", "jaetut_ruhon_osat_jasenille"],
+        ["jako_kaadot", "jako_kaadot"],
+        ["jako_kaadot_jasenille", "jako_kaadot_jasenille"],
+        ["jakoryhma_osuus_maara", "jakoryhma_osuus_maara"],
+        ["jakoryhma_seurueen_nimella", "jakoryhma_seurueen_nimella"],
+        ["jakoryhma_yhteenveto", "jakoryhma_yhteenveto"],
         [
-            ["home", "home"],
-            ["about", "about"],
-            ["contact", "contact"],
-            ["login", "login"],
-            ["register", "register"],
-            ["profile", "profile"],
-            ["dashboard", "dashboard"],
-            ["admin", "admin"],
-            ["user_table", "user_table"],
-            ["404", "404"],
-            ["500", "500"],
-        ]
-    );
+            "jakotapahtuma_jasen_jasen_nimella",
+            "jakotapahtuma_jasen_jasen_nimella",
+        ],
+        ["jakotapahtuma_ryhman_nimella", "jakotapahtuma_ryhman_nimella"],
+        ["jasen_tila", "jasen_tila"],
+        ["jasenyys_nimella", "jasenyys_nimella"],
+        ["jasenyys_nimella_ryhmalla", "jasenyys_nimella_ryhmalla"],
+        ["kaatoluettelo", "kaatoluettelo"],
+        ["kaatoluettelo_indeksilla", "kaatoluettelo_indeksilla"],
+        ["lihan_kaytto", "lihan_kaytto"],
+        ["luvat_kayttamatta_kpl_pros", "luvat_kayttamatta_kpl_pros"],
+        ["nimivalinta", "nimivalinta"],
+        ["ryhmat_jasenilla", "ryhmat_jasenilla"],
+        ["ryhmien_osuudet", "ryhmien_osuudet"],
+        ["sankey_elain_kasittely_seurue", "sankey_elain_kasittely_seurue"],
+        ["sankey_jasen_jako_kg", "sankey_jasen_jako_kg"],
+        ["sankey_jasen_jako_kpl", "sankey_jasen_jako_kpl"],
+        ["seurue_lihat", "seurue_lihat"],
+        ["seurue_lihat_osuus", "seurue_lihat_osuus"],
+        ["seurue_ryhmilla", "seurue_ryhmilla"],
+        ["seurue_sankey", "seurue_sankey"],
+    ]);
 
     // Check if the view exists in the map
     if (viewMap.has(view)) {
