@@ -1,10 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-
 // Import necessary modules and services
 import express from "express";
-import { getAllAikuinenvasa, getAllElain, getAllKasittely, getAllLupa, getAllSukupuoli } from '../services/optionTablesService';
+import {
+    getAllAikuinenvasa,
+    getAllElain,
+    getAllKasittely,
+    getAllRuhonosa,
+    getAllSukupuoli,
+} from "../services/optionTablesService";
 
 // Initialize an express router
 const router = express.Router();
@@ -14,7 +19,7 @@ const router = express.Router();
 router.get("/aikuinenvasa", (async (_req, res) => {
     const data = await getAllAikuinenvasa();
     res.status(200).json(data);
-}) as express.RequestHandler);  // Typecasting as RequestHandler to handle async function
+}) as express.RequestHandler); // Typecasting as RequestHandler to handle async function
 
 // Define GET route for fetching elain data
 // Fetches all records from the 'elain' table
@@ -32,8 +37,8 @@ router.get("/kasittely", (async (_req, res) => {
 
 // Define GET route for fetching lupa data
 // Fetches all records from the 'lupa' table
-router.get("/lupa", (async (_req, res) => {
-    const data = await getAllLupa();
+router.get("/ruhonosa", (async (_req, res) => {
+    const data = await getAllRuhonosa();
     res.status(200).json(data);
 }) as express.RequestHandler);
 
