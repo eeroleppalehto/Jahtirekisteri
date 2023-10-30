@@ -9,17 +9,11 @@ async function getAll(): Promise<Jasen[]> {
     return json;
 }
 
-/* async function getOne(id: number): Promise<Jasen> {
-    const response = await fetch(`http://localhost:3000/jasen/${id}`);
-    const json = await response.json();
-    return json;
-} */
-
 async function create(jasen: JasenForm): Promise<Jasen> {
     const response = await fetch(`${baseUrl}/api/members`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
         },
         body: JSON.stringify(jasen),
     });
@@ -29,9 +23,9 @@ async function create(jasen: JasenForm): Promise<Jasen> {
 
 async function update(jasen: Jasen): Promise<Jasen> {
     const response = await fetch(`${baseUrl}/api/members/${jasen.jasen_id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
         },
         body: JSON.stringify(jasen),
     });
@@ -39,10 +33,9 @@ async function update(jasen: Jasen): Promise<Jasen> {
     return json;
 }
 
-
 async function remove(id: number): Promise<void> {
     await fetch(`${baseUrl}/api/members/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
     });
 }
 
