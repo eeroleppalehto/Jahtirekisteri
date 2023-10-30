@@ -4,7 +4,7 @@ import { NativeStackHeaderProps } from "@react-navigation/native-stack/lib/types
 import { useNavigation } from "@react-navigation/core";
 import { Route } from "@react-navigation/native";
 
-import { RootStackScreenProps } from "../NavigationTypes";
+import { RootStackScreenProps } from "../../NavigationTypes";
 
 function myGetHeaderTitle(route: Route<string>) {
     const routeName = getFocusedRouteNameFromRoute(route) ?? "Grafiikka";
