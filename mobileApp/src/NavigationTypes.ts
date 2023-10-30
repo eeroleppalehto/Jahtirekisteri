@@ -19,7 +19,7 @@ export type MyDrawerScreenProps<T extends keyof DrawerParamList> =
 // Root types
 export type RootStackParamList = {
     BottomNavigation: NavigatorScreenParams<BottomNavParamList>;
-    Details: { type: string; data: any };
+    Details: { type: string; data: any; title: string };
     Forms: { type: string };
 };
 
