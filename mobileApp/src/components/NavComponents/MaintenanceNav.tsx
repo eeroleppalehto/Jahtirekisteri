@@ -1,8 +1,8 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import MemberScreen from "../screens/MemberScreen";
+import MemberScreen from "../../screens/MemberScreen";
 import { View, Text } from "react-native";
 
-import { MaintenanceTabParamList } from "../NavigationTypes";
+import { MaintenanceTabParamList } from "../../NavigationTypes";
 
 const TopTab = createMaterialTopTabNavigator<MaintenanceTabParamList>();
 

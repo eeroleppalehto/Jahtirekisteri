@@ -3,10 +3,10 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import DrawerContent from "./DrawerContent";
 
 import RootStack from "./RootStack";
-import ProfileScreen from "../screens/ProfileScreen";
-import ProfileAppBar from "../screens/ProfileScreen/ProfileAppBar";
+import ProfileScreen from "../../screens/ProfileScreen";
+import ProfileAppBar from "../AppBars/ProfileAppBar";
 
-import { DrawerParamList } from "../NavigationTypes";
+import { DrawerParamList } from "../../NavigationTypes";
 
 export type DrawerNavParamList = {
     RootStack: undefined;

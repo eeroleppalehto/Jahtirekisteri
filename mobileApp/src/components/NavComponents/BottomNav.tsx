@@ -3,10 +3,10 @@ import { Text } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import MaintenanceNav from "./MaintenanceNav";
-import { BottomNavParamList } from "../NavigationTypes";
+import { BottomNavParamList } from "../../NavigationTypes";
 
-import ChartVictoryXL from "../screens/GraphScreen/ChartVictoryXL";
-import ShotScreen from "../screens/ShotScreen";
+import ChartVictoryXL from "../../screens/GraphScreen/ChartVictoryXL";
+import ShotScreen from "../../screens/ShotScreen";
 
 const Tab = createMaterialBottomTabNavigator<BottomNavParamList>();
 
