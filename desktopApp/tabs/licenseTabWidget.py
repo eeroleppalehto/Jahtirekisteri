@@ -6,6 +6,7 @@ import pgModule
 import prepareData
 
 import dialogs.dialogueWindow as dialogueWindow
+import dialogs.removeDialogues.License as LicenseDialogWindow
 
 
 class Ui_licenseTabWidget(QScrollArea, QWidget):
@@ -24,6 +25,11 @@ class Ui_licenseTabWidget(QScrollArea, QWidget):
 
         self.licenseSortCB: QComboBox = self.licenseSortComboBox
         self.licenseSortCB.currentIndexChanged.connect(self.sortLicense) # Signal
+
+        self.licenseEditPB: QPushButton = self.editLicensePushButton
+        self.licenseEditPB.clicked.connect(self.openEditLicenseDialog)
+        self.licenseRemovePB: QPushButton = self.removeLicensePushButton
+        self.licenseRemovePB.clicked.connect(self.openRemoveLicenseDialog)
 
             # Read database connection arguments from the settings file
         try:
@@ -225,4 +231,11 @@ class Ui_licenseTabWidget(QScrollArea, QWidget):
     #SIGNALS
     def openSettingsDialog(self):
         dialog = dialogueWindow.SaveDBSettingsDialog()
+        dialog.exec()
+
+    def openEditLicenseDialog(self):
+        pass
+
+    def openRemoveLicenseDialog(self):
+        dialog = LicenseDialogWindow.License()
         dialog.exec()
