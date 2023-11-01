@@ -6,7 +6,8 @@ import pgModule
 import prepareData
 
 import dialogs.dialogueWindow as dialogueWindow
-import dialogs.removeDialogues.License as LicenseDialogWindow
+import dialogs.removeDialogues.License as removeLicenseDialog
+import dialogs.editDialogues.License as editLicenseDialog
 
 
 class Ui_licenseTabWidget(QScrollArea, QWidget):
@@ -234,8 +235,9 @@ class Ui_licenseTabWidget(QScrollArea, QWidget):
         dialog.exec()
 
     def openEditLicenseDialog(self):
-        pass
+        dialog = editLicenseDialog.License()
+        dialog.exec()
 
     def openRemoveLicenseDialog(self):
-        dialog = LicenseDialogWindow.License()
+        dialog = removeLicenseDialog.License()
         dialog.exec()
