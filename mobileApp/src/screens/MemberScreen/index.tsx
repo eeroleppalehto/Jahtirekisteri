@@ -1,8 +1,7 @@
 import { List } from "react-native-paper";
 import { useState, useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-
-import jasenService from "../../service/jasenService";
+import jasenService from "../../services/jasenService";
 import { Jasen } from "../../types";
 import MemberListItem from "./MemberListItem";
 import { MaintenanceTabScreenProps } from "../../NavigationTypes";

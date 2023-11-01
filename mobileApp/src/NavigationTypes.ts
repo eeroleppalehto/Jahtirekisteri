@@ -19,7 +19,7 @@ export type MyDrawerScreenProps<T extends keyof DrawerParamList> =
 // Root types
 export type RootStackParamList = {
     BottomNavigation: NavigatorScreenParams<BottomNavParamList>;
-    Details: { type: string, data: any};
+    Details: { type: string; data: any };
     Forms: { type: string };
 };
 
@@ -33,6 +33,7 @@ export type RootStackScreenProps<T extends keyof RootStackParamList> =
 export type BottomNavParamList = {
     Grafiikka: undefined;
     Kaadot: undefined;
+    Jako: undefined;
     Ylläpito: NavigatorScreenParams<MaintenanceTabParamList>;
 };
 
