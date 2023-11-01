@@ -25,6 +25,7 @@ function MemberListItem({ jasen, navigation }: Props) {
                     navigation.navigate("Details", {
                         type: "Jäsen",
                         data: jasen,
+                        title: title,
                     })
                 }
             />
