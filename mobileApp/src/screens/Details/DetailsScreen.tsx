@@ -1,12 +1,14 @@
-import MemberDetails from "../screens/MemberScreen/MemberDetails";
+import MemberDetails from "./MemberDetails";
+import ShotDetails from "./ShotDetails";
 import { View } from "react-native";
 import { Text } from "react-native-paper";
 import { useRoute, useNavigation } from "@react-navigation/native";
 
 import {
     MaintenanceTabScreenProps,
+    BottomTabScreenProps,
     RootStackScreenProps,
-} from "../NavigationTypes";
+} from "../../NavigationTypes";
 
 const ErrorScreen = () => {
     return (
@@ -36,6 +38,16 @@ function DetailsScreen({ route }: Props) {
                         route={memberRoute}
                         navigation={navigation}
                     />
+                );
+            case "Kaato":
+                const shotRoute =
+                    useRoute<BottomTabScreenProps<"Kaadot">["route"]>();
+                navigation =
+                    useNavigation<
+                        BottomTabScreenProps<"Kaadot">["navigation"]
+                    >();
+                return (
+                    <ShotDetails route={shotRoute} navigation={navigation} />
                 );
             default:
                 return <ErrorScreen />;
