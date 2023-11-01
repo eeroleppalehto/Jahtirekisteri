@@ -3,12 +3,16 @@ import { Text, Avatar, MD3Colors, TouchableRipple } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { Kaato } from "../../types";
+import { BottomTabScreenProps } from "../../NavigationTypes";
+
+type navigationProps = BottomTabScreenProps<"Kaadot">["navigation"];
 
 type Props = {
     shot: Kaato;
+    navigation: navigationProps;
 };
 
-function ShotListItem({ shot }: Props) {
+function ShotListItem({ shot, navigation }: Props) {
     const dateStringArray = new Date(shot.kaatopaiva)
         .toLocaleDateString("fi-FI", {
             year: "2-digit",
@@ -57,7 +61,15 @@ function ShotListItem({ shot }: Props) {
     };
 
     return (
-        <TouchableRipple onPress={() => console.log("pressed")}>
+        <TouchableRipple
+            onPress={() =>
+                navigation.navigate("Details", {
+                    type: "Kaato",
+                    data: shot,
+                    title: `Kaato Index: ${shot.kaato_id}`,
+                })
+            }
+        >
             <View style={styles.container}>
                 <View style={styles.avatar}>
                     <Avatar.Image

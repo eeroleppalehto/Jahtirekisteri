@@ -42,7 +42,9 @@ function ShotScreen({ navigation, route }: Props) {
                     <FlatList
                         data={results.data}
                         keyExtractor={(item) => item.kaato_id.toString()}
-                        renderItem={({ item }) => <ShotListItem shot={item} />}
+                        renderItem={({ item }) => (
+                            <ShotListItem shot={item} navigation={navigation} />
+                        )}
                         onScroll={onScroll}
                         // onGestureEvent={console.log("gesture")}
                     />
