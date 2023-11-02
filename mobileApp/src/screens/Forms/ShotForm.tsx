@@ -6,23 +6,23 @@ import { KaatoForm } from "../../types";
 import CustomInput from "../../components/CustomInput";
 import IconTextInput from "../../components/IconTextInput";
 import DatePicker from "../../components/DatePicker";
+import ShooterModalContent from "../ShooterModalContent";
+
+type Shooter = {
+    jasen_id: number | undefined;
+    kokonimi: string | undefined;
+};
 
 function ShotForm() {
-    const [visible, setVisible] = useState(false);
-    const [shotForm, setShotForm] = useState<KaatoForm>({
-        jasen_id: 0,
-        paikka_teksti: "",
-        paikka_koordinaatti: "",
-        kaatopaiva: "",
-        ruhopaino: 0,
-        elaimen_nimi: "",
-        ikaluokka: "",
-        sukupuoli: "",
-        lisatieto: "",
-    });
-    const [testText, setTestText] = useState("");
     const [shotDate, setShotDate] = useState<Date | undefined>(undefined);
     const [calendarOpen, setCalendarOpen] = useState(false);
+    const [shooter, setShooter] = useState<Shooter>({
+        jasen_id: undefined,
+        kokonimi: undefined,
+    });
+    const [shooterText, setShooterText] = useState("");
+    const [visible, setVisible] = useState(false);
+    const [testText, setTestText] = useState("");
 
     const theme = useTheme();
 
@@ -32,17 +32,20 @@ function ShotForm() {
                 <Modal
                     visible={visible}
                     onDismiss={() => setVisible(false)}
-                    contentContainerStyle={styles.modal}
+                    contentContainerStyle={{
+                        ...styles.modal,
+                        backgroundColor: theme.colors.surface,
+                    }}
                 >
-                    <Text variant="titleMedium">Lisää kaato</Text>
+                    <ShooterModalContent onValueChange={setShooterText} />
                 </Modal>
-                <DatePicker
-                    initDate={shotDate}
-                    setDate={setShotDate}
-                    open={calendarOpen}
-                    setOpen={setCalendarOpen}
-                />
             </Portal>
+            <DatePicker
+                initDate={shotDate}
+                setDate={setShotDate}
+                open={calendarOpen}
+                setOpen={setCalendarOpen}
+            />
             <Text
                 variant="titleMedium"
                 style={{
@@ -58,14 +61,17 @@ function ShotForm() {
                     iconSet="MaterialCommunityIcons"
                     iconNameMaterialCommunity="account"
                     title="Kaataja"
-                    value=""
+                    required={true}
+                    valueState={shooter.kokonimi}
+                    placeholder="Ei valittua kaatajaa"
                     iconButtonName="account-plus-outline"
-                    onPress={() => console.log("testi")}
+                    onPress={() => setVisible(true)}
                 />
                 <IconTextInput
                     iconSet="MaterialIcons"
                     iconNameMaterial="location-on"
-                    label="*Paikka"
+                    label="Paikka"
+                    required={true}
                     inputType="default"
                     value={testText}
                     onChangeText={setTestText}
@@ -73,8 +79,10 @@ function ShotForm() {
                 <CustomInput
                     iconSet="MaterialCommunityIcons"
                     iconNameMaterialCommunity="calendar"
-                    title="Kaato päivä"
-                    value=""
+                    title="Kaatopäivä"
+                    required={true}
+                    valueState={shotDate?.toLocaleDateString("fi-FI")}
+                    placeholder="Ei valittua päivää"
                     iconButtonName="calendar-plus"
                     onPress={() => setCalendarOpen(true)}
                 />
@@ -91,32 +99,33 @@ function ShotForm() {
                 </Text>
                 <CustomInput
                     iconSet="NoIcon"
-                    //iconNameMaterialCommunity="calendar"
                     title="Eläinlaji"
-                    value=""
+                    valueState=""
+                    required={true}
                     iconButtonName="plus"
                     onPress={() => console.log("testi")}
                 />
                 <CustomInput
                     iconSet="NoIcon"
-                    //iconNameMaterialCommunity="calendar"
                     title="Ikäluokka"
-                    value=""
+                    valueState=""
+                    required={true}
                     iconButtonName="plus"
                     onPress={() => console.log("testi")}
                 />
                 <CustomInput
                     iconSet="NoIcon"
-                    //iconNameMaterialCommunity="calendar"
                     title="Sukupuoli"
-                    value=""
+                    valueState=""
+                    required={true}
                     iconButtonName="plus"
                     onPress={() => console.log("testi")}
                 />
                 <IconTextInput
                     iconSet="MaterialCommunityIcons"
                     iconNameMaterialCommunity="scale"
-                    label="*Ruhopaino"
+                    label="Ruhopaino"
+                    required={true}
                     inputType="numeric"
                     value={testText}
                     onChangeText={setTestText}
@@ -125,6 +134,7 @@ function ShotForm() {
                     iconSet="MaterialCommunityIcons"
                     iconNameMaterialCommunity="information"
                     label="Lisätietoja"
+                    required={false}
                     inputType="default"
                     value={testText}
                     onChangeText={setTestText}
@@ -137,10 +147,10 @@ function ShotForm() {
 const styles = StyleSheet.create({
     container: { paddingBottom: 150 },
     modal: {
-        backgroundColor: "white",
         padding: 20,
         margin: 20,
         borderRadius: 10,
+        maxHeight: "90%",
     },
 });
 
