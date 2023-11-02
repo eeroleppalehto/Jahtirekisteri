@@ -1,5 +1,5 @@
 import { View, StyleSheet } from "react-native";
-import { TextInput, MD3Colors, useTheme } from "react-native-paper";
+import { TextInput, MD3Colors, useTheme, Text } from "react-native-paper";
 import { TextInputProps } from "react-native-paper";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -11,6 +11,7 @@ type Props = {
     iconNameMaterial?: MaterialIconNames;
     iconNameMaterialCommunity?: MaterialCommunityIconNames;
     label: string;
+    required: boolean;
     inputType: TextInputProps["keyboardType"];
     value: string | undefined;
     onChangeText: (text: string) => void;
@@ -21,6 +22,7 @@ function IconTextInput({
     iconNameMaterial,
     iconNameMaterialCommunity,
     label,
+    required,
     inputType,
     value,
     onChangeText,
@@ -47,21 +49,26 @@ function IconTextInput({
                 />
             );
             break;
-        // case "NoIcon":
-        //     iconElement = <View style={styles.emptyIcon} />;
-        //     break;
         default:
             iconElement = <View style={styles.emptyIcon} />;
             break;
     }
+
+    const title = required ? (
+        <>
+            <Text style={{}}>{label}</Text>
+            <Text style={{ color: theme.colors.error }}>*</Text>
+        </>
+    ) : (
+        <Text style={{}}>{label}</Text>
+    );
 
     return (
         <View style={styles.inputContainer}>
             {iconElement}
             <TextInput
                 mode="outlined"
-                //mode="flat"
-                label={label}
+                label={title}
                 value={value}
                 onChangeText={(text) => onChangeText(text)}
                 keyboardType={inputType}
