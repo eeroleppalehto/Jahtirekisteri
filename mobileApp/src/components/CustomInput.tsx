@@ -11,7 +11,9 @@ type Props = {
     iconNameMaterial?: MaterialIconNames;
     iconNameMaterialCommunity?: MaterialCommunityIconNames;
     title: string;
-    value: string | undefined;
+    valueState: string | undefined;
+    placeholder?: string;
+    required: boolean;
     onPress: () => void;
     iconButtonName: MaterialCommunityIconNames;
 };
@@ -21,11 +23,12 @@ function CustomInput({
     iconNameMaterial,
     iconNameMaterialCommunity,
     title,
-    value,
+    required,
+    valueState,
+    placeholder,
     onPress,
     iconButtonName,
 }: Props) {
-    const [valueText, setValueText] = useState(value);
     const theme = useTheme();
 
     let iconElement = <View style={styles.emptyIcon} />;
@@ -54,16 +57,16 @@ function CustomInput({
             break;
     }
 
-    const valueJSX = valueText ? (
+    const valueJSX = valueState ? (
         <Text variant="bodyMedium" style={{ color: MD3Colors.neutral40 }}>
-            {valueText}
+            {valueState}
         </Text>
     ) : (
         <Text
             variant="bodyMedium"
             style={{ color: MD3Colors.neutral40, fontStyle: "italic" }}
         >
-            Ei valittu
+            {placeholder ? placeholder : "Ei valittu"}
         </Text>
     );
 
@@ -79,7 +82,17 @@ function CustomInput({
                 }}
             >
                 <View>
-                    <Text variant="bodyLarge">{title}</Text>
+                    <View style={{ flexDirection: "row" }}>
+                        <Text variant="bodyLarge">{title}</Text>
+                        {required ? (
+                            <Text
+                                variant="bodyMedium"
+                                style={{ color: theme.colors.error }}
+                            >
+                                *
+                            </Text>
+                        ) : null}
+                    </View>
                     {valueJSX}
                 </View>
                 <IconButton
