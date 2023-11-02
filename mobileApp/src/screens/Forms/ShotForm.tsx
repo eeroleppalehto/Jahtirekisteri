@@ -1,20 +1,11 @@
-import {
-    TextInput,
-    Modal,
-    Portal,
-    Text,
-    MD3Colors,
-    IconButton,
-    useTheme,
-    Divider,
-} from "react-native-paper";
+import { Modal, Portal, Text, useTheme, Divider } from "react-native-paper";
 import { StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useState } from "react";
 import { KaatoForm } from "../../types";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomInput from "../../components/CustomInput";
 import IconTextInput from "../../components/IconTextInput";
+import DatePicker from "../../components/DatePicker";
 
 function ShotForm() {
     const [visible, setVisible] = useState(false);
@@ -30,10 +21,10 @@ function ShotForm() {
         lisatieto: "",
     });
     const [testText, setTestText] = useState("");
+    const [shotDate, setShotDate] = useState<Date | undefined>(undefined);
+    const [calendarOpen, setCalendarOpen] = useState(false);
 
     const theme = useTheme();
-
-    const mode = "flat";
 
     return (
         <ScrollView>
@@ -45,6 +36,12 @@ function ShotForm() {
                 >
                     <Text variant="titleMedium">Lisää kaato</Text>
                 </Modal>
+                <DatePicker
+                    initDate={shotDate}
+                    setDate={setShotDate}
+                    open={calendarOpen}
+                    setOpen={setCalendarOpen}
+                />
             </Portal>
             <Text
                 variant="titleMedium"
@@ -79,7 +76,7 @@ function ShotForm() {
                     title="Kaato päivä"
                     value=""
                     iconButtonName="calendar-plus"
-                    onPress={() => console.log("testi")}
+                    onPress={() => setCalendarOpen(true)}
                 />
                 <Divider />
                 <Text
