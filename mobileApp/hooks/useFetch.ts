@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { BASE_URL } from "../src/baseUrl";
 
 function useFetch<T>(url: string, method: string, body: any) {
-    const [data, setData] = useState<T | null>(null);
-    const [error, setError] = useState<Error | null>(null);
+    const [data, setData] = useState<T | undefined>(undefined);
+    const [error, setError] = useState<Error | undefined>(undefined);
     const [loading, setLoading] = useState(true);
 
     const urlCompose = `${BASE_URL}/api/${url}`;
