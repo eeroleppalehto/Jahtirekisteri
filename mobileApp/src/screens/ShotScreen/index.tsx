@@ -6,7 +6,7 @@ import { FlatList } from "react-native-gesture-handler";
 import useFetch from "../../../hooks/useFetch";
 import { BottomTabScreenProps } from "../../NavigationTypes";
 import { Kaato } from "../../types";
-import FloatingActionButton from "../../components/FloatingActionButton";
+import FloatingNavigationButton from "../../components/FloatingNavigationButton";
 import ShotListItem from "./ShotListItem";
 
 type Props = BottomTabScreenProps<"Kaadot">;
@@ -48,7 +48,7 @@ function ShotScreen({ navigation, route }: Props) {
                         onScroll={onScroll}
                         // onGestureEvent={console.log("gesture")}
                     />
-                    <FloatingActionButton
+                    <FloatingNavigationButton
                         scrollValue={scrollValue}
                         type="kaato"
                         label="Lisää kaato  "
