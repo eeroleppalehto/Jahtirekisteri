@@ -1,6 +1,7 @@
-import MemberForm from "../screens/Forms/MemberForm";
+import MemberForm from "./MemberForm";
+import ShotForm from "./ShotForm";
 import { Text } from "react-native-paper";
-import { RootStackScreenProps } from "../NavigationTypes";
+import { RootStackScreenProps } from "../../NavigationTypes";
 
 const ErrorScreen = () => {
     return <Text>Virhe!</Text>;
@@ -16,6 +17,8 @@ export default function FormScreen({ route }: Props) {
     switch (type) {
         case "jäsen":
             return <MemberForm />;
+        case "kaato":
+            return <ShotForm />;
         default:
             return <ErrorScreen />;
     }

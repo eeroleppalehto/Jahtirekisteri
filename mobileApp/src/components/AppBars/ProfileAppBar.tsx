@@ -1,6 +1,6 @@
 import { Appbar } from "react-native-paper";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
-import { DrawerNavParamList } from "../../components/DrawerNav";
+import { DrawerNavParamList } from "../NavComponents/DrawerNav";
 import { DrawerHeaderProps } from "@react-navigation/drawer";
 
 type Props = DrawerHeaderProps;
