@@ -1,4 +1,4 @@
-import { Text, MD3Colors } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 import { View, StyleSheet } from "react-native";
 
 type Props = {
@@ -8,14 +8,16 @@ type Props = {
 };
 
 function IconListItem({ icon, title, description }: Props) {
+    const theme = useTheme();
+
     const DescriptionText = description ? (
-        <Text variant="bodyMedium" style={{ color: MD3Colors.neutral40 }}>
+        <Text variant="bodyMedium" style={{ color: theme.colors.outline }}>
             {description}
         </Text>
     ) : (
         <Text
             variant="bodyMedium"
-            style={{ color: MD3Colors.neutral40, fontStyle: "italic" }}
+            style={{ color: theme.colors.outline, fontStyle: "italic" }}
         >
             Ei tietoja
         </Text>
