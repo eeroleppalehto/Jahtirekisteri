@@ -1,5 +1,5 @@
 import { View, StyleSheet } from "react-native";
-import { TextInput, MD3Colors, useTheme, Text } from "react-native-paper";
+import { TextInput, useTheme, Text } from "react-native-paper";
 import { TextInputProps } from "react-native-paper";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -15,6 +15,7 @@ type Props = {
     inputType: TextInputProps["keyboardType"];
     value: string | undefined;
     onChangeText: (text: string) => void;
+    multiline?: boolean;
 };
 
 function IconTextInput({
@@ -26,6 +27,7 @@ function IconTextInput({
     inputType,
     value,
     onChangeText,
+    multiline,
 }: Props) {
     const theme = useTheme();
     let iconElement = <View style={styles.emptyIcon} />;
@@ -36,7 +38,7 @@ function IconTextInput({
                 <MaterialIcons
                     name={iconNameMaterial}
                     size={24}
-                    style={{ ...styles.icon, color: MD3Colors.neutral40 }}
+                    style={{ ...styles.icon, color: theme.colors.outline }}
                 />
             );
             break;
@@ -45,7 +47,7 @@ function IconTextInput({
                 <MaterialCommunityIcons
                     name={iconNameMaterialCommunity}
                     size={24}
-                    style={{ ...styles.icon, color: MD3Colors.neutral40 }}
+                    style={{ ...styles.icon, color: theme.colors.outline }}
                 />
             );
             break;
@@ -63,6 +65,8 @@ function IconTextInput({
         <Text style={{}}>{label}</Text>
     );
 
+    const numberOfLines = multiline ? 4 : 1;
+
     return (
         <View style={styles.inputContainer}>
             {iconElement}
@@ -72,6 +76,8 @@ function IconTextInput({
                 value={value}
                 onChangeText={(text) => onChangeText(text)}
                 keyboardType={inputType}
+                multiline={multiline}
+                numberOfLines={numberOfLines}
                 style={{
                     marginRight: 54,
                     flexGrow: 1,
