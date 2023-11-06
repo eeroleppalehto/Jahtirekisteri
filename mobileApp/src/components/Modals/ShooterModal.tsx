@@ -1,12 +1,13 @@
-import { useState } from "react";
-import useFetch from "../../hooks/useFetch";
-import { ScrollView, View } from "react-native";
+import useFetch from "../../../hooks/useFetch";
+import { ScrollView, View, StyleSheet } from "react-native";
 import {
     RadioButton,
     Text,
     ActivityIndicator,
     Divider,
     Button,
+    Modal,
+    useTheme,
 } from "react-native-paper";
 
 type Shooter = {
@@ -15,22 +16,59 @@ type Shooter = {
 };
 
 type Props = {
-    onValueChange: (value: string) => void;
+    visible: boolean;
+    setVisibility: (value: boolean) => void;
+    shooterState: Shooter | undefined;
+    onValueChange: (value: Shooter) => void;
+    onButtonPress: () => void;
 };
 
-function ShooterModalContent({ onValueChange }: Props) {
+function ShooterModal({
+    visible,
+    setVisibility,
+    shooterState,
+    onValueChange,
+    onButtonPress,
+}: Props) {
     const results = useFetch<Shooter[]>(
         "view/?viewName=nimivalinta",
         "GET",
         null
     );
 
+    const theme = useTheme();
+
+    const handleChange = (value: string) => {
+        const shooter = results.data?.find(
+            (item) => item.jasen_id === parseInt(value)
+        );
+        shooter
+            ? onValueChange({
+                  jasen_id: shooter.jasen_id,
+                  kokonimi: shooter.kokonimi,
+              })
+            : null;
+    };
+
     if (results.error) {
         return <Text>{results.error.message}</Text>;
     }
 
+    const initialValue = shooterState
+        ? shooterState.jasen_id.toString()
+        : results.data
+        ? results.data[0].jasen_id.toString()
+        : "";
+
     return (
-        <>
+        <Modal
+            visible={visible}
+            onDismiss={() => setVisibility(false)}
+            contentContainerStyle={{
+                ...styles.modal,
+                backgroundColor: theme.colors.surface,
+            }}
+        >
             {results.loading ? (
                 <ActivityIndicator
                     size={"large"}
@@ -49,8 +87,8 @@ function ShooterModalContent({ onValueChange }: Props) {
                     <Divider style={{ marginVertical: 15 }} />
                     <ScrollView>
                         <RadioButton.Group
-                            onValueChange={(value) => onValueChange(value)}
-                            value={"1"}
+                            onValueChange={(value) => handleChange(value)}
+                            value={initialValue}
                         >
                             {results.data?.map((item) => (
                                 <RadioButton.Item
@@ -62,11 +100,20 @@ function ShooterModalContent({ onValueChange }: Props) {
                         </RadioButton.Group>
                     </ScrollView>
                     <Divider style={{ marginVertical: 15 }} />
-                    <Button>Valitse</Button>
+                    <Button onPress={() => onButtonPress()}>Valitse</Button>
                 </>
             )}
-        </>
+        </Modal>
     );
 }
 
-export default ShooterModalContent;
+const styles = StyleSheet.create({
+    modal: {
+        padding: 20,
+        margin: 20,
+        borderRadius: 10,
+        maxHeight: "90%",
+    },
+});
+
+export default ShooterModal;
