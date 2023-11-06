@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { Text, MD3Colors, IconButton, useTheme } from "react-native-paper";
+import { Text, IconButton, useTheme } from "react-native-paper";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 type MaterialIconNames = keyof typeof MaterialIcons.glyphMap;
@@ -16,6 +16,7 @@ type Props = {
     required: boolean;
     onPress: () => void;
     iconButtonName: MaterialCommunityIconNames;
+    enabled?: boolean;
 };
 
 function CustomInput({
@@ -28,8 +29,11 @@ function CustomInput({
     placeholder,
     onPress,
     iconButtonName,
+    enabled,
 }: Props) {
     const theme = useTheme();
+
+    const outlineColor = theme.colors.outline;
 
     let iconElement = <View style={styles.emptyIcon} />;
 
@@ -39,7 +43,7 @@ function CustomInput({
                 <MaterialIcons
                     name={iconNameMaterial}
                     size={24}
-                    style={{ ...styles.icon, color: MD3Colors.neutral40 }}
+                    style={{ ...styles.icon, color: outlineColor }}
                 />
             );
             break;
@@ -48,7 +52,7 @@ function CustomInput({
                 <MaterialCommunityIcons
                     name={iconNameMaterialCommunity}
                     size={24}
-                    style={{ ...styles.icon, color: MD3Colors.neutral40 }}
+                    style={{ ...styles.icon, color: outlineColor }}
                 />
             );
             break;
@@ -57,14 +61,21 @@ function CustomInput({
             break;
     }
 
+    let checkEnabled = false;
+    if (enabled === undefined) {
+        checkEnabled = true;
+    } else {
+        checkEnabled = enabled;
+    }
+
     const valueJSX = valueState ? (
-        <Text variant="bodyMedium" style={{ color: MD3Colors.neutral40 }}>
+        <Text variant="bodyMedium" style={{ color: outlineColor }}>
             {valueState}
         </Text>
     ) : (
         <Text
             variant="bodyMedium"
-            style={{ color: MD3Colors.neutral40, fontStyle: "italic" }}
+            style={{ color: outlineColor, fontStyle: "italic" }}
         >
             {placeholder ? placeholder : "Ei valittu"}
         </Text>
@@ -83,11 +94,24 @@ function CustomInput({
             >
                 <View>
                     <View style={{ flexDirection: "row" }}>
-                        <Text variant="bodyLarge">{title}</Text>
+                        <Text
+                            variant="bodyLarge"
+                            style={{
+                                color: checkEnabled
+                                    ? theme.colors.onBackground
+                                    : outlineColor,
+                            }}
+                        >
+                            {title}
+                        </Text>
                         {required ? (
                             <Text
                                 variant="bodyMedium"
-                                style={{ color: theme.colors.error }}
+                                style={{
+                                    color: checkEnabled
+                                        ? theme.colors.error
+                                        : outlineColor,
+                                }}
                             >
                                 *
                             </Text>
@@ -97,6 +121,7 @@ function CustomInput({
                 </View>
                 <IconButton
                     mode="contained"
+                    disabled={!checkEnabled}
                     icon={iconButtonName}
                     iconColor={theme.colors.onPrimary}
                     containerColor={theme.colors.primary}
