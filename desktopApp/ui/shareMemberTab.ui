@@ -350,6 +350,19 @@
       </rect>
      </property>
     </widget>
+    <widget class="QPushButton" name="graphPushButton">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>370</y>
+       <width>110</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Diagrammi...</string>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>

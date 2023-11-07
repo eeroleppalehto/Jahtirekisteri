@@ -12,6 +12,7 @@ import party
 import dialogs.dialogueWindow as dialogueWindow
 import dialogs.editDialogues.MemberShare as editMemberShare
 import dialogs.removeDialogues.MemberShare as removeMemberShare
+import dialogs.graphDialog as graphDialog
 
 class Ui_shareMemberTabWidget(QScrollArea, QWidget):
     def __init__(self):
@@ -43,6 +44,9 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
         
         self.shareEditPushBtn: QPushButton = self.shareEditPushButton
         self.shareEditPushBtn.clicked.connect(self.openEditShareDialog)
+
+        self.graphPushBtn: QPushButton = self.graphPushButton
+        self.graphPushBtn.clicked.connect(self.openGraphDialog)
 
         self.shareSankeyCB: QComboBox = self.shareSankeyComboBox
         self.shareSankeyCB.currentIndexChanged.connect(self.handleSankeyCBChange)
@@ -518,6 +522,10 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
                     'Oops'
                 )
 
+
+    def openGraphDialog(self):
+        dialog = graphDialog.GraphDialog()
+        dialog.exec()
 
     def openEditShareDialog(self):
         dialog = editMemberShare.MemberShare()
