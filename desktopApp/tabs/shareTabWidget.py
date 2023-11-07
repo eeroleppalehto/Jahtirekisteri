@@ -222,6 +222,8 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         sortKillsOptions = [
             'Kaato ID \u2193',
             'Kaato ID \u2191',
+            'Jaettu \u2193',
+            'Jaettu \u2191',
             'Kaataja \u2193',
             'Kaataja \u2191',
             'Kaatopäivä \u2193',
@@ -313,8 +315,8 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         self.shareSavePushBtn.setEnabled(True)
         
         # Save the shot usage id and weight to properties for later use
-        self.shotUsageId = self.shareKillsTW.item(selectedRow, 10).text()
-        self.shotWeight = float(self.shareKillsTW.item(selectedRow, 9).text())
+        self.shotUsageId = self.shareKillsTW.item(selectedRow, 11).text()
+        self.shotWeight = float(self.shareKillsTW.item(selectedRow, 10).text())
         
     def openEditShareDialog(self):
         dialog = editShareDialog.Share()
@@ -334,41 +336,46 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
             self.sortNumericCells(self.shareKillsTW, 0, self.shotKillDatabaseOperation, False)
         elif self.sortKillsCB.currentText() == 'Kaato ID \u2193':
             self.sortNumericCells(self.shareKillsTW, 0, self.shotKillDatabaseOperation, True)
+            
+        elif self.sortKillsCB.currentText() == 'Jaettu \u2191':
+            self.sortNumericCells(self.shareKillsTW, 2, self.shotKillDatabaseOperation, False)
+        elif self.sortKillsCB.currentText() == 'Jaettu \u2193':
+            self.sortNumericCells(self.shareKillsTW, 2, self.shotKillDatabaseOperation, True)
         
         elif self.sortKillsCB.currentText() == 'Kaataja \u2191':
-            self.shareKillsTW.sortItems(2, order=QtCore.Qt.DescendingOrder)
+            self.shareKillsTW.sortItems(3, order=QtCore.Qt.DescendingOrder)
         elif self.sortKillsCB.currentText() == 'Kaataja \u2193':
-            self.shareKillsTW.sortItems(2, order=QtCore.Qt.AscendingOrder)
+            self.shareKillsTW.sortItems(3, order=QtCore.Qt.AscendingOrder)
             
         elif self.sortKillsCB.currentText() == 'Kaatopäivä \u2191':
-            self.shareKillsTW.sortItems(3, order=QtCore.Qt.AscendingOrder)
+            self.shareKillsTW.sortItems(4, order=QtCore.Qt.AscendingOrder)
         elif self.sortKillsCB.currentText() == 'Kaatopäivä \u2193':
-            self.shareKillsTW.sortItems(3, order=QtCore.Qt.DescendingOrder)
+            self.shareKillsTW.sortItems(4, order=QtCore.Qt.DescendingOrder)
             
         elif self.sortKillsCB.currentText() == 'Paikka \u2191':
-            self.shareKillsTW.sortItems(4, order=QtCore.Qt.DescendingOrder)
+            self.shareKillsTW.sortItems(5, order=QtCore.Qt.DescendingOrder)
         elif self.sortKillsCB.currentText() == 'Paikka \u2193':
-            self.shareKillsTW.sortItems(4, order=QtCore.Qt.AscendingOrder)
+            self.shareKillsTW.sortItems(5, order=QtCore.Qt.AscendingOrder)
         
         elif self.sortKillsCB.currentText() == 'Eläin \u2191':
-            self.shareKillsTW.sortItems(5, order=QtCore.Qt.DescendingOrder)
+            self.shareKillsTW.sortItems(6, order=QtCore.Qt.DescendingOrder)
         elif self.sortKillsCB.currentText() == 'Eläin \u2193':
-            self.shareKillsTW.sortItems(5, order=QtCore.Qt.AscendingOrder)
+            self.shareKillsTW.sortItems(6, order=QtCore.Qt.AscendingOrder)
             
         elif self.sortKillsCB.currentText() == 'Ikäluokka \u2191':
-            self.shareKillsTW.sortItems(6, order=QtCore.Qt.DescendingOrder)
+            self.shareKillsTW.sortItems(7, order=QtCore.Qt.DescendingOrder)
         elif self.sortKillsCB.currentText() == 'Ikäluokka \u2193':
-            self.shareKillsTW.sortItems(6, order=QtCore.Qt.AscendingOrder)
+            self.shareKillsTW.sortItems(7, order=QtCore.Qt.AscendingOrder)
         
         elif self.sortKillsCB.currentText() == 'Sukupuoli \u2191':
-            self.shareKillsTW.sortItems(7, order=QtCore.Qt.DescendingOrder)
+            self.shareKillsTW.sortItems(8, order=QtCore.Qt.DescendingOrder)
         elif self.sortKillsCB.currentText() == 'Sukupuoli \u2193':
-            self.shareKillsTW.sortItems(7, order=QtCore.Qt.AscendingOrder)
+            self.shareKillsTW.sortItems(8, order=QtCore.Qt.AscendingOrder)
             
         elif self.sortKillsCB.currentText() == 'Paino \u2191':
-            self.sortNumericCells(self.shareKillsTW, 9, self.shotKillDatabaseOperation, False)
+            self.sortNumericCells(self.shareKillsTW, 10, self.shotKillDatabaseOperation, False)
         elif self.sortKillsCB.currentText() == 'Paino \u2193':
-            self.sortNumericCells(self.shareKillsTW, 9, self.shotKillDatabaseOperation, True)
+            self.sortNumericCells(self.shareKillsTW, 10, self.shotKillDatabaseOperation, True)
   
     def sortShares(self):
         """Sorts the share table based on the selected combo box value
@@ -408,7 +415,7 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
                 
         """
         
-        databaseOperation.resultSet.sort(reverse=reverse, key=lambda x: float(x[columnNumber]))
+        databaseOperation.resultSet.sort(reverse=reverse, key=lambda x: float(x[columnNumber] if x[columnNumber] != None else "0"))
         
         # Mount the data back to the TableWidget
         prepareData.prepareTable(databaseOperation, tableWidget)
