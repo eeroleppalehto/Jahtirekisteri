@@ -12,7 +12,8 @@ import seurueRouter from "./routers/seurueRouter";
 import jasenyysRouter from "./routers/jasenyysRouter";
 import apiViewRouter from "./routers/apiViewRouter";
 import optionTablesRouter from "./routers/optionTablesRouter";
-import { errorHandler } from './utils/middleware';  // Import errorHandler
+import createShotUsageRouter from "./routers/createShotUsageRouter";
+import { errorHandler } from "./utils/middleware"; // Import errorHandler
 
 // Initialize the Express application
 const app = express();
@@ -39,6 +40,7 @@ app.use("/api/seurue", seurueRouter);
 app.use("/api/jasenyys", jasenyysRouter);
 app.use("/api/view", apiViewRouter);
 app.use("/api/option-tables", optionTablesRouter);
+app.use("/api/createShotUsage", createShotUsageRouter);
 
 // Centralized error handling
 app.use(errorHandler);
