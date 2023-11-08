@@ -173,6 +173,34 @@ def createOfflineFile(figure, htmlFileName):
     """
     offline.plot(figure, filename= htmlFileName, auto_open=False) # Write the chart to an html file
 
+def createScatterChart(x: list, y: list, names: list):
+    """Creates a scatter chart
+
+    Args:
+        x (list): list of x values
+        y (list): list of y values
+        names (list): list of names for the points
+
+    Returns:
+        obj: plotly figure
+    """
+    figure = charts.Figure(data=charts.Scatter(
+        x=x,
+        y=y,
+        mode='markers', # 'markers' or 'lines+markers'
+        text=names, # Text that is shown when hovering over the marker
+        marker=dict( # Dictionary that defines the look of the markers
+            size=16,
+            color='rgba(150, 44, 44, .9)',
+            line=dict(
+                width=2,
+                color='rgba(0, 0, 0, 0.5)'
+                )
+            )
+        ))
+    
+    return figure
+
 def colors(labels):
     """ Function that generates rgb colors
 

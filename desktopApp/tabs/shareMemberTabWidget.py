@@ -7,11 +7,11 @@ from datetime import date
 import pgModule
 import prepareData
 import figures
-import party
 
 import dialogs.dialogueWindow as dialogueWindow
 import dialogs.editDialogues.MemberShare as editMemberShare
 import dialogs.removeDialogues.MemberShare as removeMemberShare
+import dialogs.graphDialog as graphDialog
 
 class Ui_shareMemberTabWidget(QScrollArea, QWidget):
     def __init__(self):
@@ -43,6 +43,9 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
         
         self.shareEditPushBtn: QPushButton = self.shareEditPushButton
         self.shareEditPushBtn.clicked.connect(self.openEditShareDialog)
+
+        self.graphPushBtn: QPushButton = self.graphPushButton
+        self.graphPushBtn.clicked.connect(self.openGraphDialog)
 
         self.shareSankeyCB: QComboBox = self.shareSankeyComboBox
         self.shareSankeyCB.currentIndexChanged.connect(self.handleSankeyCBChange)
@@ -207,7 +210,7 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
         #         )
 
         self.shareSankeyCB.clear()
-        self.shareSankeyCB.addItems(['Kilogrammat', 'Määrä'])
+        self.shareSankeyCB.addItems(['Kilogrammat', 'Määrä', 'Scatter'])
         # self.handleSankeyCBChange()
         
         # Clear and populate sort combo boxes
@@ -453,6 +456,8 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
             self.loadSankeyChartKG()
         elif self.shareSankeyCB.currentText() == 'Määrä':
             self.loadSankeyChartAmount()
+        elif self.shareSankeyCB.currentText() == 'Scatter':
+            self.loadScatterChart()
 
     def loadSankeyChartKG(self):
         # Populate the sankey chart
@@ -518,6 +523,54 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
                     'Oops'
                 )
 
+    def loadScatterChart(self):
+        # Fetch amount and weight data from database 
+        
+        databaseOperation1 = pgModule.DatabaseOperation()
+        databaseOperation1.getAllRowsFromTable(
+            self.connectionArguments, 'public.sankey_jasen_jako_kg')
+        if databaseOperation1.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation1.errorMessage,
+                databaseOperation1.detailedMessage
+                )
+            return
+        
+        databaseOperation2 = pgModule.DatabaseOperation()
+        databaseOperation2.getAllRowsFromTable(
+            self.connectionArguments, 'public.sankey_jasen_jako_kpl')
+        if databaseOperation2.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation2.errorMessage,
+                databaseOperation2.detailedMessage
+                )
+            return
+        
+        try:
+            htmlFileName = 'memberShareScatter.html'
+            urlString = f'file:///{htmlFileName}'
+            xAxisList = [ item[2] for item in databaseOperation1.resultSet ]
+            yAxisList = [ item[2] for item in databaseOperation2.resultSet ]
+            nameList = [ item[1] for item in databaseOperation1.resultSet ]
+            scatterFig = figures.createScatterChart(xAxisList, yAxisList, nameList)
+            figures.createOfflineFile(scatterFig, htmlFileName)
+            url = QtCore.QUrl(urlString)
+            self.shareSankeyWebView.load(url)
+        except Exception as e:
+            self.alert(
+                'Vakava virhe',
+                'Sankey-kaavion luonti epäonnistui',
+                'Sankey chart failed to load on share page',
+                str(e)
+            )
+
+    def openGraphDialog(self):
+        dialog = graphDialog.GraphDialog()
+        dialog.exec()
 
     def openEditShareDialog(self):
         dialog = editMemberShare.MemberShare()
