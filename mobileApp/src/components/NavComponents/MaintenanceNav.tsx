@@ -1,8 +1,8 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import MemberScreen from "../screens/MemberScreen";
+import MemberScreen from "../../screens/MemberScreen";
 import { View, Text } from "react-native";
-
-import { MaintenanceTabParamList } from "../NavigationTypes";
+import ErrorScreen from "../../screens/ErrorScreen";
+import { MaintenanceTabParamList } from "../../NavigationTypes";
 
 const TopTab = createMaterialTopTabNavigator<MaintenanceTabParamList>();
 
@@ -20,7 +20,7 @@ function MaintenanceNav() {
     return (
         <TopTab.Navigator>
             <TopTab.Screen name="Jäsenet" component={MemberScreen} />
-            <TopTab.Screen name="Ryhmät" component={Empty} />
+            <TopTab.Screen name="Ryhmät" component={ErrorScreen} />
             <TopTab.Screen name="Seurueet" component={Empty} />
         </TopTab.Navigator>
     );

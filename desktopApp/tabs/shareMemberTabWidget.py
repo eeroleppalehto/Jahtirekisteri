@@ -7,11 +7,11 @@ from datetime import date
 import pgModule
 import prepareData
 import figures
-import party
 
 import dialogs.dialogueWindow as dialogueWindow
 import dialogs.editDialogues.MemberShare as editMemberShare
 import dialogs.removeDialogues.MemberShare as removeMemberShare
+import dialogs.graphDialog as graphDialog
 
 class Ui_shareMemberTabWidget(QScrollArea, QWidget):
     def __init__(self):
@@ -43,6 +43,9 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
         
         self.shareEditPushBtn: QPushButton = self.shareEditPushButton
         self.shareEditPushBtn.clicked.connect(self.openEditShareDialog)
+
+        self.graphPushBtn: QPushButton = self.graphPushButton
+        self.graphPushBtn.clicked.connect(self.openGraphDialog)
 
         self.shareSankeyCB: QComboBox = self.shareSankeyComboBox
         self.shareSankeyCB.currentIndexChanged.connect(self.handleSankeyCBChange)
@@ -207,13 +210,15 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
         #         )
 
         self.shareSankeyCB.clear()
-        self.shareSankeyCB.addItems(['Kilogrammat', 'Määrä'])
+        self.shareSankeyCB.addItems(['Kilogrammat', 'Määrä', 'Hajonta'])
         # self.handleSankeyCBChange()
         
         # Clear and populate sort combo boxes
         sortKillsOptions = [
             'Kaato ID \u2193',
             'Kaato ID \u2191',
+            'Jaettu \u2193',
+            'Jaettu \u2191',
             'Kaataja \u2193',
             'Kaataja \u2191',
             'Kaatopäivä \u2193',
@@ -260,8 +265,8 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
             item (QTableWidgetItem): Item clicked in the table
         """
         selectedRow = item.row()
-        self.shotUsageId = int(self.shareKillsMemberTW.item(selectedRow, 10).text())
-        self.shotWeight = float(self.shareKillsMemberTW.item(selectedRow, 9).text())
+        self.shotUsageId = int(self.shareKillsMemberTW.item(selectedRow, 11).text())
+        self.shotWeight = float(self.shareKillsMemberTW.item(selectedRow, 10).text())
         self.chosenItemLbl.setText(f"Valittu Kaato ID: {self.shareKillsMemberTW.item(selectedRow, 0).text()}")
         self.shareSavePushBtn.setEnabled(True)
            
@@ -340,41 +345,46 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
             self.sortNumericCells(self.shareKillsMemberTW, 0, self.membershareKillDatabaseOperation, False)
         elif self.sortKillsCB.currentText() == 'Kaato ID \u2193':
             self.sortNumericCells(self.shareKillsMemberTW, 0, self.membershareKillDatabaseOperation, True)
+            
+        elif self.sortKillsCB.currentText() == 'Jaettu \u2191':
+            self.sortNumericCells(self.shareKillsMemberTW, 2, self.membershareKillDatabaseOperation, False)
+        elif self.sortKillsCB.currentText() == 'Jaettu \u2193':
+            self.sortNumericCells(self.shareKillsMemberTW, 2, self.membershareKillDatabaseOperation, True)
 
         elif self.sortKillsCB.currentText() == 'Kaataja \u2191':
-            self.shareKillsMemberTW.sortItems(2, order=QtCore.Qt.DescendingOrder)
+            self.shareKillsMemberTW.sortItems(3, order=QtCore.Qt.DescendingOrder)
         elif self.sortKillsCB.currentText() == 'Kaataja \u2193':
-            self.shareKillsMemberTW.sortItems(2, order=QtCore.Qt.AscendingOrder)
+            self.shareKillsMemberTW.sortItems(3, order=QtCore.Qt.AscendingOrder)
 
         elif self.sortKillsCB.currentText() == 'Kaatopäivä \u2191':
-            self.shareKillsMemberTW.sortItems(3, order=QtCore.Qt.AscendingOrder)
+            self.shareKillsMemberTW.sortItems(4, order=QtCore.Qt.AscendingOrder)
         elif self.sortKillsCB.currentText() == 'Kaatopäivä \u2193':
-            self.shareKillsMemberTW.sortItems(3, order=QtCore.Qt.DescendingOrder)
+            self.shareKillsMemberTW.sortItems(4, order=QtCore.Qt.DescendingOrder)
 
         elif self.sortKillsCB.currentText() == 'Paikka \u2191':
-            self.shareKillsMemberTW.sortItems(4, order=QtCore.Qt.DescendingOrder)
-        elif self.sortKillsCB.currentText() == 'Paikka \u2193':
-            self.shareKillsMemberTW.sortItems(4, order=QtCore.Qt.AscendingOrder)
-
-        elif self.sortKillsCB.currentText() == 'Eläin \u2191':
             self.shareKillsMemberTW.sortItems(5, order=QtCore.Qt.DescendingOrder)
-        elif self.sortKillsCB.currentText() == 'Eläin \u2193':
+        elif self.sortKillsCB.currentText() == 'Paikka \u2193':
             self.shareKillsMemberTW.sortItems(5, order=QtCore.Qt.AscendingOrder)
 
-        elif self.sortKillsCB.currentText() == 'Ikäluokka \u2191':
+        elif self.sortKillsCB.currentText() == 'Eläin \u2191':
             self.shareKillsMemberTW.sortItems(6, order=QtCore.Qt.DescendingOrder)
-        elif self.sortKillsCB.currentText() == 'Ikäluokka \u2193':
+        elif self.sortKillsCB.currentText() == 'Eläin \u2193':
             self.shareKillsMemberTW.sortItems(6, order=QtCore.Qt.AscendingOrder)
 
-        elif self.sortKillsCB.currentText() == 'Sukupuoli \u2191':
+        elif self.sortKillsCB.currentText() == 'Ikäluokka \u2191':
             self.shareKillsMemberTW.sortItems(7, order=QtCore.Qt.DescendingOrder)
-        elif self.sortKillsCB.currentText() == 'Sukupuoli \u2193':
+        elif self.sortKillsCB.currentText() == 'Ikäluokka \u2193':
             self.shareKillsMemberTW.sortItems(7, order=QtCore.Qt.AscendingOrder)
 
+        elif self.sortKillsCB.currentText() == 'Sukupuoli \u2191':
+            self.shareKillsMemberTW.sortItems(8, order=QtCore.Qt.DescendingOrder)
+        elif self.sortKillsCB.currentText() == 'Sukupuoli \u2193':
+            self.shareKillsMemberTW.sortItems(8, order=QtCore.Qt.AscendingOrder)
+
         elif self.sortKillsCB.currentText() == 'Paino \u2191':
-            self.sortNumericCells(self.shareKillsMemberTW, 9, self.membershareKillDatabaseOperation, False)
+            self.sortNumericCells(self.shareKillsMemberTW, 10, self.membershareKillDatabaseOperation, False)
         elif self.sortKillsCB.currentText() == 'Paino \u2193':
-            self.sortNumericCells(self.shareKillsMemberTW, 9, self.membershareKillDatabaseOperation, True)
+            self.sortNumericCells(self.shareKillsMemberTW, 10, self.membershareKillDatabaseOperation, True)
 
     def sortShares(self):
         """Sorts the share table based on the selected combo box value
@@ -415,7 +425,7 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
                 
         """
 
-        databaseOperation.resultSet.sort(reverse=reverse, key=lambda x: float(x[columnNumber]))
+        databaseOperation.resultSet.sort(reverse=reverse, key=lambda x: float(x[columnNumber] if x[columnNumber] != None else "0"))
 
         # Mount the data back to the TableWidget
         prepareData.prepareTable(databaseOperation, tableWidget)
@@ -446,6 +456,8 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
             self.loadSankeyChartKG()
         elif self.shareSankeyCB.currentText() == 'Määrä':
             self.loadSankeyChartAmount()
+        elif self.shareSankeyCB.currentText() == 'Hajonta':
+            self.loadScatterChart()
 
     def loadSankeyChartKG(self):
         # Populate the sankey chart
@@ -511,6 +523,54 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
                     'Oops'
                 )
 
+    def loadScatterChart(self):
+        # Fetch amount and weight data from database 
+        
+        databaseOperation1 = pgModule.DatabaseOperation()
+        databaseOperation1.getAllRowsFromTable(
+            self.connectionArguments, 'public.sankey_jasen_jako_kg')
+        if databaseOperation1.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation1.errorMessage,
+                databaseOperation1.detailedMessage
+                )
+            return
+        
+        databaseOperation2 = pgModule.DatabaseOperation()
+        databaseOperation2.getAllRowsFromTable(
+            self.connectionArguments, 'public.sankey_jasen_jako_kpl')
+        if databaseOperation2.errorCode != 0:
+            self.alert(
+                'Vakava virhe',
+                'Tietokantaoperaatio epäonnistui',
+                databaseOperation2.errorMessage,
+                databaseOperation2.detailedMessage
+                )
+            return
+        
+        try:
+            htmlFileName = 'memberShareScatter.html'
+            urlString = f'file:///{htmlFileName}'
+            xAxisList = [ item[2] for item in databaseOperation2.resultSet ]
+            yAxisList = [ item[2] for item in databaseOperation1.resultSet ]
+            nameList = [ item[1] for item in databaseOperation1.resultSet ]
+            scatterFig = figures.createScatterChart(xAxisList, yAxisList, nameList)
+            figures.createOfflineFile(scatterFig, htmlFileName)
+            url = QtCore.QUrl(urlString)
+            self.shareSankeyWebView.load(url)
+        except Exception as e:
+            self.alert(
+                'Vakava virhe',
+                'Sankey-kaavion luonti epäonnistui',
+                'Sankey chart failed to load on share page',
+                str(e)
+            )
+
+    def openGraphDialog(self):
+        dialog = graphDialog.GraphDialog()
+        dialog.exec()
 
     def openEditShareDialog(self):
         dialog = editMemberShare.MemberShare()

@@ -132,6 +132,7 @@ dmypy.json
 meatstreams.html
 partystreams.html
 memberShareStreamsKg.html
+memberShareScatter.html
 
 # Logs
 logs
@@ -263,3 +264,6 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# postgres docker
+postgresDocker/data

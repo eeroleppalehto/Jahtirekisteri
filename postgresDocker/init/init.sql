@@ -11,10 +11,10 @@ CREATE ROLE application WITH
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 14.6
--- Dumped by pg_dump version 14.6
+-- Dumped from database version 14.8 (Debian 14.8-1.pgdg120+1)
+-- Dumped by pg_dump version 15.4
 
--- Started on 2023-05-23 13:49:47
+-- Started on 2023-10-12 18:20:52
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -28,7 +28,17 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 264 (class 1255 OID 64090)
+-- TOC entry 4 (class 2615 OID 2200)
+-- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+ALTER SCHEMA public OWNER TO postgres;
+
+--
+-- TOC entry 275 (class 1255 OID 41248)
 -- Name: get_used_licences(integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -55,7 +65,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 209 (class 1259 OID 64091)
+-- TOC entry 209 (class 1259 OID 41249)
 -- Name: aikuinenvasa; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -67,7 +77,7 @@ CREATE TABLE public.aikuinenvasa (
 ALTER TABLE public.aikuinenvasa OWNER TO postgres;
 
 --
--- TOC entry 210 (class 1259 OID 64094)
+-- TOC entry 210 (class 1259 OID 41252)
 -- Name: elain; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -79,7 +89,7 @@ CREATE TABLE public.elain (
 ALTER TABLE public.elain OWNER TO postgres;
 
 --
--- TOC entry 211 (class 1259 OID 64097)
+-- TOC entry 211 (class 1259 OID 41255)
 -- Name: jakoryhma; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -93,7 +103,7 @@ CREATE TABLE public.jakoryhma (
 ALTER TABLE public.jakoryhma OWNER TO postgres;
 
 --
--- TOC entry 3554 (class 0 OID 0)
+-- TOC entry 3642 (class 0 OID 0)
 -- Dependencies: 211
 -- Name: TABLE jakoryhma; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -102,7 +112,7 @@ COMMENT ON TABLE public.jakoryhma IS 'Ryhmä, jolle lihaa jaetaan';
 
 
 --
--- TOC entry 212 (class 1259 OID 64100)
+-- TOC entry 212 (class 1259 OID 41258)
 -- Name: jakotapahtuma; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -119,7 +129,7 @@ CREATE TABLE public.jakotapahtuma (
 ALTER TABLE public.jakotapahtuma OWNER TO postgres;
 
 --
--- TOC entry 3556 (class 0 OID 0)
+-- TOC entry 3643 (class 0 OID 0)
 -- Dependencies: 212
 -- Name: COLUMN jakotapahtuma.maara; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -128,7 +138,7 @@ COMMENT ON COLUMN public.jakotapahtuma.maara IS 'Jaettu lihamäärä kiloina';
 
 
 --
--- TOC entry 213 (class 1259 OID 64103)
+-- TOC entry 213 (class 1259 OID 41261)
 -- Name: jaetut_lihat; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -144,7 +154,7 @@ CREATE VIEW public.jaetut_lihat AS
 ALTER TABLE public.jaetut_lihat OWNER TO postgres;
 
 --
--- TOC entry 214 (class 1259 OID 64107)
+-- TOC entry 214 (class 1259 OID 41265)
 -- Name: kaadon_kasittely; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -159,7 +169,7 @@ CREATE TABLE public.kaadon_kasittely (
 ALTER TABLE public.kaadon_kasittely OWNER TO postgres;
 
 --
--- TOC entry 215 (class 1259 OID 64110)
+-- TOC entry 215 (class 1259 OID 41268)
 -- Name: kaato; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -180,7 +190,7 @@ CREATE TABLE public.kaato (
 ALTER TABLE public.kaato OWNER TO postgres;
 
 --
--- TOC entry 3560 (class 0 OID 0)
+-- TOC entry 3644 (class 0 OID 0)
 -- Dependencies: 215
 -- Name: TABLE kaato; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -189,7 +199,7 @@ COMMENT ON TABLE public.kaato IS 'Ampumatapahtuman tiedot';
 
 
 --
--- TOC entry 3561 (class 0 OID 0)
+-- TOC entry 3645 (class 0 OID 0)
 -- Dependencies: 215
 -- Name: COLUMN kaato.ruhopaino; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -198,7 +208,7 @@ COMMENT ON COLUMN public.kaato.ruhopaino IS 'paino kiloina';
 
 
 --
--- TOC entry 3562 (class 0 OID 0)
+-- TOC entry 3646 (class 0 OID 0)
 -- Dependencies: 215
 -- Name: COLUMN kaato.paikka_koordinaatti; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -207,7 +217,7 @@ COMMENT ON COLUMN public.kaato.paikka_koordinaatti IS 'Tämän kentän tietotyyp
 
 
 --
--- TOC entry 216 (class 1259 OID 64115)
+-- TOC entry 216 (class 1259 OID 41273)
 -- Name: jaetut_ruhon_osat; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -226,7 +236,52 @@ CREATE VIEW public.jaetut_ruhon_osat AS
 ALTER TABLE public.jaetut_ruhon_osat OWNER TO postgres;
 
 --
--- TOC entry 217 (class 1259 OID 64120)
+-- TOC entry 217 (class 1259 OID 41278)
+-- Name: jakotapahtuma_jasen; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.jakotapahtuma_jasen (
+    tapahtuma_jasen_id integer NOT NULL,
+    paiva date NOT NULL,
+    kaadon_kasittely_id integer NOT NULL,
+    osnimitys character varying(20) NOT NULL,
+    maara real NOT NULL,
+    jasenyys_id integer NOT NULL
+);
+
+
+ALTER TABLE public.jakotapahtuma_jasen OWNER TO postgres;
+
+--
+-- TOC entry 3647 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: TABLE jakotapahtuma_jasen; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON TABLE public.jakotapahtuma_jasen IS 'Table for storing shares given straight to members';
+
+
+--
+-- TOC entry 218 (class 1259 OID 41281)
+-- Name: jaetut_ruhon_osat_jasenille; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.jaetut_ruhon_osat_jasenille AS
+ SELECT kaato.kaato_id AS "KaatoID",
+    kaato.elaimen_nimi AS "Eläin",
+    jakotapahtuma_jasen.osnimitys AS "Ruhon osa",
+    jakotapahtuma_jasen.maara AS "Määrä",
+    kaadon_kasittely.kasittely_maara AS "Käsittelyn Määrä"
+   FROM ((public.kaato
+     JOIN public.kaadon_kasittely ON ((kaadon_kasittely.kaato_id = kaato.kaato_id)))
+     JOIN public.jakotapahtuma_jasen ON ((jakotapahtuma_jasen.kaadon_kasittely_id = kaadon_kasittely.kaadon_kasittely_id)))
+  ORDER BY kaato.kaato_id DESC;
+
+
+ALTER TABLE public.jaetut_ruhon_osat_jasenille OWNER TO postgres;
+
+--
+-- TOC entry 219 (class 1259 OID 41286)
 -- Name: jasen; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -234,18 +289,19 @@ CREATE TABLE public.jasen (
     jasen_id integer NOT NULL,
     etunimi character varying(50) NOT NULL,
     sukunimi character varying(50) NOT NULL,
-    jakeluosoite character varying(30) NOT NULL,
-    postinumero character varying(10) NOT NULL,
-    postitoimipaikka character varying(30) NOT NULL,
-    tila character varying(20) DEFAULT 'aktiivinen'::character varying
+    jakeluosoite character varying(30),
+    postinumero character varying(10),
+    postitoimipaikka character varying(30),
+    tila character varying(20) DEFAULT 'aktiivinen'::character varying NOT NULL,
+    puhelinnumero character varying(15)
 );
 
 
 ALTER TABLE public.jasen OWNER TO postgres;
 
 --
--- TOC entry 3565 (class 0 OID 0)
--- Dependencies: 217
+-- TOC entry 3648 (class 0 OID 0)
+-- Dependencies: 219
 -- Name: TABLE jasen; Type: COMMENT; Schema: public; Owner: postgres
 --
 
@@ -253,7 +309,7 @@ COMMENT ON TABLE public.jasen IS 'Henkilö joka osallistuu metsästykseen tai li
 
 
 --
--- TOC entry 218 (class 1259 OID 64124)
+-- TOC entry 220 (class 1259 OID 41290)
 -- Name: kasittely; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -266,7 +322,7 @@ CREATE TABLE public.kasittely (
 ALTER TABLE public.kasittely OWNER TO postgres;
 
 --
--- TOC entry 219 (class 1259 OID 64127)
+-- TOC entry 221 (class 1259 OID 41293)
 -- Name: jako_kaadot; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -293,25 +349,53 @@ CREATE VIEW public.jako_kaadot AS
 ALTER TABLE public.jako_kaadot OWNER TO postgres;
 
 --
--- TOC entry 220 (class 1259 OID 64132)
+-- TOC entry 222 (class 1259 OID 41298)
+-- Name: jako_kaadot_jasenille; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.jako_kaadot_jasenille AS
+ SELECT kaadon_kasittely.kaato_id AS "KaatoID",
+    kaadon_kasittely.kasittely_maara AS "Jako Määrä(%)",
+    (((jasen.sukunimi)::text || ' '::text) || (jasen.etunimi)::text) AS "Kaataja",
+    kaato.kaatopaiva AS "kaatopäivä",
+    kaato.paikka_teksti AS "Paikka",
+    kaato.elaimen_nimi AS "Eläin",
+    kaato.ikaluokka AS "Ikäluokka",
+    kaato.sukupuoli AS "Sukupuoli",
+    kasittely.kasittely_teksti AS "Käyttö",
+    kaato.ruhopaino AS "Paino",
+    kaadon_kasittely.kaadon_kasittely_id
+   FROM (((public.jasen
+     JOIN public.kaato ON ((jasen.jasen_id = kaato.jasen_id)))
+     JOIN public.kaadon_kasittely ON ((kaadon_kasittely.kaato_id = kaato.kaato_id)))
+     JOIN public.kasittely ON ((kaadon_kasittely.kasittelyid = kasittely.kasittelyid)))
+  WHERE (kaadon_kasittely.kasittelyid = 5)
+  ORDER BY kaadon_kasittely.kaato_id DESC;
+
+
+ALTER TABLE public.jako_kaadot_jasenille OWNER TO postgres;
+
+--
+-- TOC entry 223 (class 1259 OID 41303)
 -- Name: jasenyys; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.jasenyys (
     jasenyys_id integer NOT NULL,
-    ryhma_id integer NOT NULL,
+    ryhma_id integer,
     jasen_id integer NOT NULL,
     osuus integer NOT NULL,
     liittyi date NOT NULL,
-    poistui date
+    poistui date,
+    seurue_id integer NOT NULL
 );
 
 
 ALTER TABLE public.jasenyys OWNER TO postgres;
 
 --
--- TOC entry 3569 (class 0 OID 0)
--- Dependencies: 220
+-- TOC entry 3649 (class 0 OID 0)
+-- Dependencies: 223
 -- Name: COLUMN jasenyys.osuus; Type: COMMENT; Schema: public; Owner: postgres
 --
 
@@ -319,7 +403,7 @@ COMMENT ON COLUMN public.jasenyys.osuus IS 'Lihaosuus prosentteina';
 
 
 --
--- TOC entry 221 (class 1259 OID 64135)
+-- TOC entry 224 (class 1259 OID 41306)
 -- Name: ryhmien_osuudet; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -327,6 +411,7 @@ CREATE VIEW public.ryhmien_osuudet AS
  SELECT jasenyys.ryhma_id,
     ((sum(jasenyys.osuus))::double precision / (100)::real) AS jakokerroin
    FROM public.jasenyys
+  WHERE (jasenyys.poistui IS NULL)
   GROUP BY jasenyys.ryhma_id
   ORDER BY jasenyys.ryhma_id;
 
@@ -334,7 +419,7 @@ CREATE VIEW public.ryhmien_osuudet AS
 ALTER TABLE public.ryhmien_osuudet OWNER TO postgres;
 
 --
--- TOC entry 222 (class 1259 OID 64139)
+-- TOC entry 225 (class 1259 OID 41310)
 -- Name: jakoryhma_osuus_maara; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -354,7 +439,7 @@ CREATE VIEW public.jakoryhma_osuus_maara AS
 ALTER TABLE public.jakoryhma_osuus_maara OWNER TO postgres;
 
 --
--- TOC entry 223 (class 1259 OID 64144)
+-- TOC entry 226 (class 1259 OID 41315)
 -- Name: jakoryhma_ryhma_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -369,8 +454,8 @@ CREATE SEQUENCE public.jakoryhma_ryhma_id_seq
 ALTER TABLE public.jakoryhma_ryhma_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3573 (class 0 OID 0)
--- Dependencies: 223
+-- TOC entry 3650 (class 0 OID 0)
+-- Dependencies: 226
 -- Name: jakoryhma_ryhma_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -378,7 +463,7 @@ ALTER SEQUENCE public.jakoryhma_ryhma_id_seq OWNED BY public.jakoryhma.ryhma_id;
 
 
 --
--- TOC entry 224 (class 1259 OID 64145)
+-- TOC entry 227 (class 1259 OID 41316)
 -- Name: seurue; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -386,15 +471,16 @@ CREATE TABLE public.seurue (
     seurue_id integer NOT NULL,
     seura_id integer NOT NULL,
     seurueen_nimi character varying(50) NOT NULL,
-    jasen_id integer NOT NULL
+    jasen_id integer NOT NULL,
+    seurue_tyyppi_id integer NOT NULL
 );
 
 
 ALTER TABLE public.seurue OWNER TO postgres;
 
 --
--- TOC entry 3575 (class 0 OID 0)
--- Dependencies: 224
+-- TOC entry 3651 (class 0 OID 0)
+-- Dependencies: 227
 -- Name: TABLE seurue; Type: COMMENT; Schema: public; Owner: postgres
 --
 
@@ -402,8 +488,8 @@ COMMENT ON TABLE public.seurue IS 'Metsästystä harjoittavan seurueen tiedot';
 
 
 --
--- TOC entry 3576 (class 0 OID 0)
--- Dependencies: 224
+-- TOC entry 3652 (class 0 OID 0)
+-- Dependencies: 227
 -- Name: COLUMN seurue.jasen_id; Type: COMMENT; Schema: public; Owner: postgres
 --
 
@@ -411,7 +497,7 @@ COMMENT ON COLUMN public.seurue.jasen_id IS 'Seurueen johtajan tunniste';
 
 
 --
--- TOC entry 225 (class 1259 OID 64148)
+-- TOC entry 228 (class 1259 OID 41319)
 -- Name: jakoryhma_seurueen_nimella; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -428,7 +514,7 @@ CREATE VIEW public.jakoryhma_seurueen_nimella AS
 ALTER TABLE public.jakoryhma_seurueen_nimella OWNER TO postgres;
 
 --
--- TOC entry 226 (class 1259 OID 64152)
+-- TOC entry 229 (class 1259 OID 41323)
 -- Name: jakoryhma_yhteenveto; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -438,6 +524,7 @@ CREATE VIEW public.jakoryhma_yhteenveto AS
     ((sum(jasenyys.osuus))::double precision / (100)::real) AS "Osuus Summa"
    FROM (public.jakoryhma
      LEFT JOIN public.jasenyys ON ((jasenyys.ryhma_id = jakoryhma.ryhma_id)))
+  WHERE (jasenyys.poistui IS NULL)
   GROUP BY jakoryhma.ryhman_nimi
   ORDER BY jakoryhma.ryhman_nimi;
 
@@ -445,7 +532,92 @@ CREATE VIEW public.jakoryhma_yhteenveto AS
 ALTER TABLE public.jakoryhma_yhteenveto OWNER TO postgres;
 
 --
--- TOC entry 227 (class 1259 OID 64156)
+-- TOC entry 230 (class 1259 OID 41328)
+-- Name: nimivalinta; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.nimivalinta AS
+ SELECT jasen.jasen_id,
+    (((jasen.sukunimi)::text || ' '::text) || (jasen.etunimi)::text) AS kokonimi
+   FROM public.jasen
+  WHERE ((jasen.tila)::text = 'aktiivinen'::text)
+  ORDER BY (((jasen.sukunimi)::text || ' '::text) || (jasen.etunimi)::text);
+
+
+ALTER TABLE public.nimivalinta OWNER TO postgres;
+
+--
+-- TOC entry 231 (class 1259 OID 41332)
+-- Name: jakotapahtuma_jasen_jasen_nimella; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.jakotapahtuma_jasen_jasen_nimella AS
+ SELECT jakotapahtuma_jasen.tapahtuma_jasen_id AS "Jako",
+    jakotapahtuma_jasen.paiva AS pvm,
+    jasenyys.jasenyys_id AS "Jäsenyys ID",
+    nimivalinta.kokonimi AS "Nimi",
+    jakotapahtuma_jasen.osnimitys AS "Ruhonosa",
+    jakotapahtuma_jasen.kaadon_kasittely_id AS "Kaadon kasittely ID",
+    jakotapahtuma_jasen.maara AS "Paino",
+    kaadon_kasittely.kaato_id AS "Kaato ID",
+    seurue.seurue_id AS "Seurue ID"
+   FROM ((((public.jakotapahtuma_jasen
+     JOIN public.jasenyys ON ((jasenyys.jasenyys_id = jakotapahtuma_jasen.jasenyys_id)))
+     JOIN public.nimivalinta ON ((jasenyys.jasen_id = nimivalinta.jasen_id)))
+     JOIN public.kaadon_kasittely ON ((kaadon_kasittely.kaadon_kasittely_id = jakotapahtuma_jasen.kaadon_kasittely_id)))
+     JOIN public.seurue ON ((seurue.seurue_id = jasenyys.seurue_id)));
+
+
+ALTER TABLE public.jakotapahtuma_jasen_jasen_nimella OWNER TO postgres;
+
+--
+-- TOC entry 232 (class 1259 OID 41337)
+-- Name: jakotapahtuma_jasen_tapahtuma_jasen_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.jakotapahtuma_jasen_tapahtuma_jasen_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.jakotapahtuma_jasen_tapahtuma_jasen_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3653 (class 0 OID 0)
+-- Dependencies: 232
+-- Name: jakotapahtuma_jasen_tapahtuma_jasen_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.jakotapahtuma_jasen_tapahtuma_jasen_id_seq OWNED BY public.jakotapahtuma_jasen.tapahtuma_jasen_id;
+
+
+--
+-- TOC entry 233 (class 1259 OID 41338)
+-- Name: jakotapahtuma_ryhman_nimella; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.jakotapahtuma_ryhman_nimella AS
+ SELECT jakotapahtuma.tapahtuma_id AS "Jako",
+    jakotapahtuma.paiva AS pvm,
+    jakotapahtuma.ryhma_id AS "Ryhmä ID",
+    jakoryhma.ryhman_nimi AS "Ryhmän Nimi",
+    jakotapahtuma.osnimitys AS "Ruhonosa",
+    jakotapahtuma.kaadon_kasittely_id AS "Kaadon kasittely ID",
+    jakotapahtuma.maara AS "Paino",
+    kaadon_kasittely.kaato_id AS "Kaato ID"
+   FROM ((public.jakotapahtuma
+     JOIN public.jakoryhma ON ((jakoryhma.ryhma_id = jakotapahtuma.ryhma_id)))
+     JOIN public.kaadon_kasittely ON ((kaadon_kasittely.kaadon_kasittely_id = jakotapahtuma.kaadon_kasittely_id)));
+
+
+ALTER TABLE public.jakotapahtuma_ryhman_nimella OWNER TO postgres;
+
+--
+-- TOC entry 234 (class 1259 OID 41342)
 -- Name: jakotapahtuma_tapahtuma_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -460,8 +632,8 @@ CREATE SEQUENCE public.jakotapahtuma_tapahtuma_id_seq
 ALTER TABLE public.jakotapahtuma_tapahtuma_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3580 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 3654 (class 0 OID 0)
+-- Dependencies: 234
 -- Name: jakotapahtuma_tapahtuma_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -469,7 +641,7 @@ ALTER SEQUENCE public.jakotapahtuma_tapahtuma_id_seq OWNED BY public.jakotapahtu
 
 
 --
--- TOC entry 228 (class 1259 OID 64157)
+-- TOC entry 235 (class 1259 OID 41343)
 -- Name: jasen_jasen_id_seq_1; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -484,8 +656,8 @@ CREATE SEQUENCE public.jasen_jasen_id_seq_1
 ALTER TABLE public.jasen_jasen_id_seq_1 OWNER TO postgres;
 
 --
--- TOC entry 3582 (class 0 OID 0)
--- Dependencies: 228
+-- TOC entry 3655 (class 0 OID 0)
+-- Dependencies: 235
 -- Name: jasen_jasen_id_seq_1; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -493,7 +665,7 @@ ALTER SEQUENCE public.jasen_jasen_id_seq_1 OWNED BY public.jasen.jasen_id;
 
 
 --
--- TOC entry 229 (class 1259 OID 64158)
+-- TOC entry 236 (class 1259 OID 41344)
 -- Name: jasen_tila; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -510,7 +682,7 @@ CREATE VIEW public.jasen_tila AS
 ALTER TABLE public.jasen_tila OWNER TO postgres;
 
 --
--- TOC entry 230 (class 1259 OID 64162)
+-- TOC entry 237 (class 1259 OID 41348)
 -- Name: jasenyys_jasenyys_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -525,8 +697,8 @@ CREATE SEQUENCE public.jasenyys_jasenyys_id_seq
 ALTER TABLE public.jasenyys_jasenyys_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3585 (class 0 OID 0)
--- Dependencies: 230
+-- TOC entry 3656 (class 0 OID 0)
+-- Dependencies: 237
 -- Name: jasenyys_jasenyys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -534,7 +706,44 @@ ALTER SEQUENCE public.jasenyys_jasenyys_id_seq OWNED BY public.jasenyys.jasenyys
 
 
 --
--- TOC entry 252 (class 1259 OID 64371)
+-- TOC entry 238 (class 1259 OID 41349)
+-- Name: jasenyys_nimella; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.jasenyys_nimella AS
+ SELECT jasenyys.jasenyys_id,
+    (((jasen.sukunimi)::text || ' '::text) || (jasen.etunimi)::text) AS kokonimi,
+    jasenyys.seurue_id
+   FROM (public.jasenyys
+     JOIN public.jasen ON ((jasen.jasen_id = jasenyys.jasen_id)));
+
+
+ALTER TABLE public.jasenyys_nimella OWNER TO postgres;
+
+--
+-- TOC entry 239 (class 1259 OID 41353)
+-- Name: seurue_tyyppi; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.seurue_tyyppi (
+    seurue_tyyppi_id integer NOT NULL,
+    seurue_tyyppi_nimi character varying(20) NOT NULL
+);
+
+
+ALTER TABLE public.seurue_tyyppi OWNER TO postgres;
+
+--
+-- TOC entry 3657 (class 0 OID 0)
+-- Dependencies: 239
+-- Name: TABLE seurue_tyyppi; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON TABLE public.seurue_tyyppi IS 'Taulu, jonka tarkoitus on rajata tyyppi tietueen arvot seurue taulussa';
+
+
+--
+-- TOC entry 240 (class 1259 OID 41356)
 -- Name: jasenyys_nimella_ryhmalla; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -546,17 +755,23 @@ CREATE VIEW public.jasenyys_nimella_ryhmalla AS
     jakoryhma.ryhman_nimi AS "Ryhmän Nimi",
     jasenyys.liittyi AS "Liittyi",
     jasenyys.poistui AS "Poistui",
-    jasenyys.osuus AS "Osuus"
-   FROM ((public.jasenyys
+    jasenyys.osuus AS "Osuus",
+    jasenyys.seurue_id AS "SeurueID",
+    seurue.seurueen_nimi AS "Seurueen Nimi",
+    seurue.seurue_tyyppi_id AS "Seurueen Tyyppi ID",
+    seurue_tyyppi.seurue_tyyppi_nimi AS "Seurueen Tyyppi"
+   FROM ((((public.jasenyys
      JOIN public.jasen ON ((jasenyys.jasen_id = jasen.jasen_id)))
-     JOIN public.jakoryhma ON ((jakoryhma.ryhma_id = jasenyys.ryhma_id)))
+     LEFT JOIN public.jakoryhma ON ((jasenyys.ryhma_id = jakoryhma.ryhma_id)))
+     JOIN public.seurue ON ((jasenyys.seurue_id = seurue.seurue_id)))
+     JOIN public.seurue_tyyppi ON ((seurue_tyyppi.seurue_tyyppi_id = seurue.seurue_tyyppi_id)))
   ORDER BY (((jasen.sukunimi)::text || ' '::text) || (jasen.etunimi)::text);
 
 
 ALTER TABLE public.jasenyys_nimella_ryhmalla OWNER TO postgres;
 
 --
--- TOC entry 231 (class 1259 OID 64168)
+-- TOC entry 241 (class 1259 OID 41361)
 -- Name: kaadon_kasittely_kaadon_kasittely_id_seq_1; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -571,8 +786,8 @@ CREATE SEQUENCE public.kaadon_kasittely_kaadon_kasittely_id_seq_1
 ALTER TABLE public.kaadon_kasittely_kaadon_kasittely_id_seq_1 OWNER TO postgres;
 
 --
--- TOC entry 3588 (class 0 OID 0)
--- Dependencies: 231
+-- TOC entry 3658 (class 0 OID 0)
+-- Dependencies: 241
 -- Name: kaadon_kasittely_kaadon_kasittely_id_seq_1; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -580,7 +795,7 @@ ALTER SEQUENCE public.kaadon_kasittely_kaadon_kasittely_id_seq_1 OWNED BY public
 
 
 --
--- TOC entry 232 (class 1259 OID 64169)
+-- TOC entry 242 (class 1259 OID 41362)
 -- Name: kaato_kaato_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -595,8 +810,8 @@ CREATE SEQUENCE public.kaato_kaato_id_seq
 ALTER TABLE public.kaato_kaato_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3590 (class 0 OID 0)
--- Dependencies: 232
+-- TOC entry 3659 (class 0 OID 0)
+-- Dependencies: 242
 -- Name: kaato_kaato_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -604,7 +819,7 @@ ALTER SEQUENCE public.kaato_kaato_id_seq OWNED BY public.kaato.kaato_id;
 
 
 --
--- TOC entry 233 (class 1259 OID 64170)
+-- TOC entry 243 (class 1259 OID 41363)
 -- Name: kaatoluettelo; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -616,6 +831,7 @@ CREATE VIEW public.kaatoluettelo AS
     kaato.ikaluokka AS "Ikäluokka",
     kaato.sukupuoli AS "Sukupuoli",
     kaato.ruhopaino AS "Paino",
+    kaato.kaato_id AS "Kaato ID",
     count(kaadon_kasittely.kaato_id) AS "Käsittelyt"
    FROM ((public.kaato
      JOIN public.jasen ON ((jasen.jasen_id = kaato.jasen_id)))
@@ -627,7 +843,7 @@ CREATE VIEW public.kaatoluettelo AS
 ALTER TABLE public.kaatoluettelo OWNER TO postgres;
 
 --
--- TOC entry 251 (class 1259 OID 64366)
+-- TOC entry 244 (class 1259 OID 41368)
 -- Name: kaatoluettelo_indeksilla; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -650,7 +866,7 @@ CREATE VIEW public.kaatoluettelo_indeksilla AS
 ALTER TABLE public.kaatoluettelo_indeksilla OWNER TO postgres;
 
 --
--- TOC entry 234 (class 1259 OID 64180)
+-- TOC entry 245 (class 1259 OID 41373)
 -- Name: kasittely_kasittelyid_seq_1; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -665,8 +881,8 @@ CREATE SEQUENCE public.kasittely_kasittelyid_seq_1
 ALTER TABLE public.kasittely_kasittelyid_seq_1 OWNER TO postgres;
 
 --
--- TOC entry 3594 (class 0 OID 0)
--- Dependencies: 234
+-- TOC entry 3660 (class 0 OID 0)
+-- Dependencies: 245
 -- Name: kasittely_kasittelyid_seq_1; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -674,14 +890,14 @@ ALTER SEQUENCE public.kasittely_kasittelyid_seq_1 OWNED BY public.kasittely.kasi
 
 
 --
--- TOC entry 235 (class 1259 OID 64181)
+-- TOC entry 246 (class 1259 OID 41374)
 -- Name: lihan_kaytto; Type: VIEW; Schema: public; Owner: postgres
 --
 
 CREATE VIEW public.lihan_kaytto AS
  SELECT kaato.elaimen_nimi AS source,
     kasittely.kasittely_teksti AS target,
-    sum(kaato.ruhopaino) AS value
+    sum(((kaato.ruhopaino * (kaadon_kasittely.kasittely_maara)::double precision) / (100.0)::double precision)) AS value
    FROM ((public.kaadon_kasittely
      JOIN public.kaato ON ((kaadon_kasittely.kaato_id = kaato.kaato_id)))
      JOIN public.kasittely ON ((kaadon_kasittely.kasittelyid = kasittely.kasittelyid)))
@@ -691,7 +907,7 @@ CREATE VIEW public.lihan_kaytto AS
 ALTER TABLE public.lihan_kaytto OWNER TO postgres;
 
 --
--- TOC entry 236 (class 1259 OID 64186)
+-- TOC entry 247 (class 1259 OID 41379)
 -- Name: lupa; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -709,8 +925,8 @@ CREATE TABLE public.lupa (
 ALTER TABLE public.lupa OWNER TO postgres;
 
 --
--- TOC entry 3597 (class 0 OID 0)
--- Dependencies: 236
+-- TOC entry 3661 (class 0 OID 0)
+-- Dependencies: 247
 -- Name: TABLE lupa; Type: COMMENT; Schema: public; Owner: postgres
 --
 
@@ -718,7 +934,7 @@ COMMENT ON TABLE public.lupa IS 'Vuosittaiset kaatoluvat';
 
 
 --
--- TOC entry 237 (class 1259 OID 64189)
+-- TOC entry 248 (class 1259 OID 41382)
 -- Name: lupa_luparivi_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -733,8 +949,8 @@ CREATE SEQUENCE public.lupa_luparivi_id_seq
 ALTER TABLE public.lupa_luparivi_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3599 (class 0 OID 0)
--- Dependencies: 237
+-- TOC entry 3662 (class 0 OID 0)
+-- Dependencies: 248
 -- Name: lupa_luparivi_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -742,7 +958,7 @@ ALTER SEQUENCE public.lupa_luparivi_id_seq OWNED BY public.lupa.luparivi_id;
 
 
 --
--- TOC entry 238 (class 1259 OID 64190)
+-- TOC entry 249 (class 1259 OID 41383)
 -- Name: luvat_kayttamatta_kpl_pros; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -761,22 +977,7 @@ CREATE VIEW public.luvat_kayttamatta_kpl_pros AS
 ALTER TABLE public.luvat_kayttamatta_kpl_pros OWNER TO postgres;
 
 --
--- TOC entry 239 (class 1259 OID 64195)
--- Name: nimivalinta; Type: VIEW; Schema: public; Owner: postgres
---
-
-CREATE VIEW public.nimivalinta AS
- SELECT jasen.jasen_id,
-    (((jasen.sukunimi)::text || ' '::text) || (jasen.etunimi)::text) AS kokonimi
-   FROM public.jasen
-  WHERE ((jasen.tila)::text = 'aktiivinen'::text)
-  ORDER BY (((jasen.sukunimi)::text || ' '::text) || (jasen.etunimi)::text);
-
-
-ALTER TABLE public.nimivalinta OWNER TO postgres;
-
---
--- TOC entry 240 (class 1259 OID 64199)
+-- TOC entry 250 (class 1259 OID 41388)
 -- Name: ruhonosa; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -788,7 +989,7 @@ CREATE TABLE public.ruhonosa (
 ALTER TABLE public.ruhonosa OWNER TO postgres;
 
 --
--- TOC entry 241 (class 1259 OID 64202)
+-- TOC entry 251 (class 1259 OID 41391)
 -- Name: ryhmat_jasenilla; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -807,8 +1008,8 @@ CREATE VIEW public.ryhmat_jasenilla AS
 ALTER TABLE public.ryhmat_jasenilla OWNER TO postgres;
 
 --
--- TOC entry 3604 (class 0 OID 0)
--- Dependencies: 241
+-- TOC entry 3663 (class 0 OID 0)
+-- Dependencies: 251
 -- Name: VIEW ryhmat_jasenilla; Type: COMMENT; Schema: public; Owner: postgres
 --
 
@@ -816,7 +1017,7 @@ COMMENT ON VIEW public.ryhmat_jasenilla IS 'Näkymä joka näyttää ryhmä, jä
 
 
 --
--- TOC entry 242 (class 1259 OID 64207)
+-- TOC entry 252 (class 1259 OID 41396)
 -- Name: seurue_sankey; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -836,7 +1037,7 @@ CREATE VIEW public.seurue_sankey AS
 ALTER TABLE public.seurue_sankey OWNER TO postgres;
 
 --
--- TOC entry 243 (class 1259 OID 64212)
+-- TOC entry 253 (class 1259 OID 41401)
 -- Name: sankey_elain_kasittely_seurue; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -855,7 +1056,63 @@ UNION
 ALTER TABLE public.sankey_elain_kasittely_seurue OWNER TO postgres;
 
 --
--- TOC entry 244 (class 1259 OID 64216)
+-- TOC entry 254 (class 1259 OID 41405)
+-- Name: sankey_jasen_jako_kg; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.sankey_jasen_jako_kg AS
+ SELECT seurue.seurueen_nimi AS source,
+    (((jasen.sukunimi)::text || ' '::text) || (jasen.etunimi)::text) AS target,
+    sum(jakotapahtuma_jasen.maara) AS value
+   FROM (((public.jasenyys
+     JOIN public.seurue ON ((jasenyys.seurue_id = seurue.seurue_id)))
+     JOIN public.jakotapahtuma_jasen ON ((jasenyys.jasenyys_id = jakotapahtuma_jasen.jasenyys_id)))
+     JOIN public.jasen ON ((jasenyys.jasen_id = jasen.jasen_id)))
+  WHERE (seurue.seurue_tyyppi_id = 2)
+  GROUP BY seurue.seurueen_nimi, (((jasen.sukunimi)::text || ' '::text) || (jasen.etunimi)::text);
+
+
+ALTER TABLE public.sankey_jasen_jako_kg OWNER TO postgres;
+
+--
+-- TOC entry 3664 (class 0 OID 0)
+-- Dependencies: 254
+-- Name: VIEW sankey_jasen_jako_kg; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON VIEW public.sankey_jasen_jako_kg IS 'Näkymä, joka antaa seureen, jäsenen ja jäsenelle annetun lihan kiloissa';
+
+
+--
+-- TOC entry 255 (class 1259 OID 41410)
+-- Name: sankey_jasen_jako_kpl; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.sankey_jasen_jako_kpl AS
+ SELECT seurue.seurueen_nimi AS source,
+    (((jasen.sukunimi)::text || ' '::text) || (jasen.etunimi)::text) AS target,
+    count(jakotapahtuma_jasen.maara) AS value
+   FROM (((public.jasenyys
+     JOIN public.seurue ON ((jasenyys.seurue_id = seurue.seurue_id)))
+     JOIN public.jakotapahtuma_jasen ON ((jasenyys.jasenyys_id = jakotapahtuma_jasen.jasenyys_id)))
+     JOIN public.jasen ON ((jasenyys.jasen_id = jasen.jasen_id)))
+  WHERE (seurue.seurue_tyyppi_id = 2)
+  GROUP BY seurue.seurueen_nimi, (((jasen.sukunimi)::text || ' '::text) || (jasen.etunimi)::text);
+
+
+ALTER TABLE public.sankey_jasen_jako_kpl OWNER TO postgres;
+
+--
+-- TOC entry 3665 (class 0 OID 0)
+-- Dependencies: 255
+-- Name: VIEW sankey_jasen_jako_kpl; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON VIEW public.sankey_jasen_jako_kpl IS 'Näkymä, joka antaa seurueen, jäsenen ja jäsenelle annetut lihat lukumäärissä';
+
+
+--
+-- TOC entry 256 (class 1259 OID 41415)
 -- Name: seura; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -871,8 +1128,8 @@ CREATE TABLE public.seura (
 ALTER TABLE public.seura OWNER TO postgres;
 
 --
--- TOC entry 3608 (class 0 OID 0)
--- Dependencies: 244
+-- TOC entry 3666 (class 0 OID 0)
+-- Dependencies: 256
 -- Name: TABLE seura; Type: COMMENT; Schema: public; Owner: postgres
 --
 
@@ -880,7 +1137,7 @@ COMMENT ON TABLE public.seura IS 'Metsästysseuran tiedot';
 
 
 --
--- TOC entry 245 (class 1259 OID 64219)
+-- TOC entry 257 (class 1259 OID 41418)
 -- Name: seura_seura_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -895,8 +1152,8 @@ CREATE SEQUENCE public.seura_seura_id_seq
 ALTER TABLE public.seura_seura_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3610 (class 0 OID 0)
--- Dependencies: 245
+-- TOC entry 3667 (class 0 OID 0)
+-- Dependencies: 257
 -- Name: seura_seura_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -904,7 +1161,7 @@ ALTER SEQUENCE public.seura_seura_id_seq OWNED BY public.seura.seura_id;
 
 
 --
--- TOC entry 246 (class 1259 OID 64220)
+-- TOC entry 258 (class 1259 OID 41419)
 -- Name: seurue_lihat; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -921,7 +1178,7 @@ CREATE VIEW public.seurue_lihat AS
 ALTER TABLE public.seurue_lihat OWNER TO postgres;
 
 --
--- TOC entry 247 (class 1259 OID 64224)
+-- TOC entry 259 (class 1259 OID 41423)
 -- Name: seurue_lihat_osuus; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -934,13 +1191,14 @@ CREATE VIEW public.seurue_lihat_osuus AS
      JOIN public.jakoryhma ON ((jakoryhma.seurue_id = seurue.seurue_id)))
      JOIN public.jasenyys ON ((jasenyys.ryhma_id = jakoryhma.ryhma_id)))
      JOIN public.seurue_lihat ON ((seurue_lihat.seurue_id = seurue.seurue_id)))
+  WHERE (jasenyys.poistui IS NULL)
   GROUP BY seurue.seurue_id, seurue.seurueen_nimi, seurue_lihat.sum;
 
 
 ALTER TABLE public.seurue_lihat_osuus OWNER TO postgres;
 
 --
--- TOC entry 248 (class 1259 OID 64229)
+-- TOC entry 260 (class 1259 OID 41428)
 -- Name: seurue_ryhmilla; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -955,7 +1213,7 @@ CREATE VIEW public.seurue_ryhmilla AS
 ALTER TABLE public.seurue_ryhmilla OWNER TO postgres;
 
 --
--- TOC entry 249 (class 1259 OID 64233)
+-- TOC entry 261 (class 1259 OID 41432)
 -- Name: seurue_seurue_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -970,8 +1228,8 @@ CREATE SEQUENCE public.seurue_seurue_id_seq
 ALTER TABLE public.seurue_seurue_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3615 (class 0 OID 0)
--- Dependencies: 249
+-- TOC entry 3668 (class 0 OID 0)
+-- Dependencies: 261
 -- Name: seurue_seurue_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -979,7 +1237,32 @@ ALTER SEQUENCE public.seurue_seurue_id_seq OWNED BY public.seurue.seurue_id;
 
 
 --
--- TOC entry 250 (class 1259 OID 64234)
+-- TOC entry 262 (class 1259 OID 41433)
+-- Name: seurue_tyyppi_seurue_tyyppi_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.seurue_tyyppi_seurue_tyyppi_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.seurue_tyyppi_seurue_tyyppi_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3669 (class 0 OID 0)
+-- Dependencies: 262
+-- Name: seurue_tyyppi_seurue_tyyppi_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.seurue_tyyppi_seurue_tyyppi_id_seq OWNED BY public.seurue_tyyppi.seurue_tyyppi_id;
+
+
+--
+-- TOC entry 263 (class 1259 OID 41434)
 -- Name: sukupuoli; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -991,7 +1274,7 @@ CREATE TABLE public.sukupuoli (
 ALTER TABLE public.sukupuoli OWNER TO postgres;
 
 --
--- TOC entry 3306 (class 2604 OID 64237)
+-- TOC entry 3372 (class 2604 OID 41437)
 -- Name: jakoryhma ryhma_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -999,7 +1282,7 @@ ALTER TABLE ONLY public.jakoryhma ALTER COLUMN ryhma_id SET DEFAULT nextval('pub
 
 
 --
--- TOC entry 3307 (class 2604 OID 64238)
+-- TOC entry 3373 (class 2604 OID 41438)
 -- Name: jakotapahtuma tapahtuma_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1007,7 +1290,15 @@ ALTER TABLE ONLY public.jakotapahtuma ALTER COLUMN tapahtuma_id SET DEFAULT next
 
 
 --
--- TOC entry 3311 (class 2604 OID 64239)
+-- TOC entry 3376 (class 2604 OID 41439)
+-- Name: jakotapahtuma_jasen tapahtuma_jasen_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.jakotapahtuma_jasen ALTER COLUMN tapahtuma_jasen_id SET DEFAULT nextval('public.jakotapahtuma_jasen_tapahtuma_jasen_id_seq'::regclass);
+
+
+--
+-- TOC entry 3377 (class 2604 OID 41440)
 -- Name: jasen jasen_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1015,7 +1306,7 @@ ALTER TABLE ONLY public.jasen ALTER COLUMN jasen_id SET DEFAULT nextval('public.
 
 
 --
--- TOC entry 3313 (class 2604 OID 64240)
+-- TOC entry 3380 (class 2604 OID 41441)
 -- Name: jasenyys jasenyys_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1023,7 +1314,7 @@ ALTER TABLE ONLY public.jasenyys ALTER COLUMN jasenyys_id SET DEFAULT nextval('p
 
 
 --
--- TOC entry 3308 (class 2604 OID 64241)
+-- TOC entry 3374 (class 2604 OID 41442)
 -- Name: kaadon_kasittely kaadon_kasittely_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1031,7 +1322,7 @@ ALTER TABLE ONLY public.kaadon_kasittely ALTER COLUMN kaadon_kasittely_id SET DE
 
 
 --
--- TOC entry 3309 (class 2604 OID 64242)
+-- TOC entry 3375 (class 2604 OID 41443)
 -- Name: kaato kaato_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1039,7 +1330,7 @@ ALTER TABLE ONLY public.kaato ALTER COLUMN kaato_id SET DEFAULT nextval('public.
 
 
 --
--- TOC entry 3312 (class 2604 OID 64243)
+-- TOC entry 3379 (class 2604 OID 41444)
 -- Name: kasittely kasittelyid; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1047,7 +1338,7 @@ ALTER TABLE ONLY public.kasittely ALTER COLUMN kasittelyid SET DEFAULT nextval('
 
 
 --
--- TOC entry 3315 (class 2604 OID 64244)
+-- TOC entry 3383 (class 2604 OID 41445)
 -- Name: lupa luparivi_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1055,7 +1346,7 @@ ALTER TABLE ONLY public.lupa ALTER COLUMN luparivi_id SET DEFAULT nextval('publi
 
 
 --
--- TOC entry 3316 (class 2604 OID 64245)
+-- TOC entry 3384 (class 2604 OID 41446)
 -- Name: seura seura_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1063,7 +1354,7 @@ ALTER TABLE ONLY public.seura ALTER COLUMN seura_id SET DEFAULT nextval('public.
 
 
 --
--- TOC entry 3314 (class 2604 OID 64246)
+-- TOC entry 3381 (class 2604 OID 41447)
 -- Name: seurue seurue_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -1071,42 +1362,43 @@ ALTER TABLE ONLY public.seurue ALTER COLUMN seurue_id SET DEFAULT nextval('publi
 
 
 --
--- TOC entry 3522 (class 0 OID 64091)
+-- TOC entry 3382 (class 2604 OID 41448)
+-- Name: seurue_tyyppi seurue_tyyppi_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.seurue_tyyppi ALTER COLUMN seurue_tyyppi_id SET DEFAULT nextval('public.seurue_tyyppi_seurue_tyyppi_id_seq'::regclass);
+
+
+--
+-- TOC entry 3609 (class 0 OID 41249)
 -- Dependencies: 209
 -- Data for Name: aikuinenvasa; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.aikuinenvasa (ikaluokka) VALUES ('Vasa');
-INSERT INTO public.aikuinenvasa (ikaluokka) VALUES ('Aikuinen');
+INSERT INTO public.aikuinenvasa VALUES ('Vasa');
+INSERT INTO public.aikuinenvasa VALUES ('Aikuinen');
 
 
 --
--- TOC entry 3523 (class 0 OID 64094)
+-- TOC entry 3610 (class 0 OID 41252)
 -- Dependencies: 210
 -- Data for Name: elain; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.elain (elaimen_nimi) VALUES ('Valkohäntäpeura');
-INSERT INTO public.elain (elaimen_nimi) VALUES ('Hirvi');
+INSERT INTO public.elain VALUES ('Valkohäntäpeura');
+INSERT INTO public.elain VALUES ('Hirvi');
 
 
 --
--- TOC entry 3524 (class 0 OID 64097)
+-- TOC entry 3611 (class 0 OID 41255)
 -- Dependencies: 211
 -- Data for Name: jakoryhma; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.jakoryhma (ryhma_id, seurue_id, ryhman_nimi) VALUES (1, 1, 'Ryhmä1');
-INSERT INTO public.jakoryhma (ryhma_id, seurue_id, ryhman_nimi) VALUES (2, 1, 'Ryhmä2');
-INSERT INTO public.jakoryhma (ryhma_id, seurue_id, ryhman_nimi) VALUES (3, 1, 'Ryhmä3');
-INSERT INTO public.jakoryhma (ryhma_id, seurue_id, ryhman_nimi) VALUES (4, 1, 'Ryhmä4');
-INSERT INTO public.jakoryhma (ryhma_id, seurue_id, ryhman_nimi) VALUES (5, 1, 'Ryhmä5');
-INSERT INTO public.jakoryhma (ryhma_id, seurue_id, ryhman_nimi) VALUES (6, 1, 'Ryhmä6');
-INSERT INTO public.jakoryhma (ryhma_id, seurue_id, ryhman_nimi) VALUES (7, 1, 'Ryhmä7');
 
 
 --
--- TOC entry 3525 (class 0 OID 64100)
+-- TOC entry 3612 (class 0 OID 41258)
 -- Dependencies: 212
 -- Data for Name: jakotapahtuma; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1114,90 +1406,31 @@ INSERT INTO public.jakoryhma (ryhma_id, seurue_id, ryhman_nimi) VALUES (7, 1, 'R
 
 
 --
--- TOC entry 3528 (class 0 OID 64120)
+-- TOC entry 3615 (class 0 OID 41278)
 -- Dependencies: 217
+-- Data for Name: jakotapahtuma_jasen; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- TOC entry 3616 (class 0 OID 41286)
+-- Dependencies: 219
 -- Data for Name: jasen; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (1, 'Kimmo', 'Suominen', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (2, 'Niko', 'Aalto', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (3, 'Matti', 'Karhunen', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (4, 'Antti', 'Heinonen', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (5, 'Antti-Juhani', 'Laitinen', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (6, 'Ari', 'Halonen', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (7, 'Esko', 'Runola', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (8, 'Miikka', 'Hiivola', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (9, 'Ari', 'Junttila', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (10, 'Timo', 'Nurmi', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (12, 'Risto', 'Leppänen', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (13, 'Timo', 'Kyrölä', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (14, 'Ari', 'Kilpeläinen', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (15, 'Esa', 'Kilpeläinen', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (16, 'Marko', 'Hannula', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (17, 'Jari', 'Kaskinen', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (18, 'Arto', 'Ali-Keskikylä', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (19, 'Mikko', 'Luostarinen', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (20, 'Niko', 'Rannikko', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (21, 'Matti', 'Van Strien', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (22, 'Juha-Matti', 'Halminen', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (23, 'Aleksi', 'Ahlqvist', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (24, 'Pentti', 'Ahlqvist', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (25, 'Tuomas', 'Ahlqvist', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (26, 'Tommi', 'Puntala', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (27, 'Juha-Matti', 'Hannula', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (28, 'Tapio', 'Ranta', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (29, 'Vilho', 'Länsiaho', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (30, 'Antti', 'Keskitalo', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (31, 'Sauli', 'Junttila', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (32, 'Mikko', 'Mäkilä', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (33, 'Mikko', 'Salminen', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (11, 'Erkki', 'Lehto', '-', '-', '-', 'aktiivinen');
-INSERT INTO public.jasen (jasen_id, etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila) VALUES (34, 'Matti', 'Rinnola', '-', '-', '-', 'aktiivinen');
 
 
 --
--- TOC entry 3530 (class 0 OID 64132)
--- Dependencies: 220
+-- TOC entry 3618 (class 0 OID 41303)
+-- Dependencies: 223
 -- Data for Name: jasenyys; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (1, 1, 3, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (2, 1, 1, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (3, 1, 4, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (4, 1, 5, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (5, 2, 6, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (6, 2, 33, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (7, 2, 7, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (8, 2, 8, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (9, 3, 9, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (10, 3, 10, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (11, 3, 11, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (12, 3, 12, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (13, 4, 13, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (14, 4, 14, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (15, 4, 15, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (16, 4, 16, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (17, 5, 17, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (18, 5, 34, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (19, 5, 18, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (20, 5, 19, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (21, 6, 20, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (22, 6, 21, 100, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (23, 6, 22, 50, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (24, 6, 23, 50, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (25, 6, 24, 50, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (26, 6, 25, 50, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (27, 7, 26, 50, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (28, 7, 27, 50, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (29, 7, 28, 50, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (30, 7, 29, 50, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (31, 7, 30, 50, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (32, 7, 31, 50, '2023-05-23', NULL);
-INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, poistui) VALUES (33, 7, 32, 50, '2023-05-23', NULL);
 
 
 --
--- TOC entry 3526 (class 0 OID 64107)
+-- TOC entry 3613 (class 0 OID 41265)
 -- Dependencies: 214
 -- Data for Name: kaadon_kasittely; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1205,7 +1438,7 @@ INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, po
 
 
 --
--- TOC entry 3527 (class 0 OID 64110)
+-- TOC entry 3614 (class 0 OID 41268)
 -- Dependencies: 215
 -- Data for Name: kaato; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -1213,80 +1446,95 @@ INSERT INTO public.jasenyys (jasenyys_id, ryhma_id, jasen_id, osuus, liittyi, po
 
 
 --
--- TOC entry 3529 (class 0 OID 64124)
--- Dependencies: 218
+-- TOC entry 3617 (class 0 OID 41290)
+-- Dependencies: 220
 -- Data for Name: kasittely; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.kasittely (kasittelyid, kasittely_teksti) VALUES (1, 'Seuralle');
-INSERT INTO public.kasittely (kasittelyid, kasittely_teksti) VALUES (2, 'Seurueelle');
-INSERT INTO public.kasittely (kasittelyid, kasittely_teksti) VALUES (3, 'Myyntiin');
-INSERT INTO public.kasittely (kasittelyid, kasittely_teksti) VALUES (4, 'Hävitetään');
+INSERT INTO public.kasittely VALUES (1, 'Seuralle');
+INSERT INTO public.kasittely VALUES (2, 'Seurueelle');
+INSERT INTO public.kasittely VALUES (3, 'Myyntiin');
+INSERT INTO public.kasittely VALUES (4, 'Hävitetään');
+INSERT INTO public.kasittely VALUES (5, 'Jäsenelle');
 
 
 --
--- TOC entry 3539 (class 0 OID 64186)
--- Dependencies: 236
+-- TOC entry 3629 (class 0 OID 41379)
+-- Dependencies: 247
 -- Data for Name: lupa; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.lupa (luparivi_id, seura_id, lupavuosi, elaimen_nimi, sukupuoli, ikaluokka, maara) VALUES (1, 1, '2023', 'Hirvi', 'Naaras', 'Aikuinen', 8);
-INSERT INTO public.lupa (luparivi_id, seura_id, lupavuosi, elaimen_nimi, sukupuoli, ikaluokka, maara) VALUES (2, 1, '2023', 'Hirvi', 'Uros', 'Aikuinen', 9);
-INSERT INTO public.lupa (luparivi_id, seura_id, lupavuosi, elaimen_nimi, sukupuoli, ikaluokka, maara) VALUES (3, 1, '2023', 'Hirvi', 'Ei määritelty', 'Vasa', 16);
 
 
 --
--- TOC entry 3541 (class 0 OID 64199)
--- Dependencies: 240
+-- TOC entry 3631 (class 0 OID 41388)
+-- Dependencies: 250
 -- Data for Name: ruhonosa; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.ruhonosa (osnimitys) VALUES ('Koko');
-INSERT INTO public.ruhonosa (osnimitys) VALUES ('Puolikas');
-INSERT INTO public.ruhonosa (osnimitys) VALUES ('Neljännes');
+INSERT INTO public.ruhonosa VALUES ('Koko');
+INSERT INTO public.ruhonosa VALUES ('Puolikas');
+INSERT INTO public.ruhonosa VALUES ('Neljännes');
 
 
 --
--- TOC entry 3542 (class 0 OID 64216)
--- Dependencies: 244
+-- TOC entry 3632 (class 0 OID 41415)
+-- Dependencies: 256
 -- Data for Name: seura; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.seura (seura_id, seuran_nimi, jakeluosoite, postinumero, postitoimipaikka) VALUES (1, 'Metsästysseura Repo ry', 'Ketoruusuntie 26', '21270', 'Nousiainen');
 
 
 --
--- TOC entry 3532 (class 0 OID 64145)
--- Dependencies: 224
+-- TOC entry 3620 (class 0 OID 41316)
+-- Dependencies: 227
 -- Data for Name: seurue; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.seurue (seurue_id, seura_id, seurueen_nimi, jasen_id) VALUES (1, 1, 'Seurue1', 1);
 
 
 --
--- TOC entry 3545 (class 0 OID 64234)
--- Dependencies: 250
+-- TOC entry 3625 (class 0 OID 41353)
+-- Dependencies: 239
+-- Data for Name: seurue_tyyppi; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.seurue_tyyppi VALUES (1, 'Ryhmä');
+INSERT INTO public.seurue_tyyppi VALUES (2, 'Jäsen');
+
+
+--
+-- TOC entry 3636 (class 0 OID 41434)
+-- Dependencies: 263
 -- Data for Name: sukupuoli; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.sukupuoli (sukupuoli) VALUES ('Uros');
-INSERT INTO public.sukupuoli (sukupuoli) VALUES ('Naaras');
-INSERT INTO public.sukupuoli (sukupuoli) VALUES ('Ei määritelty');
+INSERT INTO public.sukupuoli VALUES ('Uros');
+INSERT INTO public.sukupuoli VALUES ('Naaras');
+INSERT INTO public.sukupuoli VALUES ('Ei määritelty');
 
 
 --
--- TOC entry 3618 (class 0 OID 0)
--- Dependencies: 223
+-- TOC entry 3670 (class 0 OID 0)
+-- Dependencies: 226
 -- Name: jakoryhma_ryhma_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.jakoryhma_ryhma_id_seq', 7, true);
+SELECT pg_catalog.setval('public.jakoryhma_ryhma_id_seq', 1, false);
 
 
 --
--- TOC entry 3619 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 3671 (class 0 OID 0)
+-- Dependencies: 232
+-- Name: jakotapahtuma_jasen_tapahtuma_jasen_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.jakotapahtuma_jasen_tapahtuma_jasen_id_seq', 1, false);
+
+
+--
+-- TOC entry 3672 (class 0 OID 0)
+-- Dependencies: 234
 -- Name: jakotapahtuma_tapahtuma_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -1294,26 +1542,26 @@ SELECT pg_catalog.setval('public.jakotapahtuma_tapahtuma_id_seq', 1, false);
 
 
 --
--- TOC entry 3620 (class 0 OID 0)
--- Dependencies: 228
+-- TOC entry 3673 (class 0 OID 0)
+-- Dependencies: 235
 -- Name: jasen_jasen_id_seq_1; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.jasen_jasen_id_seq_1', 34, true);
+SELECT pg_catalog.setval('public.jasen_jasen_id_seq_1', 1, false);
 
 
 --
--- TOC entry 3621 (class 0 OID 0)
--- Dependencies: 230
+-- TOC entry 3674 (class 0 OID 0)
+-- Dependencies: 237
 -- Name: jasenyys_jasenyys_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.jasenyys_jasenyys_id_seq', 33, true);
+SELECT pg_catalog.setval('public.jasenyys_jasenyys_id_seq', 1, false);
 
 
 --
--- TOC entry 3622 (class 0 OID 0)
--- Dependencies: 231
+-- TOC entry 3675 (class 0 OID 0)
+-- Dependencies: 241
 -- Name: kaadon_kasittely_kaadon_kasittely_id_seq_1; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -1321,8 +1569,8 @@ SELECT pg_catalog.setval('public.kaadon_kasittely_kaadon_kasittely_id_seq_1', 1,
 
 
 --
--- TOC entry 3623 (class 0 OID 0)
--- Dependencies: 232
+-- TOC entry 3676 (class 0 OID 0)
+-- Dependencies: 242
 -- Name: kaato_kaato_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -1330,43 +1578,52 @@ SELECT pg_catalog.setval('public.kaato_kaato_id_seq', 1, false);
 
 
 --
--- TOC entry 3624 (class 0 OID 0)
--- Dependencies: 234
+-- TOC entry 3677 (class 0 OID 0)
+-- Dependencies: 245
 -- Name: kasittely_kasittelyid_seq_1; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.kasittely_kasittelyid_seq_1', 1, false);
+SELECT pg_catalog.setval('public.kasittely_kasittelyid_seq_1', 1, true);
 
 
 --
--- TOC entry 3625 (class 0 OID 0)
--- Dependencies: 237
+-- TOC entry 3678 (class 0 OID 0)
+-- Dependencies: 248
 -- Name: lupa_luparivi_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.lupa_luparivi_id_seq', 3, true);
+SELECT pg_catalog.setval('public.lupa_luparivi_id_seq', 1, false);
 
 
 --
--- TOC entry 3626 (class 0 OID 0)
--- Dependencies: 245
+-- TOC entry 3679 (class 0 OID 0)
+-- Dependencies: 257
 -- Name: seura_seura_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.seura_seura_id_seq', 1, true);
+SELECT pg_catalog.setval('public.seura_seura_id_seq', 1, false);
 
 
 --
--- TOC entry 3627 (class 0 OID 0)
--- Dependencies: 249
+-- TOC entry 3680 (class 0 OID 0)
+-- Dependencies: 261
 -- Name: seurue_seurue_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.seurue_seurue_id_seq', 1, true);
+SELECT pg_catalog.setval('public.seurue_seurue_id_seq', 1, false);
 
 
 --
--- TOC entry 3318 (class 2606 OID 64248)
+-- TOC entry 3681 (class 0 OID 0)
+-- Dependencies: 262
+-- Name: seurue_tyyppi_seurue_tyyppi_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.seurue_tyyppi_seurue_tyyppi_id_seq', 2, true);
+
+
+--
+-- TOC entry 3386 (class 2606 OID 41450)
 -- Name: aikuinenvasa aikuinenvasa_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1375,7 +1632,7 @@ ALTER TABLE ONLY public.aikuinenvasa
 
 
 --
--- TOC entry 3320 (class 2606 OID 64250)
+-- TOC entry 3388 (class 2606 OID 41452)
 -- Name: elain elain_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1384,7 +1641,7 @@ ALTER TABLE ONLY public.elain
 
 
 --
--- TOC entry 3322 (class 2606 OID 64252)
+-- TOC entry 3390 (class 2606 OID 41454)
 -- Name: jakoryhma jakoryhma_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1393,7 +1650,16 @@ ALTER TABLE ONLY public.jakoryhma
 
 
 --
--- TOC entry 3324 (class 2606 OID 64254)
+-- TOC entry 3399 (class 2606 OID 41456)
+-- Name: jakotapahtuma_jasen jakotapahtuma_jasen_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.jakotapahtuma_jasen
+    ADD CONSTRAINT jakotapahtuma_jasen_pk PRIMARY KEY (tapahtuma_jasen_id);
+
+
+--
+-- TOC entry 3392 (class 2606 OID 41458)
 -- Name: jakotapahtuma jakotapahtuma_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1402,7 +1668,7 @@ ALTER TABLE ONLY public.jakotapahtuma
 
 
 --
--- TOC entry 3330 (class 2606 OID 64256)
+-- TOC entry 3401 (class 2606 OID 41460)
 -- Name: jasen jasen_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1411,7 +1677,7 @@ ALTER TABLE ONLY public.jasen
 
 
 --
--- TOC entry 3334 (class 2606 OID 64258)
+-- TOC entry 3406 (class 2606 OID 41462)
 -- Name: jasenyys jasenyys_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1420,7 +1686,7 @@ ALTER TABLE ONLY public.jasenyys
 
 
 --
--- TOC entry 3326 (class 2606 OID 64260)
+-- TOC entry 3394 (class 2606 OID 41464)
 -- Name: kaadon_kasittely kaadon_kasittely_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1429,7 +1695,7 @@ ALTER TABLE ONLY public.kaadon_kasittely
 
 
 --
--- TOC entry 3328 (class 2606 OID 64262)
+-- TOC entry 3396 (class 2606 OID 41466)
 -- Name: kaato kaato_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1438,7 +1704,7 @@ ALTER TABLE ONLY public.kaato
 
 
 --
--- TOC entry 3332 (class 2606 OID 64264)
+-- TOC entry 3403 (class 2606 OID 41468)
 -- Name: kasittely kasittely_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1447,7 +1713,7 @@ ALTER TABLE ONLY public.kasittely
 
 
 --
--- TOC entry 3338 (class 2606 OID 64266)
+-- TOC entry 3413 (class 2606 OID 41470)
 -- Name: lupa lupa_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1456,7 +1722,7 @@ ALTER TABLE ONLY public.lupa
 
 
 --
--- TOC entry 3340 (class 2606 OID 64268)
+-- TOC entry 3415 (class 2606 OID 41472)
 -- Name: ruhonosa ruhonosa_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1465,7 +1731,7 @@ ALTER TABLE ONLY public.ruhonosa
 
 
 --
--- TOC entry 3342 (class 2606 OID 64270)
+-- TOC entry 3417 (class 2606 OID 41474)
 -- Name: seura seura_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1474,7 +1740,7 @@ ALTER TABLE ONLY public.seura
 
 
 --
--- TOC entry 3336 (class 2606 OID 64272)
+-- TOC entry 3409 (class 2606 OID 41476)
 -- Name: seurue seurue_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1483,7 +1749,16 @@ ALTER TABLE ONLY public.seurue
 
 
 --
--- TOC entry 3344 (class 2606 OID 64274)
+-- TOC entry 3411 (class 2606 OID 41478)
+-- Name: seurue_tyyppi seurue_tyyppi_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.seurue_tyyppi
+    ADD CONSTRAINT seurue_tyyppi_pk PRIMARY KEY (seurue_tyyppi_id);
+
+
+--
+-- TOC entry 3419 (class 2606 OID 41480)
 -- Name: sukupuoli sukupuoli_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1492,7 +1767,31 @@ ALTER TABLE ONLY public.sukupuoli
 
 
 --
--- TOC entry 3351 (class 2606 OID 64275)
+-- TOC entry 3397 (class 1259 OID 41481)
+-- Name: fki_jasenyys_jakotapahtuma_jasen_fk; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX fki_jasenyys_jakotapahtuma_jasen_fk ON public.jakotapahtuma_jasen USING btree (jasenyys_id);
+
+
+--
+-- TOC entry 3404 (class 1259 OID 41482)
+-- Name: fki_seurue_jasenyys_fk; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX fki_seurue_jasenyys_fk ON public.jasenyys USING btree (seurue_id);
+
+
+--
+-- TOC entry 3407 (class 1259 OID 41483)
+-- Name: fki_seurue_tyyppi_seurue_fk; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX fki_seurue_tyyppi_seurue_fk ON public.seurue USING btree (seurue_tyyppi_id);
+
+
+--
+-- TOC entry 3426 (class 2606 OID 41484)
 -- Name: kaato aikuinen_vasa_kaato_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1501,7 +1800,7 @@ ALTER TABLE ONLY public.kaato
 
 
 --
--- TOC entry 3359 (class 2606 OID 64280)
+-- TOC entry 3439 (class 2606 OID 41489)
 -- Name: lupa aikuinen_vasa_lupa_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1510,7 +1809,7 @@ ALTER TABLE ONLY public.lupa
 
 
 --
--- TOC entry 3352 (class 2606 OID 64285)
+-- TOC entry 3427 (class 2606 OID 41494)
 -- Name: kaato elain_kaato_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1519,7 +1818,7 @@ ALTER TABLE ONLY public.kaato
 
 
 --
--- TOC entry 3360 (class 2606 OID 64290)
+-- TOC entry 3440 (class 2606 OID 41499)
 -- Name: lupa elain_lupa_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1528,7 +1827,7 @@ ALTER TABLE ONLY public.lupa
 
 
 --
--- TOC entry 3355 (class 2606 OID 64295)
+-- TOC entry 3433 (class 2606 OID 41504)
 -- Name: jasenyys jasen_jasenyys_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1537,7 +1836,7 @@ ALTER TABLE ONLY public.jasenyys
 
 
 --
--- TOC entry 3353 (class 2606 OID 64300)
+-- TOC entry 3428 (class 2606 OID 41509)
 -- Name: kaato jasen_kaato_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1546,7 +1845,7 @@ ALTER TABLE ONLY public.kaato
 
 
 --
--- TOC entry 3357 (class 2606 OID 64305)
+-- TOC entry 3436 (class 2606 OID 41514)
 -- Name: seurue jasen_seurue_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1555,25 +1854,43 @@ ALTER TABLE ONLY public.seurue
 
 
 --
--- TOC entry 3346 (class 2606 OID 64310)
+-- TOC entry 3430 (class 2606 OID 41519)
+-- Name: jakotapahtuma_jasen jasenyys_jakotapahtuma_jasen_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.jakotapahtuma_jasen
+    ADD CONSTRAINT jasenyys_jakotapahtuma_jasen_fk FOREIGN KEY (jasenyys_id) REFERENCES public.jasenyys(jasenyys_id);
+
+
+--
+-- TOC entry 3421 (class 2606 OID 41524)
 -- Name: jakotapahtuma kaadon_kasittely_jakotapahtuma_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.jakotapahtuma
-    ADD CONSTRAINT kaadon_kasittely_jakotapahtuma_fk FOREIGN KEY (kaadon_kasittely_id) REFERENCES public.kaadon_kasittely(kaadon_kasittely_id);
+    ADD CONSTRAINT kaadon_kasittely_jakotapahtuma_fk FOREIGN KEY (kaadon_kasittely_id) REFERENCES public.kaadon_kasittely(kaadon_kasittely_id) ON DELETE CASCADE;
 
 
 --
--- TOC entry 3349 (class 2606 OID 64315)
+-- TOC entry 3431 (class 2606 OID 41529)
+-- Name: jakotapahtuma_jasen kaadon_kasittely_jakotapahtuma_jasen_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.jakotapahtuma_jasen
+    ADD CONSTRAINT kaadon_kasittely_jakotapahtuma_jasen_fk FOREIGN KEY (kaadon_kasittely_id) REFERENCES public.kaadon_kasittely(kaadon_kasittely_id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 3424 (class 2606 OID 41534)
 -- Name: kaadon_kasittely kaato_kaadon_kasittely_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.kaadon_kasittely
-    ADD CONSTRAINT kaato_kaadon_kasittely_fk FOREIGN KEY (kaato_id) REFERENCES public.kaato(kaato_id);
+    ADD CONSTRAINT kaato_kaadon_kasittely_fk FOREIGN KEY (kaato_id) REFERENCES public.kaato(kaato_id) ON DELETE CASCADE;
 
 
 --
--- TOC entry 3350 (class 2606 OID 64320)
+-- TOC entry 3425 (class 2606 OID 41539)
 -- Name: kaadon_kasittely kasittely_kaadon_kasittely_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1582,7 +1899,7 @@ ALTER TABLE ONLY public.kaadon_kasittely
 
 
 --
--- TOC entry 3347 (class 2606 OID 64325)
+-- TOC entry 3422 (class 2606 OID 41544)
 -- Name: jakotapahtuma ruhonosa_jakotapahtuma_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1591,7 +1908,16 @@ ALTER TABLE ONLY public.jakotapahtuma
 
 
 --
--- TOC entry 3348 (class 2606 OID 64330)
+-- TOC entry 3432 (class 2606 OID 41549)
+-- Name: jakotapahtuma_jasen ruhonosa_jakotapahtuma_jasen_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.jakotapahtuma_jasen
+    ADD CONSTRAINT ruhonosa_jakotapahtuma_jasen_fk FOREIGN KEY (osnimitys) REFERENCES public.ruhonosa(osnimitys);
+
+
+--
+-- TOC entry 3423 (class 2606 OID 41554)
 -- Name: jakotapahtuma ryhma_jakotapahtuma_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1600,7 +1926,7 @@ ALTER TABLE ONLY public.jakotapahtuma
 
 
 --
--- TOC entry 3356 (class 2606 OID 64335)
+-- TOC entry 3434 (class 2606 OID 41559)
 -- Name: jasenyys ryhma_jasenyys_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1609,7 +1935,7 @@ ALTER TABLE ONLY public.jasenyys
 
 
 --
--- TOC entry 3361 (class 2606 OID 64340)
+-- TOC entry 3441 (class 2606 OID 41564)
 -- Name: lupa seura_lupa_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1618,7 +1944,7 @@ ALTER TABLE ONLY public.lupa
 
 
 --
--- TOC entry 3358 (class 2606 OID 64345)
+-- TOC entry 3437 (class 2606 OID 41569)
 -- Name: seurue seura_seurue_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1627,7 +1953,16 @@ ALTER TABLE ONLY public.seurue
 
 
 --
--- TOC entry 3345 (class 2606 OID 64350)
+-- TOC entry 3435 (class 2606 OID 41574)
+-- Name: jasenyys seurue_jasenyys_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.jasenyys
+    ADD CONSTRAINT seurue_jasenyys_fk FOREIGN KEY (seurue_id) REFERENCES public.seurue(seurue_id);
+
+
+--
+-- TOC entry 3420 (class 2606 OID 41579)
 -- Name: jakoryhma seurue_ryhma_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1636,7 +1971,16 @@ ALTER TABLE ONLY public.jakoryhma
 
 
 --
--- TOC entry 3354 (class 2606 OID 64355)
+-- TOC entry 3438 (class 2606 OID 41584)
+-- Name: seurue seurue_tyyppi_seurue_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.seurue
+    ADD CONSTRAINT seurue_tyyppi_seurue_fk FOREIGN KEY (seurue_tyyppi_id) REFERENCES public.seurue_tyyppi(seurue_tyyppi_id);
+
+
+--
+-- TOC entry 3429 (class 2606 OID 41589)
 -- Name: kaato sukupuoli_kaato_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1645,7 +1989,7 @@ ALTER TABLE ONLY public.kaato
 
 
 --
--- TOC entry 3362 (class 2606 OID 64360)
+-- TOC entry 3442 (class 2606 OID 41594)
 -- Name: lupa sukupuoli_lupa_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1653,412 +1997,7 @@ ALTER TABLE ONLY public.lupa
     ADD CONSTRAINT sukupuoli_lupa_fk FOREIGN KEY (sukupuoli) REFERENCES public.sukupuoli(sukupuoli);
 
 
---
--- TOC entry 3551 (class 0 OID 0)
--- Dependencies: 264
--- Name: FUNCTION get_used_licences(license_year integer); Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON FUNCTION public.get_used_licences(license_year integer) TO application;
-
-
---
--- TOC entry 3552 (class 0 OID 0)
--- Dependencies: 209
--- Name: TABLE aikuinenvasa; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.aikuinenvasa TO application;
-
-
---
--- TOC entry 3553 (class 0 OID 0)
--- Dependencies: 210
--- Name: TABLE elain; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.elain TO application;
-
-
---
--- TOC entry 3555 (class 0 OID 0)
--- Dependencies: 211
--- Name: TABLE jakoryhma; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.jakoryhma TO application;
-
-
---
--- TOC entry 3557 (class 0 OID 0)
--- Dependencies: 212
--- Name: TABLE jakotapahtuma; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.jakotapahtuma TO application;
-
-
---
--- TOC entry 3558 (class 0 OID 0)
--- Dependencies: 213
--- Name: TABLE jaetut_lihat; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.jaetut_lihat TO application;
-
-
---
--- TOC entry 3559 (class 0 OID 0)
--- Dependencies: 214
--- Name: TABLE kaadon_kasittely; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.kaadon_kasittely TO application;
-
-
---
--- TOC entry 3563 (class 0 OID 0)
--- Dependencies: 215
--- Name: TABLE kaato; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.kaato TO application;
-
-
---
--- TOC entry 3564 (class 0 OID 0)
--- Dependencies: 216
--- Name: TABLE jaetut_ruhon_osat; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.jaetut_ruhon_osat TO application;
-
-
---
--- TOC entry 3566 (class 0 OID 0)
--- Dependencies: 217
--- Name: TABLE jasen; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.jasen TO application;
-
-
---
--- TOC entry 3567 (class 0 OID 0)
--- Dependencies: 218
--- Name: TABLE kasittely; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.kasittely TO application;
-
-
---
--- TOC entry 3568 (class 0 OID 0)
--- Dependencies: 219
--- Name: TABLE jako_kaadot; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.jako_kaadot TO application;
-
-
---
--- TOC entry 3570 (class 0 OID 0)
--- Dependencies: 220
--- Name: TABLE jasenyys; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.jasenyys TO application;
-
-
---
--- TOC entry 3571 (class 0 OID 0)
--- Dependencies: 221
--- Name: TABLE ryhmien_osuudet; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.ryhmien_osuudet TO application;
-
-
---
--- TOC entry 3572 (class 0 OID 0)
--- Dependencies: 222
--- Name: TABLE jakoryhma_osuus_maara; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.jakoryhma_osuus_maara TO application;
-
-
---
--- TOC entry 3574 (class 0 OID 0)
--- Dependencies: 223
--- Name: SEQUENCE jakoryhma_ryhma_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON SEQUENCE public.jakoryhma_ryhma_id_seq TO application;
-
-
---
--- TOC entry 3577 (class 0 OID 0)
--- Dependencies: 224
--- Name: TABLE seurue; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.seurue TO application;
-
-
---
--- TOC entry 3578 (class 0 OID 0)
--- Dependencies: 225
--- Name: TABLE jakoryhma_seurueen_nimella; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.jakoryhma_seurueen_nimella TO application;
-
-
---
--- TOC entry 3579 (class 0 OID 0)
--- Dependencies: 226
--- Name: TABLE jakoryhma_yhteenveto; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.jakoryhma_yhteenveto TO application;
-
-
---
--- TOC entry 3581 (class 0 OID 0)
--- Dependencies: 227
--- Name: SEQUENCE jakotapahtuma_tapahtuma_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON SEQUENCE public.jakotapahtuma_tapahtuma_id_seq TO application;
-
-
---
--- TOC entry 3583 (class 0 OID 0)
--- Dependencies: 228
--- Name: SEQUENCE jasen_jasen_id_seq_1; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON SEQUENCE public.jasen_jasen_id_seq_1 TO application;
-
-
---
--- TOC entry 3584 (class 0 OID 0)
--- Dependencies: 229
--- Name: TABLE jasen_tila; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.jasen_tila TO application;
-
-
---
--- TOC entry 3586 (class 0 OID 0)
--- Dependencies: 230
--- Name: SEQUENCE jasenyys_jasenyys_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON SEQUENCE public.jasenyys_jasenyys_id_seq TO application;
-
-
---
--- TOC entry 3587 (class 0 OID 0)
--- Dependencies: 252
--- Name: TABLE jasenyys_nimella_ryhmalla; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.jasenyys_nimella_ryhmalla TO application;
-
-
---
--- TOC entry 3589 (class 0 OID 0)
--- Dependencies: 231
--- Name: SEQUENCE kaadon_kasittely_kaadon_kasittely_id_seq_1; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON SEQUENCE public.kaadon_kasittely_kaadon_kasittely_id_seq_1 TO application;
-
-
---
--- TOC entry 3591 (class 0 OID 0)
--- Dependencies: 232
--- Name: SEQUENCE kaato_kaato_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON SEQUENCE public.kaato_kaato_id_seq TO application;
-
-
---
--- TOC entry 3592 (class 0 OID 0)
--- Dependencies: 233
--- Name: TABLE kaatoluettelo; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.kaatoluettelo TO application;
-
-
---
--- TOC entry 3593 (class 0 OID 0)
--- Dependencies: 251
--- Name: TABLE kaatoluettelo_indeksilla; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.kaatoluettelo_indeksilla TO application;
-
-
---
--- TOC entry 3595 (class 0 OID 0)
--- Dependencies: 234
--- Name: SEQUENCE kasittely_kasittelyid_seq_1; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON SEQUENCE public.kasittely_kasittelyid_seq_1 TO application;
-
-
---
--- TOC entry 3596 (class 0 OID 0)
--- Dependencies: 235
--- Name: TABLE lihan_kaytto; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.lihan_kaytto TO application;
-
-
---
--- TOC entry 3598 (class 0 OID 0)
--- Dependencies: 236
--- Name: TABLE lupa; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.lupa TO application;
-
-
---
--- TOC entry 3600 (class 0 OID 0)
--- Dependencies: 237
--- Name: SEQUENCE lupa_luparivi_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON SEQUENCE public.lupa_luparivi_id_seq TO application;
-
-
---
--- TOC entry 3601 (class 0 OID 0)
--- Dependencies: 238
--- Name: TABLE luvat_kayttamatta_kpl_pros; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.luvat_kayttamatta_kpl_pros TO application;
-
-
---
--- TOC entry 3602 (class 0 OID 0)
--- Dependencies: 239
--- Name: TABLE nimivalinta; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.nimivalinta TO application;
-
-
---
--- TOC entry 3603 (class 0 OID 0)
--- Dependencies: 240
--- Name: TABLE ruhonosa; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.ruhonosa TO application;
-
-
---
--- TOC entry 3605 (class 0 OID 0)
--- Dependencies: 241
--- Name: TABLE ryhmat_jasenilla; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.ryhmat_jasenilla TO application;
-
-
---
--- TOC entry 3606 (class 0 OID 0)
--- Dependencies: 242
--- Name: TABLE seurue_sankey; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.seurue_sankey TO application;
-
-
---
--- TOC entry 3607 (class 0 OID 0)
--- Dependencies: 243
--- Name: TABLE sankey_elain_kasittely_seurue; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.sankey_elain_kasittely_seurue TO application;
-
-
---
--- TOC entry 3609 (class 0 OID 0)
--- Dependencies: 244
--- Name: TABLE seura; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.seura TO application;
-
-
---
--- TOC entry 3611 (class 0 OID 0)
--- Dependencies: 245
--- Name: SEQUENCE seura_seura_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON SEQUENCE public.seura_seura_id_seq TO application;
-
-
---
--- TOC entry 3612 (class 0 OID 0)
--- Dependencies: 246
--- Name: TABLE seurue_lihat; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.seurue_lihat TO application;
-
-
---
--- TOC entry 3613 (class 0 OID 0)
--- Dependencies: 247
--- Name: TABLE seurue_lihat_osuus; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.seurue_lihat_osuus TO application;
-
-
---
--- TOC entry 3614 (class 0 OID 0)
--- Dependencies: 248
--- Name: TABLE seurue_ryhmilla; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.seurue_ryhmilla TO application;
-
-
---
--- TOC entry 3616 (class 0 OID 0)
--- Dependencies: 249
--- Name: SEQUENCE seurue_seurue_id_seq; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON SEQUENCE public.seurue_seurue_id_seq TO application;
-
-
---
--- TOC entry 3617 (class 0 OID 0)
--- Dependencies: 250
--- Name: TABLE sukupuoli; Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON TABLE public.sukupuoli TO application;
-
-
--- Completed on 2023-05-23 13:49:48
+-- Completed on 2023-10-12 18:20:52
 
 --
 -- PostgreSQL database dump complete

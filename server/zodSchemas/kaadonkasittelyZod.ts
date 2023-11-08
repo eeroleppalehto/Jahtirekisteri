@@ -16,5 +16,12 @@ const kaadonkasittelySchema = z.object({
     kasittely_maara: z.number().int(),
 });
 
+// Zod schema for validating the shot usage object without the shot usage id
+// and shot id fields
+export const kaadonkasittelySchemaOnlyKasittely = kaadonkasittelySchema.omit({
+    kaadon_kasittely_id: true,
+    kaato_id: true,
+});
+
 // Export the schema so it can be used in other modules
 export default kaadonkasittelySchema;

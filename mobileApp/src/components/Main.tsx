@@ -1,5 +1,5 @@
-import { StatusBar } from "expo-status-bar"
-import DrawerNav from "./DrawerNav";
+import { StatusBar } from "expo-status-bar";
+import DrawerNav from "./NavComponents/DrawerNav";
 
 function Main() {
     return (
@@ -7,7 +7,7 @@ function Main() {
             <StatusBar style="auto" />
             <DrawerNav />
         </>
-    )
+    );
 }
 
 export default Main;

@@ -1,7 +1,7 @@
 import { TextInput, Text, Button, SegmentedButtons } from "react-native-paper";
 import { useState } from "react";
 import { ScrollView } from "react-native";
-import jasenService from "../../service/jasenService";
+import jasenService from "../../services/jasenService";
 import { JasenForm } from "../../types";
 import { useNavigation } from "@react-navigation/native";
 import { MaintenanceTabScreenProps } from "../../NavigationTypes";

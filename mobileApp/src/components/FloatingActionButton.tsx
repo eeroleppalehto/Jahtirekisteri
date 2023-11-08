@@ -6,34 +6,46 @@ import {
     Platform,
     I18nManager,
 } from "react-native";
-import { AnimatedFAB } from "react-native-paper";
+import { FAB, useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
 interface Props {
     scrollValue: number;
     type: string;
     label: string;
+    icon: string;
+    onPress: () => void;
+    position?: "left" | "right";
 }
 
-const FloatingActionButton = ({ scrollValue, type, label }: Props) => {
+const FloatingActionButton = ({
+    scrollValue,
+    type,
+    label,
+    icon,
+    onPress,
+    position = "right",
+}: Props) => {
     const extended = scrollValue <= 10;
     const animateFrom = "right";
     const fabStyle = { [animateFrom]: 16 };
-
+    const theme = useTheme();
     const isIOS = Platform.OS === "ios";
 
     const navigation = useNavigation();
 
     return (
-        <AnimatedFAB
-            icon={"plus"}
+        <FAB
             label={label}
-            extended={extended}
-            onPress={() => navigation.navigate("Forms", { type })}
+            onPress={onPress}
             visible={true}
-            animateFrom={"right"}
-            iconMode={"static"}
-            style={[styles.fabStyle, {}, { right: 16 }]}
+            variant="primary"
+            color={theme.colors.onPrimary}
+            style={[
+                { ...styles.fabStyle, backgroundColor: theme.colors.primary },
+                {},
+                {},
+            ]}
         />
     );
 };
@@ -45,8 +57,11 @@ const styles = StyleSheet.create({
         flexGrow: 1,
     },
     fabStyle: {
-        bottom: 16,
-        right: 16,
+        bottom: 20,
+        marginHorizontal: 55,
+        left: 0,
+        right: 0,
+        // right: 16,
         position: "absolute",
     },
 });

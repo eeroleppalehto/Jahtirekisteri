@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>565</width>
-    <height>536</height>
+    <width>590</width>
+    <height>584</height>
    </rect>
   </property>
   <widget class="QScrollArea" name="scrollArea">
@@ -16,7 +16,7 @@
      <x>0</x>
      <y>0</y>
      <width>571</width>
-     <height>531</height>
+     <height>571</height>
     </rect>
    </property>
    <property name="widgetResizable">
@@ -27,8 +27,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>567</width>
-      <height>527</height>
+      <width>569</width>
+      <height>569</height>
      </rect>
     </property>
     <widget class="QLineEdit" name="licenseYearLineEdit">
@@ -208,6 +208,32 @@
        <width>141</width>
        <height>22</height>
       </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="editLicensePushButton">
+     <property name="geometry">
+      <rect>
+       <x>398</x>
+       <y>530</y>
+       <width>131</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Muokkaa lupia</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="removeLicensePushButton">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>530</y>
+       <width>121</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Poista lupa</string>
      </property>
     </widget>
    </widget>
