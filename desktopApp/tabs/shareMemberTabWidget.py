@@ -210,7 +210,7 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
         #         )
 
         self.shareSankeyCB.clear()
-        self.shareSankeyCB.addItems(['Kilogrammat', 'Määrä', 'Scatter'])
+        self.shareSankeyCB.addItems(['Kilogrammat', 'Määrä', 'Hajonta'])
         # self.handleSankeyCBChange()
         
         # Clear and populate sort combo boxes
@@ -456,7 +456,7 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
             self.loadSankeyChartKG()
         elif self.shareSankeyCB.currentText() == 'Määrä':
             self.loadSankeyChartAmount()
-        elif self.shareSankeyCB.currentText() == 'Scatter':
+        elif self.shareSankeyCB.currentText() == 'Hajonta':
             self.loadScatterChart()
 
     def loadSankeyChartKG(self):
@@ -553,8 +553,8 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
         try:
             htmlFileName = 'memberShareScatter.html'
             urlString = f'file:///{htmlFileName}'
-            xAxisList = [ item[2] for item in databaseOperation1.resultSet ]
-            yAxisList = [ item[2] for item in databaseOperation2.resultSet ]
+            xAxisList = [ item[2] for item in databaseOperation2.resultSet ]
+            yAxisList = [ item[2] for item in databaseOperation1.resultSet ]
             nameList = [ item[1] for item in databaseOperation1.resultSet ]
             scatterFig = figures.createScatterChart(xAxisList, yAxisList, nameList)
             figures.createOfflineFile(scatterFig, htmlFileName)

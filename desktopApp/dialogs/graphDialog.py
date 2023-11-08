@@ -35,14 +35,14 @@ class GraphDialog(DialogFrame):
     
     def populateGraph(self):
         self.graphCB.clear()
-        self.graphCB.addItems(['Kilogrammat', 'Määrä', 'Scatter'])
+        self.graphCB.addItems(['Kilogrammat', 'Määrä', 'Hajonta'])
         
     def handleSankeyCBChange(self):
         if self.graphCB.currentText() == 'Kilogrammat':
             self.loadSankeyChartKG()
         elif self.graphCB.currentText() == 'Määrä':
             self.loadSankeyChartAmount()
-        elif self.graphCB.currentText() == 'Scatter':
+        elif self.graphCB.currentText() == 'Hajonta':
             self.loadScatterChart()
 
     def loadSankeyChartKG(self):
@@ -139,8 +139,8 @@ class GraphDialog(DialogFrame):
         try:
             htmlFileName = 'memberShareScatter.html'
             urlString = f'file:///{htmlFileName}'
-            xAxisList = [ item[2] for item in databaseOperation1.resultSet ]
-            yAxisList = [ item[2] for item in databaseOperation2.resultSet ]
+            xAxisList = [ item[2] for item in databaseOperation2.resultSet ]
+            yAxisList = [ item[2] for item in databaseOperation1.resultSet ]
             nameList = [ item[1] for item in databaseOperation1.resultSet ]
             scatterFig = figures.createScatterChart(xAxisList, yAxisList, nameList)
             figures.createOfflineFile(scatterFig, htmlFileName)
