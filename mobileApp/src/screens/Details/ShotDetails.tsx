@@ -1,5 +1,5 @@
 import { Text, MD3Colors, Divider, useTheme } from "react-native-paper";
-import { BottomTabScreenProps } from "../../NavigationTypes";
+import { RootStackScreenProps } from "../../NavigationTypes";
 import useFetch from "../../../hooks/useFetch";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -7,12 +7,12 @@ import { ScrollView } from "react-native-gesture-handler";
 import IconListItem from "../../components/IconListItem";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 
-type Props = BottomTabScreenProps<"Kaadot">;
+type Props = RootStackScreenProps<"Details">;
 
 function ShotDetails({ route, navigation }: Props) {
     const theme = useTheme();
     if (!route.params) return <Text>Virhe!</Text>;
-
+    if (route) console.log(route);
     const LocationIcon = (
         <MaterialIcons
             name="location-on"
