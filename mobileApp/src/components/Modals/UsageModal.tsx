@@ -9,6 +9,7 @@ import {
     Modal,
     useTheme,
 } from "react-native-paper";
+import { UsageForm } from "../../types";
 
 type Usage = {
     kasittelyid: number;
@@ -18,35 +19,42 @@ type Usage = {
 type Props = {
     visible: boolean;
     setVisibility: (value: boolean) => void;
-    usage: Usage | undefined;
-    onValueChange: (value: Usage) => void;
+    usageForm: UsageForm | undefined;
+    onValueChange: (value: Usage | undefined) => void;
     onButtonPress: () => void;
 };
 
 function UsageModal({
     visible,
     setVisibility,
-    usage,
+    usageForm,
     onValueChange,
     onButtonPress,
 }: Props) {
     const results = useFetch<Usage[]>("option-tables/kasittely", "GET", null);
     const theme = useTheme();
 
+    // const handleChange = (value: string) => {
+    //     const usage = results.data?.find(
+    //         (item) => item.kasittelyid === parseInt(value)
+    //     );
+    //     usage
+    //         ? onValueChange({
+    //               kasittelyid: usage.kasittelyid,
+    //               kasittely_maara: usageForm.kasittely_maara,
+    //           })
+    //         : null;
+    // };
+
     const handleChange = (value: string) => {
-        const usage = results.data?.find(
+        const selectedUsage = results.data?.find(
             (item) => item.kasittelyid === parseInt(value)
         );
-        usage
-            ? onValueChange({
-                  kasittelyid: usage.kasittelyid,
-                  kasittely_teksti: usage.kasittely_teksti,
-              })
-            : null;
+        onValueChange(selectedUsage);
     };
 
-    const initialValue = usage
-        ? usage.kasittelyid.toString()
+    const initialValue = usageForm
+        ? usageForm.kasittelyid?.toString()
         : results.data
         ? results.data[0].kasittelyid.toString()
         : "";
@@ -78,7 +86,7 @@ function UsageModal({
                     <Divider style={{ marginVertical: 15 }} />
                     <RadioButton.Group
                         onValueChange={(value) => handleChange(value)}
-                        value={initialValue}
+                        value={initialValue ? initialValue : ""}
                     >
                         {results.data?.map((item) => (
                             <RadioButton.Item

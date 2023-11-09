@@ -18,7 +18,7 @@ type Shooter = {
 type Props = {
     visible: boolean;
     setVisibility: (value: boolean) => void;
-    shooterState: Shooter | undefined;
+    shooterId: number | undefined;
     onValueChange: (value: Shooter) => void;
     onButtonPress: () => void;
 };
@@ -26,7 +26,7 @@ type Props = {
 function ShooterModal({
     visible,
     setVisibility,
-    shooterState,
+    shooterId,
     onValueChange,
     onButtonPress,
 }: Props) {
@@ -38,24 +38,31 @@ function ShooterModal({
 
     const theme = useTheme();
 
+    // const handleChange = (value: string) => {
+    //     const shooter = results.data?.find(
+    //         (item) => item.jasen_id === parseInt(value)
+    //     );
+    //     shooter
+    //         ? onValueChange({
+    //               jasen_id: shooter.jasen_id,
+    //               kokonimi: shooter.kokonimi,
+    //           })
+    //         : null;
+    // };
+
     const handleChange = (value: string) => {
-        const shooter = results.data?.find(
+        const selectedShooter = results.data?.find(
             (item) => item.jasen_id === parseInt(value)
         );
-        shooter
-            ? onValueChange({
-                  jasen_id: shooter.jasen_id,
-                  kokonimi: shooter.kokonimi,
-              })
-            : null;
+        onValueChange(selectedShooter!);
     };
 
     if (results.error) {
         return <Text>{results.error.message}</Text>;
     }
 
-    const initialValue = shooterState
-        ? shooterState.jasen_id.toString()
+    const initialValue = shooterId
+        ? shooterId.toString()
         : results.data
         ? results.data[0].jasen_id.toString()
         : "";
