@@ -1,16 +1,7 @@
-import {
-    Modal,
-    Portal,
-    Text,
-    useTheme,
-    Divider,
-    Button,
-    Switch,
-    Surface,
-} from "react-native-paper";
+import { Portal, Text, useTheme, Divider, Switch } from "react-native-paper";
 import { StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomInput from "../../components/CustomInput";
 import IconTextInput from "../../components/IconTextInput";
 import DatePicker from "../../components/DatePicker";
@@ -20,8 +11,10 @@ import AgeModal from "../../components/Modals/AgeModal";
 import GenderModal from "../../components/Modals/GenderModal";
 import UsageModal from "../../components/Modals/UsageModal";
 import Slider from "@react-native-community/slider";
-//import { useFetch } from "../../hooks/useFetch";
-import FloatingActionButton from "../../components/FloatingActionButton";
+import { RootStackScreenProps } from "../../NavigationTypes";
+import { UsageForm, ShotFormType } from "../../types";
+
+type Props = RootStackScreenProps<"Forms">;
 
 type Shooter = {
     jasen_id: number;
@@ -33,27 +26,8 @@ type Usage = {
     kasittely_teksti: string;
 };
 
-function ShotForm() {
-    const [shotDate, setShotDate] = useState<Date | undefined>(undefined);
+function ShotForm({ route, navigation }: Props) {
     const [calendarOpen, setCalendarOpen] = useState(false);
-    const [shotLocation, setShotLocation] = useState("");
-    const [shooter, setShooter] = useState<Shooter | undefined>(undefined);
-    const [animal, setAnimal] = useState<string | undefined>(undefined);
-    const [age, setAge] = useState<string | undefined>(undefined);
-    const [gender, setGender] = useState<string | undefined>(undefined);
-    const [weight, setWeight] = useState<number | undefined>(undefined);
-    const [info, setInfo] = useState<string | undefined>(undefined);
-
-    const [firstUsage, setFirstUsage] = useState<Usage | undefined>(undefined);
-    const [firstUsageAmount, setFirstUsageAmount] = useState<number>(100);
-
-    const [secondUsageEnabled, setSecondUsageEnabled] =
-        useState<boolean>(false);
-    const [secondUsage, setSecondUsage] = useState<Usage | undefined>(
-        undefined
-    );
-    const [secondUsageAmount, setSecondUsageAmount] = useState<number>(0);
-
     const [shooterModalVisible, setShooterModalVisible] = useState(false);
     const [animalModalVisible, setAnimalModalVisible] = useState(false);
     const [ageModalVisible, setAgeModalVisible] = useState(false);
@@ -62,67 +36,215 @@ function ShotForm() {
     const [secondUsageModalVisible, setSecondUsageModalVisible] =
         useState(false);
 
+    const [shooterLabel, setShooterLabel] = useState<string | undefined>(
+        undefined
+    );
+
+    const [firstUsageLabel, setFirstUsageLabel] = useState<string | undefined>(
+        undefined
+    );
+
+    const [secondUsageEnabled, setSecondUsageEnabled] =
+        useState<boolean>(false);
+
+    const [secondUsageLabel, setSecondUsageLabel] = useState<
+        string | undefined
+    >(undefined);
+
     const theme = useTheme();
 
+    useEffect(() => {
+        // TODO: Make this into a custom hook that returns the params
+        // TODO: See if it's possible check params already has shot and usage
+        // and if it does, skip this part to keep the old state
+        if (route.params?.clear !== false) {
+            setShooterLabel(undefined);
+            setFirstUsageLabel(undefined);
+            setSecondUsageLabel(undefined);
+            navigation.setParams({
+                shot: {
+                    jasen_id: undefined,
+                    kaatopaiva: undefined,
+                    ruhopaino: 0,
+                    paikka_teksti: "",
+                    elaimen_nimi: undefined,
+                    sukupuoli: undefined,
+                    ikaluokka: undefined,
+                    lisatieto: "",
+                },
+                usage: [
+                    {
+                        kasittelyid: undefined,
+                        kasittely_maara: 100,
+                    },
+                    {
+                        kasittelyid: undefined,
+                        kasittely_maara: 0,
+                    },
+                ],
+                path: "createShotUsage",
+            });
+            navigation.setParams({ clear: false });
+        }
+    }, [route.params?.clear]);
+
+    const { shot, usage } = route.params as {
+        shot: ShotFormType;
+        usage: UsageForm[];
+    };
+
+    const handleShooterChange = (shooter: Shooter) => {
+        setShooterLabel(shooter.kokonimi);
+        navigation.setParams({
+            shot: { ...shot, jasen_id: shooter.jasen_id },
+        });
+    };
+
+    const handleShotDateChange = (date: Date | undefined) => {
+        if (date === undefined) return;
+        navigation.setParams({
+            shot: { ...shot, kaatopaiva: date.toISOString() },
+        });
+    };
+
+    const handleShotLocationChange = (location: string) => {
+        navigation.setParams({
+            shot: { ...shot, paikka_teksti: location },
+        });
+    };
+
+    const handleAnimalChange = (animal: string) => {
+        navigation.setParams({
+            shot: { ...shot, elaimen_nimi: animal },
+        });
+    };
+
+    const handleAgeChange = (age: string) => {
+        navigation.setParams({
+            shot: { ...shot, ikaluokka: age },
+        });
+    };
+
+    const handleGenderChange = (gender: string) => {
+        navigation.setParams({
+            shot: { ...shot, sukupuoli: gender },
+        });
+    };
+
+    const handleWeightChange = (weight: string) => {
+        navigation.setParams({
+            shot: { ...shot, ruhopaino: Number(weight) },
+        });
+    };
+
+    const handleInfoChange = (info: string) => {
+        navigation.setParams({
+            shot: { ...shot, lisatieto: info },
+        });
+    };
+
+    const handleFirstUsageChange = (obj: Usage | undefined) => {
+        if (obj === undefined) return;
+        setFirstUsageLabel(obj.kasittely_teksti);
+        navigation.setParams({
+            usage: [{ ...usage[0], kasittelyid: obj.kasittelyid }, usage[1]],
+        });
+    };
+
+    const handleSecondUsageChange = (obj: Usage | undefined) => {
+        if (obj === undefined) return;
+        setSecondUsageLabel(obj.kasittely_teksti);
+        navigation.setParams({
+            usage: [usage[0], { ...usage[1], kasittelyid: obj.kasittelyid }],
+        });
+    };
+
     const handleFirstSliderChange = (value: number) => {
-        setFirstUsageAmount(value);
-        setSecondUsageAmount(100 - value);
+        navigation.setParams({
+            usage: [
+                { ...usage[0], kasittely_maara: value },
+                { ...usage[1], kasittely_maara: 100 - value },
+            ],
+        });
     };
 
     const handleSecondSliderChange = (value: number) => {
-        setSecondUsageAmount(value);
-        setFirstUsageAmount(100 - value);
+        navigation.setParams({
+            usage: [
+                { ...usage[0], kasittely_maara: 100 - value },
+                { ...usage[1], kasittely_maara: value },
+            ],
+        });
+    };
+
+    const handleSecondUsageToggle = (value: boolean) => {
+        setSecondUsageEnabled(value);
+        if (value === false) {
+            setSecondUsageLabel(undefined);
+            navigation.setParams({
+                usage: [
+                    { ...usage[0], kasittely_maara: 100 },
+                    { kasittelyid: undefined, kasittely_maara: 0 },
+                ],
+            });
+        }
     };
 
     return (
         <>
             <Portal>
                 <DatePicker
-                    initDate={shotDate}
-                    setDate={setShotDate}
+                    initDate={
+                        shot
+                            ? shot.kaatopaiva
+                                ? new Date(shot.kaatopaiva)
+                                : undefined
+                            : undefined
+                    }
+                    setDate={handleShotDateChange}
                     open={calendarOpen}
                     setOpen={setCalendarOpen}
                 />
                 <ShooterModal
                     visible={shooterModalVisible}
                     setVisibility={setShooterModalVisible}
-                    onValueChange={setShooter}
-                    shooterState={shooter}
+                    onValueChange={handleShooterChange}
+                    shooterId={shot ? shot.jasen_id : undefined}
                     onButtonPress={() => setShooterModalVisible(false)}
                 />
                 <AnimalModal
                     visible={animalModalVisible}
                     setVisibility={setAnimalModalVisible}
-                    age={animal}
-                    onValueChange={setAnimal}
+                    animal={shot ? shot.elaimen_nimi : undefined}
+                    onValueChange={handleAnimalChange}
                     onButtonPress={() => setAnimalModalVisible(false)}
                 />
                 <AgeModal
                     visible={ageModalVisible}
                     setVisibility={setAgeModalVisible}
-                    animal={age}
-                    onValueChange={setAge}
+                    age={shot ? shot.ikaluokka : undefined}
+                    onValueChange={handleAgeChange}
                     onButtonPress={() => setAgeModalVisible(false)}
                 />
                 <GenderModal
                     visible={genderModalVisible}
                     setVisibility={setGenderModalVisible}
-                    gender={gender}
-                    onValueChange={setGender}
+                    gender={shot ? shot.sukupuoli : undefined}
+                    onValueChange={handleGenderChange}
                     onButtonPress={() => setGenderModalVisible(false)}
                 />
                 <UsageModal
                     visible={firstUsageModalVisible}
                     setVisibility={setFirstUsageModalVisible}
-                    usage={firstUsage}
-                    onValueChange={setFirstUsage}
+                    usageForm={usage ? usage[0] : undefined}
+                    onValueChange={handleFirstUsageChange}
                     onButtonPress={() => setFirstUsageModalVisible(false)}
                 />
                 <UsageModal
                     visible={secondUsageModalVisible}
                     setVisibility={setSecondUsageModalVisible}
-                    usage={secondUsage}
-                    onValueChange={setSecondUsage}
+                    usageForm={usage ? usage[1] : undefined}
+                    onValueChange={handleSecondUsageChange}
                     onButtonPress={() => setSecondUsageModalVisible(false)}
                 />
             </Portal>
@@ -143,7 +265,7 @@ function ShotForm() {
                         iconNameMaterialCommunity="account"
                         title="Kaataja"
                         required={true}
-                        valueState={shooter?.kokonimi}
+                        valueState={shooterLabel}
                         placeholder="Ei valittua kaatajaa"
                         iconButtonName="account-plus-outline"
                         onPress={() => setShooterModalVisible(true)}
@@ -154,7 +276,15 @@ function ShotForm() {
                         iconNameMaterialCommunity="calendar"
                         title="Kaatopäivä"
                         required={true}
-                        valueState={shotDate?.toLocaleDateString("fi-FI")}
+                        valueState={
+                            shot
+                                ? shot.kaatopaiva
+                                    ? new Date(
+                                          shot.kaatopaiva
+                                      ).toLocaleDateString("fi-FI")
+                                    : undefined
+                                : undefined
+                        }
                         placeholder="Ei valittua päivää"
                         iconButtonName="calendar-plus"
                         onPress={() => setCalendarOpen(true)}
@@ -165,8 +295,8 @@ function ShotForm() {
                         label="Paikka"
                         required={true}
                         inputType="default"
-                        value={shotLocation}
-                        onChangeText={setShotLocation}
+                        value={shot ? shot.paikka_teksti : undefined}
+                        onChangeText={handleShotLocationChange}
                     />
                     <Divider />
                     <Text
@@ -182,7 +312,7 @@ function ShotForm() {
                     <CustomInput
                         iconSet="NoIcon"
                         title="Eläinlaji"
-                        valueState={animal}
+                        valueState={shot ? shot.elaimen_nimi : undefined}
                         required={true}
                         iconButtonName="plus"
                         onPress={() => setAnimalModalVisible(true)}
@@ -190,7 +320,7 @@ function ShotForm() {
                     <CustomInput
                         iconSet="NoIcon"
                         title="Ikäluokka"
-                        valueState={age}
+                        valueState={shot ? shot.ikaluokka : undefined}
                         required={true}
                         iconButtonName="plus"
                         onPress={() => setAgeModalVisible(true)}
@@ -198,7 +328,7 @@ function ShotForm() {
                     <CustomInput
                         iconSet="NoIcon"
                         title="Sukupuoli"
-                        valueState={gender}
+                        valueState={shot ? shot.sukupuoli : undefined}
                         required={true}
                         iconButtonName="plus"
                         onPress={() => setGenderModalVisible(true)}
@@ -209,8 +339,15 @@ function ShotForm() {
                         label="Ruhopaino"
                         required={true}
                         inputType="numeric"
-                        value={weight?.toString()}
-                        onChangeText={(text: string) => setWeight(Number(text))}
+                        value={
+                            //TODO: This stinks!!!
+                            shot
+                                ? shot.ruhopaino
+                                    ? shot.ruhopaino.toString()
+                                    : ""
+                                : ""
+                        }
+                        onChangeText={handleWeightChange}
                     />
                     <IconTextInput
                         iconSet="MaterialCommunityIcons"
@@ -218,8 +355,8 @@ function ShotForm() {
                         label="Lisätietoja"
                         required={false}
                         inputType="default"
-                        value={info}
-                        onChangeText={setInfo}
+                        value={shot ? shot.lisatieto : undefined}
+                        onChangeText={handleInfoChange}
                         multiline={true}
                     />
                     <Divider />
@@ -237,7 +374,7 @@ function ShotForm() {
                     <CustomInput
                         iconSet="NoIcon"
                         title="Ensimmäinen käyttö"
-                        valueState={firstUsage?.kasittely_teksti}
+                        valueState={firstUsageLabel}
                         required={true}
                         iconButtonName="plus"
                         onPress={() => setFirstUsageModalVisible(true)}
@@ -247,7 +384,7 @@ function ShotForm() {
                             Ensimmäisen käytön osuus
                         </Text>
                         <Text style={{ color: theme.colors.outline }}>
-                            {firstUsageAmount}
+                            {usage ? usage[0].kasittely_maara : 100}
                         </Text>
                     </View>
                     <Slider
@@ -256,7 +393,7 @@ function ShotForm() {
                         maximumValue={100}
                         minimumTrackTintColor={theme.colors.primary}
                         thumbTintColor={theme.colors.primary}
-                        value={firstUsageAmount}
+                        value={usage ? usage[0].kasittely_maara : 100}
                         onValueChange={handleFirstSliderChange}
                         step={25}
                     />
@@ -277,13 +414,13 @@ function ShotForm() {
                         </Text>
                         <Switch
                             value={secondUsageEnabled}
-                            onValueChange={setSecondUsageEnabled}
+                            onValueChange={handleSecondUsageToggle}
                         />
                     </View>
                     <CustomInput
                         iconSet="NoIcon"
                         title="Toinen käyttö"
-                        valueState={secondUsage?.kasittely_teksti}
+                        valueState={secondUsageLabel}
                         required={true}
                         iconButtonName="plus"
                         onPress={() => setSecondUsageModalVisible(true)}
@@ -301,7 +438,7 @@ function ShotForm() {
                             Toisen käytön osuus
                         </Text>
                         <Text style={{ color: theme.colors.outline }}>
-                            {secondUsageAmount}
+                            {usage ? usage[1].kasittely_maara : 0}
                         </Text>
                     </View>
                     <Slider
@@ -311,39 +448,12 @@ function ShotForm() {
                         maximumValue={100}
                         minimumTrackTintColor={theme.colors.primary}
                         thumbTintColor={theme.colors.primary}
-                        value={secondUsageAmount}
+                        value={usage ? usage[1].kasittely_maara : 0}
                         onValueChange={handleSecondSliderChange}
                         step={25}
                     />
                 </View>
             </ScrollView>
-            {/* <FloatingActionButton
-                scrollValue={0}
-                type={"create"}
-                label={"Tallenna"}
-                icon={"content-save"}
-                onPress={() => console.log("pressed")}
-            /> */}
-            {/* <Surface
-                elevation={1}
-                style={{
-                    ...styles.bottomBar,
-                    backgroundColor: theme.colors.primaryContainer,
-                }}
-            >
-                <Button mode="elevated" style={{ flex: 1 }}>
-                    Poistu
-                </Button>
-                <Button mode="elevated" style={{ flex: 1 }}>
-                    Tallenna
-                </Button>
-            </Surface> */}
-            {/* <Button
-                mode="contained"
-                style={{ bottom: 20, right: 55, position: "absolute" }}
-            >
-                Tallenna
-            </Button> */}
         </>
     );
 }
