@@ -75,6 +75,7 @@ class EditShot(DialogFrame):
         if self.editShotUsage2CheckB.isChecked():
             self.editShotUsage2CB.setEnabled(True)
         else:
+            self.editShotUsageSB.setValue(100)
             self.editShotUsage2CB.setEnabled(False)
     
     def calculateUsage2Value(self):
