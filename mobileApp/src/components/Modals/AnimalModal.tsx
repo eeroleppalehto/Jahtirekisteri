@@ -10,14 +10,14 @@ import {
     useTheme,
 } from "react-native-paper";
 
-type Age = {
+type Animal = {
     elaimen_nimi: string;
 };
 
 type Props = {
     visible: boolean;
     setVisibility: (value: boolean) => void;
-    age: string | undefined;
+    animal: string | undefined;
     onValueChange: (value: string) => void;
     onButtonPress: () => void;
 };
@@ -25,11 +25,11 @@ type Props = {
 function AnimalModal({
     visible,
     setVisibility,
-    age,
+    animal,
     onValueChange,
     onButtonPress,
 }: Props) {
-    const results = useFetch<Age[]>("option-tables/elain", "GET", null);
+    const results = useFetch<Animal[]>("option-tables/elain", "GET", null);
     const theme = useTheme();
 
     return (
@@ -59,7 +59,7 @@ function AnimalModal({
                     <Divider style={{ marginVertical: 15 }} />
                     <RadioButton.Group
                         onValueChange={(value) => onValueChange(value)}
-                        value={age ? age : ""}
+                        value={animal ? animal : ""}
                     >
                         {results.data?.map((item) => (
                             <RadioButton.Item
