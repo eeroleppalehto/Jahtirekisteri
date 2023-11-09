@@ -9,7 +9,8 @@ from PyQt5.QtWidgets import (QDialog, QLineEdit, QLabel, QPushButton,
                              QComboBox, QTableWidget, QSpinBox, QDateEdit, QCheckBox,
                              QMainWindow, QApplication)
 from PyQt5.uic import loadUi
-from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
+from dialogs.dialogueWindow import DialogFrame
+import dialogs.messageModule as msg
 import pgModule as pgModule
 import prepareData as prepareData
 from datetime import date
@@ -27,14 +28,14 @@ class Group(DialogFrame):
         self.setWindowTitle('Muokkaa ryhmän tietoja')
 
         # Elements
-        self.editGroupCB = self.editGroupComboBox
-        self.editGroupPartyCB = self.editGroupPartyComboBox
-        self.editGroupNameLE = self.editGroupNameLineEdit
-        self.editGroupCancelPushBtn = self.editGroupCancelPushButton
+        self.editGroupCB: QComboBox = self.editGroupComboBox
+        self.editGroupPartyCB: QComboBox = self.editGroupPartyComboBox
+        self.editGroupNameLE: QLineEdit = self.editGroupNameLineEdit
+        self.editGroupCancelPushBtn: QPushButton = self.editGroupCancelPushButton
         self.editGroupCancelPushBtn.clicked.connect(self.closeDialog)
-        self.editGroupSavePushBtn = self.editGroupSavePushButton
+        self.editGroupSavePushBtn: QPushButton = self.editGroupSavePushButton
         self.editGroupSavePushBtn.clicked.connect(self.editGroup)
-        self.editGroupPopulatePushBtn = self.editGroupPopulatePushButton
+        self.editGroupPopulatePushBtn: QPushButton = self.editGroupPopulatePushButton
         self.editGroupPopulatePushBtn.clicked.connect(self.populateFields)
 
         # State to track whether user has selected group to edit
@@ -147,7 +148,7 @@ class Group(DialogFrame):
             table = 'public.jakoryhma'
             limit = f"public.jakoryhma.ryhma_id = {self.group[0]}"   
         except:
-            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','Ryhmän muokkaus epäonnistui' )
         
         if errorCode == 1:
                 self.alert(
@@ -175,8 +176,7 @@ class Group(DialogFrame):
             i += 1
             j += 1
 
-        success = SuccessfulOperationDialog()
-        success.exec()
+        msg.PopupMessages().successMessage('Muokkaus onnistui')
         self.editGroupNameLE.clear()
         self.state = -1
         self.populateGroupCB()

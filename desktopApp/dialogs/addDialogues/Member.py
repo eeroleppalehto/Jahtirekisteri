@@ -4,7 +4,8 @@ sys.path.append('../desktopApp')
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QDateEdit, QSpinBox, QComboBox, QLineEdit
 from PyQt5.uic import loadUi
-from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
+from dialogs.dialogueWindow import DialogFrame
+import dialogs.messageModule as msg
 import pgModule as pgModule
 import prepareData as prepareData
 
@@ -73,7 +74,7 @@ class Member(DialogFrame):
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
             
         except:
-            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','Jäsenen lisäys epäonnistui' )
 
         # If any of the required fields were empty, show an error message
         if errorCode == 1:
@@ -95,8 +96,7 @@ class Member(DialogFrame):
                     )
             else:
                 # Update the page to show new data and clear 
-                success = SuccessfulOperationDialog()
-                success.exec()
+                msg.PopupMessages().successMessage('Lisäys onnistui')
                 self.addMemberFirstNameLE.clear()
                 self.addMemberLastNameLE.clear()
                 self.addMemberPostalAddressLE.clear()
