@@ -2,13 +2,13 @@ import { View } from "react-native";
 import { Text, Avatar, MD3Colors, TouchableRipple } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
-import { Kaato } from "../../types";
+import { Shot } from "../../types";
 import { BottomTabScreenProps } from "../../NavigationTypes";
 
 type navigationProps = BottomTabScreenProps<"Kaadot">["navigation"];
 
 type Props = {
-    shot: Kaato;
+    shot: Shot;
     navigation: navigationProps;
 };
 
