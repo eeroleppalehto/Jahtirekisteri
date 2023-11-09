@@ -1,10 +1,10 @@
 import { View } from "react-native";
 import { List, Divider, Text, Button } from "react-native-paper";
 import { Jasen } from "../../types";
-import { MaintenanceTabScreenProps } from "../../NavigationTypes";
+import { RootStackScreenProps } from "../../NavigationTypes";
 import { MaterialIcons } from "@expo/vector-icons";
 
-type Props = MaintenanceTabScreenProps<"Jäsenet">;
+type Props = RootStackScreenProps<"Details">;
 
 function MemberDetails({ route, navigation }: Props) {
     try {

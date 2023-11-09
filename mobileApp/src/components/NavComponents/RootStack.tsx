@@ -7,7 +7,6 @@ import { CustomAppBar } from "../AppBars/CustomAppBar";
 import FormScreen from "../../screens/Forms/FormScreen";
 import FormAppBar from "../AppBars/FormAppBar";
 
-import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../NavigationTypes";
 import DetailsAppBar from "../AppBars/DetailsAppBar";
 
@@ -28,29 +27,21 @@ function RootStack() {
                 name="BottomNavigation"
                 component={BottomNav}
                 options={{
-                    header: (props: NativeStackHeaderProps) => (
-                        <CustomAppBar {...props} />
-                    ),
+                    header: (props) => <CustomAppBar {...props} />,
                 }}
             />
             <Stack.Screen
                 name="Details"
                 component={DetailsScreen}
                 options={{
-                    header: (props: NativeStackHeaderProps) => (
-                        <DetailsAppBar {...props} />
-                    ),
+                    header: (props) => <DetailsAppBar {...props} />,
                 }}
             />
-
-            {/*TODO: Confirgure AppBar for DetailsScreen*/}
             <Stack.Screen
                 name="Forms"
                 component={FormScreen}
                 options={{
-                    header: (props: NativeStackHeaderProps) => (
-                        <FormAppBar {...props} />
-                    ),
+                    header: (props) => <FormAppBar {...props} />,
                 }}
             />
         </Stack.Navigator>

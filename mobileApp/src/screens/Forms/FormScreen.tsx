@@ -9,7 +9,7 @@ const ErrorScreen = () => {
 
 type Props = RootStackScreenProps<"Forms">;
 
-export default function FormScreen({ route }: Props) {
+export default function FormScreen({ route, navigation }: Props) {
     if (!route.params?.type) return <ErrorScreen />;
 
     const { type } = route.params;
@@ -18,7 +18,7 @@ export default function FormScreen({ route }: Props) {
         case "jäsen":
             return <MemberForm />;
         case "kaato":
-            return <ShotForm />;
+            return <ShotForm route={route} navigation={navigation} />;
         default:
             return <ErrorScreen />;
     }

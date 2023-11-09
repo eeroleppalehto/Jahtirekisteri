@@ -20,35 +20,28 @@ const ErrorScreen = () => {
 
 type Props = RootStackScreenProps<"Details">;
 
-function DetailsScreen({ route }: Props) {
+function DetailsScreen({ route, navigation }: Props) {
     if (!route.params?.type) return <ErrorScreen />;
     try {
         const { type } = route.params;
-        let navigation;
+        //let navigation;
         switch (type) {
             case "Jäsen":
-                const memberRoute =
-                    useRoute<MaintenanceTabScreenProps<"Jäsenet">["route"]>();
-                navigation =
-                    useNavigation<
-                        MaintenanceTabScreenProps<"Jäsenet">["navigation"]
-                    >();
-                return (
-                    <MemberDetails
-                        route={memberRoute}
-                        navigation={navigation}
-                    />
-                );
+                // const memberRoute =
+                //     useRoute<MaintenanceTabScreenProps<"Jäsenet">["route"]>();
+                // navigation =
+                //     useNavigation<
+                //         MaintenanceTabScreenProps<"Jäsenet">["navigation"]
+                //     >();
+                return <MemberDetails route={route} navigation={navigation} />;
             case "Kaato":
-                const shotRoute =
-                    useRoute<BottomTabScreenProps<"Kaadot">["route"]>();
-                navigation =
-                    useNavigation<
-                        BottomTabScreenProps<"Kaadot">["navigation"]
-                    >();
-                return (
-                    <ShotDetails route={shotRoute} navigation={navigation} />
-                );
+                // const shotRoute =
+                //     useRoute<BottomTabScreenProps<"Kaadot">["route"]>();
+                // navigation =
+                //     useNavigation<
+                //         BottomTabScreenProps<"Kaadot">["navigation"]
+                //     >();
+                return <ShotDetails route={route} navigation={navigation} />;
             default:
                 return <ErrorScreen />;
         }

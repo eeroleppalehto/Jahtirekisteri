@@ -6,6 +6,7 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { MaterialBottomTabScreenProps } from "@react-navigation/material-bottom-tabs";
 import type { MaterialTopTabScreenProps } from "@react-navigation/material-top-tabs";
 import type { DrawerScreenProps } from "@react-navigation/drawer";
+import { FormTypes, ShotFormType, UsageForm } from "./types";
 
 // Drawer types
 export type DrawerParamList = {
@@ -20,7 +21,14 @@ export type MyDrawerScreenProps<T extends keyof DrawerParamList> =
 export type RootStackParamList = {
     BottomNavigation: NavigatorScreenParams<BottomNavParamList>;
     Details: { type: string; data: any; title: string };
-    Forms: { type: string };
+    Forms: {
+        type: string;
+        data?: FormTypes;
+        shot?: ShotFormType;
+        usage?: UsageForm[];
+        path?: string;
+        clear?: boolean;
+    };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

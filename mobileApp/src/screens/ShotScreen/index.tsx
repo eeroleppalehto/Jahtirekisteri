@@ -5,7 +5,7 @@ import { MD3Colors, Text, ActivityIndicator } from "react-native-paper";
 import { FlatList } from "react-native-gesture-handler";
 import useFetch from "../../../hooks/useFetch";
 import { BottomTabScreenProps } from "../../NavigationTypes";
-import { Kaato } from "../../types";
+import { Shot } from "../../types";
 import FloatingNavigationButton from "../../components/FloatingNavigationButton";
 import ShotListItem from "./ShotListItem";
 
@@ -27,7 +27,7 @@ function ShotScreen({ navigation, route }: Props) {
         console.log("swipe");
     };
 
-    const results = useFetch<Kaato[]>("shots", "GET", null);
+    const results = useFetch<Shot[]>("shots", "GET", null);
 
     if (results.error) {
         return <Text>{results.error.message}</Text>;

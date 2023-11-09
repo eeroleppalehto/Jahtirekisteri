@@ -17,7 +17,7 @@ type Age = {
 type Props = {
     visible: boolean;
     setVisibility: (value: boolean) => void;
-    animal: string | undefined;
+    age: string | undefined;
     onValueChange: (value: string) => void;
     onButtonPress: () => void;
 };
@@ -25,7 +25,7 @@ type Props = {
 function AgeModal({
     visible,
     setVisibility,
-    animal,
+    age,
     onValueChange,
     onButtonPress,
 }: Props) {
@@ -59,7 +59,7 @@ function AgeModal({
                     <Divider style={{ marginVertical: 15 }} />
                     <RadioButton.Group
                         onValueChange={(value) => onValueChange(value)}
-                        value={animal ? animal : ""}
+                        value={age ? age : ""}
                     >
                         {results.data?.map((item) => (
                             <RadioButton.Item
