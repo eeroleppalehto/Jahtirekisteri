@@ -7,7 +7,7 @@ sys.path.append('../desktopApp')
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import (QDialog, QLineEdit, QLabel, QPushButton,
                              QComboBox, QTableWidget, QSpinBox, QDateEdit, QCheckBox,
-                             QMainWindow, QApplication)
+                             QMainWindow, QApplication, QPlainTextEdit)
 from PyQt5.uic import loadUi
 from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
 import pgModule as pgModule
@@ -29,40 +29,41 @@ class EditShot(DialogFrame):
         self.setWindowTitle('Muokkaa kaatoja')
 
         # Elements
-        self.editShotTW = self.editShotTableWidget
+        self.editShotTW: QTableWidget = self.editShotTableWidget
         self.editShotTW.itemClicked.connect(self.onTableItemClicked)
-        self.editShotPopulatePB = self.editShotPopulatePushButton
+        self.editShotPopulatePB: QPushButton = self.editShotPopulatePushButton
         self.editShotPopulatePB.clicked.connect(self.populateFields)
         self.editShotPopulatePB.setEnabled(False)
 
-        self.editShotByCB = self.editShotByComboBox
-        self.editShotAnimalCB = self.editShotAnimalComboBox
-        self.editShotDE = self.editShotDateEdit
-        self.editShotLocationLE = self.editShotLocationLineEdit
+        self.editShotByCB: QComboBox = self.editShotByComboBox
+        self.editShotAnimalCB: QComboBox = self.editShotAnimalComboBox
+        self.editShotDE: QDateEdit = self.editShotDateEdit
+        self.editShotLocationLE: QLineEdit = self.editShotLocationLineEdit
         self.editShotLocationLE.textChanged.connect(self.validateLineEdits)
-        self.editShotGenderCB = self.editShotGenderComboBox
-        self.editShotAgeCB = self.editShotAgeComboBox
-        self.editShotWeightLE = self.editShotWeightLineEdit
+        self.editShotGenderCB: QComboBox = self.editShotGenderComboBox
+        self.editShotAgeCB: QComboBox = self.editShotAgeComboBox
+        self.editShotWeightLE: QLineEdit = self.editShotWeightLineEdit
         self.editShotWeightLE.textChanged.connect(self.validateLineEdits)
-        self.editShotAdditionalInfoPT = self.editShotAdditionalInfoPlainTextEdit
+        self.editShotAdditionalInfoPT: QPlainTextEdit = self.editShotAdditionalInfoPlainTextEdit
         
-        self.editShotUsageCB = self.editShotUsageComboBox
-        self.editShotUsageSB = self.editShotUsagePortionSpinBox
+        self.editShotUsageCB: QComboBox = self.editShotUsageComboBox
+        self.editShotUsageSB: QSpinBox = self.editShotUsagePortionSpinBox
         self.editShotUsageSB.valueChanged.connect(self.calculateUsage2Value)
 
-        self.editShotUsage2CB = self.editShotUsage2ComboBox
+        self.editShotUsage2CB: QComboBox = self.editShotUsage2ComboBox
         self.editShotUsage2CB.setEnabled(False)
 
-        self.editShotUsage2SB = self.editShotUsage2PortionSpinBox
+        self.editShotUsage2SB: QSpinBox = self.editShotUsage2PortionSpinBox
         self.editShotUsage2SB.setEnabled(False)
+        
 
-        self.editShotUsage2CheckB = self.editShotUsage2CheckBox
+        self.editShotUsage2CheckB: QCheckBox = self.editShotUsage2CheckBox
         self.editShotUsage2CheckB.clicked.connect(self.toggleUsage2)
 
-        self.editShotSavePB = self.editShotSavePushButton
+        self.editShotSavePB: QPushButton = self.editShotSavePushButton
         self.editShotSavePB.setEnabled(False)
         self.editShotSavePB.clicked.connect(self.editShotAndUsage)
-        self.editShotCancelPB = self.editShotCancelPushButton
+        self.editShotCancelPB: QPushButton = self.editShotCancelPushButton
         self.editShotCancelPB.clicked.connect(self.closeDialog)
 
         self.state = -1
