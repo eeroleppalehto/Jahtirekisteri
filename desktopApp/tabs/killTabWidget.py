@@ -7,7 +7,7 @@ import pgModule
 import prepareData
 
 import dialogs.dialogueWindow as dialogueWindow
-import dialogs.editShotDialog as editShotDialog
+import dialogs.editDialogues.Shot as Shot
 import dialogs.removeDialogues.Shot as removeShotDialog
 
 
@@ -445,7 +445,7 @@ class Ui_killTabWidget(QScrollArea, QWidget):
         dialog.exec()
 
     def openEditShotDialog(self):
-        dialog = editShotDialog.EditShot()
+        dialog = Shot.EditShot()
         dialog.exec()
         
     def opeRemoveShotDialog(self):
