@@ -8,9 +8,9 @@ export type Jasen = {
     tila: string;
 };
 
-export type JasenForm = Omit<Jasen, "jasen_id">;
+export type JasenForm = Partial<Omit<Jasen, "jasen_id">>;
 
-export type Kaato = {
+export type Shot = {
     kaato_id: number;
     jasen_id: number;
     kaatopaiva: string;
@@ -23,4 +23,19 @@ export type Kaato = {
     elaimen_nimi: string;
 };
 
-export type KaatoForm = Omit<Kaato, "kaato_id">;
+export type ShotFormType = Partial<Omit<Shot, "kaato_id">>;
+
+export type UsageForm = {
+    kasittelyid?: number;
+    kasittely_maara?: number;
+};
+
+export type ShotUsageForm = {
+    shot: Partial<ShotFormType>;
+    usages: Array<{
+        kasittelyid: number | undefined;
+        kasittely_maara: number;
+    }>;
+};
+
+export type FormTypes = ShotUsageForm | JasenForm | undefined;
