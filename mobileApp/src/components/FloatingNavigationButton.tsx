@@ -11,8 +11,8 @@ import { useNavigation } from "@react-navigation/native";
 
 interface Props {
     scrollValue: number;
-    type: string;
     label: string;
+    type: string;
 }
 
 const FloatingNavigationButton = ({ scrollValue, type, label }: Props) => {
@@ -29,7 +29,11 @@ const FloatingNavigationButton = ({ scrollValue, type, label }: Props) => {
             icon={"plus"}
             label={label}
             extended={extended}
-            onPress={() => navigation.navigate("Forms", { type })}
+            onPress={() =>
+                navigation.navigate("Forms", {
+                    type,
+                })
+            }
             visible={true}
             animateFrom={"right"}
             iconMode={"static"}
