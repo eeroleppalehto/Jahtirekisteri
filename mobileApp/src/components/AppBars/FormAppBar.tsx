@@ -1,5 +1,7 @@
 import { Appbar } from "react-native-paper";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
+import { UsageForm, ShotFormType } from "../../types";
+import { BASE_URL } from "../../baseUrl";
 
 type Props = NativeStackHeaderProps;
 
@@ -9,12 +11,64 @@ export default function FormAppBar({
     route,
     options,
 }: Props) {
-    const { type } = route.params as { type: string };
+    const { type, shot, usage, clear } = route.params as {
+        type: string;
+        shot?: ShotFormType;
+        usage?: UsageForm[];
+        clear?: any;
+    };
+
+    const handleShotFormSubmit = () => {
+        let path: string;
+        const method = "POST";
+        let payload: any;
+
+        if (type === "kaato") {
+            if (!shot) {
+                console.log("no shot data");
+                return;
+            }
+            if (!usage) {
+                console.log("no usage data");
+                return;
+            }
+
+            const usages = usage.filter(
+                (item) => item.kasittelyid !== undefined
+            );
+
+            payload = {
+                shot,
+                usages,
+            };
+        }
+
+        console.log("Submitting...");
+
+        fetch(`${BASE_URL}/api/createShotUsage`, {
+            method,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        })
+            .then((res) => {
+                navigation.setParams({ clear: true });
+                console.log(`returned with status code ${res.status}`);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
 
     return (
         <Appbar.Header>
             <Appbar.BackAction onPress={navigation.goBack} />
             <Appbar.Content title={`Lisää ${type}`} />
+            <Appbar.Action
+                icon="content-save"
+                onPress={() => handleShotFormSubmit()}
+            />
         </Appbar.Header>
     );
 }
