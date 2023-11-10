@@ -1,14 +1,52 @@
 import { Text, useTheme } from "react-native-paper";
 import { View, StyleSheet } from "react-native";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+
+type MaterialIconNames = keyof typeof MaterialIcons.glyphMap;
+type MaterialCommunityIconNames = keyof typeof MaterialCommunityIcons.glyphMap;
 
 type Props = {
-    icon: React.JSX.Element | null;
+    iconSet: "MaterialIcons" | "MaterialCommunityIcons" | "NoIcon";
+    iconNameMaterial?: MaterialIconNames;
+    iconNameMaterialCommunity?: MaterialCommunityIconNames;
     title: string;
-    description: string | null;
+    description: string | undefined;
 };
 
-function IconListItem({ icon, title, description }: Props) {
+function IconListItem({
+    iconSet,
+    iconNameMaterial,
+    iconNameMaterialCommunity,
+    title,
+    description,
+}: Props) {
     const theme = useTheme();
+
+    // Initialize icon element to empty icon
+    let iconElement = <View style={styles.emptyIcon} />;
+    // Switch case for selecting the correct icon element
+    switch (iconSet) {
+        case "MaterialIcons":
+            iconElement = (
+                <MaterialIcons
+                    name={iconNameMaterial}
+                    size={24}
+                    style={{ ...styles.icon, color: theme.colors.outline }}
+                />
+            );
+            break;
+        case "MaterialCommunityIcons":
+            iconElement = (
+                <MaterialCommunityIcons
+                    name={iconNameMaterialCommunity}
+                    size={24}
+                    style={{ ...styles.icon, color: theme.colors.outline }}
+                />
+            );
+            break;
+        default:
+            break;
+    }
 
     const DescriptionText = description ? (
         <Text variant="bodyMedium" style={{ color: theme.colors.outline }}>
@@ -27,7 +65,7 @@ function IconListItem({ icon, title, description }: Props) {
 
     return (
         <View style={styles.container}>
-            <View style={iconStyle}>{icon}</View>
+            {iconElement}
             <View style={{}}>
                 <Text variant="bodyLarge">{title}</Text>
                 {DescriptionText}
@@ -45,12 +83,14 @@ const styles = StyleSheet.create({
     icon: {
         paddingTop: 5,
         paddingLeft: 14,
-        paddingRight: 16,
+        paddingRight: 15,
     },
     emptyIcon: {
         paddingTop: 5,
         paddingLeft: 26,
         paddingRight: 28,
+        width: 24,
+        height: 24,
     },
     // textContainer: {
     //     flex: 1,

@@ -3,9 +3,7 @@ import { RootStackScreenProps } from "../../NavigationTypes";
 import useFetch from "../../../hooks/useFetch";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-
 import IconListItem from "../../components/IconListItem";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 type Props = RootStackScreenProps<"Details">;
 
@@ -13,43 +11,10 @@ function ShotDetails({ route, navigation }: Props) {
     const theme = useTheme();
     if (!route.params) return <Text>Virhe!</Text>;
     if (route) console.log(route);
-    const LocationIcon = (
-        <MaterialIcons
-            name="location-on"
-            size={24}
-            style={{ color: MD3Colors.neutral40 }}
-        />
-    );
 
     const locationTitle = "Paikka";
 
-    const ShooterIcon = (
-        <MaterialCommunityIcons
-            name="account"
-            size={24}
-            style={{ color: MD3Colors.neutral40 }}
-        />
-    );
-    const shooterTitle = "Kaataja";
-
-    const DateIcon = (
-        <MaterialCommunityIcons
-            name="calendar"
-            size={24}
-            style={{ color: MD3Colors.neutral40 }}
-        />
-    );
-
-    const WeightIcon = (
-        <MaterialCommunityIcons
-            name="scale"
-            size={24}
-            style={{ color: MD3Colors.neutral40 }}
-        />
-    );
-    const weightTitle = "Paino";
-
-    const description = null;
+    const description = undefined;
 
     return (
         <ScrollView>
@@ -64,42 +29,46 @@ function ShotDetails({ route, navigation }: Props) {
                 Kaadon tiedot
             </Text>
             <IconListItem
-                icon={LocationIcon}
+                iconSet="MaterialIcons"
+                iconNameMaterial="location-on"
                 title={locationTitle}
                 description={"Mynämäki"}
             />
             <IconListItem
-                icon={DateIcon}
+                iconSet="MaterialCommunityIcons"
+                iconNameMaterialCommunity="calendar"
                 title={"Päivämäärä"}
                 description={"12.12.2020"}
             />
             <IconListItem
-                icon={ShooterIcon}
+                iconSet="MaterialCommunityIcons"
+                iconNameMaterialCommunity="account"
                 title={"Kaataja"}
                 description={description}
             />
             <IconListItem
-                icon={WeightIcon}
+                iconSet="MaterialCommunityIcons"
+                iconNameMaterialCommunity="scale"
                 title={"Paino"}
                 description={description}
             />
             <IconListItem
-                icon={null}
+                iconSet="NoIcon"
                 title={"Eläin"}
                 description={description}
             />
             <IconListItem
-                icon={null}
+                iconSet="NoIcon"
                 title={"Ikäluokka"}
                 description={description}
             />
             <IconListItem
-                icon={null}
+                iconSet="NoIcon"
                 title={"Sukupuoli"}
                 description={description}
             />
             <IconListItem
-                icon={null}
+                iconSet="NoIcon"
                 title={"Lisätietoja"}
                 description={description}
             />
@@ -116,12 +85,12 @@ function ShotDetails({ route, navigation }: Props) {
             </Text>
             <View style={{ paddingTop: 20, paddingBottom: 300 }}>
                 <IconListItem
-                    icon={null}
+                    iconSet="NoIcon"
                     title="Jäsenelle"
                     description={"Määrä 75%"}
                 />
                 <IconListItem
-                    icon={null}
+                    iconSet="NoIcon"
                     title="Seuralle"
                     description={"Määrä 25%"}
                 />
