@@ -22,6 +22,7 @@ type Props = {
     onButtonPress: () => void;
 };
 
+// Modal for selecting age group
 function AgeModal({
     visible,
     setVisibility,
@@ -29,9 +30,13 @@ function AgeModal({
     onValueChange,
     onButtonPress,
 }: Props) {
+    // Get age groups from database
     const results = useFetch<Age[]>("option-tables/aikuinenvasa");
     const theme = useTheme();
 
+    // Return loading indicator if data is still loading,
+    // otherwise generate radio buttons for each age group
+    // and return the modal
     return (
         <Modal
             visible={visible}
