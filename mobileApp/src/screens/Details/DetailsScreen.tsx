@@ -1,52 +1,30 @@
 import MemberDetails from "./MemberDetails";
 import ShotDetails from "./ShotDetails";
-import { View } from "react-native";
-import { Text } from "react-native-paper";
-import { useRoute, useNavigation } from "@react-navigation/native";
-
-import {
-    MaintenanceTabScreenProps,
-    BottomTabScreenProps,
-    RootStackScreenProps,
-} from "../../NavigationTypes";
-
-const ErrorScreen = () => {
-    return (
-        <View>
-            <Text>Virhe!</Text>
-        </View>
-    );
-};
+import ErrorScreen from "../ErrorScreen";
+import { RootStackScreenProps } from "../../NavigationTypes";
 
 type Props = RootStackScreenProps<"Details">;
 
+// Screen for displaying details screens for different types
+// if type is not found, displays an error screen
 function DetailsScreen({ route, navigation }: Props) {
     if (!route.params?.type) return <ErrorScreen />;
     try {
+        // Get type from route params
         const { type } = route.params;
-        //let navigation;
+
+        // Switch case for selecting the correct details screen
         switch (type) {
             case "Jäsen":
-                // const memberRoute =
-                //     useRoute<MaintenanceTabScreenProps<"Jäsenet">["route"]>();
-                // navigation =
-                //     useNavigation<
-                //         MaintenanceTabScreenProps<"Jäsenet">["navigation"]
-                //     >();
                 return <MemberDetails route={route} navigation={navigation} />;
             case "Kaato":
-                // const shotRoute =
-                //     useRoute<BottomTabScreenProps<"Kaadot">["route"]>();
-                // navigation =
-                //     useNavigation<
-                //         BottomTabScreenProps<"Kaadot">["navigation"]
-                //     >();
                 return <ShotDetails route={route} navigation={navigation} />;
             default:
                 return <ErrorScreen />;
         }
     } catch (error) {
         console.log("Screen type not found");
+        if (error instanceof Error) console.log(error.message);
         return <ErrorScreen />;
     }
 }

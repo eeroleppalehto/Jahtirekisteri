@@ -1,4 +1,4 @@
-import { Text, MD3Colors, Divider, useTheme } from "react-native-paper";
+import { Text, Divider, useTheme } from "react-native-paper";
 import { RootStackScreenProps } from "../../NavigationTypes";
 import useFetch from "../../../hooks/useFetch";
 import { View } from "react-native";
@@ -7,10 +7,14 @@ import IconListItem from "../../components/IconListItem";
 
 type Props = RootStackScreenProps<"Details">;
 
+//TODO: Get data from route params and render screen based on that
+//TODO: Error handling if data is undefined
+//TODO: Fetch usage data from backend
+
+// Screen for displaying details screen for a shot
 function ShotDetails({ route, navigation }: Props) {
     const theme = useTheme();
     if (!route.params) return <Text>Virhe!</Text>;
-    if (route) console.log(route);
 
     const locationTitle = "Paikka";
 
