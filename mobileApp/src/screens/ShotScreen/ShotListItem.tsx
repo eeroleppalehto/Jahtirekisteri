@@ -12,7 +12,9 @@ type Props = {
     navigation: navigationProps;
 };
 
+// ListItem for displaying a single shot in a list
 function ShotListItem({ shot, navigation }: Props) {
+    // Format date to Finnish format
     const dateStringArray = new Date(shot.kaatopaiva)
         .toLocaleDateString("fi-FI", {
             year: "2-digit",
@@ -23,6 +25,7 @@ function ShotListItem({ shot, navigation }: Props) {
 
     const dateString = dateStringArray.toString().replace(/,/g, "");
 
+    // Render icon based on gender value
     const getGenderIcon = (gender: string) => {
         if (gender === "Uros") {
             return (
@@ -52,6 +55,7 @@ function ShotListItem({ shot, navigation }: Props) {
         }
     };
 
+    // Render avatar based on animal value
     const getAnimalAvatar = (animal: string) => {
         if (animal === "Hirvi") {
             return require("../../../assets/mooseAvatar.jpg");
