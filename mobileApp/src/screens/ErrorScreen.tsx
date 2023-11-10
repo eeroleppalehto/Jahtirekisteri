@@ -1,6 +1,7 @@
 import { View } from "react-native";
-import { Text, MD3Colors, useTheme } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 
+// Screen for displaying an error message
 function ErrorScreen() {
     const theme = useTheme();
     return (

@@ -9,7 +9,9 @@ import FloatingNavigationButton from "../../components/FloatingNavigationButton"
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 
 type Props = MaintenanceTabScreenProps<"Jäsenet">;
+// TODO: Refactor to use implementation as ShotScreen
 
+// Screen for displaying all members in Maintenance tab
 function MemberScreen({ navigation, route }: Props) {
     const [members, setMembers] = useState<Jasen[]>([]);
     const [scrollValue, setScrollValue] = useState(0);

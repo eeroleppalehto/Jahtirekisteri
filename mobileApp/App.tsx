@@ -4,7 +4,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import Main from "./src/components/Main";
 import { en, registerTranslation } from "react-native-paper-dates";
 
+// Register your translation with the react-native-paper-dates library
 registerTranslation("en", en);
+// As the library does not have a Finnish translation, we need to register our own
+// TODO: Make a pull request to the library to add Finnish translation
 registerTranslation("fi", {
     save: "Tallenna",
     selectSingle: "Valitse päivä",

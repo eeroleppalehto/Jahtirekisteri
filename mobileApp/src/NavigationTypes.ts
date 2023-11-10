@@ -8,6 +8,15 @@ import type { MaterialTopTabScreenProps } from "@react-navigation/material-top-t
 import type { DrawerScreenProps } from "@react-navigation/drawer";
 import { FormTypes, ShotFormType, UsageForm } from "./types";
 
+/* 
+    This file describes the types of the navigations that the app has and
+    what screens each navigation component has and what params do these screens take.
+    For example, RootStackParamList describes that it has BottomNavigation screen
+    Details screen and Forms screen. And further the Details screen takes
+    type, data and title as params. These params are then used in the screens
+    rendering logic.
+ */
+
 // Drawer types
 export type DrawerParamList = {
     RootStack: NavigatorScreenParams<RootStackParamList>;
