@@ -15,13 +15,25 @@ interface Props {
     type: string;
 }
 
-const FloatingNavigationButton = ({ scrollValue, type, label }: Props) => {
-    const extended = scrollValue <= 10;
+/**
+ * Floating navigation button that opens a form from the bottom navigation.
+ * @date 11/10/2023 - 1:23:33 PM
+ *
+ * @param {number} scrollValue Value for determining if the button should be extended or not
+ * @param {string} type Type of the form to open
+ * @param {string} label Label for the button
+ * @returns {*}
+ */
+
+function FloatingNavigationButton({ scrollValue, type, label }: Props) {
+    const extended = scrollValue <= 10; // If scrollValue is less than 10, extend the button
     const animateFrom = "right";
     const fabStyle = { [animateFrom]: 16 };
 
     const isIOS = Platform.OS === "ios";
 
+    // Get navigation object from react navigation
+    // TODO: See if navigation can be passed as a prop
     const navigation = useNavigation();
 
     return (
@@ -40,7 +52,7 @@ const FloatingNavigationButton = ({ scrollValue, type, label }: Props) => {
             style={[styles.fabStyle, {}, { right: 16 }]}
         />
     );
-};
+}
 
 export default FloatingNavigationButton;
 

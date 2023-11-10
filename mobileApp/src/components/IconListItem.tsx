@@ -13,6 +13,18 @@ type Props = {
     description: string | undefined;
 };
 
+/**
+ * Description placeholder
+ * @date 11/10/2023 - 1:27:38 PM
+ *
+ * @param {("MaterialIcons" | "MaterialCommunityIcons" | "NoIcon")} iconSet Icon set to use. Currently supported: MaterialIcons, MaterialCommunityIcons, NoIcon
+ * @param {(string | undefined)} iconNameMaterial If iconSet is MaterialIcons, this is the name of the icon to use
+ * @param {(string | undefined)} iconNameMaterialCommunity If iconSet is MaterialCommunityIcons, this is the name of the icon to use
+ * @param {*} icon Icon React component to display
+ * @param {string} title Title of the list item
+ * @param {string} description Description of the list item
+ * @returns {*}
+ */
 function IconListItem({
     iconSet,
     iconNameMaterial,
@@ -48,6 +60,8 @@ function IconListItem({
             break;
     }
 
+    // Generate description text element
+    // If description is null, use italic text with "Ei tietoja" as the text
     const DescriptionText = description ? (
         <Text variant="bodyMedium" style={{ color: theme.colors.outline }}>
             {description}
@@ -61,7 +75,8 @@ function IconListItem({
         </Text>
     );
 
-    const iconStyle = icon ? styles.icon : styles.emptyIcon;
+    // // Generate icon style based on if icon is defined or not
+    // const iconStyle = icon ? styles.icon : styles.emptyIcon;
 
     return (
         <View style={styles.container}>
