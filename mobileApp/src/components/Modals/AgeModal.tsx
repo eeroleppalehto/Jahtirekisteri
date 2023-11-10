@@ -29,7 +29,7 @@ function AgeModal({
     onValueChange,
     onButtonPress,
 }: Props) {
-    const results = useFetch<Age[]>("option-tables/aikuinenvasa", "GET", null);
+    const results = useFetch<Age[]>("option-tables/aikuinenvasa");
     const theme = useTheme();
 
     return (

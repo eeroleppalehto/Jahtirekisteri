@@ -31,7 +31,7 @@ function UsageModal({
     onValueChange,
     onButtonPress,
 }: Props) {
-    const results = useFetch<Usage[]>("option-tables/kasittely", "GET", null);
+    const results = useFetch<Usage[]>("option-tables/kasittely");
     const theme = useTheme();
 
     // const handleChange = (value: string) => {

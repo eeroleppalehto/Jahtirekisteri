@@ -27,7 +27,7 @@ function ShotScreen({ navigation, route }: Props) {
         console.log("swipe");
     };
 
-    const results = useFetch<Shot[]>("shots", "GET", null);
+    const results = useFetch<Shot[]>("shots");
 
     if (results.error) {
         return <Text>{results.error.message}</Text>;

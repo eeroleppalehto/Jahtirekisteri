@@ -29,7 +29,7 @@ function GenderModal({
     onValueChange,
     onButtonPress,
 }: Props) {
-    const results = useFetch<Gender[]>("option-tables/sukupuoli", "GET", null);
+    const results = useFetch<Gender[]>("option-tables/sukupuoli");
     const theme = useTheme();
 
     return (

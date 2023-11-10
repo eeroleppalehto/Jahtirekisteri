@@ -30,11 +30,7 @@ function ShooterModal({
     onValueChange,
     onButtonPress,
 }: Props) {
-    const results = useFetch<Shooter[]>(
-        "view/?viewName=nimivalinta",
-        "GET",
-        null
-    );
+    const results = useFetch<Shooter[]>("view/?viewName=nimivalinta");
 
     const theme = useTheme();
 

@@ -29,7 +29,7 @@ function AnimalModal({
     onValueChange,
     onButtonPress,
 }: Props) {
-    const results = useFetch<Animal[]>("option-tables/elain", "GET", null);
+    const results = useFetch<Animal[]>("option-tables/elain");
     const theme = useTheme();
 
     return (
