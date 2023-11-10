@@ -16,6 +16,10 @@ const Empty = () => {
     );
 };
 
+/* 
+    Top navigation for the maintenance screens. This component is used to
+    navigate between the MemberScreen, GroupScreen and PartyScreen.
+ */
 function MaintenanceNav() {
     return (
         <TopTab.Navigator>
