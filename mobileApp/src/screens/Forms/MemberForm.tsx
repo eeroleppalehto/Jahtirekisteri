@@ -8,6 +8,9 @@ import { MaintenanceTabScreenProps } from "../../NavigationTypes";
 
 type navType = MaintenanceTabScreenProps<"Jäsenet">["navigation"];
 
+//TODO: Refator to use implementation as ShotForm
+
+// Form for adding a new member
 export default function MemberForm() {
     const [form, setForm] = useState<JasenForm>({
         etunimi: "",
@@ -79,7 +82,7 @@ export default function MemberForm() {
                 style={{ margin: 15 }}
             />
             <SegmentedButtons
-                value={form.tila}
+                value={form.tila ? form.tila : "aktiivinen"}
                 onValueChange={(value) => setForm({ ...form, tila: value })}
                 buttons={[
                     {
