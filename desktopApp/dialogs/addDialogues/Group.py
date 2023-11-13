@@ -8,6 +8,7 @@ from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
 import pgModule as pgModule
 import prepareData as prepareData
 from datetime import date
+import dialogs.messageModule as msg
 
 class Group(DialogFrame):
     """Creates a dialog to add group to database"""
@@ -67,7 +68,7 @@ class Group(DialogFrame):
             sqlClauseEnd = ");"
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
         except:
-            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','Ryhmän lisäys epäonnistui' )
 
         if errorCode == 1:
             self.alert(
@@ -88,8 +89,7 @@ class Group(DialogFrame):
                     )
             else:
                 # Update the page to show new data and clear 
-                success = SuccessfulOperationDialog()
-                success.exec()
+                msg.PopupMessages().successMessage('Lisäys onnistui')
                 self.addGroupGroupNameLE.clear()
             
 

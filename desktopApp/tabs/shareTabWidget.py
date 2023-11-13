@@ -11,6 +11,7 @@ import party
 import dialogs.dialogueWindow as dialogueWindow
 import dialogs.editDialogues.Share as editShareDialog
 import dialogs.removeDialogues.GroupShare as removeShareDialog
+import dialogs.messageModule as msg
 
 
 class Ui_shareTabWidget(QScrollArea, QWidget):
@@ -211,6 +212,7 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
                 prepareData.prepareTable(databaseOperation6, self.sharedPortionsTW)
                 self.sharedPortionsTW.setColumnHidden(4, True)
             except:
+
                 self.alert(
                 'Vakava virhe',
                 'Jaetut taulukon luonti epäonnistui',
@@ -301,7 +303,8 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
                 )
         else:
             
-            # Update the page to show new data and clear 
+            # Update the page to show new data and clear
+            msg.PopupMessages().successMessage('Tallennus onnistui')
             self.populateSharePage()
             self.chosenShotLbl.setText('Ei valittua kaatoa')
 

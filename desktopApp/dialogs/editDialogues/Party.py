@@ -9,7 +9,8 @@ from PyQt5.QtWidgets import (QDialog, QLineEdit, QLabel, QPushButton,
                              QComboBox, QTableWidget, QSpinBox, QDateEdit, QCheckBox,
                              QMainWindow, QApplication)
 from PyQt5.uic import loadUi
-from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
+from dialogs.dialogueWindow import DialogFrame
+import dialogs.messageModule as msg
 import pgModule as pgModule
 import prepareData as prepareData
 from datetime import date
@@ -194,7 +195,7 @@ class Party(DialogFrame):
             table = 'public.seurue'
             limit = f"public.seurue.seurue_id = {self.chosenParty['seurue_id']}"
         except:
-            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','Muokkaus epäonnistui' )
 
         databaseOperation = pgModule.DatabaseOperation()
         databaseOperation.updateManyValuesInRow(self.connectionArguments, table, columnValueString, limit)
@@ -207,8 +208,7 @@ class Party(DialogFrame):
                 )
             return
         
-        success = SuccessfulOperationDialog()
-        success.exec()
+        msg.PopupMessages().successMessage('Muokkaus onnistui')
         self.editPartyNameLE.clear()
         self.editPartySavePushBtn.setEnabled(False)
         self.populatePartyCB()

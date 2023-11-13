@@ -4,7 +4,7 @@ sys.path.append('../desktopApp')
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QDialog, QComboBox, QLabel, QPushButton
 from PyQt5.uic import loadUi
-from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
+from dialogs.dialogueWindow import DialogFrame
 import pgModule as pgModule
 import prepareData as prepareData
 from dialogs.messageModule import PopupMessages as msg
@@ -23,11 +23,11 @@ class Membership(DialogFrame):
         self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
         
         # Elements
-        self.removeMembershipCB = self.removeMembershipComboBox
+        self.removeMembershipCB: QComboBox = self.removeMembershipComboBox
         
-        self.removeMembershipPushBtn = self.removeMembershipPushButton
+        self.removeMembershipPushBtn: QPushButton = self.removeMembershipPushButton
         self.removeMembershipPushBtn.clicked.connect(self.removeMembership) # Signal
-        self.removeMembershipCancelPushBtn = self.removeMembershipCancelPushButton
+        self.removeMembershipCancelPushBtn: QPushButton = self.removeMembershipCancelPushButton
         self.removeMembershipCancelPushBtn.clicked.connect(self.closeDialog) # Signal
         
         # Populate the membership combo box
@@ -85,9 +85,6 @@ class Membership(DialogFrame):
                 databaseOperation.detailedMessage
                 )
         else:
-            
-            """ successfulOperationDialog = SuccessfulOperationDialog()
-            successfulOperationDialog.exec() """
             msg().successMessage('Jäsenyys poistettu')
             self.populateRemoveMembershipDialog()
          

@@ -2,6 +2,7 @@ import sys
 # Add parent directory to the path
 sys.path.append('../desktopApp')
 from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QComboBox, QPushButton
 from PyQt5.uic import loadUi
 from dialogs.dialogueWindow import DialogFrame
 import pgModule as pgModule
@@ -20,10 +21,10 @@ class License(DialogFrame):
         databaseOperationConnections = pgModule.DatabaseOperation()
         self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
 
-        self.licenseCB = self.licenseComboBox
-        self.cancelPB = self.cancelPushButton
+        self.licenseCB: QComboBox = self.licenseComboBox
+        self.cancelPB: QPushButton = self.cancelPushButton
         self.cancelPB.clicked.connect(self.closeDialog)
-        self.removePB = self.removePushButton
+        self.removePB: QPushButton = self.removePushButton
         self.removePB.clicked.connect(self.removeLicense)
 
         self.populateRemoveLicenseDialog()

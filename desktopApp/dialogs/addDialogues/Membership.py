@@ -4,7 +4,8 @@ sys.path.append('../desktopApp')
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QDateEdit, QSpinBox, QComboBox, QLineEdit
 from PyQt5.uic import loadUi
-from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
+from dialogs.dialogueWindow import DialogFrame
+import dialogs.messageModule as msg
 import pgModule as pgModule
 import prepareData as prepareData
 from datetime import date
@@ -121,7 +122,7 @@ class Membership(DialogFrame):
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
 
         except:
-            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','Jäsenyyden lisäys epäonnistui' )
 
         # Create DatabaseOperation object to execute the SQL clause
         databaseOperation = pgModule.DatabaseOperation()
@@ -135,8 +136,7 @@ class Membership(DialogFrame):
                 )
         else:
             # Update the page to show new data and clear 
-            success = SuccessfulOperationDialog()
-            success.exec()
+            msg.PopupMessages().successMessage('Lisäys onnistui')
 
     def handlePartyCBChange(self):
         """

@@ -8,7 +8,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import (QDialog, QLineEdit, QLabel, QPushButton,
                              QMainWindow, QApplication)
 from PyQt5.uic import loadUi
-from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
+from dialogs.dialogueWindow import DialogFrame
+import dialogs.messageModule as msg
 import pgModule as pgModule
 import prepareData as prepareData
 
@@ -27,14 +28,14 @@ class Company(DialogFrame):
         self.setWindowTitle('Muokkaa seuraa')
 
         # Elements
-        self.editCompanyNameLE = self.editCompanyNameLineEdit
-        self.editCompanyPostalAddressLE = self.editCompanyPostalAddressLineEdit
-        self.editCompanyZIPLE = self.editCompanyZIPLineEdit
-        self.editCompanyCityLE = self.editCompanyCityLineEdit
+        self.editCompanyNameLE: QLineEdit = self.editCompanyNameLineEdit
+        self.editCompanyPostalAddressLE: QLineEdit = self.editCompanyPostalAddressLineEdit
+        self.editCompanyZIPLE: QLineEdit = self.editCompanyZIPLineEdit
+        self.editCompanyCityLE: QLineEdit = self.editCompanyCityLineEdit
 
-        self.editCompanySavePushBtn = self.editCompanySavePushButton
+        self.editCompanySavePushBtn: QPushButton = self.editCompanySavePushButton
         self.editCompanySavePushBtn.clicked.connect(self.editCompany) # Signal
-        self.editCompanyCancelPushBtn = self.editCompanyCancelPushButton
+        self.editCompanyCancelPushBtn: QPushButton = self.editCompanyCancelPushButton
         self.editCompanyCancelPushBtn.clicked.connect(self.closeDialog) # Signal
 
         self.populateEditCompanyDialog()
@@ -65,7 +66,6 @@ class Company(DialogFrame):
 
 
     def editCompany(self):
-        success = SuccessfulOperationDialog()
         errorCode = 0
         # Update option
         if self.companyInfo != []:
@@ -91,7 +91,7 @@ class Company(DialogFrame):
                 limit = 'public.seura.seura_id = 1'
 
             except:
-                self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+                self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','Virhe tiedoissa' )
             
             if errorCode == 1:
                 self.alert(
@@ -119,7 +119,7 @@ class Company(DialogFrame):
                 i += 1
                 j += 1
 
-            success.exec()
+            msg.PopupMessages().successMessage('Muokkaus onnistui')
             
         # Add option
         else:
@@ -141,7 +141,7 @@ class Company(DialogFrame):
                 sqlClauseEnd = ");"
                 sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
             except:
-                self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+                self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','Seuran muokkaus epäonnistui' )
 
             if errorCode == 1:
                 self.alert(
@@ -162,7 +162,7 @@ class Company(DialogFrame):
                     databaseOperation.detailedMessage
                     )
             else:
-                success.exec()
+                msg.PopupMessages().successMessage('Muokkaus onnistui')
 
 
     def closeDialog(self):

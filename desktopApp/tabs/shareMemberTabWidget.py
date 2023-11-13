@@ -8,7 +8,7 @@ import pgModule
 import prepareData
 import figures
 
-import dialogs.dialogueWindow as dialogueWindow
+import dialogs.messageModule as msg
 import dialogs.editDialogues.MemberShare as editMemberShare
 import dialogs.removeDialogues.MemberShare as removeMemberShare
 import dialogs.graphDialog as graphDialog
@@ -317,6 +317,7 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
                 )
         else:
             # Update the table
+            msg.PopupMessages().successMessage('Tallennus onnistui')
             self.populateSharePage()
             self.shareSavePushBtn.setEnabled(False)
    

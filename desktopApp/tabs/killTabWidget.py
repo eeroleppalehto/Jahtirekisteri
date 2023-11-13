@@ -6,8 +6,9 @@ from datetime import date
 import pgModule
 import prepareData
 
+import dialogs.messageModule as msg
 import dialogs.dialogueWindow as dialogueWindow
-import dialogs.editShotDialog as editShotDialog
+import dialogs.editDialogues.Shot as Shot
 import dialogs.removeDialogues.Shot as removeShotDialog
 
 
@@ -340,7 +341,7 @@ class Ui_killTabWidget(QScrollArea, QWidget):
             sqlClauseEnd = "RETURNING kaato_id;"
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
         except:
-            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','Tallennus epäonnistui' )
             return
         
 
@@ -360,6 +361,7 @@ class Ui_killTabWidget(QScrollArea, QWidget):
                 )
         else:
             # Update the page to show new data and clear
+            msg.PopupMessages().successMessage('Tallennus onnistui')
             self.shotLocationLE.clear()
             self.shotWeightLE.clear()
             self.shotAddInfoTE.clear()
@@ -445,7 +447,7 @@ class Ui_killTabWidget(QScrollArea, QWidget):
         dialog.exec()
 
     def openEditShotDialog(self):
-        dialog = editShotDialog.EditShot()
+        dialog = Shot.EditShot()
         dialog.exec()
         
     def opeRemoveShotDialog(self):

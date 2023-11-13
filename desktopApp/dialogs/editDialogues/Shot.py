@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (QDialog, QLineEdit, QLabel, QPushButton,
                              QComboBox, QTableWidget, QSpinBox, QDateEdit, QCheckBox,
                              QMainWindow, QApplication, QPlainTextEdit)
 from PyQt5.uic import loadUi
-from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
+from dialogs.dialogueWindow import DialogFrame
 import pgModule as pgModule
 import prepareData as prepareData
 from datetime import date
