@@ -5,6 +5,8 @@ import { BASE_URL } from "../../baseUrl";
 
 type Props = NativeStackHeaderProps;
 
+// The AppBar component that is rendered in the FormScreen
+// includes logic to handle the form submit
 export default function FormAppBar({
     back,
     navigation,
@@ -18,6 +20,8 @@ export default function FormAppBar({
         clear?: any;
     };
 
+    // The callback function that is called when the user presses the save button
+    // TODO: Exract this function to a separate file
     const handleShotFormSubmit = () => {
         let path: string;
         const method = "POST";

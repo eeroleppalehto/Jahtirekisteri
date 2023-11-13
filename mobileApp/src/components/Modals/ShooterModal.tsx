@@ -23,6 +23,7 @@ type Props = {
     onButtonPress: () => void;
 };
 
+// Modal for selecting shooter
 function ShooterModal({
     visible,
     setVisibility,
@@ -30,30 +31,17 @@ function ShooterModal({
     onValueChange,
     onButtonPress,
 }: Props) {
-    const results = useFetch<Shooter[]>(
-        "view/?viewName=nimivalinta",
-        "GET",
-        null
-    );
-
+    // Get shooters from database
+    const results = useFetch<Shooter[]>("view/?viewName=nimivalinta");
     const theme = useTheme();
 
-    // const handleChange = (value: string) => {
-    //     const shooter = results.data?.find(
-    //         (item) => item.jasen_id === parseInt(value)
-    //     );
-    //     shooter
-    //         ? onValueChange({
-    //               jasen_id: shooter.jasen_id,
-    //               kokonimi: shooter.kokonimi,
-    //           })
-    //         : null;
-    // };
-
+    // Callback function for changing the selected shooter
     const handleChange = (value: string) => {
+        // Find the selected shooter from the results
         const selectedShooter = results.data?.find(
             (item) => item.jasen_id === parseInt(value)
         );
+        // Pass the selected shooter to the parent components callback function
         onValueChange(selectedShooter!);
     };
 
@@ -61,12 +49,18 @@ function ShooterModal({
         return <Text>{results.error.message}</Text>;
     }
 
+    // If shooterId is defined, use it as the initial value,
+    // otherwise use the first shooter from the results.
+    // If results are still loading, use an empty string
     const initialValue = shooterId
         ? shooterId.toString()
         : results.data
         ? results.data[0].jasen_id.toString()
         : "";
 
+    // Return loading indicator if data is still loading,
+    // otherwise generate radio buttons for each shooter
+    // and return the modal
     return (
         <Modal
             visible={visible}

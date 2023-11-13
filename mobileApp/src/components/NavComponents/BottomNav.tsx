@@ -14,6 +14,12 @@ const Placeholder = () => {
     return <Text>Placeholder</Text>;
 };
 
+/* 
+    The main component of the app. This component is used to navigate between
+    the main screens of the app. The screens are Grafiikka, Kaadot,
+    Jako and Ylläpito.
+*/
+
 function BottomNav() {
     return (
         <Tab.Navigator>

@@ -18,6 +18,21 @@ type Props = {
     multiline?: boolean;
 };
 
+/**
+ * Description placeholder
+ * @date 11/10/2023 - 1:37:10 PM
+ *
+ * @param {("MaterialIcons" | "MaterialCommunityIcons" | "NoIcon")} iconSet Icon set to use. Currently supported: MaterialIcons, MaterialCommunityIcons, NoIcon
+ * @param {(string | undefined)} iconNameMaterial If iconSet is MaterialIcons, this is the name of the icon to use
+ * @param {(string | undefined)} iconNameMaterialCommunity If iconSet is MaterialCommunityIcons, this is the name of the icon to use
+ * @param {string} label Label of the input
+ * @param {boolean} required Is the input required
+ * @param {TextInputProps} inputType Type of the keyboard to use
+ * @param {string} value Value of the input
+ * @param {(text: string) => void} onChangeText Callback function for when the text changes
+ * @param {boolean} multiline Is the input multiline
+ * @returns {*}
+ */
 function IconTextInput({
     iconSet,
     iconNameMaterial,
@@ -30,8 +45,10 @@ function IconTextInput({
     multiline,
 }: Props) {
     const theme = useTheme();
-    let iconElement = <View style={styles.emptyIcon} />;
 
+    // Initialize icon element to empty icon
+    let iconElement = <View style={styles.emptyIcon} />;
+    // Switch case for selecting the correct icon element
     switch (iconSet) {
         case "MaterialIcons":
             iconElement = (
@@ -52,10 +69,11 @@ function IconTextInput({
             );
             break;
         default:
-            iconElement = <View style={styles.emptyIcon} />;
             break;
     }
 
+    // Generate title element
+    // If required is true, add a red asterisk to the end of the title
     const title = required ? (
         <>
             <Text style={{}}>{label}</Text>
@@ -65,6 +83,7 @@ function IconTextInput({
         <Text style={{}}>{label}</Text>
     );
 
+    // Generate number of lines for multiline input
     const numberOfLines = multiline ? 4 : 1;
 
     return (

@@ -1,3 +1,4 @@
+// Type definitions of the app
 export type Jasen = {
     jasen_id: number;
     etunimi: string;

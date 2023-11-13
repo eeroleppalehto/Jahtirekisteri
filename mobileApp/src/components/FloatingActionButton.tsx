@@ -18,6 +18,9 @@ interface Props {
     position?: "left" | "right";
 }
 
+// TODO: Refactor from arrow function to regular function
+// TODO: Is this component needed? If not, remove it
+
 const FloatingActionButton = ({
     scrollValue,
     type,

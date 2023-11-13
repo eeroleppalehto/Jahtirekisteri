@@ -26,7 +26,9 @@ type Usage = {
     kasittely_teksti: string;
 };
 
+// Form for adding a new shot and usages for it
 function ShotForm({ route, navigation }: Props) {
+    // Modal visibility states
     const [calendarOpen, setCalendarOpen] = useState(false);
     const [shooterModalVisible, setShooterModalVisible] = useState(false);
     const [animalModalVisible, setAnimalModalVisible] = useState(false);
@@ -36,23 +38,24 @@ function ShotForm({ route, navigation }: Props) {
     const [secondUsageModalVisible, setSecondUsageModalVisible] =
         useState(false);
 
-    const [shooterLabel, setShooterLabel] = useState<string | undefined>(
-        undefined
-    );
-
-    const [firstUsageLabel, setFirstUsageLabel] = useState<string | undefined>(
-        undefined
-    );
-
+    // Second usage toggle state
     const [secondUsageEnabled, setSecondUsageEnabled] =
         useState<boolean>(false);
 
+    // Label states for displaying the selected value
+    const [shooterLabel, setShooterLabel] = useState<string | undefined>(
+        undefined
+    );
+    const [firstUsageLabel, setFirstUsageLabel] = useState<string | undefined>(
+        undefined
+    );
     const [secondUsageLabel, setSecondUsageLabel] = useState<
         string | undefined
     >(undefined);
 
     const theme = useTheme();
 
+    // Initialize the form with empty values and set it to route params
     useEffect(() => {
         // TODO: Make this into a custom hook that returns the params
         // TODO: See if it's possible check params already has shot and usage
@@ -88,11 +91,13 @@ function ShotForm({ route, navigation }: Props) {
         }
     }, [route.params?.clear]);
 
+    // Read the params from route
     const { shot, usage } = route.params as {
         shot: ShotFormType;
         usage: UsageForm[];
     };
 
+    // Callback functions for updating the params
     const handleShooterChange = (shooter: Shooter) => {
         setShooterLabel(shooter.kokonimi);
         navigation.setParams({

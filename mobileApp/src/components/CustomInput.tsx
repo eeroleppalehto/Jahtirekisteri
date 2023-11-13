@@ -19,6 +19,24 @@ type Props = {
     enabled?: boolean;
 };
 
+/**
+ * React functional component for displaying a non text input field
+ * with a title and an icon button that opens a modal for selecting.
+ * Modal is not included in this component.
+ * @date 11/10/2023 - 12:50:24 PM
+ *
+ * @param {("MaterialIcons" | "MaterialCommunityIcons" | "NoIcon")} iconSet Icon set to use. Currently supported: MaterialIcons, MaterialCommunityIcons, NoIcon
+ * @param {(string | undefined)} iconNameMaterial If iconSet is MaterialIcons, this is the name of the icon to use
+ * @param {(string | undefined)} iconNameMaterialCommunity If iconSet is MaterialCommunityIcons, this is the name of the icon to use
+ * @param {string} title Title of the input
+ * @param {boolean} required Is the input required
+ * @param {string | undefined} valueState Shows chosen value if defined, otherwise shows placeholder
+ * @param {string | undefined} placeholder If no value is defined, shows this as placeholder. Defaults to "Ei valittu"
+ * @param {() => void} onPress Callback function for the icon button
+ * @param {(string | undefined)} iconButtonName Name of the icon to use for the icon button
+ * @param {boolean} enabled Is the input enabled
+ * @returns {*}
+ */
 function CustomInput({
     iconSet,
     iconNameMaterial,
@@ -32,11 +50,13 @@ function CustomInput({
     enabled,
 }: Props) {
     const theme = useTheme();
-
     const outlineColor = theme.colors.outline;
 
+    // Initialize icon element to empty icon
     let iconElement = <View style={styles.emptyIcon} />;
 
+    // Switch case for selecting the correct icon element
+    // based on the iconSet prop. Uses empty icon if iconSet is not supported.
     switch (iconSet) {
         case "MaterialIcons":
             iconElement = (
@@ -57,7 +77,7 @@ function CustomInput({
             );
             break;
         default:
-            iconElement = <View style={styles.emptyIcon} />;
+            // iconElement = <View style={styles.emptyIcon} />;
             break;
     }
 
@@ -68,6 +88,9 @@ function CustomInput({
         checkEnabled = enabled;
     }
 
+    // Generate JSX for the value element.
+    // If valueState is undefined, show placeholder
+    // and use italic font style
     const valueJSX = valueState ? (
         <Text variant="bodyMedium" style={{ color: outlineColor }}>
             {valueState}
@@ -104,6 +127,7 @@ function CustomInput({
                         >
                             {title}
                         </Text>
+                        {/* Set the labels font color as outlineColor if the component is disabled */}
                         {required ? (
                             <Text
                                 variant="bodyMedium"

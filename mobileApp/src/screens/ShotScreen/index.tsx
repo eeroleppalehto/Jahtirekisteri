@@ -11,9 +11,12 @@ import ShotListItem from "./ShotListItem";
 
 type Props = BottomTabScreenProps<"Kaadot">;
 
+// Screen for displaying all shots in Shots tab
 function ShotScreen({ navigation, route }: Props) {
     const [scrollValue, setScrollValue] = useState(0);
 
+    // Callback function for updating scroll value and passing it to FloatingNavigationButton
+    // which uses it to determine when to extend the button
     const onScroll = ({
         nativeEvent,
     }: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -27,12 +30,16 @@ function ShotScreen({ navigation, route }: Props) {
         console.log("swipe");
     };
 
-    const results = useFetch<Shot[]>("shots", "GET", null);
+    // Fetch all shots from the API
+    const results = useFetch<Shot[]>("shots");
 
     if (results.error) {
         return <Text>{results.error.message}</Text>;
     }
 
+    // If loading, display loading indicator
+    // Else display the list of shots
+    // TODO: Add error handling
     return (
         <>
             {results.loading ? (

@@ -6,14 +6,13 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 type Props = RootStackScreenProps<"Details">;
 
-function MemberDetails({ route, navigation }: Props) {
-    try {
-    } catch (error) {
-        return <Text>Virhe</Text>;
-    }
+// TODO: Refactor to use IconListItem component
 
+// Screen for displaying details screen for a member
+function MemberDetails({ route, navigation }: Props) {
     if (!route.params) return <Text>Virhe</Text>;
 
+    // TODO: Error handling if data is undefined
     const { data } = route.params;
     const {
         etunimi,
@@ -33,16 +32,12 @@ function MemberDetails({ route, navigation }: Props) {
                     description={jakeluosoite}
                     left={(props) => <MaterialIcons name="location-on" />}
                 />
-                {/* <Divider /> */}
                 <List.Item title="Postinumero" description={postinumero} />
-                {/* <Divider /> */}
                 <List.Item
                     title="Postitoimipaikka"
                     description={postitoimipaikka}
                 />
-                {/* <Divider /> */}
                 <List.Item title="Tila" description={tila} />
-                {/* <Divider /> */}
             </View>
             <View>
                 <Button

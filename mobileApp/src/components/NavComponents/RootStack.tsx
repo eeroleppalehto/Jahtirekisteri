@@ -12,6 +12,11 @@ import DetailsAppBar from "../AppBars/DetailsAppBar";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
+/* 
+    The RootStack component is used to render the main bottom navigation of 
+    the app and the screens that are accessed through it like the DetailsScreen
+    and FormScreen.
+*/
 function RootStack() {
     return (
         <Stack.Navigator

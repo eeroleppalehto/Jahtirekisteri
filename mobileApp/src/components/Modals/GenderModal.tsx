@@ -22,6 +22,7 @@ type Props = {
     onButtonPress: () => void;
 };
 
+// Modal for selecting gender
 function GenderModal({
     visible,
     setVisibility,
@@ -29,9 +30,13 @@ function GenderModal({
     onValueChange,
     onButtonPress,
 }: Props) {
-    const results = useFetch<Gender[]>("option-tables/sukupuoli", "GET", null);
+    // Get genders from the database
+    const results = useFetch<Gender[]>("option-tables/sukupuoli");
     const theme = useTheme();
 
+    // Return loading indicator if data is still loading,
+    // otherwise generate radio buttons for each gender
+    // and return the modal
     return (
         <Modal
             visible={visible}

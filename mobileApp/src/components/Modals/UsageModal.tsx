@@ -24,6 +24,7 @@ type Props = {
     onButtonPress: () => void;
 };
 
+// Modal for selecting usage
 function UsageModal({
     visible,
     setVisibility,
@@ -31,34 +32,32 @@ function UsageModal({
     onValueChange,
     onButtonPress,
 }: Props) {
-    const results = useFetch<Usage[]>("option-tables/kasittely", "GET", null);
+    // Get usages from database
+    const results = useFetch<Usage[]>("option-tables/kasittely");
     const theme = useTheme();
 
-    // const handleChange = (value: string) => {
-    //     const usage = results.data?.find(
-    //         (item) => item.kasittelyid === parseInt(value)
-    //     );
-    //     usage
-    //         ? onValueChange({
-    //               kasittelyid: usage.kasittelyid,
-    //               kasittely_maara: usageForm.kasittely_maara,
-    //           })
-    //         : null;
-    // };
-
+    // Callback function for changing the selected usage
     const handleChange = (value: string) => {
+        // Find the selected usage from the results
         const selectedUsage = results.data?.find(
             (item) => item.kasittelyid === parseInt(value)
         );
+        // Pass the selected usage to the parent components callback function
         onValueChange(selectedUsage);
     };
 
+    // If usageForm is defined, use it as the initial value,
+    // otherwise use the first usage from the results.
+    // If results are still loading, use an empty string
     const initialValue = usageForm
         ? usageForm.kasittelyid?.toString()
         : results.data
         ? results.data[0].kasittelyid.toString()
         : "";
 
+    // Return loading indicator if data is still loading,
+    // otherwise generate radio buttons for each usage
+    // and return the modal
     return (
         <Modal
             visible={visible}

@@ -22,6 +22,7 @@ type Props = {
     onButtonPress: () => void;
 };
 
+// Modal for selecting animal
 function AnimalModal({
     visible,
     setVisibility,
@@ -29,9 +30,13 @@ function AnimalModal({
     onValueChange,
     onButtonPress,
 }: Props) {
-    const results = useFetch<Animal[]>("option-tables/elain", "GET", null);
+    // Get animals from database
+    const results = useFetch<Animal[]>("option-tables/elain");
     const theme = useTheme();
 
+    // Return loading indicator if data is still loading,
+    // otherwise generate radio buttons for each animal
+    // and return the modal
     return (
         <Modal
             visible={visible}

@@ -19,6 +19,7 @@ interface Props {
     navigation: DrawerNavigationHelpers;
 }
 
+// The DrawerContent component is used to render the content of the drawer when user opens it
 function DrawerContent({ navigation }: Props) {
     return (
         <DrawerContentScrollView>
