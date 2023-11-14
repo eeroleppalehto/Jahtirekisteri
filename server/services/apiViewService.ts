@@ -4,6 +4,7 @@
 // Import Prisma client and Zod schema
 import prisma from "../client";
 import viewValidationZod from "../zodSchemas/viewValidationZod";
+import { viewMap } from "../utils/viewMap";
 
 /**
  * Get view data from the database.
@@ -15,7 +16,10 @@ export const getViewData = async (viewName: string): Promise<object[] | []> => {
     const parsedViewName = viewValidationZod.parse(viewName);
 
     // Construct the query
-    const query = `SELECT * FROM ${parsedViewName}`;
+    // const query = `SELECT * FROM ${parsedViewName}`;
+
+    const query = viewMap.get(parsedViewName);
+    if (!query) throw new Error("Invalid view name");
 
     // Execute the query
     const data = await prisma.$queryRawUnsafe<object[]>(query);
