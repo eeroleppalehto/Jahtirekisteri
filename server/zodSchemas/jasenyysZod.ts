@@ -1,11 +1,13 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 const jasenyysZod = z.object({
     // Optional integer ID for jasenyys
     jasenyys_id: z.number().int().optional(),
 
+    seurue_id: z.number().int(),
+
     // Integer ID for the group associated with this jasenyys
-    ryhma_id: z.number().int(),
+    ryhma_id: z.number().int().optional(),
 
     // Integer ID for the member associated with this jasenyys
     jasen_id: z.number().int(),
