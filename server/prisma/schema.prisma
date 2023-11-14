@@ -37,7 +37,7 @@ model jakotapahtuma {
   osnimitys           String           @db.VarChar(20)
   kaadon_kasittely_id Int
   maara               Float            @db.Real
-  kaadon_kasittely    kaadon_kasittely @relation(fields: [kaadon_kasittely_id], references: [kaadon_kasittely_id], onDelete: NoAction, onUpdate: NoAction, map: "kaadon_kasittely_jakotapahtuma_fk")
+  kaadon_kasittely    kaadon_kasittely @relation(fields: [kaadon_kasittely_id], references: [kaadon_kasittely_id], onDelete: Cascade, onUpdate: NoAction, map: "kaadon_kasittely_jakotapahtuma_fk")
   ruhonosa            ruhonosa         @relation(fields: [osnimitys], references: [osnimitys], onDelete: NoAction, onUpdate: NoAction, map: "ruhonosa_jakotapahtuma_fk")
   jakoryhma           jakoryhma        @relation(fields: [ryhma_id], references: [ryhma_id], onDelete: NoAction, onUpdate: NoAction, map: "ryhma_jakotapahtuma_fk")
 }
@@ -47,10 +47,11 @@ model jasen {
   jasen_id         Int        @id(map: "jasen_pk") @default(autoincrement())
   etunimi          String     @db.VarChar(50)
   sukunimi         String     @db.VarChar(50)
-  jakeluosoite     String     @db.VarChar(30)
-  postinumero      String     @db.VarChar(10)
-  postitoimipaikka String     @db.VarChar(30)
-  tila             String?    @default("aktiivinen") @db.VarChar(20)
+  jakeluosoite     String?    @db.VarChar(30)
+  postinumero      String?    @db.VarChar(10)
+  postitoimipaikka String?    @db.VarChar(30)
+  tila             String     @default("aktiivinen") @db.VarChar(20)
+  puhelinnumero    String?    @db.VarChar(15)
   jasenyys         jasenyys[]
   kaato            kaato[]
   seurue           seurue[]
@@ -58,24 +59,30 @@ model jasen {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model jasenyys {
-  jasenyys_id Int       @id(map: "jasenyys_pk") @default(autoincrement())
-  ryhma_id    Int
-  jasen_id    Int
-  osuus       Int
-  liittyi     DateTime  @db.Date
-  poistui     DateTime? @db.Date
-  jasen       jasen     @relation(fields: [jasen_id], references: [jasen_id], onDelete: NoAction, onUpdate: NoAction, map: "jasen_jasenyys_fk")
-  jakoryhma   jakoryhma @relation(fields: [ryhma_id], references: [ryhma_id], onDelete: NoAction, onUpdate: NoAction, map: "ryhma_jasenyys_fk")
+  jasenyys_id         Int                   @id(map: "jasenyys_pk") @default(autoincrement())
+  ryhma_id            Int?
+  jasen_id            Int
+  osuus               Int
+  liittyi             DateTime              @db.Date
+  poistui             DateTime?             @db.Date
+  seurue_id           Int
+  jakotapahtuma_jasen jakotapahtuma_jasen[]
+  jasen               jasen                 @relation(fields: [jasen_id], references: [jasen_id], onDelete: NoAction, onUpdate: NoAction, map: "jasen_jasenyys_fk")
+  jakoryhma           jakoryhma?            @relation(fields: [ryhma_id], references: [ryhma_id], onDelete: NoAction, onUpdate: NoAction, map: "ryhma_jasenyys_fk")
+  seurue              seurue                @relation(fields: [seurue_id], references: [seurue_id], onDelete: NoAction, onUpdate: NoAction, map: "seurue_jasenyys_fk")
+
+  @@index([seurue_id], map: "fki_seurue_jasenyys_fk")
 }
 
 model kaadon_kasittely {
-  kaadon_kasittely_id Int             @id(map: "kaadon_kasittely_pk") @default(autoincrement())
+  kaadon_kasittely_id Int                   @id(map: "kaadon_kasittely_pk") @default(autoincrement())
   kasittelyid         Int
   kaato_id            Int
   kasittely_maara     Int
   jakotapahtuma       jakotapahtuma[]
-  kaato               kaato           @relation(fields: [kaato_id], references: [kaato_id], onDelete: NoAction, onUpdate: NoAction, map: "kaato_kaadon_kasittely_fk")
-  kasittely           kasittely       @relation(fields: [kasittelyid], references: [kasittelyid], onDelete: NoAction, onUpdate: NoAction, map: "kasittely_kaadon_kasittely_fk")
+  jakotapahtuma_jasen jakotapahtuma_jasen[]
+  kaato               kaato                 @relation(fields: [kaato_id], references: [kaato_id], onDelete: Cascade, onUpdate: NoAction, map: "kaato_kaadon_kasittely_fk")
+  kasittely           kasittely             @relation(fields: [kasittelyid], references: [kasittelyid], onDelete: NoAction, onUpdate: NoAction, map: "kasittely_kaadon_kasittely_fk")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -119,8 +126,10 @@ model lupa {
 }
 
 model ruhonosa {
-  osnimitys     String          @id(map: "ruhonosa_pk") @db.VarChar(20)
-  jakotapahtuma jakotapahtuma[]
+  osnimitys           String                @id(map: "ruhonosa_pk") @db.VarChar(20)
+  osnimitys_suhdeluku Float?                @db.Real
+  jakotapahtuma       jakotapahtuma[]
+  jakotapahtuma_jasen jakotapahtuma_jasen[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -136,17 +145,44 @@ model seura {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model seurue {
-  seurue_id     Int         @id(map: "seurue_pk") @default(autoincrement())
-  seura_id      Int
-  seurueen_nimi String      @db.VarChar(50)
-  jasen_id      Int
-  jakoryhma     jakoryhma[]
-  jasen         jasen       @relation(fields: [jasen_id], references: [jasen_id], onDelete: NoAction, onUpdate: NoAction, map: "jasen_seurue_fk")
-  seura         seura       @relation(fields: [seura_id], references: [seura_id], onDelete: NoAction, onUpdate: NoAction, map: "seura_seurue_fk")
+  seurue_id        Int           @id(map: "seurue_pk") @default(autoincrement())
+  seura_id         Int
+  seurueen_nimi    String        @db.VarChar(50)
+  jasen_id         Int
+  seurue_tyyppi_id Int
+  jakoryhma        jakoryhma[]
+  jasenyys         jasenyys[]
+  jasen            jasen         @relation(fields: [jasen_id], references: [jasen_id], onDelete: NoAction, onUpdate: NoAction, map: "jasen_seurue_fk")
+  seura            seura         @relation(fields: [seura_id], references: [seura_id], onDelete: NoAction, onUpdate: NoAction, map: "seura_seurue_fk")
+  seurue_tyyppi    seurue_tyyppi @relation(fields: [seurue_tyyppi_id], references: [seurue_tyyppi_id], onDelete: NoAction, onUpdate: NoAction, map: "seurue_tyyppi_seurue_fk")
+
+  @@index([seurue_tyyppi_id], map: "fki_seurue_tyyppi_seurue_fk")
 }
 
 model sukupuoli {
   sukupuoli                        String  @id(map: "sukupuoli_pk") @db.VarChar(20)
   kaato_kaato_sukupuoliTosukupuoli kaato[] @relation("kaato_sukupuoliTosukupuoli")
   lupa_lupa_sukupuoliTosukupuoli   lupa[]  @relation("lupa_sukupuoliTosukupuoli")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model jakotapahtuma_jasen {
+  tapahtuma_jasen_id  Int              @id(map: "jakotapahtuma_jasen_pk") @default(autoincrement())
+  paiva               DateTime         @db.Date
+  kaadon_kasittely_id Int
+  osnimitys           String           @db.VarChar(20)
+  maara               Float            @db.Real
+  jasenyys_id         Int
+  jasenyys            jasenyys         @relation(fields: [jasenyys_id], references: [jasenyys_id], onDelete: NoAction, onUpdate: NoAction, map: "jasenyys_jakotapahtuma_jasen_fk")
+  kaadon_kasittely    kaadon_kasittely @relation(fields: [kaadon_kasittely_id], references: [kaadon_kasittely_id], onDelete: Cascade, onUpdate: NoAction, map: "kaadon_kasittely_jakotapahtuma_jasen_fk")
+  ruhonosa            ruhonosa         @relation(fields: [osnimitys], references: [osnimitys], onDelete: NoAction, onUpdate: NoAction, map: "ruhonosa_jakotapahtuma_jasen_fk")
+
+  @@index([jasenyys_id], map: "fki_jasenyys_jakotapahtuma_jasen_fk")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model seurue_tyyppi {
+  seurue_tyyppi_id   Int      @id(map: "seurue_tyyppi_pk") @default(autoincrement())
+  seurue_tyyppi_nimi String   @db.VarChar(20)
+  seurue             seurue[]
 }
