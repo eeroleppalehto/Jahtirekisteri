@@ -56,3 +56,10 @@ export const getAllSukupuoli = async (): Promise<object[]> => {
     );
     return data;
 };
+
+export const getAllSeurueTyyppi = async (): Promise<object[]> => {
+    const data = await prisma.$queryRawUnsafe<object[]>(
+        "SELECT * FROM seurue_tyyppi"
+    );
+    return data;
+};
