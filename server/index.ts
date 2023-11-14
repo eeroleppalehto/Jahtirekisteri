@@ -13,6 +13,7 @@ import jasenyysRouter from "./routers/jasenyysRouter";
 import apiViewRouter from "./routers/apiViewRouter";
 import optionTablesRouter from "./routers/optionTablesRouter";
 import createShotUsageRouter from "./routers/createShotUsageRouter";
+import jakotapahtumaJasenRouter from "./routers/jakotapahtumaJasenRouter";
 import { errorHandler } from "./utils/middleware"; // Import errorHandler
 
 // Initialize the Express application
@@ -41,6 +42,7 @@ app.use("/api/jasenyys", jasenyysRouter);
 app.use("/api/view", apiViewRouter);
 app.use("/api/option-tables", optionTablesRouter);
 app.use("/api/createShotUsage", createShotUsageRouter);
+app.use("/api/jakotapahtumaJasen", jakotapahtumaJasenRouter);
 
 // Centralized error handling
 app.use(errorHandler);
