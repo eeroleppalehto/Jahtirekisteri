@@ -9,6 +9,7 @@ import {
     getAllKasittely,
     getAllRuhonosa,
     getAllSukupuoli,
+    getAllSeurueTyyppi,
 } from "../services/optionTablesService";
 
 // Initialize an express router
@@ -46,6 +47,11 @@ router.get("/ruhonosa", (async (_req, res) => {
 // Fetches all records from the 'sukupuoli' table
 router.get("/sukupuoli", (async (_req, res) => {
     const data = await getAllSukupuoli();
+    res.status(200).json(data);
+}) as express.RequestHandler);
+
+router.get("/seurueTyyppi", (async (_req, res) => {
+    const data = await getAllSeurueTyyppi();
     res.status(200).json(data);
 }) as express.RequestHandler);
 
