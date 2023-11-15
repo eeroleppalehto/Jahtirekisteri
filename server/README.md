@@ -20,7 +20,7 @@ To get this project up and running on your local machine, follow these steps:
 
 * Once previous steps have been done, run the following command to install the dependencies for the project `npm install`
 
-## Getting started
+## Manual
 
 ### Starting the server
 
@@ -32,30 +32,26 @@ To start Prisma Studio, run the following command: `npx prisma studio`. Now you 
 
 Prisma Studio is a visual editor for your database. You can use it to browse and edit data in your database. You can also use it to test your database queries.
 
-## Folder structure
+## Extensions
 
-Here is a short description of the most important files and folders in the server folder:
+This section contains recomendations for extensions for VS Code.
 
-* **prisma folder**: This folder contains the Prisma schema file and the migrations folder. The migrations folder contains the migrations for the database. 
-  * **schema.prisma**: This file contains the database schema.
-* **routers folder**: This folder contains the routers for the REST API.
-* **services folder**: This folder contains the services used by the routers.
-* **tests folder**: This folder contains the tests for the server.
-* **utils folder**: This folder contains the utility functions for the server such as the error handler
-* **zodSchemas folder**: This folder contains the Zod schemas to validate the data sent to the server.
-* **client.ts**: This file contains the singleton for the Prisma client that is used to access the database.
-* **index.ts**: This file contains the main logic for the server.
-* **singleton.ts**: This file contains the singleton object for testing prisma client.
+### ESLint
 
-## Libraries
+ESLint is a tool for identifying and reporting on patterns found in ECMAScript/JavaScript code, with the goal of making code more consistent and avoiding bugs. In layman's terms, it's a tool that analyzes your code and points out any errors or bad practices that your code may have.
 
-Here is a list of the most important libraries used in the server:
+### GitHub Copilot
 
-| Library | Short description | Documentation |
-| --- | --- | --- |
-| [Express](https://expressjs.com/) | Web framework for Node.js | [Documentation](https://expressjs.com/en/5x/api.html) |
-| Prisma | Database toolkit for Node.js and TypeScript | [Documentation](https://www.prisma.io/docs/) |
-| Zod | TypeScript-first schema validation with static type inference | [Documentation](https://zod.dev/) |
-| Jest | JavaScript Testing Framework | [Documentation](https://jestjs.io/docs/getting-started) |
-| Supertest | HTTP assertions for Jest | [Documentation](https://github.com/ladjs/supertest#readme) |
-| express-async-errors | Async/await error handling for Express | [Documentation](https://github.com/davidbanham/express-async-errors#readme) |
+GitHub Copilot is an AI pair programmer that helps you write better code. GitHub Copilot draws context from the code you’re working on, suggesting whole lines or entire functions.
+
+### Pretty TypeScript Errors
+
+This extension will format TypeScript errors in a way that is easy to read and understand. It will also add links to the documentation for each error code.
+
+### Prisma
+
+The Prisma extension provides syntax highlighting for Prisma schema files (.prisma) and Prisma Client queries (.ts, .js, .jsx, .tsx).
+
+### Rest Client
+
+REST Client allows you to send HTTP request and view the response in Visual Studio Code directly. Alternatively, you can use Postman to test the server. You can get Postman from <https://www.postman.com/downloads/>.
