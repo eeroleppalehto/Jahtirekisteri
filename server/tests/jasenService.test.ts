@@ -10,7 +10,6 @@ test("should create new member", async () => {
         jakeluosoite: "Testiosoite 123",
         postinumero: "00100",
         postitoimipaikka: "Helsinki",
-        puhelinnumero: "0401234567",
         tila: "aktiivinen",
     };
 
@@ -33,7 +32,6 @@ test("should update a member", async () => {
         jakeluosoite: "Muokattu Osoite 321",
         postinumero: "00200",
         postitoimipaikka: "Espoo",
-        puhelinnumero: "0401234567",
         tila: "poistunut",
     };
 
@@ -65,7 +63,6 @@ test("should delete a member", async () => {
         jakeluosoite: "Poisto Osoite 123",
         postinumero: "00300",
         postitoimipaikka: "Vantaa",
-        puhelinnumero: "0401234567",
         tila: "poistunut",
     });
 
@@ -77,7 +74,6 @@ test("should delete a member", async () => {
         jakeluosoite: "Poisto Osoite 123",
         postinumero: "00300",
         postitoimipaikka: "Vantaa",
-        puhelinnumero: "0401234567",
         tila: "poistunut",
     });
 });
@@ -93,7 +89,6 @@ test("should get all members", async () => {
             jakeluosoite: "Testiosoite 123",
             postinumero: "00100",
             postitoimipaikka: "Helsinki",
-            puhelinnumero: "0401234567",
             tila: "aktiivinen",
         },
         {
@@ -103,7 +98,6 @@ test("should get all members", async () => {
             jakeluosoite: "Toinen Osoite 321",
             postinumero: "00200",
             postitoimipaikka: "Espoo",
-            puhelinnumero: "0407654321",
             tila: "poistunut",
         },
     ];
