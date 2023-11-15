@@ -6,7 +6,7 @@ This directory contains automated tests for the Jahtirekisteri application. The 
 
 ### File Structure
 
-- `jasen.test.ts`: Contains tests for member management services including member creation, updating, deletion, and listing.
+- `jasenService.test.ts`: Contains tests for member management services including member creation, updating, deletion, and listing.
 
 ### Testing Framework and Tools
 
