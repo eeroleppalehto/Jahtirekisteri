@@ -12,11 +12,16 @@ const router = express.Router();
 router.get("/", (async (req, res) => {
     const viewName = req.query.viewName;
 
+    const { column, value } = req.query as {
+        column: string | undefined;
+        value: string | undefined;
+    };
+
     if (typeof viewName !== "string") {
         throw new Error("Invalid view name");
     }
 
-    const data = await getViewData(viewName);
+    const data = await getViewData(viewName, column, value);
     res.status(200).json(data); // 200 OK
 }) as express.RequestHandler);
 
