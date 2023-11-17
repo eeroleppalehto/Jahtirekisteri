@@ -125,8 +125,8 @@ viewMap.set(
         jakoryhma.ryhman_nimi,
         jakoryhma.seurue_id,
         seurue.seurueen_nimi,
-        count(jasenyys.jasen_id)::integer AS "Jäseniä",
-        sum(jasenyys.osuus)::double precision / 100::real AS "Osuus Summa"
+        count(jasenyys.jasen_id)::integer AS jasenia,
+        sum(jasenyys.osuus)::double precision / 100::real AS osuus_summa
     FROM jakoryhma
     JOIN seurue ON jakoryhma.seurue_id = seurue.seurue_id
         LEFT JOIN jasenyys ON jasenyys.ryhma_id = jakoryhma.ryhma_id
