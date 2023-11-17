@@ -2,6 +2,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import MemberScreen from "../../screens/MemberScreen";
 import GroupScreen from "../../screens/GroupScreen";
 import { View, Text } from "react-native";
+import { useTheme } from "react-native-paper";
 import ErrorScreen from "../../screens/ErrorScreen";
 import { MaintenanceTabParamList } from "../../NavigationTypes";
 
@@ -22,8 +23,15 @@ const Empty = () => {
     navigate between the MemberScreen, GroupScreen and PartyScreen.
  */
 function MaintenanceNav() {
+    const theme = useTheme();
     return (
-        <TopTab.Navigator>
+        <TopTab.Navigator
+            screenOptions={{
+                tabBarIndicatorStyle: {
+                    backgroundColor: theme.colors.primary,
+                },
+            }}
+        >
             <TopTab.Screen name="Jäsenet" component={MemberScreen} />
             <TopTab.Screen name="Ryhmät" component={GroupScreen} />
             <TopTab.Screen name="Seurueet" component={Empty} />
