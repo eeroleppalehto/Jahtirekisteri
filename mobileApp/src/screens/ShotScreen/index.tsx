@@ -1,7 +1,6 @@
-//import { ActivityIndicator } from "react-native";
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import { useState } from "react";
-import { MD3Colors, Text, ActivityIndicator } from "react-native-paper";
+import { Text, ActivityIndicator } from "react-native-paper";
 import { FlatList } from "react-native-gesture-handler";
 import useFetch from "../../../hooks/useFetch";
 import { BottomTabScreenProps } from "../../NavigationTypes";
