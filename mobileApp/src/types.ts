@@ -11,6 +11,21 @@ export type Jasen = {
 
 export type JasenForm = Partial<Omit<Jasen, "jasen_id">>;
 
+export type Group = {
+    ryhma_id: number;
+    seurue_id: number;
+    ryhman_nimi: string;
+};
+
+export type GroupViewQuery = {
+    ryhma_id: number;
+    ryhman_nimi: string;
+    seurue_id: number;
+    seurueen_nimi: string;
+    jasenia: number;
+    osuus_summa: number | null;
+};
+
 export type Shot = {
     kaato_id: number;
     jasen_id: number;

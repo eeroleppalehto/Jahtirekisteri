@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { Text, Avatar, MD3Colors, TouchableRipple } from "react-native-paper";
+import { Text, Avatar, TouchableRipple, useTheme } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { Shot } from "../../types";
@@ -14,6 +14,8 @@ type Props = {
 
 // ListItem for displaying a single shot in a list
 function ShotListItem({ shot, navigation }: Props) {
+    const theme = useTheme();
+
     // Format date to Finnish format
     const dateStringArray = new Date(shot.kaatopaiva)
         .toLocaleDateString("fi-FI", {
@@ -32,7 +34,7 @@ function ShotListItem({ shot, navigation }: Props) {
                 <MaterialCommunityIcons
                     name="gender-male"
                     size={20}
-                    color={MD3Colors.neutral30}
+                    color={theme.colors.outline}
                 />
             );
         } else if (gender === "Naaras") {
@@ -40,7 +42,7 @@ function ShotListItem({ shot, navigation }: Props) {
                 <MaterialCommunityIcons
                     name="gender-female"
                     size={20}
-                    color={MD3Colors.neutral30}
+                    color={theme.colors.outline}
                     style={{ flexGrow: 0 }}
                 />
             );
@@ -49,7 +51,7 @@ function ShotListItem({ shot, navigation }: Props) {
                 <MaterialCommunityIcons
                     name="minus"
                     size={20}
-                    color={MD3Colors.neutral30}
+                    color={theme.colors.outline}
                 />
             );
         }
@@ -97,7 +99,7 @@ function ShotListItem({ shot, navigation }: Props) {
                             <Text
                                 variant="bodyMedium"
                                 style={{
-                                    color: MD3Colors.neutral40,
+                                    color: theme.colors.outline,
                                 }}
                             >
                                 Miika Hiivola
@@ -111,7 +113,7 @@ function ShotListItem({ shot, navigation }: Props) {
                             <Text
                                 variant="bodyMedium"
                                 style={{
-                                    color: MD3Colors.neutral40,
+                                    color: theme.colors.outline,
                                 }}
                             >
                                 {shot.ikaluokka}
@@ -128,7 +130,8 @@ function ShotListItem({ shot, navigation }: Props) {
 const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
-        paddingVertical: 12,
+        alignItems: "center",
+        paddingVertical: 20,
         gap: 15,
     },
     avatar: {
