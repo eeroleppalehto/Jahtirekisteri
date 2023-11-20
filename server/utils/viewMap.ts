@@ -136,3 +136,18 @@ viewMap.set(
         jakoryhma.seurue_id,
         seurue.seurueen_nimi`
 );
+
+viewMap.set(
+    "mobiili_seurue_sivu",
+    queryBuilder`
+    SELECT seurue.seurue_id,
+        seurue.seurueen_nimi,
+        seurue.jasen_id,
+        (jasen.sukunimi::text || ' '::text) || jasen.etunimi::text AS seurueen_johatajan_nimi,
+        seurue.seurue_tyyppi_id,
+        seurue_tyyppi.seurue_tyyppi_nimi
+    FROM seurue
+        INNER JOIN jasen ON jasen.jasen_id = seurue.jasen_id
+        INNER JOIN seurue_tyyppi ON seurue_tyyppi.seurue_tyyppi_id = seurue.seurue_tyyppi_id
+    WHERE ${"column"} = ${"value"};`
+);

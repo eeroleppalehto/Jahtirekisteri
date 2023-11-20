@@ -26,6 +26,15 @@ export type GroupViewQuery = {
     osuus_summa: number | null;
 };
 
+export type PartyViewQuery = {
+    seurue_id: number;
+    seurueen_nimi: string;
+    jasen_id: number;
+    seurueen_johatajan_nimi: string;
+    seurue_tyyppi_id: number;
+    seurue_tyyppi_nimi: string;
+};
+
 export type Shot = {
     kaato_id: number;
     jasen_id: number;
