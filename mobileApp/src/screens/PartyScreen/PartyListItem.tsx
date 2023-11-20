@@ -37,7 +37,7 @@ function PartyListItem({ party }: Props) {
                                 color: theme.colors.outline,
                             }}
                         >
-                            Seurueen Johtaja:
+                            {"Seurueenjohtaja:"}
                         </Text>
                         <Text
                             variant="bodyMedium"
