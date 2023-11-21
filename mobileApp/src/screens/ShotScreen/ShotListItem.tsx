@@ -2,13 +2,13 @@ import { View } from "react-native";
 import { Text, Avatar, TouchableRipple, useTheme } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
-import { Shot } from "../../types";
+import { ShotViewQuery } from "../../types";
 import { BottomTabScreenProps } from "../../NavigationTypes";
 
 type navigationProps = BottomTabScreenProps<"Kaadot">["navigation"];
 
 type Props = {
-    shot: Shot;
+    shot: ShotViewQuery;
     navigation: navigationProps;
 };
 
@@ -102,7 +102,7 @@ function ShotListItem({ shot, navigation }: Props) {
                                     color: theme.colors.outline,
                                 }}
                             >
-                                Miika Hiivola
+                                {shot.kaatajan_nimi}
                             </Text>
                         </View>
                         <View

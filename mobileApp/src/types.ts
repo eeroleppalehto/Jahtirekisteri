@@ -6,6 +6,7 @@ export type Jasen = {
     jakeluosoite: string;
     postinumero: string;
     postitoimipaikka: string;
+    puhelinnumero: string;
     tila: string;
 };
 
@@ -46,6 +47,28 @@ export type Shot = {
     ikaluokka: string;
     lisatieto: string;
     elaimen_nimi: string;
+};
+
+export type ShotViewQuery = {
+    kaato_id: number;
+    jasen_id: number;
+    kaatajan_nimi: string;
+    kaatopaiva: string;
+    ruhopaino: number;
+    paikka_teksti: string;
+    paikka_koordinaatti: string;
+    sukupuoli: string;
+    ikaluokka: string;
+    lisatieto: string;
+    elaimen_nimi: string;
+};
+
+export type UsageViewQuery = {
+    kaato_id: number;
+    kaadon_kasittely_id: number;
+    kasittelyid: number;
+    kasittely_maara: number;
+    kasittely_teksti: string;
 };
 
 export type ShotFormType = Partial<Omit<Shot, "kaato_id">>;

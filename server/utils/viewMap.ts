@@ -1,5 +1,11 @@
 import { queryBuilder } from "./queryBuilder";
 
+/**
+ * This file contains the view map for the database views. This map is used to
+ * validate the view name and to build the query for the view.
+ *
+ * @date 11/20/2023 - 11:12:19 AM
+ */
 type Params = {
     column: string | number;
     value: number;
@@ -7,6 +13,9 @@ type Params = {
 
 type QueryBuilder = (params: Params) => string;
 
+// Map for the views. The key is the view name and the value is the query builder
+// which returns a function that takes the column and value as parameters and
+// returns the query for the view.
 export const viewMap = new Map<string, QueryBuilder>([
     [
         "jaetut_lihat",
@@ -118,6 +127,7 @@ export const viewMap = new Map<string, QueryBuilder>([
     ],
 ]);
 
+// View for the GroupScreen in the mobile app
 viewMap.set(
     "mobiili_ryhma_sivu",
     queryBuilder`
@@ -137,6 +147,7 @@ viewMap.set(
         seurue.seurueen_nimi`
 );
 
+// View for the PartyScreen in the mobile app
 viewMap.set(
     "mobiili_seurue_sivu",
     queryBuilder`
@@ -149,5 +160,39 @@ viewMap.set(
     FROM seurue
         INNER JOIN jasen ON jasen.jasen_id = seurue.jasen_id
         INNER JOIN seurue_tyyppi ON seurue_tyyppi.seurue_tyyppi_id = seurue.seurue_tyyppi_id
+    WHERE ${"column"} = ${"value"};`
+);
+
+// View for the ShotScreen in the mobile app
+viewMap.set(
+    "mobiili_kaato_sivu",
+    queryBuilder`
+    SELECT kaato.kaato_id,
+        kaato.jasen_id,
+        (jasen.sukunimi::text || ' '::text) || jasen.etunimi::text AS kaatajan_nimi,
+        kaato.kaatopaiva,
+        kaato.ruhopaino,
+        kaato.paikka_teksti,
+        kaato.paikka_koordinaatti,
+        kaato.elaimen_nimi,
+        kaato.sukupuoli,
+        kaato.ikaluokka,
+        kaato.lisatieto
+    FROM kaato
+	    INNER JOIN jasen ON jasen.jasen_id = kaato.jasen_id
+    WHERE ${"column"} = ${"value"};`
+);
+
+// View for usages in the mobile app
+viewMap.set(
+    "mobiili_kaadon_kasittely",
+    queryBuilder`
+    SELECT kaadon_kasittely.kaato_id,
+        kaadon_kasittely.kaadon_kasittely_id,
+        kaadon_kasittely.kasittelyid,
+        kaadon_kasittely.kasittely_maara,
+        kasittely.kasittely_teksti
+    FROM kaadon_kasittely
+	    INNER JOIN kasittely ON kaadon_kasittely.kasittelyid = kasittely.kasittelyid
     WHERE ${"column"} = ${"value"};`
 );

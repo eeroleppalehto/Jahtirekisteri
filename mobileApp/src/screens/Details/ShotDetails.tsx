@@ -1,9 +1,10 @@
-import { Text, Divider, useTheme } from "react-native-paper";
+import { Text, Divider, ActivityIndicator, useTheme } from "react-native-paper";
 import { RootStackScreenProps } from "../../NavigationTypes";
 import useFetch from "../../../hooks/useFetch";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import IconListItem from "../../components/IconListItem";
+import { ShotViewQuery, UsageViewQuery } from "../../types";
 
 type Props = RootStackScreenProps<"Details">;
 
@@ -13,12 +14,29 @@ type Props = RootStackScreenProps<"Details">;
 
 // Screen for displaying details screen for a shot
 function ShotDetails({ route, navigation }: Props) {
+    const results = useFetch<UsageViewQuery[]>(
+        `view/?viewName=mobiili_kaadon_kasittely&column=kaadon_kasittely.kaato_id&value=${route.params.data.kaato_id}`
+    );
     const theme = useTheme();
     if (!route.params) return <Text>Virhe!</Text>;
+
+    const { data } = route.params as { data: ShotViewQuery };
 
     const locationTitle = "Paikka";
 
     const description = undefined;
+
+    const dateString = new Date(data.kaatopaiva).toLocaleDateString("fi-FI");
+
+    const UsageComponent = (usage: UsageViewQuery) => {
+        return (
+            <IconListItem
+                iconSet="NoIcon"
+                title={usage.kasittely_teksti}
+                description={usage.kasittely_maara.toString()}
+            />
+        );
+    };
 
     return (
         <ScrollView>
@@ -36,45 +54,45 @@ function ShotDetails({ route, navigation }: Props) {
                 iconSet="MaterialIcons"
                 iconNameMaterial="location-on"
                 title={locationTitle}
-                description={"Mynämäki"}
+                description={data.paikka_teksti}
             />
             <IconListItem
                 iconSet="MaterialCommunityIcons"
                 iconNameMaterialCommunity="calendar"
                 title={"Päivämäärä"}
-                description={"12.12.2020"}
+                description={dateString}
             />
             <IconListItem
                 iconSet="MaterialCommunityIcons"
                 iconNameMaterialCommunity="account"
                 title={"Kaataja"}
-                description={description}
+                description={data.kaatajan_nimi}
             />
             <IconListItem
                 iconSet="MaterialCommunityIcons"
                 iconNameMaterialCommunity="scale"
                 title={"Paino"}
-                description={description}
+                description={`${data.ruhopaino.toString()}kg`}
             />
             <IconListItem
                 iconSet="NoIcon"
                 title={"Eläin"}
-                description={description}
+                description={data.elaimen_nimi}
             />
             <IconListItem
                 iconSet="NoIcon"
                 title={"Ikäluokka"}
-                description={description}
+                description={data.ikaluokka}
             />
             <IconListItem
                 iconSet="NoIcon"
                 title={"Sukupuoli"}
-                description={description}
+                description={data.sukupuoli}
             />
             <IconListItem
                 iconSet="NoIcon"
                 title={"Lisätietoja"}
-                description={description}
+                description={data.lisatieto}
             />
             <Divider />
             <Text
@@ -88,16 +106,25 @@ function ShotDetails({ route, navigation }: Props) {
                 Käsittelyt
             </Text>
             <View style={{ paddingTop: 20, paddingBottom: 300 }}>
-                <IconListItem
-                    iconSet="NoIcon"
-                    title="Jäsenelle"
-                    description={"Määrä 75%"}
-                />
-                <IconListItem
-                    iconSet="NoIcon"
-                    title="Seuralle"
-                    description={"Määrä 25%"}
-                />
+                {results.loading ? (
+                    <ActivityIndicator
+                        size={"large"}
+                        style={{ paddingTop: 20 }}
+                    />
+                ) : (
+                    results.data?.map((usage) => {
+                        const descriptionText = `Määrä ${usage.kasittely_maara.toString()}%`;
+
+                        return (
+                            <IconListItem
+                                key={usage.kasittelyid}
+                                iconSet="NoIcon"
+                                title={usage.kasittely_teksti}
+                                description={descriptionText}
+                            />
+                        );
+                    })
+                )}
             </View>
         </ScrollView>
     );

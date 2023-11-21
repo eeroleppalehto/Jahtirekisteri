@@ -13,8 +13,9 @@ export default function FormAppBar({
     route,
     options,
 }: Props) {
-    const { type, shot, usage, clear } = route.params as {
+    const { type, data, shot, usage, clear } = route.params as {
         type: string;
+        data: any;
         shot?: ShotFormType;
         usage?: UsageForm[];
         clear?: any;
@@ -22,8 +23,9 @@ export default function FormAppBar({
 
     // The callback function that is called when the user presses the save button
     // TODO: Exract this function to a separate file
+    // TODO: Check if the form is valid before submitting
     const handleShotFormSubmit = () => {
-        let path: string;
+        let path: string = "";
         const method = "POST";
         let payload: any;
 
@@ -41,15 +43,27 @@ export default function FormAppBar({
                 (item) => item.kasittelyid !== undefined
             );
 
+            path = `createShotUsage`;
+
             payload = {
                 shot,
                 usages,
             };
+        } else if (type === "jäsen") {
+            if (!data) {
+                console.log("no data");
+                return;
+            }
+            path = "members";
+            payload = { ...data };
+        } else {
+            console.log("no type");
+            return;
         }
 
         console.log("Submitting...");
 
-        fetch(`${BASE_URL}/api/createShotUsage`, {
+        fetch(`${BASE_URL}/api/${path}`, {
             method,
             headers: {
                 "Content-Type": "application/json",
