@@ -15,7 +15,7 @@ export default function FormScreen({ route, navigation }: Props) {
     // Switch case for selecting the correct form
     switch (type) {
         case "jäsen":
-            return <MemberForm />;
+            return <MemberForm route={route} navigation={navigation} />;
         case "kaato":
             return <ShotForm route={route} navigation={navigation} />;
         default:
