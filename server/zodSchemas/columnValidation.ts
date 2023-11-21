@@ -4,6 +4,7 @@ const columnList: string[] = [
     "jakoryhma.ryhma_id",
     "seurue_id",
     "kaadon_kasittely.kaato_id",
+    "kaadon_kasittely.kasittelyid",
 ];
 
 const validateColumn = (column: string) => {
