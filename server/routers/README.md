@@ -22,10 +22,10 @@ To make requests to the server, you can use `curl` command in the terminal or an
 
 ```sh
 # Retrieves all harvest processing information
-curl -X GET http://localhost:3000/kaadonkasittely
+curl -X GET http://localhost:3000/api/shot-usages
 
 # Retrieves individual harvest processing information based on ID
-curl -X GET http://localhost:3000/kaadonkasittely/{id}
+curl -X GET http://localhost:3000/api/shot-usages/{id}
 
 Replace {id} with the actual ID of the harvest processing entry you wish to retrieve. Ensure that you have installed and configured all necessary dependencies and that your server is running.
 
@@ -37,31 +37,31 @@ The table below lists the available routers and their corresponding files in the
 | Router                  | File                        | Description |
 |-------------------------|-----------------------------|-------------|
 | `ApiViewRouter`         | `apiViewRouter.ts`          | Manages the retrieval of view data. |
-| `JakoryhmaRouter`       | `jakoryhmaRouter.ts`        | Provides functionalities for managing groups. |
-| `JakotapahtumaRouter`   | `jakotapahtumaRouter.ts`    | Handles the management of distribution events. |
-| `JasenRouter`           | `jasenRouter.ts`            | Manages member information. |
-| `JasenyysRouter`        | `jasenyysRouter.ts`         | Handles membership information. |
-| `KaadonkasittelyRouter` | `kaadonkasittelyRouter.ts`  | Manages harvest processing information. |
-| `KaatoRouter`           | `kaatoRouter.ts`            | Manages harvest data. |
-| `LupaRouter`            | `lupaRouter.ts`             | Handles permit information. |
+| `GroupsRouter`          | `groupsRouter.ts`           | Provides functionalities for managing groups. |
+| `SharesRouter`          | `sharesRouter.ts`           | Handles the management of distribution events. |
+| `MembersRouter`         | `membersRouter.ts`          | Manages member information. |
+| `MembershipsRouter`     | `membershipsRouter.ts`      | Handles membership information. |
+| `ShotUsagesRouter`      | `shotUsagesRouter.ts`       | Manages harvest processing information. |
+| `ShotsRouter`           | `shotsRouter.ts`            | Manages harvest data. |
+| `LicensesRouter`        | `licensesRouter.ts`         | Handles permit information. |
 | `OptionTablesRouter`    | `optionTablesRouter.ts`     | Offers listings from helper option tables. |
-| `SeurueRouter`          | `seurueRouter.ts`           | Manages hunting party information. |
+| `PartiesRouter`         | `partiesRouter.ts`          | Manages hunting party information. |
 
 
-### `KaadonkasittelyRouter` - `kaadonkasittelyRouter.ts`
+### `ShotUsagesRouter - shotUsagesRouter.ts`
 - GET /: Returns all the harvest processing entries.
 - GET /:id: Retrieves a single harvest processing entry by its ID.
 - POST /: Creates a new harvest processing entry.
 - PUT /:id: Updates an existing harvest processing entry.
 - DELETE /:id: Deletes a harvest processing entry.
 
-### `KaatoRouter` - `kaatoRouter.ts`
+### `ShotsRouter - shotsRouter.ts`
 - GET /: Retrieves all harvest entries.
 - POST /: Creates a new harvest entry.
 - PUT /:id: Updates an existing harvest entry.
 - DELETE /:id: Deletes a harvest entry.
 
-### `LupaRouter` - `lupaRouter.ts`
+### `LicensesRouter - licensesRouter.ts`
 - GET /: Lists all permits.
 - GET /:id: Retrieves a permit entry by its ID.
 - POST /: Creates a new permit.
@@ -75,7 +75,7 @@ The table below lists the available routers and their corresponding files in the
 - GET /ruhonosa: Fetches all records from the 'ruhonosa' table.
 - GET /sukupuoli: Fetches all records from the 'sukupuoli' table.
 
-### `SeurueRouter` - `seurueRouter.ts`
+### `PartiesRouter - partiesRouter.ts`
 - GET /: Lists all hunting parties.
 - GET /:id: Retrieves a hunting party by its ID.
 - POST /: Creates a new hunting party.
