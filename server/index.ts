@@ -2,18 +2,18 @@
 import express from "express";
 import cors from "cors";
 import "express-async-errors";
-import jasenRouter from "./routers/jasenRouter";
-import kaatoRouter from "./routers/kaatoRouter";
-import jakoryhmaRouter from "./routers/jakoryhmaRouter";
-import jakotapahtumaRouter from "./routers/jakotapahtumaRouter";
-import kaadonkasittelyRouter from "./routers/kaadonkasittelyRouter";
-import lupaRouter from "./routers/lupaRouter";
-import seurueRouter from "./routers/seurueRouter";
-import jasenyysRouter from "./routers/jasenyysRouter";
+import jasenRouter from "./routers/membersRouter";
+import kaatoRouter from "./routers/shotsRouter";
+import jakoryhmaRouter from "./routers/groupsRouter";
+import jakotapahtumaRouter from "./routers/sharesRouter";
+import kaadonkasittelyRouter from "./routers/shotUsagesRouter";
+import lupaRouter from "./routers/licensesRouter";
+import seurueRouter from "./routers/partiesRouter";
+import jasenyysRouter from "./routers/membershipsRouter";
 import apiViewRouter from "./routers/apiViewRouter";
 import optionTablesRouter from "./routers/optionTablesRouter";
 import createShotUsageRouter from "./routers/createShotUsageRouter";
-import jakotapahtumaJasenRouter from "./routers/jakotapahtumaJasenRouter";
+import jakotapahtumaJasenRouter from "./routers/memberSharesRouter";
 import { errorHandler } from "./utils/middleware"; // Import errorHandler
 
 // Initialize the Express application
@@ -32,17 +32,18 @@ app.get("/ping", (_req, res) => {
 
 // Attach routers to the /api/ path
 app.use("/api/members", jasenRouter);
-app.use("/api/jakoryhma", jakoryhmaRouter);
+app.use("/api/groups", jakoryhmaRouter);
 app.use("/api/shots", kaatoRouter);
-app.use("/api/jakotapahtuma", jakotapahtumaRouter);
-app.use("/api/kaadonkasittely", kaadonkasittelyRouter);
-app.use("/api/lupa", lupaRouter);
-app.use("/api/seurue", seurueRouter);
-app.use("/api/jasenyys", jasenyysRouter);
+app.use("/api/shares", jakotapahtumaRouter);
+app.use("/api/shot-usages", kaadonkasittelyRouter);
+app.use("/api/licenses", lupaRouter);
+app.use("/api/parties", seurueRouter);
+app.use("/api/memberships", jasenyysRouter);
 app.use("/api/view", apiViewRouter);
 app.use("/api/option-tables", optionTablesRouter);
 app.use("/api/createShotUsage", createShotUsageRouter);
-app.use("/api/jakotapahtumaJasen", jakotapahtumaJasenRouter);
+app.use("/api/member-shares", jakotapahtumaJasenRouter);
+
 
 // Centralized error handling
 app.use(errorHandler);
