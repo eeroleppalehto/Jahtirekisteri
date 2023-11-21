@@ -1,12 +1,11 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { Text } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
 import MaintenanceNav from "./MaintenanceNav";
-import { BottomNavParamList } from "../../NavigationTypes";
-
+import ShareNav from "./ShareNav";
 import ChartVictoryXL from "../../screens/GraphScreen/ChartVictoryXL";
 import ShotScreen from "../../screens/ShotScreen";
+import { BottomNavParamList } from "../../NavigationTypes";
 
 const Tab = createMaterialBottomTabNavigator<BottomNavParamList>();
 
@@ -51,7 +50,7 @@ function BottomNav() {
             />
             <Tab.Screen
                 name="Jako"
-                component={Placeholder}
+                component={ShareNav}
                 options={{
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons
