@@ -2,18 +2,18 @@
 import express from "express";
 import cors from "cors";
 import "express-async-errors";
-import jasenRouter from "./routers/membersRouter";
-import kaatoRouter from "./routers/shotsRouter";
-import jakoryhmaRouter from "./routers/groupsRouter";
-import jakotapahtumaRouter from "./routers/sharesRouter";
-import kaadonkasittelyRouter from "./routers/shotUsagesRouter";
-import lupaRouter from "./routers/licensesRouter";
-import seurueRouter from "./routers/partiesRouter";
-import jasenyysRouter from "./routers/membershipsRouter";
-import apiViewRouter from "./routers/apiViewRouter";
-import optionTablesRouter from "./routers/optionTablesRouter";
-import createShotUsageRouter from "./routers/createShotUsageRouter";
-import jakotapahtumaJasenRouter from "./routers/memberSharesRouter";
+import jasenRouter from "./routers/v1/membersRouter";
+import kaatoRouter from "./routers/v1/shotsRouter";
+import jakoryhmaRouter from "./routers/v1/groupsRouter";
+import jakotapahtumaRouter from "./routers/v1/sharesRouter";
+import kaadonkasittelyRouter from "./routers/v1/shotUsagesRouter";
+import lupaRouter from "./routers/v1/licensesRouter";
+import seurueRouter from "./routers/v1/partiesRouter";
+import jasenyysRouter from "./routers/v1/membershipsRouter";
+import apiViewRouter from "./routers/v1/apiViewRouter";
+import optionTablesRouter from "./routers/v1/optionTablesRouter";
+import createShotUsageRouter from "./routers/v1/createShotUsageRouter";
+import jakotapahtumaJasenRouter from "./routers/v1/memberSharesRouter";
 import { errorHandler } from "./utils/middleware"; // Import errorHandler
 
 // Initialize the Express application
@@ -30,19 +30,19 @@ app.get("/ping", (_req, res) => {
     res.send("pong");
 });
 
-// Attach routers to the /api/ path
-app.use("/api/members", jasenRouter);
-app.use("/api/groups", jakoryhmaRouter);
-app.use("/api/shots", kaatoRouter);
-app.use("/api/shares", jakotapahtumaRouter);
-app.use("/api/shot-usages", kaadonkasittelyRouter);
-app.use("/api/licenses", lupaRouter);
-app.use("/api/parties", seurueRouter);
-app.use("/api/memberships", jasenyysRouter);
-app.use("/api/view", apiViewRouter);
-app.use("/api/option-tables", optionTablesRouter);
-app.use("/api/createShotUsage", createShotUsageRouter);
-app.use("/api/member-shares", jakotapahtumaJasenRouter);
+// Attach routers to the /api/v1/ path
+app.use("/api/v1/members", jasenRouter);
+app.use("/api/v1/groups", jakoryhmaRouter);
+app.use("/api/v1/shots", kaatoRouter);
+app.use("/api/v1/shares", jakotapahtumaRouter);
+app.use("/api/v1/shot-usages", kaadonkasittelyRouter);
+app.use("/api/v1/licenses", lupaRouter);
+app.use("/api/v1/parties", seurueRouter);
+app.use("/api/v1/memberships", jasenyysRouter);
+app.use("/api/v1/view", apiViewRouter);
+app.use("/api/v1/option-tables", optionTablesRouter);
+app.use("/api/v1/createShotUsage", createShotUsageRouter);
+app.use("/api/v1/member-shares", jakotapahtumaJasenRouter);
 
 
 // Centralized error handling
