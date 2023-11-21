@@ -8,9 +8,11 @@ import { MaintenanceTabParamList } from "../../NavigationTypes";
 
 const TopTab = createMaterialTopTabNavigator<MaintenanceTabParamList>();
 
-/* 
-    Top navigation for the maintenance screens. This component is used to
-    navigate between the MemberScreen, GroupScreen and PartyScreen.
+/**
+ * Top navigation for the maintenance screens. This component is used to
+ * navigate between the MemberScreen, GroupScreen and PartyScreen.
+ * @date 11/21/2023 - 11:19:22 AM
+ *
  */
 function MaintenanceNav() {
     const theme = useTheme();
