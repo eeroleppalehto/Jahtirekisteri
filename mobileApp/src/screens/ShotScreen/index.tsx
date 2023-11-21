@@ -4,7 +4,7 @@ import { Text, ActivityIndicator } from "react-native-paper";
 import { FlatList } from "react-native-gesture-handler";
 import useFetch from "../../../hooks/useFetch";
 import { BottomTabScreenProps } from "../../NavigationTypes";
-import { Shot } from "../../types";
+import { Shot, ShotViewQuery } from "../../types";
 import FloatingNavigationButton from "../../components/FloatingNavigationButton";
 import ShotListItem from "./ShotListItem";
 
@@ -30,10 +30,12 @@ function ShotScreen({ navigation, route }: Props) {
     };
 
     // Fetch all shots from the API
-    const results = useFetch<Shot[]>("shots");
+    const { data, loading, error } = useFetch<ShotViewQuery[]>(
+        "view/?viewName=mobiili_kaato_sivu"
+    );
 
-    if (results.error) {
-        return <Text>{results.error.message}</Text>;
+    if (error) {
+        return <Text>{error.message}</Text>;
     }
 
     // If loading, display loading indicator
@@ -41,12 +43,12 @@ function ShotScreen({ navigation, route }: Props) {
     // TODO: Add error handling
     return (
         <>
-            {results.loading ? (
+            {loading ? (
                 <ActivityIndicator size={"large"} style={{ paddingTop: 50 }} />
             ) : (
                 <>
                     <FlatList
-                        data={results.data}
+                        data={data}
                         keyExtractor={(item) => item.kaato_id.toString()}
                         renderItem={({ item }) => (
                             <ShotListItem shot={item} navigation={navigation} />
