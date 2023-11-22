@@ -6,8 +6,8 @@ import {
     readLupaById,
     updateLupaById,
     deleteLupaById,
-    readAllLupas
-} from "../services/lupaService";
+    readAllLupas,
+} from "../../services/lupaService";
 
 // Initialize the Express router
 const router = express.Router();

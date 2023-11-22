@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // Import necessary modules and services
 import express from "express";
-import { getViewData } from "../services/apiViewService";
+import { getViewData } from "../../services/apiViewService";
 // import viewValidationZod from '../zodSchemas/viewValidationZod';
 
 // Initialize an express router

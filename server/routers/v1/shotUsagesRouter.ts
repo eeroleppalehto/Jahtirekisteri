@@ -6,7 +6,7 @@ import {
     getAllKaadonkasittelyt,
     updateKaadonkasittelyById,
     deleteKaadonkasittelyById,
-} from "../services/kaadonkasittelyService";
+} from "../../services/kaadonkasittelyService";
 
 // Initialize a new router for handling shot usage-related requests
 const router = express.Router();

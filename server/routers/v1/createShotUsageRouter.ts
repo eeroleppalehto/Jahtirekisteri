@@ -1,5 +1,5 @@
 import express from "express";
-import { createShotUsage } from "../services/createShotUsageService";
+import { createShotUsage } from "../../services/createShotUsageService";
 
 const createShotUsageRouter = express.Router();
 

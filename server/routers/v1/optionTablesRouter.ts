@@ -10,7 +10,7 @@ import {
     getAllRuhonosa,
     getAllSukupuoli,
     getAllSeurueTyyppi,
-} from "../services/optionTablesService";
+} from "../../services/optionTablesService";
 
 // Initialize an express router
 const router = express.Router();

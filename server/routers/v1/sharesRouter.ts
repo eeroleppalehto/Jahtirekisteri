@@ -6,7 +6,7 @@ import {
     updateJakotapahtumaById,
     deleteJakotapahtumaById,
     getAllJakotapahtumat,
-} from "../services/jakotapahtumaService";
+} from "../../services/jakotapahtumaService";
 
 // Initialize a new router for handling share-related requests
 const router = express.Router();
