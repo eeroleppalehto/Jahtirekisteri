@@ -1,6 +1,6 @@
 // Import required modules and services
 import express from "express";
-import * as JakoryhmaService from "../services/jakoryhmaService";
+import * as JakoryhmaService from "../../services/jakoryhmaService";
 // Import Zod schema for data validation
 // import { JakoryhmaSchema } from "../zodSchemas/jakoryhmaZod";
 
