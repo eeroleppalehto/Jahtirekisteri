@@ -86,4 +86,19 @@ export type ShotUsageForm = {
     }>;
 };
 
+export type ShareViewQuery = {
+    kaato_id: number;
+    kasittely_maara: number;
+    jaettu_pros: number | null;
+    kaataja: string;
+    kaatopaiva: string;
+    paikka_teksti: string;
+    elaimen_nimi: string;
+    ikaluokka: string;
+    sukupuoli: string;
+    kasittely_teksti: string;
+    ruhopaino: number;
+    kaadon_kasittely_id: number;
+};
+
 export type FormTypes = ShotUsageForm | JasenForm | undefined;

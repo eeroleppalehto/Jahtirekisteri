@@ -196,3 +196,30 @@ viewMap.set(
 	    INNER JOIN kasittely ON kaadon_kasittely.kasittelyid = kasittely.kasittelyid
     WHERE ${"column"} = ${"value"};`
 );
+
+// View for group shares in the mobile app
+viewMap.set(
+    "mobiili_ryhmien_jaot",
+    queryBuilder`
+    SELECT kaadon_kasittely.kaato_id,
+        kaadon_kasittely.kasittely_maara,
+        sum(ruhonosa.osnimitys_suhdeluku) * 10000::double precision / kaadon_kasittely.kasittely_maara::double precision AS jaettu_pros,
+        (jasen.sukunimi::text || ' '::text) || jasen.etunimi::text AS kaataja,
+        kaato.kaatopaiva,
+        kaato.paikka_teksti,
+        kaato.elaimen_nimi,
+        kaato.ikaluokka,
+        kaato.sukupuoli,
+        kasittely.kasittely_teksti,
+        kaato.ruhopaino,
+        kaadon_kasittely.kaadon_kasittely_id
+    FROM jasen
+        JOIN kaato ON jasen.jasen_id = kaato.jasen_id
+        JOIN kaadon_kasittely ON kaadon_kasittely.kaato_id = kaato.kaato_id
+        JOIN kasittely ON kaadon_kasittely.kasittelyid = kasittely.kasittelyid
+        LEFT JOIN jakotapahtuma ON jakotapahtuma.kaadon_kasittely_id = kaadon_kasittely.kaadon_kasittely_id
+        LEFT JOIN ruhonosa ON ruhonosa.osnimitys::text = jakotapahtuma.osnimitys::text
+    WHERE ${"column"} = ${"value"}
+    GROUP BY kaadon_kasittely.kaato_id, kaadon_kasittely.kasittely_maara, ((jasen.sukunimi::text || ' '::text) || jasen.etunimi::text), kaato.kaatopaiva, kaato.paikka_teksti, kaato.elaimen_nimi, kaato.ikaluokka, kaato.sukupuoli, kasittely.kasittely_teksti, kaato.ruhopaino, kaadon_kasittely.kaadon_kasittely_id
+    ORDER BY kaadon_kasittely.kaato_id DESC;`
+);

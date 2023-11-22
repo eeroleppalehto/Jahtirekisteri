@@ -73,18 +73,18 @@ export type MaintenanceTabScreenProps<T extends keyof MaintenanceTabParamList> =
         RootStackScreenProps<keyof RootStackParamList>
     >;
 
-///////////////////////////
-// export type HomeTabParamList = {
-//     Popular: undefined;
-//     Latest: undefined;
-// };
+// Share tab types
+export type ShareTabParamList = {
+    Jäsenille: undefined;
+    Ryhmille: undefined;
+};
 
-// export type HomeTabScreenProps<T extends keyof HomeTabParamList> =
-//     CompositeScreenProps<
-//         MaterialBottomTabScreenProps<HomeTabParamList, T>,
-//         RootStackScreenProps<keyof RootStackParamList>
-//     >;
-///////////////////////////
+export type ShareTabScreenProps<T extends keyof ShareTabParamList> =
+    CompositeScreenProps<
+        MaterialTopTabScreenProps<ShareTabParamList, T>,
+        RootStackScreenProps<keyof RootStackParamList>
+    >;
+
 declare global {
     namespace ReactNavigation {
         interface RootParamList extends RootStackParamList {}

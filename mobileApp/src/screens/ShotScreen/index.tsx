@@ -4,7 +4,7 @@ import { Text, ActivityIndicator } from "react-native-paper";
 import { FlatList } from "react-native-gesture-handler";
 import useFetch from "../../../hooks/useFetch";
 import { BottomTabScreenProps } from "../../NavigationTypes";
-import { Shot, ShotViewQuery } from "../../types";
+import { ShotViewQuery } from "../../types";
 import FloatingNavigationButton from "../../components/FloatingNavigationButton";
 import ShotListItem from "./ShotListItem";
 
