@@ -1,5 +1,5 @@
 import useFetch from "../../../hooks/useFetch";
-import { ScrollView, View, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import {
     RadioButton,
     Text,
@@ -31,7 +31,7 @@ function AnimalModal({
     onButtonPress,
 }: Props) {
     // Get animals from database
-    const results = useFetch<Animal[]>("option-tables/elain");
+    const results = useFetch<Animal[]>("option-tables/animals");
     const theme = useTheme();
 
     // Return loading indicator if data is still loading,

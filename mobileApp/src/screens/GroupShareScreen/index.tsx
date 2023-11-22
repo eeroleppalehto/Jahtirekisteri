@@ -10,7 +10,7 @@ type Props = ShareTabScreenProps<"Ryhmille">;
 //Screen for displaying shares meant for groups
 function GroupShareScreen({ navigation, route }: Props) {
     const { data, loading, error } = useFetch<ShareViewQuery[]>(
-        "view/?viewName=mobiili_ryhmien_jaot&column=kaadon_kasittely.kasittelyid&value=2"
+        "views/?name=mobiili_ryhmien_jaot&column=kaadon_kasittely.kasittelyid&value=2"
     );
 
     return (

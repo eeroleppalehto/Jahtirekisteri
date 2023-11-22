@@ -15,7 +15,7 @@ type Props = RootStackScreenProps<"Details">;
 // Screen for displaying details screen for a shot
 function ShotDetails({ route, navigation }: Props) {
     const results = useFetch<UsageViewQuery[]>(
-        `view/?viewName=mobiili_kaadon_kasittely&column=kaadon_kasittely.kaato_id&value=${route.params.data.kaato_id}`
+        `views/?name=mobiili_kaadon_kasittely&column=kaadon_kasittely.kaato_id&value=${route.params.data.kaato_id}`
     );
     const theme = useTheme();
     if (!route.params) return <Text>Virhe!</Text>;

@@ -33,7 +33,7 @@ function UsageModal({
     onButtonPress,
 }: Props) {
     // Get usages from database
-    const results = useFetch<Usage[]>("option-tables/kasittely");
+    const results = useFetch<Usage[]>("option-tables/usages");
     const theme = useTheme();
 
     // Callback function for changing the selected usage

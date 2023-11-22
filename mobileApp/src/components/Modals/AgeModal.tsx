@@ -1,5 +1,5 @@
 import useFetch from "../../../hooks/useFetch";
-import { ScrollView, View, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import {
     RadioButton,
     Text,
@@ -31,7 +31,7 @@ function AgeModal({
     onButtonPress,
 }: Props) {
     // Get age groups from database
-    const results = useFetch<Age[]>("option-tables/aikuinenvasa");
+    const results = useFetch<Age[]>("option-tables/ages");
     const theme = useTheme();
 
     // Return loading indicator if data is still loading,

@@ -31,7 +31,7 @@ function ShotScreen({ navigation, route }: Props) {
 
     // Fetch all shots from the API
     const { data, loading, error } = useFetch<ShotViewQuery[]>(
-        "view/?viewName=mobiili_kaato_sivu"
+        "views/?name=mobiili_kaato_sivu"
     );
 
     if (error) {

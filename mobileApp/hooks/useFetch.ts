@@ -14,7 +14,7 @@ function useFetch<T>(url: string) {
     const [error, setError] = useState<Error | undefined>(undefined);
     const [loading, setLoading] = useState(true);
 
-    const urlCompose = `${BASE_URL}/api/${url}`;
+    const urlCompose = `${BASE_URL}/api/v1/${url}`;
 
     useEffect(() => {
         const fetchGet = async () => {
