@@ -39,11 +39,10 @@ app.use("/api/v1/shot-usages", kaadonkasittelyRouter);
 app.use("/api/v1/licenses", lupaRouter);
 app.use("/api/v1/parties", seurueRouter);
 app.use("/api/v1/memberships", jasenyysRouter);
-app.use("/api/v1/view", apiViewRouter);
+app.use("/api/v1/views", apiViewRouter);
 app.use("/api/v1/option-tables", optionTablesRouter);
-app.use("/api/v1/createShotUsage", createShotUsageRouter);
+app.use("/api/v1/shot-with-usages", createShotUsageRouter);
 app.use("/api/v1/member-shares", jakotapahtumaJasenRouter);
-
 
 // Centralized error handling
 app.use(errorHandler);
