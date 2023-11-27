@@ -4,6 +4,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
 import { Prisma } from "@prisma/client";
+import { writeLog } from '../logModule';
 
 // Defining a custom type for structured error messages
 export type ErrorType = {
@@ -11,6 +12,24 @@ export type ErrorType = {
     errorType: string;
     errorMessage: string;
     errorDetails: string[] | unknown[];
+};
+
+// Custom middleware for logging requests and responses
+export const logRequest = (req: Request, res: Response, next: NextFunction) => {
+    // Store the original 'send' method of the response object
+    const originalSend = res.send;
+
+    // Override the 'send' method with a custom implementation
+    res.send = function (data: string | Buffer) {  // Here you can specify the type of data if necessary
+    // Log the request and response details in a non-blocking way
+        writeLog(`Datetime: ${new Date().toISOString()}, Route: ${req.path}, Method: ${req.method}, Status: ${res.statusCode}, ID: ${req.id || 'N/A'}, ResponseBody: ${data}`)
+            .catch((error) => console.error('Log error:', error));
+
+        // Use the spread operator to pass all arguments to the original send function
+        return originalSend.apply(res, [data]);
+    };
+    // Proceed to the next middleware
+    next();
 };
 
 // Custom error handler function
