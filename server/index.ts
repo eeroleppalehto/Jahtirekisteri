@@ -14,7 +14,7 @@ import apiViewRouter from "./routers/v1/apiViewRouter";
 import optionTablesRouter from "./routers/v1/optionTablesRouter";
 import createShotUsageRouter from "./routers/v1/createShotUsageRouter";
 import jakotapahtumaJasenRouter from "./routers/v1/memberSharesRouter";
-import { errorHandler } from "./utils/middleware"; // Import errorHandler
+import { errorHandler, logRequest } from "./utils/middleware"; // Import errorHandler
 
 // Initialize the Express application
 const app = express();
@@ -22,6 +22,8 @@ const app = express();
 // Middleware configurations
 app.use(cors()); // Enable CORS
 app.use(express.json()); // Parse JSON payloads
+
+app.use(logRequest); // Log requests and responses
 
 // Routes
 app.get("/ping", (_req, res) => {
