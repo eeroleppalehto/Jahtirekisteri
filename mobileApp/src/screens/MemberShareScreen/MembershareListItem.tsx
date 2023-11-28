@@ -4,7 +4,6 @@ import {
     useTheme,
     TouchableRipple,
     Text,
-    Chip,
     Surface,
 } from "react-native-paper";
 import { ShareViewQuery } from "../../types";
