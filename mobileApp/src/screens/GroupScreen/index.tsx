@@ -48,13 +48,15 @@ function GroupScreen({ navigation, route }: Props) {
                     {item.groups[0].seurueen_nimi}
                 </Text>
                 {item.groups.map((group) => (
-                    <GroupListItem key={group.ryhma_id} group={group} />
+                    <GroupListItem
+                        key={group.ryhma_id}
+                        group={group}
+                        navigation={navigation}
+                    />
                 ))}
             </View>
         );
     });
-
-    console.log(groupsByParty);
 
     return (
         <ScrollView>
