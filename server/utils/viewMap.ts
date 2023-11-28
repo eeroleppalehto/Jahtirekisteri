@@ -223,3 +223,20 @@ viewMap.set(
     GROUP BY kaadon_kasittely.kaato_id, kaadon_kasittely.kasittely_maara, ((jasen.sukunimi::text || ' '::text) || jasen.etunimi::text), kaato.kaatopaiva, kaato.paikka_teksti, kaato.elaimen_nimi, kaato.ikaluokka, kaato.sukupuoli, kasittely.kasittely_teksti, kaato.ruhopaino, kaadon_kasittely.kaadon_kasittely_id
     ORDER BY kaadon_kasittely.kaato_id DESC;`
 );
+
+viewMap.set(
+    "mobiili_jasenyydet",
+    queryBuilder`
+    SELECT jasenyys.jasen_id,
+	jasenyys.jasenyys_id,
+	(jasen.sukunimi::text || ' '::text) || jasen.etunimi::text AS jasenen_nimi,
+	jasenyys.osuus,
+	jasenyys.liittyi,
+	jasenyys.poistui,
+	jasenyys.ryhma_id,
+    jasenyys.seurue_id
+FROM jasenyys
+	INNER JOIN jasen ON jasen.jasen_id = jasenyys.jasen_id
+	INNER JOIN jakoryhma ON jakoryhma.ryhma_id = jasenyys.ryhma_id
+WHERE ${"column"} = ${"value"};`
+);
