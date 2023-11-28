@@ -43,9 +43,13 @@ Here is a short description of the most important files and folders in the serve
 * **tests folder**: This folder contains the tests for the server.
 * **utils folder**: This folder contains the utility functions for the server such as the error handler
 * **zodSchemas folder**: This folder contains the Zod schemas to validate the data sent to the server.
+* **logs folder**:  Contains log files for the server.
+  * **server.log**:The main log file where server events are recorded.
 * **client.ts**: This file contains the singleton for the Prisma client that is used to access the database.
 * **index.ts**: This file contains the main logic for the server.
 * **singleton.ts**: This file contains the singleton object for testing prisma client.
+* **logModule.ts**:Module for logging server events.
+
 
 ## Libraries
 
