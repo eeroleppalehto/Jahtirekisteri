@@ -96,7 +96,7 @@ function MemberScreen({ navigation, route }: Props) {
                 <ActivityIndicator size={"large"} style={{ paddingTop: 50 }} />
             ) : (
                 <>
-                    <FlatList
+                    <FlatList //TODO: Add sticky headers? https://reactnative.dev/docs/flatlist#stickyheadersenabled
                         data={membersByLetter}
                         keyExtractor={(item) => item.letter}
                         renderItem={({ item }) => (
