@@ -31,7 +31,7 @@ function GenderModal({
     onButtonPress,
 }: Props) {
     // Get genders from the database
-    const results = useFetch<Gender[]>("option-tables/sukupuoli");
+    const results = useFetch<Gender[]>("option-tables/genders");
     const theme = useTheme();
 
     // Return loading indicator if data is still loading,

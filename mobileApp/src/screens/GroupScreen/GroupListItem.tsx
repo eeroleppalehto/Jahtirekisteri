@@ -3,13 +3,17 @@ import { Text, TouchableRipple, useTheme } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { GroupViewQuery } from "../../types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaintenanceTabScreenProps } from "../../NavigationTypes";
+
+type navigationProps = MaintenanceTabScreenProps<"Ryhmät">["navigation"];
 
 type Props = {
     group: GroupViewQuery;
+    navigation: navigationProps;
 };
 
 // ListItem for displaying a single group in a list
-function GroupListItem({ group }: Props) {
+function GroupListItem({ group, navigation }: Props) {
     const theme = useTheme();
 
     // Left trailing icon for the group
@@ -22,7 +26,15 @@ function GroupListItem({ group }: Props) {
     );
 
     return (
-        <TouchableRipple onPress={() => console.log("pressed")}>
+        <TouchableRipple
+            onPress={() =>
+                navigation.navigate("Details", {
+                    type: "Ryhmä",
+                    data: group,
+                    title: group.ryhman_nimi,
+                })
+            }
+        >
             <View style={styles.container}>
                 {iconElement}
                 <View style={styles.textContainer}>

@@ -10,7 +10,7 @@ type Props = MaintenanceTabScreenProps<"Seurueet">;
 
 function PartyScreen({ navigation, route }: Props) {
     const { data, loading } = useFetch<PartyViewQuery[]>(
-        `view/?viewName=mobiili_seurue_sivu`
+        `views/?name=mobiili_seurue_sivu`
     );
 
     const theme = useTheme();

@@ -11,7 +11,7 @@ type Props = MaintenanceTabScreenProps<"Ryhmät">;
 // Screen for displaying all groups in Groups tab
 function GroupScreen({ navigation, route }: Props) {
     const results = useFetch<GroupViewQuery[]>(
-        "view/?viewName=mobiili_ryhma_sivu"
+        "views/?name=mobiili_ryhma_sivu"
     );
 
     const theme = useTheme();
@@ -48,13 +48,15 @@ function GroupScreen({ navigation, route }: Props) {
                     {item.groups[0].seurueen_nimi}
                 </Text>
                 {item.groups.map((group) => (
-                    <GroupListItem key={group.ryhma_id} group={group} />
+                    <GroupListItem
+                        key={group.ryhma_id}
+                        group={group}
+                        navigation={navigation}
+                    />
                 ))}
             </View>
         );
     });
-
-    console.log(groupsByParty);
 
     return (
         <ScrollView>

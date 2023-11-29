@@ -101,4 +101,15 @@ export type ShareViewQuery = {
     kaadon_kasittely_id: number;
 };
 
+export type MembershipViewQuery = {
+    jasen_id: number;
+    jasenen_nimi: string;
+    jasenyys_id: number;
+    osuus: number;
+    liittyi: string;
+    poistui: string | null;
+    ryhma_id: number | null;
+    seurue_id: number;
+};
+
 export type FormTypes = ShotUsageForm | JasenForm | undefined;

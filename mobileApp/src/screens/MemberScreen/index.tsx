@@ -1,7 +1,6 @@
 import { ActivityIndicator, Text, useTheme } from "react-native-paper";
 import { useState } from "react";
-import { ScrollView, FlatList } from "react-native-gesture-handler";
-import jasenService from "../../services/jasenService";
+import { FlatList } from "react-native-gesture-handler";
 import { Jasen } from "../../types";
 import MemberListItem from "./MemberListItem";
 import { MaintenanceTabScreenProps } from "../../NavigationTypes";
@@ -97,7 +96,7 @@ function MemberScreen({ navigation, route }: Props) {
                 <ActivityIndicator size={"large"} style={{ paddingTop: 50 }} />
             ) : (
                 <>
-                    <FlatList
+                    <FlatList //TODO: Add sticky headers? https://reactnative.dev/docs/flatlist#stickyheadersenabled
                         data={membersByLetter}
                         keyExtractor={(item) => item.letter}
                         renderItem={({ item }) => (

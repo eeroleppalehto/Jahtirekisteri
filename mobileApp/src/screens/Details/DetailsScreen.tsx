@@ -1,5 +1,6 @@
 import MemberDetails from "./MemberDetails";
 import ShotDetails from "./ShotDetails";
+import GroupDetails from "./GroupDetails";
 import ErrorScreen from "../ErrorScreen";
 import { RootStackScreenProps } from "../../NavigationTypes";
 
@@ -19,6 +20,8 @@ function DetailsScreen({ route, navigation }: Props) {
                 return <MemberDetails route={route} navigation={navigation} />;
             case "Kaato":
                 return <ShotDetails route={route} navigation={navigation} />;
+            case "Ryhmä":
+                return <GroupDetails route={route} navigation={navigation} />;
             default:
                 return <ErrorScreen />;
         }

@@ -32,7 +32,7 @@ function ShooterModal({
     onButtonPress,
 }: Props) {
     // Get shooters from database
-    const results = useFetch<Shooter[]>("view/?viewName=nimivalinta");
+    const results = useFetch<Shooter[]>("views/?name=nimivalinta");
     const theme = useTheme();
 
     // Callback function for changing the selected shooter
