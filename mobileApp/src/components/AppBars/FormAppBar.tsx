@@ -1,4 +1,10 @@
-import { Appbar } from "react-native-paper";
+import {
+    Appbar,
+    Text,
+    Surface,
+    useTheme,
+    TouchableRipple,
+} from "react-native-paper";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { UsageForm, ShotFormType } from "../../types";
 import { BASE_URL } from "../../baseUrl";
@@ -20,6 +26,8 @@ export default function FormAppBar({
         usage?: UsageForm[];
         clear?: any;
     };
+
+    const theme = useTheme();
 
     // The callback function that is called when the user presses the save button
     // TODO: Exract this function to a separate file
@@ -83,10 +91,40 @@ export default function FormAppBar({
         <Appbar.Header>
             <Appbar.BackAction onPress={navigation.goBack} />
             <Appbar.Content title={`Lisää ${type}`} />
-            <Appbar.Action
-                icon="content-save"
+            <TouchableRipple
+                style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    backgroundColor: theme.colors.primary,
+                    borderRadius: 16,
+                    paddingLeft: 8,
+                    marginRight: 8,
+                }}
                 onPress={() => handleShotFormSubmit()}
-            />
+            >
+                <Surface
+                    elevation={1}
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        backgroundColor: theme.colors.primary,
+                        borderRadius: 16,
+                        paddingLeft: 8,
+                        gap: -8,
+                    }}
+                >
+                    <Text
+                        variant="bodyLarge"
+                        style={{ color: theme.colors.onPrimary }}
+                    >
+                        Tallenna
+                    </Text>
+                    <Appbar.Action
+                        icon="content-save-outline"
+                        color={theme.colors.onPrimary}
+                    />
+                </Surface>
+            </TouchableRipple>
         </Appbar.Header>
     );
 }
