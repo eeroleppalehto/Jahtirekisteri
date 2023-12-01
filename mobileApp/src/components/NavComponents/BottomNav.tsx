@@ -1,5 +1,4 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { Text } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import MaintenanceNav from "./MaintenanceNav";
 import ShareNav from "./ShareNav";
@@ -8,10 +7,6 @@ import ShotScreen from "../../screens/ShotScreen";
 import { BottomNavParamList } from "../../NavigationTypes";
 
 const Tab = createMaterialBottomTabNavigator<BottomNavParamList>();
-
-const Placeholder = () => {
-    return <Text>Placeholder</Text>;
-};
 
 /* 
     The main component of the app. This component is used to navigate between
