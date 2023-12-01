@@ -6,7 +6,7 @@ import {
     Platform,
     I18nManager,
 } from "react-native";
-import { AnimatedFAB } from "react-native-paper";
+import { AnimatedFAB, useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
 interface Props {
@@ -32,6 +32,8 @@ function FloatingNavigationButton({ scrollValue, type, label }: Props) {
 
     const isIOS = Platform.OS === "ios";
 
+    const theme = useTheme();
+
     // Get navigation object from react navigation
     // TODO: See if navigation can be passed as a prop
     const navigation = useNavigation();
@@ -49,7 +51,12 @@ function FloatingNavigationButton({ scrollValue, type, label }: Props) {
             visible={true}
             animateFrom={"right"}
             iconMode={"static"}
-            style={[styles.fabStyle, {}, { right: 16 }]}
+            color={theme.colors.onPrimary}
+            style={[
+                styles.fabStyle,
+                {},
+                { right: 16, backgroundColor: theme.colors.primary },
+            ]}
         />
     );
 }
