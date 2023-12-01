@@ -1,9 +1,17 @@
 import { View } from "react-native";
-import { Bar, CartesianChart } from "victory-native";
-import { LinearGradient, useFont, vec } from "@shopify/react-native-skia";
-// import inter from "../fonts/inter-medium.ttf"
+import useFetch from "../../../hooks/useFetch";
+type GroupDataChart = {
+    ryhma_id: number;
+    ryhman_nimi: string;
+    seurue_id: number;
+    osuus: number | null;
+    maara: number | null;
+};
 
 const ChartVictoryXL = () => {
+    const { data, loading, error } = useFetch<GroupDataChart[]>(
+        `views/?name=jakoryhma_osuus_maara`
+    );
     const font = useFont(
         require("../../fonts/Roboto-Regular.ttf"),
         12,
@@ -12,41 +20,45 @@ const ChartVictoryXL = () => {
         }
     );
 
-    const data = Array.from({ length: 6 }, (_, index) => ({
-        month: index + 1,
-        listenCount: Math.floor(Math.random() * (100 - 50 + 1)) + 50,
-    }));
+    const parsedData = data
+        ? data.map((item) => {
+              const maara = item.maara === null ? 0 : item.maara;
+              return {
+                  group: item.ryhman_nimi,
+                  maara: maara,
+              };
+          })
+        : [];
 
     return (
-        <View
-            style={{
-                flex: 1,
-                justifyContent: "space-between",
-                //alignItems: "center",
-                width: "100%",
-                height: "90%",
-                padding: "2%",
-            }}
-        >
-            <CartesianChart
-                data={data}
-                xKey="month"
-                yKeys={["listenCount"]}
-                domainPadding={{ left: 50, right: 50, top: 30 }}
+        <ScrollView>
+            <View style={{ height: 400, margin: 16 }}>
+                {loading ? (
+                    <ActivityIndicator animating={true} />
+                ) : (
+                    <CartesianChart
+                        data={parsedData}
+                        xKey="group"
+                        yKeys={["maara"]}
+                        domainPadding={{
+                            left: 60,
+                            right: 60,
+                            top: 60,
+                            bottom: 400,
+                        }}
                 axisOptions={{
                     font,
-                    formatXLabel(value) {
-                        const date = new Date(2023, value - 1);
-                        return date.toLocaleString("default", {
-                            month: "short",
-                        });
+                            formatXLabel(_value) {
+                                return "";
                     },
                 }}
             >
                 {({ points, chartBounds }) => (
                     <Bar
+                                    key={"group"}
                         chartBounds={chartBounds}
-                        points={points.listenCount}
+                                    points={points.maara}
+                                    innerPadding={0.5}
                         roundedCorners={{
                             topLeft: 5,
                             topRight: 5,
@@ -55,12 +67,14 @@ const ChartVictoryXL = () => {
                         <LinearGradient
                             start={vec(0, 0)}
                             end={vec(0, 400)}
-                            colors={["#a78bfa", "#a78bfa50"]}
+                                        colors={["#526600", "#52660050"]}
                         />
                     </Bar>
-                )}
+                        )}
             </CartesianChart>
+                )}
         </View>
+        </ScrollView>
     );
 };
 
