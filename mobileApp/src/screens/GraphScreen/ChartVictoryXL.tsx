@@ -46,6 +46,7 @@ const ChartVictoryXL = () => {
                             top: 60,
                             bottom: 400,
                         }}
+                        chartPressState={state}
                 axisOptions={{
                     font,
                             formatXLabel(_value) {
@@ -54,6 +55,7 @@ const ChartVictoryXL = () => {
                 }}
             >
                 {({ points, chartBounds }) => (
+                            <>
                     <Bar
                                     key={"group"}
                         chartBounds={chartBounds}
@@ -70,6 +72,17 @@ const ChartVictoryXL = () => {
                                         colors={["#526600", "#52660050"]}
                         />
                     </Bar>
+                                {isActive && (
+                                    <ToolTip
+                                        x={state.x.position}
+                                        y={state.y.maara.position}
+                                        title={{
+                                            nimi: state.x.value.value,
+                                            maara: state.y.maara.value.value,
+                                        }}
+                                    />
+                                )}
+                            </>
                         )}
             </CartesianChart>
                 )}
@@ -77,5 +90,44 @@ const ChartVictoryXL = () => {
         </ScrollView>
     );
 };
+function ToolTip({
+    x,
+    y,
+    title,
+}: {
+    x: SharedValue<number>;
+    y: SharedValue<number>;
+    title: { nimi: string; maara: number };
+}) {
+    const theme = useTheme();
+
+    const nameLength = title.nimi.length * 4;
+    const amountLength = title.maara.toString().length * 4;
+
+    const font = useFont(
+        require("../../fonts/Roboto-Regular.ttf"),
+        16,
+        (err) => {
+            console.log(err.message);
+        }
+    );
+
+    return (
+        <>
+            <SkText
+                text={title.nimi}
+                x={x.value - nameLength}
+                y={16}
+                font={font}
+            />
+            <SkText
+                text={title.maara.toString() + " kg"}
+                x={x.value - amountLength}
+                y={32}
+                font={font}
+            />
+        </>
+    );
+}
 
 export default ChartVictoryXL;
