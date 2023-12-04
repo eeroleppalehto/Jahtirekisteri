@@ -51,7 +51,7 @@ export default function FormAppBar({
                 (item) => item.kasittelyid !== undefined
             );
 
-            path = `createShotUsage`;
+            path = `shot-with-usages`;
 
             payload = {
                 shot,
@@ -71,7 +71,7 @@ export default function FormAppBar({
 
         console.log("Submitting...");
 
-        fetch(`${BASE_URL}/api/${path}`, {
+        fetch(`${BASE_URL}/api/v1/${path}`, {
             method,
             headers: {
                 "Content-Type": "application/json",
