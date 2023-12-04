@@ -20,6 +20,12 @@ export const BASE_URL = 'http://<your-ip-address>:3000';
 
 Replace `<your-ip-address>` with your IP address. You can find your IP address by running the following command in the terminal: `ipconfig` on Windows or `ifconfig` on Mac. You can also find the IP address when running the app in the terminal between the `exp://` and `:19000` in the URL.
 
+## Build
+
+To build the apk-file of the application install the Expo CLI by running the following command: `npm install -g eas-cli`. After the installation you need to login to Expo by running the following command: `eas login`.
+
+To build the app run `eas build -p android --profile preview`. This will build the app in expo's servers and you can download the apk-file from the link that is provided after the build is done. If you're using Mac or Linux, you can also build the app locally by adding the `--local` flag to the command.
+
 ## File structure
 
 The `src` folder contains all the code for the app. The `assets` folder contains all the images and fonts used in the app. The `screen` directory is used to store all the screen views used in the app. For singular components, the `components` directory is used which holds for example navigation and app bar components among others.
@@ -39,7 +45,6 @@ Short description of the modules:
 | utils | Directory for utilities |
 | NavigationTypes.ts | Types for navigation |
 | types.ts | Types for the app |
-
 
 ## Libraries
 
