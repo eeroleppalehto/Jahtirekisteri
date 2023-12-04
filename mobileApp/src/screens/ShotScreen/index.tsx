@@ -1,7 +1,7 @@
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import { useState } from "react";
-import { Text, ActivityIndicator } from "react-native-paper";
-import { FlatList } from "react-native-gesture-handler";
+import { Text } from "react-native-paper";
+import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import useFetch from "../../../hooks/useFetch";
 import { BottomTabScreenProps } from "../../NavigationTypes";
 import { ShotViewQuery } from "../../types";
@@ -25,12 +25,8 @@ function ShotScreen({ navigation, route }: Props) {
         setScrollValue(currentScrollPosition);
     };
 
-    const onSwipeDown = () => {
-        console.log("swipe");
-    };
-
     // Fetch all shots from the API
-    const { data, loading, error } = useFetch<ShotViewQuery[]>(
+    const { data, loading, error, onRefresh } = useFetch<ShotViewQuery[]>(
         "views/?name=mobiili_kaato_sivu"
     );
 
@@ -43,26 +39,26 @@ function ShotScreen({ navigation, route }: Props) {
     // TODO: Add error handling
     return (
         <>
-            {loading ? (
-                <ActivityIndicator size={"large"} style={{ paddingTop: 50 }} />
-            ) : (
-                <>
-                    <FlatList
-                        data={data}
-                        keyExtractor={(item) => item.kaato_id.toString()}
-                        renderItem={({ item }) => (
-                            <ShotListItem shot={item} navigation={navigation} />
-                        )}
-                        onScroll={onScroll}
-                        // onGestureEvent={console.log("gesture")}
+            <FlatList
+                data={data}
+                keyExtractor={(item) => item.kaato_id.toString()}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={loading}
+                        onRefresh={onRefresh}
                     />
-                    <FloatingNavigationButton
-                        scrollValue={scrollValue}
-                        type="kaato"
-                        label="Lisää kaato  "
-                    />
-                </>
-            )}
+                }
+                renderItem={({ item }) => (
+                    <ShotListItem shot={item} navigation={navigation} />
+                )}
+                onScroll={onScroll}
+                // onGestureEvent={console.log("gesture")}
+            />
+            <FloatingNavigationButton
+                scrollValue={scrollValue}
+                type="kaato"
+                label="Lisää kaato  "
+            />
         </>
     );
 }

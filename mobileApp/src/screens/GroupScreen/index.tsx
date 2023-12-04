@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import { MaintenanceTabScreenProps } from "../../NavigationTypes";
 import { Text, ActivityIndicator, useTheme } from "react-native-paper";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, RefreshControl } from "react-native-gesture-handler";
 import { GroupViewQuery } from "../../types";
 import useFetch from "../../../hooks/useFetch";
 import GroupListItem from "./GroupListItem";
@@ -10,14 +10,14 @@ type Props = MaintenanceTabScreenProps<"Ryhmät">;
 
 // Screen for displaying all groups in Groups tab
 function GroupScreen({ navigation, route }: Props) {
-    const results = useFetch<GroupViewQuery[]>(
+    const { data, loading, error, onRefresh } = useFetch<GroupViewQuery[]>(
         "views/?name=mobiili_ryhma_sivu"
     );
 
     const theme = useTheme();
 
     // Group the groups by party
-    const groupsByParty = results.data?.reduce((acc, group) => {
+    const groupsByParty = data?.reduce((acc, group) => {
         // If the party is not yet in the array, add it
         // Otherwise, add the group to the party's groups
         if (!acc.some((item) => item.party === group.seurue_id)) {
@@ -59,12 +59,12 @@ function GroupScreen({ navigation, route }: Props) {
     });
 
     return (
-        <ScrollView>
-            {results.loading ? (
-                <ActivityIndicator size={"large"} style={{ paddingTop: 50 }} />
-            ) : (
-                <>{partyContent}</>
-            )}
+        <ScrollView
+            refreshControl={
+                <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+            }
+        >
+            <>{partyContent}</>
         </ScrollView>
     );
 }

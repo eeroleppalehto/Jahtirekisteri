@@ -1,6 +1,6 @@
 import { ActivityIndicator, Text, useTheme } from "react-native-paper";
 import { useState } from "react";
-import { FlatList } from "react-native-gesture-handler";
+import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import { Jasen } from "../../types";
 import MemberListItem from "./MemberListItem";
 import { MaintenanceTabScreenProps } from "../../NavigationTypes";
@@ -18,7 +18,7 @@ type MembersByLetter = {
 
 // Screen for displaying all members in Maintenance tab
 function MemberScreen({ navigation, route }: Props) {
-    const { data, loading, error } = useFetch<Jasen[]>("members");
+    const { data, loading, error, onRefresh } = useFetch<Jasen[]>("members");
     const [scrollValue, setScrollValue] = useState(0);
 
     const theme = useTheme();
@@ -92,23 +92,23 @@ function MemberScreen({ navigation, route }: Props) {
 
     return (
         <>
-            {loading ? (
-                <ActivityIndicator size={"large"} style={{ paddingTop: 50 }} />
-            ) : (
-                <>
-                    <FlatList //TODO: Add sticky headers? https://reactnative.dev/docs/flatlist#stickyheadersenabled
-                        data={membersByLetter}
-                        keyExtractor={(item) => item.letter}
-                        renderItem={({ item }) => (
-                            <MemberContent
-                                letter={item.letter}
-                                members={item.members}
-                            />
-                        )}
-                        onScroll={onScroll}
+            <FlatList //TODO: Add sticky headers? https://reactnative.dev/docs/flatlist#stickyheadersenabled
+                data={membersByLetter}
+                keyExtractor={(item) => item.letter}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={loading}
+                        onRefresh={onRefresh}
                     />
-                </>
-            )}
+                }
+                renderItem={({ item }) => (
+                    <MemberContent
+                        letter={item.letter}
+                        members={item.members}
+                    />
+                )}
+                onScroll={onScroll}
+            />
             <FloatingNavigationButton
                 scrollValue={scrollValue}
                 type="jäsen"
