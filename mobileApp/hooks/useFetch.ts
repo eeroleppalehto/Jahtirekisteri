@@ -17,6 +17,8 @@ function useFetch<T>(url: string) {
     const urlCompose = `${BASE_URL}/api/v1/${url}`;
 
     useEffect(() => {
+        // Function to fetch data from the backend
+        // and set the data, error and loading state accordingly
         const fetchGet = async () => {
             try {
                 setLoading(true);
@@ -39,9 +41,20 @@ function useFetch<T>(url: string) {
             }
         };
 
+        // Check if loading is false to prevent infinite loop
+        if (!loading) return;
+
         fetchGet();
-    }, [url]);
-    return { data, error, loading };
+    }, [url, loading]);
+
+    // Function for ScrollView and FlatList
+    // to set the loading state to true
+    // which will trigger the useEffect to fetch the data again
+    const onRefresh = () => {
+        setLoading(true);
+    };
+
+    return { data, error, loading, onRefresh };
 }
 
 export default useFetch;
