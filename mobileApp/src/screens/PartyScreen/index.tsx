@@ -1,15 +1,15 @@
 import useFetch from "../../../hooks/useFetch";
 import { PartyViewQuery } from "../../types";
 import { MaintenanceTabScreenProps } from "../../NavigationTypes";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
+import { ScrollView, RefreshControl } from "react-native-gesture-handler";
 import PartyListItem from "./PartyListItem";
-import { Text, ActivityIndicator, useTheme } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 import { View } from "react-native";
 
 type Props = MaintenanceTabScreenProps<"Seurueet">;
 
 function PartyScreen({ navigation, route }: Props) {
-    const { data, loading } = useFetch<PartyViewQuery[]>(
+    const { data, loading, error, onRefresh } = useFetch<PartyViewQuery[]>(
         `views/?name=mobiili_seurue_sivu`
     );
 
@@ -54,12 +54,12 @@ function PartyScreen({ navigation, route }: Props) {
     });
 
     return (
-        <ScrollView>
-            {loading ? (
-                <ActivityIndicator size={"large"} style={{ paddingTop: 50 }} />
-            ) : (
-                <>{partyContent}</>
-            )}
+        <ScrollView
+            refreshControl={
+                <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+            }
+        >
+            <>{partyContent}</>
         </ScrollView>
     );
 }

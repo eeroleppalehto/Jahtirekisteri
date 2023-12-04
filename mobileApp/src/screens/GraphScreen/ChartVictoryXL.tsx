@@ -6,7 +6,6 @@ import {
     LinearGradient,
     useFont,
     vec,
-    Circle,
     Text as SkText,
 } from "@shopify/react-native-skia";
 import type { SharedValue } from "react-native-reanimated";
