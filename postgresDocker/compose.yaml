@@ -22,3 +22,22 @@ services:
     ports:
       - "5050:80"
     restart: always
+
+  node-server:
+    container_name: node-server
+    image: node-server:latest
+    build: ../server
+    working_dir: /home/node/app
+    env_file:
+      - .env
+    environment:
+     - DATABASE_URL=postgresql://application:Q2werty@postgres:5432/dev_metsastys?schema=public
+     - PORT=8080
+    command: npm start
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - postgres
+    # volumes:
+    #   - ./node-server:/home/node/app
