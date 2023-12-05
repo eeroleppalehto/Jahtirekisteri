@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "tsc": "tsc",
+    "build": "tsc && cp -r prisma package.json package-lock.json .env build",
     "dev": "ts-node-dev index.ts",
     "lint": "eslint --ext .ts .",
     "start": "ts-node index.ts"
