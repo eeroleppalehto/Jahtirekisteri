@@ -2,6 +2,7 @@
 import express from "express";
 import cors from "cors";
 import "express-async-errors";
+import "dotenv/config";
 import jasenRouter from "./routers/v1/membersRouter";
 import kaatoRouter from "./routers/v1/shotsRouter";
 import jakoryhmaRouter from "./routers/v1/groupsRouter";
@@ -50,7 +51,7 @@ app.use("/api/v1/member-shares", jakotapahtumaJasenRouter);
 app.use(errorHandler);
 
 // Set the port
-const PORT = 3000;
+const PORT = process.env.PORT ? process.env.PORT : 3000;
 
 // Start the Express server
 app.listen(PORT, () => {
