@@ -13,4 +13,4 @@ WORKDIR /home/node/app
 COPY build/ .
 RUN npm install --omit=dev
 EXPOSE 8080
-CMD [ "npm", "start"]
+CMD [ "node", "index.js"]

@@ -33,7 +33,7 @@ services:
     environment:
      - DATABASE_URL=postgresql://application:Q2werty@postgres:5432/dev_metsastys?schema=public
      - PORT=8080
-    command: npm start
+    command: node index.js
     ports:
       - "8080:8080"
     restart: always
