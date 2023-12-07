@@ -43,4 +43,11 @@ A detailed description of each schema and the validation rules they enforce is p
 ### `SeurueZod` - `seurueZod.ts`
 - Requires club and member IDs, hunting party names, and validates data types and character lengths.
 
+### Schema Updates
+
+#### Recent Changes
+- `JakotapahtumaZod`: Updated to use `z.date()` for date fields to ensure consistency with Prisma schema's DateTime type. Added custom validation for the 'osnimitys' field.
+- `JasenyysZod`: Adjusted to align with new date formats and validation rules.
+- `JakotapahtumaJasenZod`:  Updated similarly to JakotapahtumaZod and JasenyysZod, including the use of z.date() for date fields and any custom validation functions or rules that were added or modified.
+
 These schema files are essential for maintaining high data quality standards and preventing invalid data from entering the system. They provide a clear contract for data structures across the application, thereby facilitating reliable and consistent data handling.
