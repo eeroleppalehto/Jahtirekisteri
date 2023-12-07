@@ -1,16 +1,15 @@
 import jakotapahtumaZod from '../zodSchemas/jakotapahtumaZod';
 
 describe('Jakotapahtuma Validation', () => {
-    // Testing valid 'osnimitys' values: 'Koko', 'Puolikas', and 'Neljännes'.
-    // Ensures that only these specific values are accepted for 'osnimitys'.
+    // Testing valid 'osnimitys' values with Date objects
     test.each(['Koko', 'Puolikas', 'Neljännes'])('valid osnimitys "%s"', (osnimitys) => {
         const validEvent = {
-            tapahtuma_id: 1, // Event ID as an integer
-            paiva: new Date().toISOString(), // ISO date format
-            ryhma_id: 1, // Group ID as an integer
-            osnimitys: osnimitys, // Portion name
-            kaadon_kasittely_id: 1, // Processing ID as an integer
-            maara: 10, // Quantity as a number
+            tapahtuma_id: 1,
+            paiva: new Date(), // Directly using Date object
+            ryhma_id: 1,
+            osnimitys,
+            kaadon_kasittely_id: 1,
+            maara: 10,
         };
         const result = jakotapahtumaZod.safeParse(validEvent);
         expect(result.success).toBe(true);
