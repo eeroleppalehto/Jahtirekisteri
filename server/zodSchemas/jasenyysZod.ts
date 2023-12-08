@@ -17,10 +17,10 @@ const jasenyysZod = z.object({
     osuus: z.number().int(),
 
     // Date when the member joined the group
-    liittyi: z.date(),
+    liittyi: z.string().datetime(),
 
     // Optional date when the member left the group
-    poistui: z.date().optional(),
+    poistui: z.string().datetime().optional(),
 });
 
 export default jasenyysZod;

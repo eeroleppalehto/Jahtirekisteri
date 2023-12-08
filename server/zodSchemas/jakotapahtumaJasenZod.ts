@@ -13,7 +13,7 @@ const jakotapahtumaJasenZod = z.object({
     tapahtuma_jasen_id: z.number().int().optional(),
 
     // Date field for the event, changed to use z.date() to match Prisma's DateTime type
-    paiva: z.date(), 
+    paiva: z.string().datetime(),
 
     // Integer ID for the jasenyys (membership) associated with this entity
     jasenyys_id: z.number().int(),

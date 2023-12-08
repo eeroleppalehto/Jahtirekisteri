@@ -13,7 +13,7 @@ const jakotapahtumaZod = z.object({
     tapahtuma_id: z.number().int().optional(),
 
     // Date field for the event, changed to use z.date() to match Prisma's DateTime type
-    paiva: z.date(),
+    paiva: z.string().datetime(),
 
     // Integer ID for the ryhma (group) associated with this event
     ryhma_id: z.number().int(),
