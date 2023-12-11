@@ -1,17 +1,21 @@
-import prisma from "../client";
-import { kaatoInput } from "../zodSchemas/kaatoZod";
+// kaatoService.ts
+import prisma from "../client"; // Import Prisma client for database operations
+import { kaatoInput } from "../zodSchemas/kaatoZod"; // Import Zod schema for kaato input validation
 
-// Define CRUD operations for kaato table
+/**
+ * This service module provides CRUD operations for the 'kaato' table in the database.
+ * It utilizes the Prisma ORM for interacting with the database and Zod for input validation.
+ */
 
-// Read all kaadot
+// Read all kaadot (entries) from the 'kaato' table
 const getAllKaato = async () => {
     const kaadot = await prisma.kaato.findMany();
     return kaadot;
 };
 
-// Create a new kaato
+// Create a new kaato entry in the 'kaato' table
 const createKaato = async (object: unknown) => {
-    const data = kaatoInput.parse(object);
+    const data = kaatoInput.parse(object); // Validate input using Zod schema
     const { 
         jasen_id,
         kaatopaiva,
@@ -40,9 +44,9 @@ const createKaato = async (object: unknown) => {
     return kaato;
 };
 
-// Update an existing kaato
+// Update an existing kaato entry in the 'kaato' table
 const updateKaato = async (id: number, object: unknown) => {
-    const data = kaatoInput.parse(object);
+    const data = kaatoInput.parse(object); // Validate input using Zod schema
     const { 
         jasen_id,
         kaatopaiva,
@@ -73,7 +77,7 @@ const updateKaato = async (id: number, object: unknown) => {
     return kaato;
 };
 
-// Delete an existing kaato
+// Delete an existing kaato entry from the 'kaato' table
 const deleteKaato = async (id: number) => {
     const kaato = await prisma.kaato.delete({
         where: { kaato_id: id }
@@ -82,4 +86,5 @@ const deleteKaato = async (id: number) => {
     return kaato;
 };
 
+// Export CRUD operations for external use
 export default { getAllKaato, createKaato, updateKaato, deleteKaato };
