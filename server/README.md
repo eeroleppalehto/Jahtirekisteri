@@ -18,6 +18,7 @@ To get this project up and running on your local machine, follow these steps:
   * `<database>` with the name of the database.
   * `<schema>` with the name of the schema.
 
+* You can specify the port for the server by adding `PORT=<port>` to the .env file. If you don't specify the port, the server will use default port 3000.
 * Once previous steps have been done, run the following command to install the dependencies for the project `npm install`
 
 ## Getting started
@@ -63,3 +64,13 @@ Here is a list of the most important libraries used in the server:
 | Jest | JavaScript Testing Framework | [Documentation](https://jestjs.io/docs/getting-started) |
 | Supertest | HTTP assertions for Jest | [Documentation](https://github.com/ladjs/supertest#readme) |
 | express-async-errors | Async/await error handling for Express | [Documentation](https://github.com/davidbanham/express-async-errors#readme) |
+
+## Build
+
+To build the server, run the following command: `npm run build`. This will compile the TypeScript files to JavaScript files and put them in the build folder. It will also copy the prisma folder, package.json, package-lock.json and .env files to the build folder.
+
+### Docker Image
+
+To build a docker image for the server, run the following command: `docker build -t node-server .`. This will build a docker image with the name node-server. If you're planning to use the docker compose in postgresDocker folder, you need to replace the DATABASE_URL in the .env file to match the docker compose file.
+
+Optionally to run the docker image, run the following command: `docker run -p <port-number>:<port-number> node-server`. This will run the docker image on port. This is not needed if you're planning to use the docker compose in postgresDocker folder.

@@ -17,6 +17,8 @@ Ensiksi tulee luoda postges Docker-image, jolla on suomalaiset merkistöt käyt�
 docker build -t postgres-14-fi:latest .
 ```
 
+Tämän lisäksi tulee luoda Docker-image node palvelimelle, joka käyttää luotua postgres-tietokantaa. Tämän luomiseksi seuraa server-kansion README.md tiedostossa olevia ohjeita Build-osiossa.
+
 Seuraava komento rakentaa docker kompoosin, joka sisältää sekä juuri luodun posgres-tietokannan että pgAdminin web-palvelimen. Luodakseen kompoosin, tulee kansiossa olla `.env`-tiedosto, jossa on määritelty seuraavat muuttujat
 
 * POSTGRES_USER
@@ -30,6 +32,8 @@ Komento myös ajaa `init`-kansiossa olevan SQL-skriptin, joka luo sovelluksen ti
 ```docker
 docker-compose up -d
 ```
+
+Jos olet tehnyt muutoksia
 
 ## pgAdmin
 
