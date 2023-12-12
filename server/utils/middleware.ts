@@ -1,5 +1,3 @@
-// utils/middleware.ts
-
 // Importing necessary types from express, zod, and prisma
 import { Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
@@ -36,6 +34,16 @@ export const logRequest = (req: Request, res: Response, next: NextFunction) => {
     };
     // Proceed to the next middleware
     next();
+};
+
+// Middleware for handling requests to unknown endpoints
+export const unknownEndpoint = (_req: Request, res: Response) => {
+    res.status(404).json({
+        success: false,
+        errorType: "NotFound",
+        errorMessage: "Unknown Endpoint",
+        errorDetails: ["The requested endpoint does not exist in the API"]
+    });
 };
 
 // Custom error handler function
