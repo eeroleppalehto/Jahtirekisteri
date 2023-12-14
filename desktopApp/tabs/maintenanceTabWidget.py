@@ -1,5 +1,5 @@
 
-from PyQt5.QtWidgets import QWidget, QScrollArea, QFrame, QVBoxLayout, QMessageBox, QPushButton, QTableWidget, QComboBox
+from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox, QPushButton, QTableWidget, QComboBox
 from PyQt5.QtCore import Qt
 from PyQt5.uic import loadUi
 import pgModule
