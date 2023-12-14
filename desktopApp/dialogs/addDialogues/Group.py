@@ -4,7 +4,7 @@ sys.path.append('../desktopApp')
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QDateEdit, QSpinBox, QComboBox, QLineEdit
 from PyQt5.uic import loadUi
-from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
+from dialogs.dialogueWindow import DialogFrame
 import pgModule as pgModule
 import prepareData as prepareData
 from datetime import date
@@ -26,12 +26,12 @@ class Group(DialogFrame):
         self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
 
         # Elements
-        self.addGroupGroupNameLE = self.addGroupGroupNameLineEdit
-        self.addGroupPartyCB = self.addGroupPartyComboBox
+        self.addGroupGroupNameLE: QLineEdit = self.addGroupGroupNameLineEdit
+        self.addGroupPartyCB: QComboBox = self.addGroupPartyComboBox
         
-        self.addGroupAddPushBtn = self.addGroupAddPushButton
+        self.addGroupAddPushBtn: QPushButton = self.addGroupAddPushButton
         self.addGroupAddPushBtn.clicked.connect(self.addGroup) # Signal
-        self.addGroupCancelPushBtn = self.addGroupCancelPushButton
+        self.addGroupCancelPushBtn: QPushButton = self.addGroupCancelPushButton
         self.addGroupCancelPushBtn.clicked.connect(self.closeDialog) # Signal
 
         self.populateAddGroupDialog()
