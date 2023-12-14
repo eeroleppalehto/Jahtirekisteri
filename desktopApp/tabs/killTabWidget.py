@@ -270,15 +270,14 @@ class Ui_killTabWidget(QScrollArea, QWidget):
                 databaseOperation, self.shotLicenseTW)
 
     def saveUsage(self, shotId, usageId, usagePortion):
-        """_summary_
+        """Insert single usage into database
 
         Args:
-            shotId (int): _description_
-            usageId (int): _description_
-            usagePortion (int): _description_
+            shotId (int): Id of shot to insert
+            usageId (int): Id of usage to insert
+            usagePortion (int): Portion amount to insert
         """
-        errorCode = 0
-        # FIXME: Is the try-except block necessary?
+
         try:
             sqlClauseBeginning = "INSERT INTO public.kaadon_kasittely(kaato_id, kasittelyid, kasittely_maara) VALUES("
             sqlClauseValues = f"{shotId!r}, {usageId!r}, {usagePortion!r})"
@@ -370,10 +369,8 @@ class Ui_killTabWidget(QScrollArea, QWidget):
     def toggleUsage2(self):
         if self.shotUsage2CheckB.isChecked():
             self.shotUsage2CB.setEnabled(True)
-            # self.shotUsage2PortionSB.setEnabled(True)
         else:
             self.shotUsage2CB.setEnabled(False)
-            # self.shotUsage2PortionSB.setEnabled(False)
 
     def calculateUsage2Value(self):
         value = self.shotUsagePortionSB.value()
