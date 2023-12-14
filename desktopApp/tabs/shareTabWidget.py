@@ -45,7 +45,7 @@ class Ui_shareTabWidget(QScrollArea, QWidget):
         # Signal when the user clicks an item on shareKillsTW
         self.shareKillsTW.itemClicked.connect(self.onShareKillTableClick)
 
-                # Read database connection arguments from the settings file
+        # Read database connection arguments from the settings file
         try:
             databaseOperation = pgModule.DatabaseOperation()
             self.connectionArguments = databaseOperation.readDatabaseSettingsFromFile('connectionSettings.dat')
