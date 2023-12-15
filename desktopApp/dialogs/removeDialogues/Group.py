@@ -26,7 +26,7 @@ class Group(DialogFrame):
         self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
 
         # Elements
-        self.removeGroupCB = self.removeGroupComboBox
+        self.removeGroupCB: QComboBox = self.removeGroupComboBox
         
         
         self.removeGroupRemovePushBtn: QPushButton = self.removeGroupRemovePushButton

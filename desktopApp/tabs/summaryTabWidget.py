@@ -1,6 +1,7 @@
 
-from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox
+from PyQt5.QtWidgets import QWidget, QScrollArea, QMessageBox, QTableWidget
 from PyQt5 import QtCore
+from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.uic import loadUi
 import pgModule
 import prepareData
@@ -19,9 +20,9 @@ class Ui_summaryTabWidget(QScrollArea, QWidget):
         # self.setCentralWidget(self.scrollArea)
 
         # Summary page (Yhteenveto)
-        self.summaryMeatSharedTW = self.meatSharedTableWidget
-        self.summaryGroupSummaryTW = self.groupSummaryTableWidget
-        self.sankeyWebV = self.sankeyWebEngineView
+        self.summaryMeatSharedTW: QTableWidget = self.meatSharedTableWidget
+        self.summaryGroupSummaryTW: QTableWidget = self.groupSummaryTableWidget
+        self.sankeyWebV: QWebEngineView = self.sankeyWebEngineView
 
         # Read database connection arguments from the settings file
         try:

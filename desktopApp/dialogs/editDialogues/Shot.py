@@ -72,6 +72,7 @@ class EditShot(DialogFrame):
 
 
     def toggleUsage2(self):
+        # Disable/enable 2nd usage, set value of 1st usage if 2nd usage not selected
         if self.editShotUsage2CheckB.isChecked():
             self.editShotUsage2CB.setEnabled(True)
         else:
@@ -220,6 +221,8 @@ class EditShot(DialogFrame):
         
         self.editShotWeightLE.setText(str(self.shotWeight))
     
+        # Database is set to saving NULL values as 'None'
+        # Set additional info box to contain an empty string if no data exists
         if not self.shotInfo or self.shotInfo == 'None':
             self.editShotAdditionalInfoPT.setPlainText('')
         else:
@@ -257,7 +260,6 @@ class EditShot(DialogFrame):
 
 
     def editShot(self):
-        errorCode = 0
         if self.state == -1:
             self.alert(
                 'Virhe',
@@ -335,6 +337,13 @@ class EditShot(DialogFrame):
         
 
     def editUsage(self, shotUsageId, usageId, usageAmount):
+        """Update a single usage
+
+        Args:
+            shotUsageId (int): Limit by shot usage Id
+            usageId (int): Usage Id to update
+            usageAmount (int): Usage amount to update
+        """
         try:
             table = 'public.kaadon_kasittely'
             columnValueString = f"kasittelyid = {usageId!r}, kasittely_maara = {usageAmount!r}"
@@ -361,14 +370,13 @@ class EditShot(DialogFrame):
             pass
 
     def addNewUsage(self, shotId, usageId, usageAmount):
-        """_summary_
+        """Insert a new usage to the database
 
         Args:
-            shotId (int): _description_
-            usageId (int): _description_
-            usagePortion (int): _description_
+            shotId (int): Value to: kaato_id
+            usageId (int): Value to: kasittelyid
+            usagePortion (int): Value to: kasittely_maara
         """
-        errorCode = 0
 
         sqlClauseBeginning = "INSERT INTO public.kaadon_kasittely(kaato_id, kasittelyid, kasittely_maara) VALUES("
         sqlClauseValues = f"{shotId!r}, {usageId!r}, {usageAmount!r})"
@@ -388,6 +396,12 @@ class EditShot(DialogFrame):
                 )
 
     def deleteUsage(self, usageId, shotById):
+        """Delete a usage from the database based on usage- and shot Id
+
+        Args:
+            usageId (int): Usage Id to sort and delete by
+            shotById (int): Shot Id to sort and delete by
+        """
         try:
             limit = f"kaadon_kasittely_id = {usageId!r} AND kaato_id = {shotById!r}"
         except Exception as e:
@@ -404,6 +418,7 @@ class EditShot(DialogFrame):
 
 
     def validateLineEdits(self):
+        # Enable save button if shot location and weight not empty
         if self.editShotLocationLE.text().strip() and self.editShotWeightLE.text().strip():
             self.editShotSavePB.setEnabled(True)
         else:
@@ -425,6 +440,9 @@ class EditShot(DialogFrame):
             return
 
         self.editUsage(self.usages[0][0], use, useAmount)
+        
+        # Handle 1st and 2nd usage edits and addition depending
+        # on if usages selected / existing
         if self.editShotUsage2CheckB.isChecked() and len(self.usages) > 1:
             try:
                 useIx2 = self.editShotUsage2CB.currentIndex()
@@ -465,6 +483,7 @@ class EditShot(DialogFrame):
         msg().successMessage("Muutokset tallennettu")
 
     def onTableItemClicked(self, item):
+        # Select rows on table and enable populate push button
         selectedRow = item.row()
         self.shooterId = self.editShotTW.item(selectedRow, 0).text()
         self.shooter = self.editShotTW.item(selectedRow, 1).text()
@@ -480,6 +499,14 @@ class EditShot(DialogFrame):
         self.editShotPopulatePB.setEnabled(True)
 
     def compareUpdates(self, updateList):
+        """Compare updates of a given data set
+
+        Args:
+            updateList (list): List containing new values to compare and update
+
+        Returns:
+            bool: False for entries that exist as same, True for new values
+        """
         originalList = [
             int(self.shooterId),
             str(date.fromisoformat(self.shotDate)),
@@ -500,27 +527,11 @@ class EditShot(DialogFrame):
         self.close()
 
 
-class TestMainWindow(QMainWindow):
-    """Main Window for testing dialogs."""
-
-    def __init__(self):
-        super().__init__()
-
-        self.setWindowTitle('Pääikkuna dialogien testaukseen')
-
-        # Add dialogs to be tested here and run them as follows:
-        saveDBSettingsDialog = EditShot()
-        saveDBSettingsDialog.exec()
-
 # Some tests
 if __name__ == "__main__":
 
     # Create a testing application
     testApp = QApplication(sys.argv)
-
-    # Create a main window for testing a dialog
-    testMainWindow = TestMainWindow()
-    testMainWindow.show()
 
     # Run the testing application
     testApp.exec()
