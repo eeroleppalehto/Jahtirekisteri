@@ -54,6 +54,7 @@ model jasen {
   puhelinnumero    String?    @db.VarChar(15)
   jasenyys         jasenyys[]
   kaato            kaato[]
+  kayttaja         kayttaja?
   seurue           seurue[]
 }
 
@@ -185,4 +186,12 @@ model seurue_tyyppi {
   seurue_tyyppi_id   Int      @id(map: "seurue_tyyppi_pk") @default(autoincrement())
   seurue_tyyppi_nimi String   @db.VarChar(20)
   seurue             seurue[]
+}
+
+model kayttaja {
+  kayttaja_id    Int     @id
+  kayttajatunnus String  @unique @db.VarChar(32)
+  salasana_hash  String  @db.VarChar(255)
+  sahkoposti     String? @db.VarChar(64)
+  jasen          jasen   @relation(fields: [kayttaja_id], references: [jasen_id], onDelete: NoAction, onUpdate: NoAction, map: "jasen_kayttaja_fk")
 }
