@@ -7,3 +7,8 @@ export const kayttajaInput = z.object({
     salasana_hash: z.string().max(255),
     sahkoposti: z.string().email().max(64).optional(),
 }) satisfies z.Schema<Prisma.kayttajaUncheckedCreateInput>;
+
+export const loginInput = z.object({
+    kayttajatunnus: z.string().max(32),
+    salasana: z.string().max(255),
+});

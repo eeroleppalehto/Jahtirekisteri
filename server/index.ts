@@ -15,6 +15,7 @@ import apiViewRouter from "./routers/v1/apiViewRouter";
 import optionTablesRouter from "./routers/v1/optionTablesRouter";
 import createShotUsageRouter from "./routers/v1/createShotUsageRouter";
 import jakotapahtumaJasenRouter from "./routers/v1/memberSharesRouter";
+import loginRouter from "./routers/v2/loginRouter";
 import { errorHandler, logRequest, unknownEndpoint } from "./utils/middleware";
 
 // Initialize the Express application
@@ -46,6 +47,9 @@ app.use("/api/v1/views", apiViewRouter);
 app.use("/api/v1/option-tables", optionTablesRouter);
 app.use("/api/v1/shot-with-usages", createShotUsageRouter);
 app.use("/api/v1/member-shares", jakotapahtumaJasenRouter);
+
+// Attach routers to the /api/v2/ path
+app.use("/api/v2/users", loginRouter);
 
 // Middleware for handling unknown endpoints
 app.use(unknownEndpoint);
