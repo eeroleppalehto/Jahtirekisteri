@@ -27,6 +27,10 @@ To get this project up and running on your local machine, follow these steps:
 
 To start the server, run the following command: `npm run dev`. Now you can try to access the server by going to <http://localhost:3000/ping> in your browser. If you see the text "pong" in your browser, the server is working.
 
+### Update Prisma schema
+
+If your underlying database schema changes, you need to update the Prisma schema. To do this, run the following command: `npx prisma db pull`. This will update the Prisma schema to match the database schema. If you have made changes to the Prisma schema, you need to run the following command: `npx prisma generate`. This will generate the Prisma client based on the Prisma schema.
+
 ### Prisma Studio
 
 To start Prisma Studio, run the following command: `npx prisma studio`. Now you can try to access Prisma Studio by going to <http://localhost:5555> in your browser.
@@ -37,7 +41,7 @@ Prisma Studio is a visual editor for your database. You can use it to browse and
 
 Here is a short description of the most important files and folders in the server folder:
 
-* **prisma folder**: This folder contains the Prisma schema file and the migrations folder. The migrations folder contains the migrations for the database. 
+* **prisma folder**: This folder contains the Prisma schema file and the migrations folder. The migrations folder contains the migrations for the database.
   * **schema.prisma**: This file contains the database schema.
 * **routers folder**: This folder contains the routers for the REST API.
 * **services folder**: This folder contains the services used by the routers.
@@ -50,7 +54,6 @@ Here is a short description of the most important files and folders in the serve
 * **index.ts**: This file contains the main logic for the server.
 * **singleton.ts**: This file contains the singleton object for testing prisma client.
 * **logModule.ts**:Module for logging server events.
-
 
 ## Libraries
 
