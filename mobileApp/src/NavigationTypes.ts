@@ -30,6 +30,7 @@ export type MyDrawerScreenProps<T extends keyof DrawerParamList> =
 export type RootStackParamList = {
     BottomNavigation: NavigatorScreenParams<BottomNavParamList>;
     Details: { type: string; data: any; title: string };
+    Login: undefined;
     Forms: {
         type: string;
         data?: FormTypes;
