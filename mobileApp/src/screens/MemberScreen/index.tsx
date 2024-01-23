@@ -6,7 +6,7 @@ import MemberListItem from "./MemberListItem";
 import { MaintenanceTabScreenProps } from "../../NavigationTypes";
 import FloatingNavigationButton from "../../components/FloatingNavigationButton";
 import { NativeScrollEvent, NativeSyntheticEvent, View } from "react-native";
-import useFetch from "../../../hooks/useFetch";
+import useFetch from "../../hooks/useFetch";
 
 type Props = MaintenanceTabScreenProps<"Jäsenet">;
 // TODO: Refactor to use implementation as ShotScreen

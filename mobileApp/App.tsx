@@ -3,6 +3,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import Main from "./src/components/Main";
 import { en, registerTranslation } from "react-native-paper-dates";
+import { AuthProvider } from "./src/context/AuthProvider";
 
 // Register your translation with the react-native-paper-dates library
 registerTranslation("en", en);
@@ -76,9 +77,11 @@ export default function App() {
     return (
         <SafeAreaProvider>
             <PaperProvider theme={theme}>
-                <NavigationContainer>
-                    <Main />
-                </NavigationContainer>
+                <AuthProvider>
+                    <NavigationContainer>
+                        <Main />
+                    </NavigationContainer>
+                </AuthProvider>
             </PaperProvider>
         </SafeAreaProvider>
     );

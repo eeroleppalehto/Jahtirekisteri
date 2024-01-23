@@ -3,8 +3,8 @@
 
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import MaintenanceNav from "../components/NavComponents/MaintenanceNav";
-import ShareNav from "../components/NavComponents/ShareNav";
+import MaintenanceNav from "../navigation/MaintenanceNav";
+import ShareNav from "../navigation/ShareNav";
 import ShotScreen from "../screens/ShotScreen";
 import { BottomNavParamList } from "../NavigationTypes";
 

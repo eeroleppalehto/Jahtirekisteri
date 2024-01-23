@@ -1,10 +1,10 @@
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import DrawerContent from "./DrawerContent";
+import DrawerContent from "../components/DrawerContent";
 import RootStack from "./RootStack";
-import ProfileScreen from "../../screens/ProfileScreen";
-import ProfileAppBar from "../AppBars/ProfileAppBar";
-import { DrawerParamList } from "../../NavigationTypes";
+import ProfileScreen from "../screens/ProfileScreen";
+import ProfileAppBar from "../components/AppBars/ProfileAppBar";
+import { DrawerParamList } from "../NavigationTypes";
 
 export type DrawerNavParamList = {
     RootStack: undefined;
@@ -13,7 +13,6 @@ export type DrawerNavParamList = {
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
-// React
 function DrawerNav() {
     return (
         <Drawer.Navigator
@@ -37,6 +36,13 @@ function DrawerNav() {
                     header: (props) => <ProfileAppBar {...props} />,
                 }}
             />
+            {/* <Drawer.Screen // Screen that shows user profile
+                name="Login"
+                component={LoginScreen}
+                options={{
+                    header: (props) => <LoginAppBar {...props} />,
+                }}
+            /> */}
         </Drawer.Navigator>
     );
 }

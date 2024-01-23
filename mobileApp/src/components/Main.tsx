@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import DrawerNav from "./NavComponents/DrawerNav";
+import DrawerNav from "../navigation/DrawerNav";
 
 function Main() {
     return (

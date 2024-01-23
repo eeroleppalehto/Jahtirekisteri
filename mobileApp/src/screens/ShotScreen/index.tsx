@@ -2,7 +2,7 @@ import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import { useState } from "react";
 import { Text } from "react-native-paper";
 import { FlatList, RefreshControl } from "react-native-gesture-handler";
-import useFetch from "../../../hooks/useFetch";
+import useFetch from "../../hooks/useFetch";
 import { BottomTabScreenProps } from "../../NavigationTypes";
 import { ShotViewQuery } from "../../types";
 import FloatingNavigationButton from "../../components/FloatingNavigationButton";

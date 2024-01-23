@@ -3,7 +3,7 @@ import { MaintenanceTabScreenProps } from "../../NavigationTypes";
 import { Text, ActivityIndicator, useTheme } from "react-native-paper";
 import { ScrollView, RefreshControl } from "react-native-gesture-handler";
 import { GroupViewQuery } from "../../types";
-import useFetch from "../../../hooks/useFetch";
+import useFetch from "../../hooks/useFetch";
 import GroupListItem from "./GroupListItem";
 
 type Props = MaintenanceTabScreenProps<"Ryhmät">;

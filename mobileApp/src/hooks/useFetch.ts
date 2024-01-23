@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { BASE_URL } from "../src/baseUrl";
+import { BASE_URL } from "../baseUrl";
+import { useAuth } from "../context/AuthProvider";
 
 /**
  * Custom hook to fetch data from the backend. It returns the data, error and loading state to be used in the component.
@@ -13,8 +14,14 @@ function useFetch<T>(url: string) {
     const [data, setData] = useState<T | undefined>(undefined);
     const [error, setError] = useState<Error | undefined>(undefined);
     const [loading, setLoading] = useState(true);
+    const { authState } = useAuth();
 
     const urlCompose = `${BASE_URL}/api/v1/${url}`;
+
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    if (authState?.token)
+        headers.append("Authorization", `Bearer ${authState.token}`);
 
     useEffect(() => {
         // Function to fetch data from the backend
@@ -24,9 +31,7 @@ function useFetch<T>(url: string) {
                 setLoading(true);
                 const response = await fetch(urlCompose, {
                     method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
+                    headers: headers,
                 });
                 const json = await response.json();
                 setData(json);

@@ -9,7 +9,7 @@ import {
     Text as SkText,
 } from "@shopify/react-native-skia";
 import type { SharedValue } from "react-native-reanimated";
-import useFetch from "../../../hooks/useFetch";
+import useFetch from "../../hooks/useFetch";
 
 type GroupDataChart = {
     ryhma_id: number;

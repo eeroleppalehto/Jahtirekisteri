@@ -1,4 +1,4 @@
-import useFetch from "../../../hooks/useFetch";
+import useFetch from "../../hooks/useFetch";
 import { ActivityIndicator } from "react-native-paper";
 import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import { ShareTabScreenProps } from "../../NavigationTypes";

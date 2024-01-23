@@ -7,7 +7,7 @@ import {
     useTheme,
 } from "react-native-paper";
 import { RootStackScreenProps } from "../../NavigationTypes";
-import useFetch from "../../../hooks/useFetch";
+import useFetch from "../../hooks/useFetch";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import IconListItem from "../../components/IconListItem";

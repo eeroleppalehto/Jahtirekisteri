@@ -16,7 +16,7 @@ import kayttajaService from "../../services/kayttajaService";
 const loginRouter = express.Router();
 
 // POST endpoint for authenticating a user and returning a JWT token
-loginRouter.post("/", (async (req, res) => {
+loginRouter.post("/login", (async (req, res) => {
     const data = loginInput.parse(req.body);
     const { kayttajatunnus, salasana } = data;
 
