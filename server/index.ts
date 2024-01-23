@@ -1,6 +1,5 @@
 // Import required libraries and modules
 import express from "express";
-import cors from "cors";
 import "express-async-errors";
 import "dotenv/config";
 import jasenRouter from "./routers/v1/membersRouter";
@@ -16,13 +15,14 @@ import optionTablesRouter from "./routers/v1/optionTablesRouter";
 import createShotUsageRouter from "./routers/v1/createShotUsageRouter";
 import jakotapahtumaJasenRouter from "./routers/v1/memberSharesRouter";
 import loginRouter from "./routers/v2/loginRouter";
+import testRouter from "./routers/v2/testRouter";
 import { errorHandler, logRequest, unknownEndpoint } from "./utils/middleware";
 
 // Initialize the Express application
 const app = express();
 
 // Middleware configurations
-app.use(cors()); // Enable CORS
+// app.use(cors()); // Enable CORS
 app.use(express.json()); // Parse JSON payloads
 
 app.use(logRequest); // Log requests and responses
@@ -47,9 +47,10 @@ app.use("/api/v1/views", apiViewRouter);
 app.use("/api/v1/option-tables", optionTablesRouter);
 app.use("/api/v1/shot-with-usages", createShotUsageRouter);
 app.use("/api/v1/member-shares", jakotapahtumaJasenRouter);
+app.use("/api/v1/test", testRouter);
 
 // Attach routers to the /api/v2/ path
-app.use("/api/v2/users", loginRouter);
+app.use("/api/v2/auth", loginRouter);
 
 // Middleware for handling unknown endpoints
 app.use(unknownEndpoint);
