@@ -1,4 +1,4 @@
-import useFetch from "../../../hooks/useFetch";
+import useFetch from "../../hooks/useFetch";
 import { PartyViewQuery } from "../../types";
 import { MaintenanceTabScreenProps } from "../../NavigationTypes";
 import { ScrollView, RefreshControl } from "react-native-gesture-handler";

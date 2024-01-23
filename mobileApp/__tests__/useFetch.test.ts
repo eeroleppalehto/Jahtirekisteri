@@ -1,4 +1,4 @@
-import useFetch from "../hooks/useFetch";
+import useFetch from "../src/hooks/useFetch";
 import { act, renderHook, waitFor } from "@testing-library/react-native";
 
 it("should return the data, error and loading state on beginning", async () => {
