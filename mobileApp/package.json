@@ -34,7 +34,8 @@
     "react-native-screens": "~3.22.0",
     "react-native-svg": "13.9.0",
     "react-native-tab-view": "^3.5.2",
-    "victory-native": "40.0.2"
+    "victory-native": "40.0.2",
+    "expo-secure-store": "~12.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -57,10 +58,12 @@
   "private": true,
   "jest": {
     "preset": "jest-expo",
-    "setupFilesAfterEnv": ["@testing-library/react-native/extend-expect"],
+    "setupFilesAfterEnv": [
+      "@testing-library/react-native/extend-expect"
+    ],
     "setupFiles": [
-        "<rootDir>/jest/setup.js"
-      ],
+      "<rootDir>/jest/setup.js"
+    ],
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|@shopify/react-native-skia|victory-native)"
     ]
