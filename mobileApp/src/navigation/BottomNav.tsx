@@ -1,10 +1,8 @@
-// THIS IS A TEST COMPONENT FOR THE BOTTOM NAVIGATION. THIS COMPONENT IS NOT USED IN THE APP.
-// Reason for this is that the Victory Native XL chart library is not currently working with jest.
-
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import MaintenanceNav from "../navigation/MaintenanceNav";
-import ShareNav from "../navigation/ShareNav";
+import MaintenanceNav from "./MaintenanceNav";
+import ShareNav from "./ShareNav";
+import ChartVictoryXL from "../screens/GraphScreen/ChartVictoryXL";
 import ShotScreen from "../screens/ShotScreen";
 import { BottomNavParamList } from "../NavigationTypes";
 
@@ -19,6 +17,19 @@ const Tab = createMaterialBottomTabNavigator<BottomNavParamList>();
 function BottomNav() {
     return (
         <Tab.Navigator>
+            <Tab.Screen
+                name="Grafiikka"
+                component={ChartVictoryXL}
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons
+                            name="chart-box-outline"
+                            size={24}
+                            color={color}
+                        />
+                    ),
+                }}
+            />
             <Tab.Screen
                 name="Kaadot"
                 component={ShotScreen}
@@ -36,7 +47,6 @@ function BottomNav() {
                 name="Jako"
                 component={ShareNav}
                 options={{
-                    tabBarLabel: "Jako",
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons
                             name="share"
@@ -50,7 +60,6 @@ function BottomNav() {
                 name="Ylläpito"
                 component={MaintenanceNav}
                 options={{
-                    tabBarTestID: "TestTab",
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons
                             name="account-group"

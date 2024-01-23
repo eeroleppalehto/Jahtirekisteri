@@ -1,6 +1,6 @@
 import { screen, render } from "@testing-library/react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import MaintenanceNav from "../../src/components/NavComponents/MaintenanceNav";
+import MaintenanceNav from "../../src/navigation/MaintenanceNav";
 
 test("MaintenanceNav renders correctly", () => {
     render(
