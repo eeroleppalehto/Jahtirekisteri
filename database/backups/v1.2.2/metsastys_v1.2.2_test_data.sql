@@ -1629,6 +1629,7 @@ INSERT INTO public.rooli VALUES ('pääkäyttäjä');
 INSERT INTO public.rooli VALUES ('muokkaus');
 INSERT INTO public.rooli VALUES ('lisäys');
 INSERT INTO public.rooli VALUES ('luku');
+INSERT INTO public.rooli VALUES ('ei oikeuksia');
 
 
 --
