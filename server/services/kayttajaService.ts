@@ -1,7 +1,7 @@
 /* 2024-01-17 Eero Leppälehto kayttajaService */
 
 import prisma from "../client";
-import { kayttajaInput } from "../zodSchemas/kayttajaValidation";
+import { kayttajaInput, validateRooli } from "../zodSchemas/kayttajaValidation";
 
 /**
  * Service module for handling CRUD operations for 'kayttaja' table.
@@ -22,7 +22,13 @@ const getKayttajaByUsername = async (username: string) => {
 
 const createKayttaja = async (object: unknown) => {
     const data = kayttajaInput.parse(object);
-    const { kayttaja_id, kayttajatunnus, salasana_hash, sahkoposti } = data;
+    const {
+        kayttaja_id,
+        kayttajatunnus,
+        salasana_hash,
+        sahkoposti,
+        roolin_nimi,
+    } = data;
 
     const kayttaja = await prisma.kayttaja.create({
         data: {
@@ -30,6 +36,7 @@ const createKayttaja = async (object: unknown) => {
             kayttajatunnus,
             salasana_hash,
             sahkoposti,
+            roolin_nimi,
         },
     });
 
@@ -54,6 +61,19 @@ const updateKayttajaSalasana = async (username: string, newHash: string) => {
     return kayttaja;
 };
 
+const updateKayttajaRooli = async (username: string, newRole: string) => {
+    if (!validateRooli(newRole)) {
+        throw new Error("Invalid role");
+    }
+
+    const kayttaja = await prisma.kayttaja.update({
+        where: { kayttajatunnus: username },
+        data: { roolin_nimi: newRole },
+    });
+
+    return kayttaja;
+};
+
 const deleteKayttaja = async (username: string) => {
     const kayttaja = await prisma.kayttaja.delete({
         where: { kayttajatunnus: username },
@@ -68,5 +88,6 @@ export default {
     createKayttaja,
     updateKayttajanimi,
     updateKayttajaSalasana,
+    updateKayttajaRooli,
     deleteKayttaja,
 };

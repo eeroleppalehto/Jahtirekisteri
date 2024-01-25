@@ -2,20 +2,20 @@
 import express from "express";
 import "express-async-errors";
 import "dotenv/config";
-import jasenRouter from "./routers/v1/membersRouter";
-import kaatoRouter from "./routers/v1/shotsRouter";
-import jakoryhmaRouter from "./routers/v1/groupsRouter";
-import jakotapahtumaRouter from "./routers/v1/sharesRouter";
-import kaadonkasittelyRouter from "./routers/v1/shotUsagesRouter";
-import lupaRouter from "./routers/v1/licensesRouter";
-import seurueRouter from "./routers/v1/partiesRouter";
-import jasenyysRouter from "./routers/v1/membershipsRouter";
-import apiViewRouter from "./routers/v1/apiViewRouter";
-import optionTablesRouter from "./routers/v1/optionTablesRouter";
-import createShotUsageRouter from "./routers/v1/createShotUsageRouter";
-import jakotapahtumaJasenRouter from "./routers/v1/memberSharesRouter";
-import loginRouter from "./routers/v2/loginRouter";
-import testRouter from "./routers/v2/testRouter";
+import jasenRouter from "./routers/v2/membersRouter";
+import kaatoRouter from "./routers/v2/shotsRouter";
+import jakoryhmaRouter from "./routers/v2/groupsRouter";
+import jakotapahtumaRouter from "./routers/v2/sharesRouter";
+import kaadonkasittelyRouter from "./routers/v2/shotUsagesRouter";
+import lupaRouter from "./routers/v2/licensesRouter";
+import seurueRouter from "./routers/v2/partiesRouter";
+import jasenyysRouter from "./routers/v2/membershipsRouter";
+import apiViewRouter from "./routers/v2/viewRouter";
+import optionTablesRouter from "./routers/v2/optionTablesRouter";
+import createShotUsageRouter from "./routers/v2/createShotUsageRouter";
+import jakotapahtumaJasenRouter from "./routers/v2/memberSharesRouter";
+import authenticationRouter from "./routers/v2/authenticationRouter";
+// import testRouter from "./routers/v2/testRouter";
 import { errorHandler, logRequest, unknownEndpoint } from "./utils/middleware";
 
 // Initialize the Express application
@@ -47,10 +47,21 @@ app.use("/api/v1/views", apiViewRouter);
 app.use("/api/v1/option-tables", optionTablesRouter);
 app.use("/api/v1/shot-with-usages", createShotUsageRouter);
 app.use("/api/v1/member-shares", jakotapahtumaJasenRouter);
-app.use("/api/v1/test", testRouter);
 
 // Attach routers to the /api/v2/ path
-app.use("/api/v2/auth", loginRouter);
+app.use("/api/v2/auth", authenticationRouter);
+app.use("/api/v2/members", jasenRouter);
+app.use("/api/v2/groups", jakoryhmaRouter);
+app.use("/api/v2/shots", kaatoRouter);
+app.use("/api/v2/shares", jakotapahtumaRouter);
+app.use("/api/v2/shot-usages", kaadonkasittelyRouter);
+app.use("/api/v2/licenses", lupaRouter);
+app.use("/api/v2/parties", seurueRouter);
+app.use("/api/v2/memberships", jasenyysRouter);
+app.use("/api/v2/views", apiViewRouter);
+app.use("/api/v2/option-tables", optionTablesRouter);
+app.use("/api/v2/shot-with-usages", createShotUsageRouter);
+app.use("/api/v2/member-shares", jakotapahtumaJasenRouter);
 
 // Middleware for handling unknown endpoints
 app.use(unknownEndpoint);
