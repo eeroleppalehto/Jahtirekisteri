@@ -42,11 +42,16 @@ loginRouter.post("/login", (async (req, res) => {
     const userForToken = {
         kayttaja_id: kayttaja.kayttaja_id,
         kayttajatunnus: kayttaja.kayttajatunnus,
+        rooli: kayttaja.roolin_nimi,
     };
 
     const token = jwt.sign(userForToken, process.env.JWT_SECRET as string);
 
-    res.status(200).send({ token, kayttajatunnus: kayttaja.kayttajatunnus });
+    res.status(200).send({
+        token,
+        kayttajatunnus: kayttaja.kayttajatunnus,
+        rooli: kayttaja.roolin_nimi,
+    });
 }) as express.RequestHandler);
 
 export default loginRouter;
