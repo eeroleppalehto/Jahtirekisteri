@@ -193,5 +193,12 @@ model kayttaja {
   kayttajatunnus String  @unique @db.VarChar(32)
   salasana_hash  String  @db.VarChar(255)
   sahkoposti     String? @db.VarChar(64)
+  roolin_nimi    String  @db.VarChar(32)
   jasen          jasen   @relation(fields: [kayttaja_id], references: [jasen_id], onDelete: NoAction, onUpdate: NoAction, map: "jasen_kayttaja_fk")
+  rooli          rooli   @relation(fields: [roolin_nimi], references: [roolin_nimi], onDelete: NoAction, onUpdate: NoAction, map: "kayttaja_rooli_fk")
+}
+
+model rooli {
+  roolin_nimi String     @id @db.VarChar(32)
+  kayttaja    kayttaja[]
 }
