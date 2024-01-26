@@ -15,7 +15,8 @@ import {
 } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { DrawerNavigationHelpers } from "@react-navigation/drawer/lib/typescript/src/types";
-import { useAuth } from "../context/AuthProvider";
+import { useAuth, AuthState } from "../context/AuthProvider";
+import useFetch from "../hooks/useFetch";
 
 interface Props {
     navigation: DrawerNavigationHelpers;
@@ -25,16 +26,11 @@ interface Props {
 function DrawerContent({ navigation }: Props) {
     const { authState, onLogout } = useAuth();
 
-    // If user is logged in, loginStatus is true, otherwise false
-    const loginStatus = authState?.authenticated
-        ? authState?.authenticated
-        : false;
-
     return (
         <DrawerContentScrollView>
             <View style={styles.drawerContent}>
                 <ProfileSection
-                    loginStatus={loginStatus}
+                    authState={authState}
                     navigation={navigation}
                     logout={onLogout}
                 />
@@ -60,25 +56,28 @@ function DrawerContent({ navigation }: Props) {
 }
 
 type ProfileSectionProps = {
-    loginStatus: boolean;
+    authState?: AuthState;
     navigation: DrawerNavigationHelpers;
     logout?: () => Promise<any>;
 };
 
 function ProfileSection({
-    loginStatus,
+    authState,
     navigation,
     logout,
 }: ProfileSectionProps) {
     const theme = useTheme();
-    switch (loginStatus) {
+    switch (authState?.authenticated) {
         case true:
             return (
                 <>
                     <View style={styles.userInfoSection}>
                         <Avatar.Icon size={50} icon={"account"} />
-                        <Title style={styles.title}>Miika Hiivola</Title>
-                        <Caption style={styles.caption}>Käyttäjänimi</Caption>
+                        {/* <Title style={styles.title}>Miika Hiivola</Title> */}
+                        {authState?.username ? <MemberNameTitle /> : null}
+                        <Caption style={styles.caption}>
+                            {authState.username}
+                        </Caption>
                     </View>
                     <DrawerItem
                         icon={({ color, size }) => (
@@ -161,6 +160,27 @@ function ProfileSection({
                 </View>
             );
     }
+}
+
+type MemberName = {
+    etunimi: string;
+    sukunimi: string;
+};
+
+function MemberNameTitle() {
+    const { data, error, loading } = useFetch<MemberName>(`misc/name`);
+    console.log(data);
+    return (
+        <>
+            {loading ?? null}
+            {data && (
+                <Title
+                    style={styles.title}
+                >{`${data.etunimi} ${data.sukunimi}`}</Title>
+            )}
+            {/* <Title style={styles.title}>Miika Hiivola</Title>); */}
+        </>
+    );
 }
 
 const styles = StyleSheet.create({
