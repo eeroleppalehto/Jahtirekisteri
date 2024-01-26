@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import { AnimatedFAB, useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../context/AuthProvider";
+import { WRITE_RIGHTS_SET } from "../utils/authenticationUtils";
 
 interface Props {
     scrollValue: number;
@@ -34,30 +36,40 @@ function FloatingNavigationButton({ scrollValue, type, label }: Props) {
 
     const theme = useTheme();
 
+    const { authState } = useAuth();
+
+    const hasWriteRights = authState?.role
+        ? WRITE_RIGHTS_SET.has(authState.role)
+        : false;
+
     // Get navigation object from react navigation
     // TODO: See if navigation can be passed as a prop
     const navigation = useNavigation();
 
     return (
-        <AnimatedFAB
-            icon={"plus"}
-            label={label}
-            extended={extended}
-            onPress={() =>
-                navigation.navigate("Forms", {
-                    type,
-                })
-            }
-            visible={true}
-            animateFrom={"right"}
-            iconMode={"static"}
-            color={theme.colors.onPrimary}
-            style={[
-                styles.fabStyle,
-                {},
-                { right: 16, backgroundColor: theme.colors.primary },
-            ]}
-        />
+        <>
+            {hasWriteRights ? (
+                <AnimatedFAB
+                    icon={"plus"}
+                    label={label}
+                    extended={extended}
+                    onPress={() =>
+                        navigation.navigate("Forms", {
+                            type,
+                        })
+                    }
+                    visible={true}
+                    animateFrom={"right"}
+                    iconMode={"static"}
+                    color={theme.colors.onPrimary}
+                    style={[
+                        styles.fabStyle,
+                        {},
+                        { right: 16, backgroundColor: theme.colors.primary },
+                    ]}
+                />
+            ) : null}
+        </>
     );
 }
 
