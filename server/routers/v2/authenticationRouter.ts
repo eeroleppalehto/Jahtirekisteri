@@ -12,6 +12,7 @@ import jwt from "jsonwebtoken";
 import "dotenv/config";
 import { loginInput } from "../../zodSchemas/kayttajaValidation";
 import kayttajaService from "../../services/kayttajaService";
+import { getDecodedToken } from "../../utils/authenticationUtils";
 
 const loginRouter = express.Router();
 
@@ -51,6 +52,17 @@ loginRouter.post("/login", (async (req, res) => {
         token,
         kayttajatunnus: kayttaja.kayttajatunnus,
         rooli: kayttaja.roolin_nimi,
+    });
+}) as express.RequestHandler);
+
+loginRouter.get("/user", ((req, res) => {
+    const decodedToken = getDecodedToken(req);
+    if (!decodedToken)
+        return res.status(401).json({ error: "Token missing or invalid" });
+
+    res.status(200).json({
+        kayttajatunnus: decodedToken.kayttajatunnus,
+        rooli: decodedToken.rooli,
     });
 }) as express.RequestHandler);
 
