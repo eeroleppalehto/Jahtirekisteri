@@ -1,9 +1,20 @@
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { Text, useTheme, Avatar, Chip, Surface } from "react-native-paper";
-import { Jasen } from "../../types";
+import {
+    Text,
+    useTheme,
+    Avatar,
+    Chip,
+    Surface,
+    MD3Theme,
+    ActivityIndicator,
+} from "react-native-paper";
+import { Jasen, JasenStateQuery } from "../../types";
 import { RootStackScreenProps } from "../../NavigationTypes";
 import IconListItem from "../../components/IconListItem";
+import useFetch from "../../hooks/useFetch";
+import { useAuth } from "../../context/AuthProvider";
+import { EDIT_RIGHTS_SET } from "../../utils/authenticationUtils";
 
 type Props = RootStackScreenProps<"Details">;
 
@@ -11,10 +22,16 @@ type Props = RootStackScreenProps<"Details">;
 function MemberDetails({ route, navigation }: Props) {
     if (!route.params) return <Text>Virhe</Text>;
 
+    const { authState } = useAuth();
+
     const theme = useTheme();
 
+    const hasEditRights = authState?.role
+        ? EDIT_RIGHTS_SET.has(authState.role)
+        : false;
+
     // TODO: Error handling if data is undefined
-    const { data } = route.params as { data: Jasen };
+    const { data } = route.params as { data: JasenStateQuery };
 
     const TextAvatar = (firstname: string, lastname: string) => {
         const firstLetter = firstname.charAt(0).toUpperCase();
@@ -46,42 +63,64 @@ function MemberDetails({ route, navigation }: Props) {
                         {data.tila}
                     </Chip>
                 </View>
-                <Text
-                    variant="titleMedium"
-                    style={{
-                        color: theme.colors.primary,
-                        paddingLeft: 16,
-                        paddingTop: 60,
-                    }}
-                >
-                    {"Yhteystiedot"}
-                </Text>
-                <IconListItem
-                    iconSet="MaterialIcons"
-                    iconNameMaterial="phone"
-                    title="Puhelinnumero"
-                    description={data.puhelinnumero}
-                />
-                <IconListItem
-                    iconSet="MaterialIcons"
-                    iconNameMaterial="location-on"
-                    title="Osoite"
-                    description={data.jakeluosoite}
-                />
-                <IconListItem
-                    iconSet="MaterialIcons"
-                    iconNameMaterial="location-on"
-                    title="Postinumero"
-                    description={data.postinumero}
-                />
-                <IconListItem
-                    iconSet="MaterialIcons"
-                    iconNameMaterial="location-on"
-                    title="Postitoimipaikka"
-                    description={data.postitoimipaikka}
-                />
+                {hasEditRights ? (
+                    <MemberInfo id={data.jasen_id} theme={theme} />
+                ) : null}
             </View>
         </ScrollView>
+    );
+}
+
+type MembersInfoProps = {
+    id: number;
+    theme: MD3Theme;
+};
+
+function MemberInfo({ id, theme }: MembersInfoProps) {
+    const { data, error, loading } = useFetch<Jasen>(`jasenet/${id}`);
+
+    return (
+        <>
+            {loading ? <ActivityIndicator /> : null}
+            {data ? (
+                <>
+                    <Text
+                        variant="titleMedium"
+                        style={{
+                            color: theme.colors.primary,
+                            paddingLeft: 16,
+                            paddingTop: 60,
+                        }}
+                    >
+                        {"Yhteystiedot"}
+                    </Text>
+                    <IconListItem
+                        iconSet="MaterialIcons"
+                        iconNameMaterial="phone"
+                        title="Puhelinnumero"
+                        description={data.puhelinnumero}
+                    />
+                    <IconListItem
+                        iconSet="MaterialIcons"
+                        iconNameMaterial="location-on"
+                        title="Osoite"
+                        description={data.jakeluosoite}
+                    />
+                    <IconListItem
+                        iconSet="MaterialIcons"
+                        iconNameMaterial="location-on"
+                        title="Postinumero"
+                        description={data.postinumero}
+                    />
+                    <IconListItem
+                        iconSet="MaterialIcons"
+                        iconNameMaterial="location-on"
+                        title="Postitoimipaikka"
+                        description={data.postitoimipaikka}
+                    />
+                </>
+            ) : null}
+        </>
     );
 }
 
