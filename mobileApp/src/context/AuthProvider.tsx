@@ -10,6 +10,8 @@ type AuthContextType = {
 
 type AuthState = {
     token: string | null;
+    username: string | null;
+    role: string | null;
     authenticated: boolean | null;
 };
 
@@ -29,19 +31,53 @@ const AuthContext = createContext<AuthContextType>({});
 export const AuthProvider = ({ children }: any) => {
     const [authState, setAuthState] = useState<AuthState>({
         token: null,
+        username: null,
+        role: null,
         authenticated: false,
     });
 
     useEffect(() => {
         const getToken = async () => {
             const token = await SecureStore.getItemAsync(TOKEN_KEY);
-            if (token) {
+            if (!token) {
                 setAuthState({
-                    token,
-                    authenticated: true,
+                    token: null,
+                    username: null,
+                    role: null,
+                    authenticated: false,
                 });
+                return;
             }
+
+            const headers = new Headers();
+            headers.append("Content-Type", "application/json");
+            headers.append("Authorization", `Bearer ${token}`);
+
+            const request = await fetch(`${BASE_URL}/api/v2/auth/user`, {
+                method: "GET",
+                headers,
+            });
+
+            if (!request.ok) {
+                setAuthState({
+                    token: null,
+                    username: null,
+                    role: null,
+                    authenticated: false,
+                });
+                return;
+            }
+
+            const data = await request.json();
+
+            setAuthState({
+                token,
+                username: data.kayttajatunnus,
+                role: data.rooli,
+                authenticated: true,
+            });
         };
+
         getToken();
     }, []);
 
@@ -66,10 +102,12 @@ export const AuthProvider = ({ children }: any) => {
 
             setAuthState({
                 token: data.token,
+                username: data.kayttajatunnus,
+                role: data.rooli,
                 authenticated: true,
             });
 
-            // await SecureStore.setItemAsync(TOKEN_KEY, data.token);
+            await SecureStore.setItemAsync(TOKEN_KEY, data.token);
 
             return data;
         } catch (e) {
@@ -81,6 +119,8 @@ export const AuthProvider = ({ children }: any) => {
         await SecureStore.deleteItemAsync(TOKEN_KEY);
         setAuthState({
             token: null,
+            username: null,
+            role: null,
             authenticated: false,
         });
     };
