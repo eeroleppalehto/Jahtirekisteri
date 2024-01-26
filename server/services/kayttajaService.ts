@@ -20,6 +20,27 @@ const getKayttajaByUsername = async (username: string) => {
     return kayttaja;
 };
 
+type MemberName = {
+    etunimi: string;
+    sukunimi: string;
+};
+
+const getMemberByUsername = async (username: string) => {
+    const memberNames = await prisma.$queryRaw<MemberName[]>`
+        SELECT jasen.etunimi,
+            jasen.sukunimi
+        FROM jasen
+        INNER JOIN kayttaja ON jasen.jasen_id = kayttaja.kayttaja_id
+        WHERE kayttaja.kayttajatunnus = ${username}
+    `;
+
+    if (memberNames.length === 0) {
+        throw new Error("No member found");
+    }
+
+    return memberNames[0];
+};
+
 const createKayttaja = async (object: unknown) => {
     const data = kayttajaInput.parse(object);
     const {
@@ -85,6 +106,7 @@ const deleteKayttaja = async (username: string) => {
 export default {
     getAllKayttaja,
     getKayttajaByUsername,
+    getMemberByUsername,
     createKayttaja,
     updateKayttajanimi,
     updateKayttajaSalasana,
