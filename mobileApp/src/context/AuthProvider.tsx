@@ -8,7 +8,7 @@ type AuthContextType = {
     onLogout?: () => Promise<any>;
 };
 
-type AuthState = {
+export type AuthState = {
     token: string | null;
     username: string | null;
     role: string | null;
@@ -23,8 +23,6 @@ type LoginInfo = {
 export const useAuth = () => useContext<AuthContextType>(AuthContext);
 
 const TOKEN_KEY = "jwt-token";
-
-// const API_URL = new URL("/api/v2", BASE_URL).toString();
 
 const AuthContext = createContext<AuthContextType>({});
 
