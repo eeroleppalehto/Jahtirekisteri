@@ -17,6 +17,7 @@ export const kayttajaInput = z.object({
     kayttaja_id: z.number().int().positive(),
     kayttajatunnus: z.string().max(32),
     salasana_hash: z.string().max(255),
+    jasen_id: z.number().int().positive(),
     sahkoposti: z.string().email().max(64).optional(),
     roolin_nimi: z.string().max(32).refine(validateRooli),
 }) satisfies z.Schema<Prisma.kayttajaUncheckedCreateInput>;

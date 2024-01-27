@@ -30,7 +30,7 @@ const getMemberByUsername = async (username: string) => {
         SELECT jasen.etunimi,
             jasen.sukunimi
         FROM jasen
-        INNER JOIN kayttaja ON jasen.jasen_id = kayttaja.kayttaja_id
+        INNER JOIN kayttaja ON jasen.jasen_id = kayttaja.jasen_id
         WHERE kayttaja.kayttajatunnus = ${username}
     `;
 
@@ -47,6 +47,7 @@ const createKayttaja = async (object: unknown) => {
         kayttaja_id,
         kayttajatunnus,
         salasana_hash,
+        jasen_id,
         sahkoposti,
         roolin_nimi,
     } = data;
@@ -56,6 +57,7 @@ const createKayttaja = async (object: unknown) => {
             kayttaja_id,
             kayttajatunnus,
             salasana_hash,
+            jasen_id,
             sahkoposti,
             roolin_nimi,
         },

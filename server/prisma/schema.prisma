@@ -54,7 +54,7 @@ model jasen {
   puhelinnumero    String?    @db.VarChar(15)
   jasenyys         jasenyys[]
   kaato            kaato[]
-  kayttaja         kayttaja?
+  kayttaja         kayttaja[]
   seurue           seurue[]
 }
 
@@ -128,7 +128,6 @@ model lupa {
 
 model ruhonosa {
   osnimitys           String                @id(map: "ruhonosa_pk") @db.VarChar(20)
-  osnimitys_suhdeluku Float?                @db.Real
   jakotapahtuma       jakotapahtuma[]
   jakotapahtuma_jasen jakotapahtuma_jasen[]
 }
@@ -189,12 +188,13 @@ model seurue_tyyppi {
 }
 
 model kayttaja {
-  kayttaja_id    Int     @id
+  kayttaja_id    Int     @id @default(autoincrement())
   kayttajatunnus String  @unique @db.VarChar(32)
+  jasen_id       Int
   salasana_hash  String  @db.VarChar(255)
   sahkoposti     String? @db.VarChar(64)
   roolin_nimi    String  @db.VarChar(32)
-  jasen          jasen   @relation(fields: [kayttaja_id], references: [jasen_id], onDelete: NoAction, onUpdate: NoAction, map: "jasen_kayttaja_fk")
+  jasen          jasen   @relation(fields: [jasen_id], references: [jasen_id], onDelete: NoAction, onUpdate: NoAction, map: "jasen_kayttaja_fk")
   rooli          rooli   @relation(fields: [roolin_nimi], references: [roolin_nimi], onDelete: NoAction, onUpdate: NoAction, map: "kayttaja_rooli_fk")
 }
 
