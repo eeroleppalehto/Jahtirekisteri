@@ -93,7 +93,8 @@ export const AuthProvider = ({ children }: any) => {
                     salasana: loginInfo.password,
                 }),
             });
-            console.log("requesting2");
+
+            console.log(request.status);
             if (!request.ok) throw new Error(request.statusText);
             const data = await request.json();
             console.log(data);
@@ -109,6 +110,10 @@ export const AuthProvider = ({ children }: any) => {
 
             return data;
         } catch (e) {
+            if (e instanceof Error) {
+                console.log(e.message);
+                return { error: e.message };
+            }
             return { error: e };
         }
     };
