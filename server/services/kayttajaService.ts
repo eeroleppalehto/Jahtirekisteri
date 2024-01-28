@@ -43,18 +43,11 @@ const getMemberByUsername = async (username: string) => {
 
 const createKayttaja = async (object: unknown) => {
     const data = kayttajaInput.parse(object);
-    const {
-        kayttaja_id,
-        kayttajatunnus,
-        salasana_hash,
-        jasen_id,
-        sahkoposti,
-        roolin_nimi,
-    } = data;
+    const { kayttajatunnus, salasana_hash, jasen_id, sahkoposti, roolin_nimi } =
+        data;
 
     const kayttaja = await prisma.kayttaja.create({
         data: {
-            kayttaja_id,
             kayttajatunnus,
             salasana_hash,
             jasen_id,
