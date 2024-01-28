@@ -53,22 +53,6 @@ function MemberScreen({ navigation, route }: Props) {
         return 0;
     });
 
-    // Group members by first letter of last name
-    // const membersByLetter = sortedMembers?.reduce((acc, member) => {
-    //     const firstLetter = member.sukunimi.charAt(0).toUpperCase();
-    //     if (!acc.some((item) => item.letter === firstLetter)) {
-    //         acc.push({
-    //             letter: firstLetter,
-    //             members: [member],
-    //         });
-    //     } else {
-    //         acc.find((item) => item.letter === firstLetter)?.members.push(
-    //             member
-    //         );
-    //     }
-    //     return acc;
-    // }, [] as { letter: string; members: JasenStateQuery[] }[]);
-
     const membersByTitle = sortedMembers?.reduce((acc, member) => {
         const firstLetter = member.sukunimi.charAt(0).toUpperCase();
         if (!acc.some((item) => item.title === firstLetter)) {

@@ -1,7 +1,7 @@
-import { View } from "react-native";
+import { SectionList } from "react-native";
 import { MaintenanceTabScreenProps } from "../../NavigationTypes";
-import { Text, ActivityIndicator, useTheme } from "react-native-paper";
-import { ScrollView, RefreshControl } from "react-native-gesture-handler";
+import { Text, useTheme } from "react-native-paper";
+import { RefreshControl } from "react-native-gesture-handler";
 import { GroupViewQuery } from "../../types";
 import useFetch from "../../hooks/useFetch";
 import GroupListItem from "./GroupListItem";
@@ -23,49 +23,47 @@ function GroupScreen({ navigation, route }: Props) {
         if (!acc.some((item) => item.party === group.seurue_id)) {
             acc.push({
                 party: group.seurue_id,
-                groups: [group],
+                partyName: group.seurueen_nimi,
+                data: [group],
             });
         } else {
-            acc.find((item) => item.party === group.seurue_id)?.groups.push(
+            acc.find((item) => item.party === group.seurue_id)?.data.push(
                 group
             );
         }
         return acc;
-    }, [] as { party: number; groups: GroupViewQuery[] }[]);
-
-    // Create a group list for each party
-    const partyContent = groupsByParty?.map((item) => {
-        return (
-            <View key={item.party}>
-                <Text
-                    variant="titleMedium"
-                    style={{
-                        color: theme.colors.primary,
-                        paddingLeft: 16,
-                        paddingTop: 20,
-                    }}
-                >
-                    {item.groups[0].seurueen_nimi}
-                </Text>
-                {item.groups.map((group) => (
-                    <GroupListItem
-                        key={group.ryhma_id}
-                        group={group}
-                        navigation={navigation}
-                    />
-                ))}
-            </View>
-        );
-    });
+    }, [] as { party: number; partyName: string; data: GroupViewQuery[] }[]);
 
     return (
-        <ScrollView
-            refreshControl={
-                <RefreshControl refreshing={loading} onRefresh={onRefresh} />
-            }
-        >
-            <>{partyContent}</>
-        </ScrollView>
+        <>
+            {groupsByParty && (
+                <SectionList
+                    sections={groupsByParty}
+                    keyExtractor={(item) => item.ryhma_id.toString()}
+                    renderItem={({ item }) => (
+                        <GroupListItem group={item} navigation={navigation} />
+                    )}
+                    renderSectionHeader={({ section: { partyName } }) => (
+                        <Text
+                            variant="titleMedium"
+                            style={{
+                                color: theme.colors.primary,
+                                paddingLeft: 16,
+                                paddingTop: 20,
+                            }}
+                        >
+                            {partyName}
+                        </Text>
+                    )}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={loading}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                />
+            )}
+        </>
     );
 }
 
