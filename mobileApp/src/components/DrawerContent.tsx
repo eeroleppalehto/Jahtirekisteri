@@ -168,8 +168,7 @@ type MemberName = {
 };
 
 function MemberNameTitle() {
-    const { data, error, loading } = useFetch<MemberName>(`misc/name`);
-    console.log(data);
+    const { data, error, loading } = useFetch<MemberName>(`profiles/name`);
     return (
         <>
             {loading ?? null}
