@@ -70,7 +70,7 @@ export default function LoginScreen() {
                     contentStyle={{ flexDirection: "row-reverse" }}
                     icon={() => (
                         <MaterialIcons
-                            name="navigate-next"
+                            name="login"
                             size={24}
                             color={theme.colors.onPrimary}
                         />

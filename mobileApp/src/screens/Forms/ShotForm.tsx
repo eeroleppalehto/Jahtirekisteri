@@ -1,18 +1,20 @@
 import { Portal, Text, useTheme, Divider, Switch } from "react-native-paper";
 import { StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import CustomInput from "../../components/CustomInput";
 import IconTextInput from "../../components/IconTextInput";
 import DatePicker from "../../components/DatePicker";
-import ShooterModal from "../../components/Modals/ShooterModal";
-import AnimalModal from "../../components/Modals/AnimalModal";
-import AgeModal from "../../components/Modals/AgeModal";
-import GenderModal from "../../components/Modals/GenderModal";
-import UsageModal from "../../components/Modals/UsageModal";
 import Slider from "@react-native-community/slider";
 import { RootStackScreenProps } from "../../NavigationTypes";
 import { UsageForm, ShotFormType } from "../../types";
+import { BottomSheetPicker } from "../../components/BottomSheetPicker";
+import { AgeRadioGroup } from "../../components/RadioGroups/AgeRadioGroup";
+import { AnimalRadioGroup } from "../../components/RadioGroups/AnimalRadioGroup";
+import { GenderRadioGroup } from "../../components/RadioGroups/GenderRadioGroup";
+import { ShooterRadioGroup } from "../../components/RadioGroups/ShooterRadioGroup";
+import { UsageRadioGroup } from "../../components/RadioGroups/UsageRadioGroup";
+import BottomSheet from "@gorhom/bottom-sheet";
 
 type Props = RootStackScreenProps<"Forms">;
 
@@ -26,17 +28,24 @@ type Usage = {
     kasittely_teksti: string;
 };
 
+type BottomSheetContent =
+    | "shooter"
+    | "age"
+    | "animal"
+    | "gender"
+    | "usage1"
+    | "usage2"
+    | "none";
+
 // Form for adding a new shot and usages for it
 function ShotForm({ route, navigation }: Props) {
     // Modal visibility states
     const [calendarOpen, setCalendarOpen] = useState(false);
-    const [shooterModalVisible, setShooterModalVisible] = useState(false);
-    const [animalModalVisible, setAnimalModalVisible] = useState(false);
-    const [ageModalVisible, setAgeModalVisible] = useState(false);
-    const [genderModalVisible, setGenderModalVisible] = useState(false);
-    const [firstUsageModalVisible, setFirstUsageModalVisible] = useState(false);
-    const [secondUsageModalVisible, setSecondUsageModalVisible] =
-        useState(false);
+
+    // Bottom sheet state and ref
+    const bottomSheetRef = useRef<BottomSheet>(null);
+    const [bottomSheetContent, setBottomSheetContent] =
+        useState<BottomSheetContent>("none");
 
     // Second usage toggle state
     const [secondUsageEnabled, setSecondUsageEnabled] =
@@ -90,6 +99,15 @@ function ShotForm({ route, navigation }: Props) {
             navigation.setParams({ clear: false });
         }
     }, [route.params?.clear]);
+
+    const handleBottomSheetOpen = (
+        content: BottomSheetContent,
+        index: number
+    ) => {
+        // bottomSheetRef.current?.expand();
+        bottomSheetRef.current?.snapToIndex(index);
+        setBottomSheetContent(content);
+    };
 
     // Read the params from route
     const { shot, usage } = route.params as {
@@ -195,6 +213,55 @@ function ShotForm({ route, navigation }: Props) {
         }
     };
 
+    const BottomSheetContent = () => {
+        switch (bottomSheetContent) {
+            case "shooter":
+                return (
+                    <ShooterRadioGroup
+                        shooterId={shot ? shot.jasen_id : undefined}
+                        onValueChange={handleShooterChange}
+                    />
+                );
+            case "age":
+                return (
+                    <AgeRadioGroup
+                        age={shot ? shot.ikaluokka : undefined}
+                        onValueChange={handleAgeChange}
+                    />
+                );
+            case "animal":
+                return (
+                    <AnimalRadioGroup
+                        animal={shot ? shot.elaimen_nimi : undefined}
+                        onValueChange={handleAnimalChange}
+                    />
+                );
+            case "gender":
+                return (
+                    <GenderRadioGroup
+                        gender={shot ? shot.sukupuoli : undefined}
+                        onValueChange={handleGenderChange}
+                    />
+                );
+            case "usage1":
+                return (
+                    <UsageRadioGroup
+                        usageForm={usage ? usage[0] : undefined}
+                        onValueChange={handleFirstUsageChange}
+                    />
+                );
+            case "usage2":
+                return (
+                    <UsageRadioGroup
+                        usageForm={usage ? usage[1] : undefined}
+                        onValueChange={handleSecondUsageChange}
+                    />
+                );
+            default:
+                return <></>;
+        }
+    };
+
     return (
         <>
             <Portal>
@@ -209,48 +276,6 @@ function ShotForm({ route, navigation }: Props) {
                     setDate={handleShotDateChange}
                     open={calendarOpen}
                     setOpen={setCalendarOpen}
-                />
-                <ShooterModal
-                    visible={shooterModalVisible}
-                    setVisibility={setShooterModalVisible}
-                    onValueChange={handleShooterChange}
-                    shooterId={shot ? shot.jasen_id : undefined}
-                    onButtonPress={() => setShooterModalVisible(false)}
-                />
-                <AnimalModal
-                    visible={animalModalVisible}
-                    setVisibility={setAnimalModalVisible}
-                    animal={shot ? shot.elaimen_nimi : undefined}
-                    onValueChange={handleAnimalChange}
-                    onButtonPress={() => setAnimalModalVisible(false)}
-                />
-                <AgeModal
-                    visible={ageModalVisible}
-                    setVisibility={setAgeModalVisible}
-                    age={shot ? shot.ikaluokka : undefined}
-                    onValueChange={handleAgeChange}
-                    onButtonPress={() => setAgeModalVisible(false)}
-                />
-                <GenderModal
-                    visible={genderModalVisible}
-                    setVisibility={setGenderModalVisible}
-                    gender={shot ? shot.sukupuoli : undefined}
-                    onValueChange={handleGenderChange}
-                    onButtonPress={() => setGenderModalVisible(false)}
-                />
-                <UsageModal
-                    visible={firstUsageModalVisible}
-                    setVisibility={setFirstUsageModalVisible}
-                    usageForm={usage ? usage[0] : undefined}
-                    onValueChange={handleFirstUsageChange}
-                    onButtonPress={() => setFirstUsageModalVisible(false)}
-                />
-                <UsageModal
-                    visible={secondUsageModalVisible}
-                    setVisibility={setSecondUsageModalVisible}
-                    usageForm={usage ? usage[1] : undefined}
-                    onValueChange={handleSecondUsageChange}
-                    onButtonPress={() => setSecondUsageModalVisible(false)}
                 />
             </Portal>
             <ScrollView>
@@ -273,7 +298,7 @@ function ShotForm({ route, navigation }: Props) {
                         valueState={shooterLabel}
                         placeholder="Ei valittua kaatajaa"
                         iconButtonName="account-plus-outline"
-                        onPress={() => setShooterModalVisible(true)}
+                        onPress={() => handleBottomSheetOpen("shooter", 2)}
                     />
 
                     <CustomInput
@@ -286,7 +311,7 @@ function ShotForm({ route, navigation }: Props) {
                                 ? shot.kaatopaiva
                                     ? new Date(
                                           shot.kaatopaiva
-                                      ).toLocaleDateString("fi-FI")
+                                      ).toLocaleDateString("fi-FI") // TODO: This stinks!!!
                                     : undefined
                                 : undefined
                         }
@@ -320,7 +345,7 @@ function ShotForm({ route, navigation }: Props) {
                         valueState={shot ? shot.elaimen_nimi : undefined}
                         required={true}
                         iconButtonName="plus"
-                        onPress={() => setAnimalModalVisible(true)}
+                        onPress={() => handleBottomSheetOpen("animal", 0)}
                     />
                     <CustomInput
                         iconSet="NoIcon"
@@ -328,7 +353,7 @@ function ShotForm({ route, navigation }: Props) {
                         valueState={shot ? shot.ikaluokka : undefined}
                         required={true}
                         iconButtonName="plus"
-                        onPress={() => setAgeModalVisible(true)}
+                        onPress={() => handleBottomSheetOpen("age", 0)}
                     />
                     <CustomInput
                         iconSet="NoIcon"
@@ -336,7 +361,7 @@ function ShotForm({ route, navigation }: Props) {
                         valueState={shot ? shot.sukupuoli : undefined}
                         required={true}
                         iconButtonName="plus"
-                        onPress={() => setGenderModalVisible(true)}
+                        onPress={() => handleBottomSheetOpen("gender", 0)}
                     />
                     <IconTextInput
                         iconSet="MaterialCommunityIcons"
@@ -382,7 +407,7 @@ function ShotForm({ route, navigation }: Props) {
                         valueState={firstUsageLabel}
                         required={true}
                         iconButtonName="plus"
-                        onPress={() => setFirstUsageModalVisible(true)}
+                        onPress={() => handleBottomSheetOpen("usage1", 1)}
                     />
                     <View style={{ paddingLeft: 55 }}>
                         <Text variant="bodyLarge">
@@ -428,7 +453,7 @@ function ShotForm({ route, navigation }: Props) {
                         valueState={secondUsageLabel}
                         required={true}
                         iconButtonName="plus"
-                        onPress={() => setSecondUsageModalVisible(true)}
+                        onPress={() => handleBottomSheetOpen("usage2", 1)}
                         enabled={secondUsageEnabled}
                     />
                     <View style={{ paddingLeft: 55, paddingTop: 20 }}>
@@ -459,6 +484,9 @@ function ShotForm({ route, navigation }: Props) {
                     />
                 </View>
             </ScrollView>
+            <BottomSheetPicker ref={bottomSheetRef}>
+                {BottomSheetContent()}
+            </BottomSheetPicker>
         </>
     );
 }

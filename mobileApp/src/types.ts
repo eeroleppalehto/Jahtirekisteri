@@ -10,6 +10,13 @@ export type Jasen = {
     tila: string;
 };
 
+export type JasenStateQuery = {
+    jasen_id: number;
+    etunimi: string;
+    sukunimi: string;
+    tila: string;
+};
+
 export type JasenForm = Partial<Omit<Jasen, "jasen_id">>;
 
 export type Group = {

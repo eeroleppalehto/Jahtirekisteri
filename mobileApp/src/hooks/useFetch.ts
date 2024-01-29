@@ -16,7 +16,7 @@ function useFetch<T>(url: string) {
     const [loading, setLoading] = useState(true);
     const { authState } = useAuth();
 
-    const urlCompose = `${BASE_URL}/api/v1/${url}`;
+    const urlCompose = `${BASE_URL}/api/v2/${url}`;
 
     const headers = new Headers();
     headers.append("Content-Type", "application/json");

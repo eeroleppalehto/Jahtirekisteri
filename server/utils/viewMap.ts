@@ -240,3 +240,15 @@ FROM jasenyys
 	INNER JOIN jakoryhma ON jakoryhma.ryhma_id = jasenyys.ryhma_id
 WHERE ${"column"} = ${"value"};`
 );
+
+// View for the MemberScreen in the mobile app
+viewMap.set(
+    "jasen_tila_indeksilla",
+    queryBuilder`
+    SELECT jasen.jasen_id,
+    jasen.sukunimi,
+    jasen.etunimi,
+    jasen.tila
+    FROM jasen
+    WHERE ${"column"} = ${"value"};`
+);

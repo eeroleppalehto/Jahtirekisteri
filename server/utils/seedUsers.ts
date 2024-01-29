@@ -18,18 +18,18 @@ const seedUsers = async () => {
         const salasana_hash = await bcrypt.hash(defaultPassword, 10);
 
         return await kayttajaService.createKayttaja({
-            kayttaja_id: jasen_id,
             kayttajatunnus,
+            jasen_id,
             salasana_hash,
+            roolin_nimi: "luku",
         });
     });
 
-    console.log(`Seeded ${users.length} users to the database!`);
-    users.forEach((user) => console.log(user));
+    return users;
 };
 
 seedUsers()
-    .then(() => console.log("End"))
+    .then((result) => console.log(result))
     .catch((error) => {
         console.error(error);
     });

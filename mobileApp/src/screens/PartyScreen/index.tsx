@@ -1,10 +1,10 @@
 import useFetch from "../../hooks/useFetch";
 import { PartyViewQuery } from "../../types";
 import { MaintenanceTabScreenProps } from "../../NavigationTypes";
-import { ScrollView, RefreshControl } from "react-native-gesture-handler";
+import { RefreshControl } from "react-native-gesture-handler";
 import PartyListItem from "./PartyListItem";
 import { Text, useTheme } from "react-native-paper";
-import { View } from "react-native";
+import { SectionList } from "react-native";
 
 type Props = MaintenanceTabScreenProps<"Seurueet">;
 
@@ -15,52 +15,50 @@ function PartyScreen({ navigation, route }: Props) {
 
     const theme = useTheme();
 
-    // Group parties by type
-    const partyByType = data?.reduce((acc, party) => {
-        // If the party type is not yet in the accumulator, add it
-        // Otherwise, add the party to the parties array of the type
-        if (!acc.some((item) => item.type === party.seurue_tyyppi_id)) {
+    // Generate sections for SectionList
+    const partiesByType = data?.reduce((acc, party) => {
+        // If type is not yet in array, add it
+        if (!acc.some((item) => item.type === party.seurue_tyyppi_nimi)) {
             acc.push({
-                type: party.seurue_tyyppi_id,
-                parties: [party],
+                type: party.seurue_tyyppi_nimi, // Type of party
+                data: [party], // Array of parties
             });
         } else {
             acc.find(
-                (item) => item.type === party.seurue_tyyppi_id
-            )?.parties.push(party);
+                (item) => item.type === party.seurue_tyyppi_nimi
+            )?.data.push(party);
         }
         return acc;
-    }, [] as { type: number; parties: PartyViewQuery[] }[]);
-
-    // Create a list of PartyListItems for each party type
-    const partyContent = partyByType?.map((item) => {
-        return (
-            <View key={item.type} style={{ marginBottom: 20 }}>
-                <Text
-                    variant="titleMedium"
-                    style={{
-                        color: theme.colors.primary,
-                        paddingLeft: 16,
-                        paddingTop: 20,
-                    }}
-                >
-                    {item.parties[0].seurue_tyyppi_nimi} Seurueet
-                </Text>
-                {item.parties.map((party) => (
-                    <PartyListItem key={party.seurue_id} party={party} />
-                ))}
-            </View>
-        );
-    });
+    }, [] as { type: string; data: PartyViewQuery[] }[]);
 
     return (
-        <ScrollView
-            refreshControl={
-                <RefreshControl refreshing={loading} onRefresh={onRefresh} />
-            }
-        >
-            <>{partyContent}</>
-        </ScrollView>
+        <>
+            {partiesByType && (
+                <SectionList
+                    sections={partiesByType}
+                    keyExtractor={(item) => item.seurue_id.toString()}
+                    renderItem={({ item }) => <PartyListItem party={item} />}
+                    renderSectionHeader={({ section: { type } }) => (
+                        <Text
+                            variant="titleMedium"
+                            style={{
+                                color: theme.colors.primary,
+                                paddingLeft: 16,
+                                paddingTop: 20,
+                            }}
+                        >
+                            {`${type} Seurueet`}
+                        </Text>
+                    )}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={loading}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                />
+            )}
+        </>
     );
 }
 

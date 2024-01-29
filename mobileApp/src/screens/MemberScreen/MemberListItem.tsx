@@ -7,14 +7,14 @@ import {
     useTheme,
 } from "react-native-paper";
 import { View, StyleSheet } from "react-native";
-import { Jasen } from "../../types";
+import { JasenStateQuery } from "../../types";
 
 import { MaintenanceTabScreenProps } from "../../NavigationTypes";
 
 type navigationProps = MaintenanceTabScreenProps<"Jäsenet">["navigation"];
 
 interface Props {
-    jasen: Jasen;
+    jasen: JasenStateQuery;
     navigation: navigationProps;
 }
 
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         paddingVertical: 20,
-        paddingLeft: 10,
+        paddingLeft: 50,
         gap: 15,
     },
     avatar: {
