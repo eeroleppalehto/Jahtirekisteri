@@ -1,5 +1,6 @@
-import useFetch from "../../hooks/useFetch";
-import { RadioButton, ActivityIndicator, useTheme } from "react-native-paper";
+import { RadioButton, ActivityIndicator } from "react-native-paper";
+import { useFetchQuery } from "../../hooks/useTanStackQuery";
+import { ErrorScreen } from "../../screens/ErrorScreen";
 
 type Animal = {
     elaimen_nimi: string;
@@ -11,25 +12,25 @@ type Props = {
 };
 
 export function AnimalRadioGroup({ animal, onValueChange }: Props) {
-    const { data, error, loading } = useFetch<Animal[]>(
-        "option-tables/animals"
-    );
-    const theme = useTheme();
+    const result = useFetchQuery<Animal[]>("option-tables/animals", "Animals");
 
     return (
         <>
-            {loading && (
+            {result.isLoading && (
                 <ActivityIndicator
                     size={"large"}
-                    style={{ paddingVertical: 50 }}
+                    style={{ paddingVertical: 20 }}
                 />
             )}
-            {data && (
+            {result.isError && (
+                <ErrorScreen error={result.error} reload={result.refetch} />
+            )}
+            {result.isSuccess && (
                 <RadioButton.Group
                     onValueChange={(value) => onValueChange(value)}
                     value={animal ? animal : ""}
                 >
-                    {data.map((item) => (
+                    {result.data.map((item) => (
                         <RadioButton.Item
                             label={item.elaimen_nimi}
                             value={item.elaimen_nimi}
