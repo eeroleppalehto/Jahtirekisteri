@@ -8,24 +8,21 @@ import FloatingNavigationButton from "../../components/FloatingNavigationButton"
 import {
     NativeScrollEvent,
     NativeSyntheticEvent,
-    View,
     SectionList,
 } from "react-native";
-import useFetch from "../../hooks/useFetch";
+import { useFetchQuery } from "../../hooks/useTanStackQuery";
+import { ErrorScreen } from "../ErrorScreen";
+import { DefaultActivityIndicator } from "../../components/DefaultActivityIndicator";
 
 type Props = MaintenanceTabScreenProps<"Jäsenet">;
-// TODO: Refactor to use implementation as ShotScreen
-
-type MembersByLetter = {
-    letter: string;
-    members: JasenStateQuery[];
-};
 
 // Screen for displaying all members in Maintenance tab
 function MemberScreen({ navigation, route }: Props) {
-    const { data, loading, error, onRefresh } = useFetch<JasenStateQuery[]>(
-        "views/?name=jasen_tila_indeksilla"
+    const result = useFetchQuery<JasenStateQuery[]>(
+        "views/?name=jasen_tila_indeksilla",
+        "Members"
     );
+
     const [scrollValue, setScrollValue] = useState(0);
 
     const theme = useTheme();
@@ -40,18 +37,20 @@ function MemberScreen({ navigation, route }: Props) {
     };
 
     // Sort members by last name
-    const sortedMembers = data?.sort((a, b) => {
-        const completeNameA = `${a.sukunimi} ${a.etunimi}`;
-        const completeNameB = `${b.sukunimi} ${b.etunimi}`;
+    const sortedMembers = result.isSuccess
+        ? result.data.sort((a, b) => {
+              const completeNameA = `${a.sukunimi} ${a.etunimi}`;
+              const completeNameB = `${b.sukunimi} ${b.etunimi}`;
 
-        if (completeNameA < completeNameB) {
-            return -1;
-        }
-        if (completeNameA > completeNameB) {
-            return 1;
-        }
-        return 0;
-    });
+              if (completeNameA < completeNameB) {
+                  return -1;
+              }
+              if (completeNameA > completeNameB) {
+                  return 1;
+              }
+              return 0;
+          })
+        : undefined;
 
     const membersByTitle = sortedMembers?.reduce((acc, member) => {
         const firstLetter = member.sukunimi.charAt(0).toUpperCase();
@@ -66,37 +65,13 @@ function MemberScreen({ navigation, route }: Props) {
         return acc;
     }, [] as { title: string; data: JasenStateQuery[] }[]);
 
-    const MemberContent = ({ letter, members }: MembersByLetter) => {
-        return (
-            <View key={letter} style={{ flexDirection: "row" }}>
-                <View style={{ flex: 1 }}>
-                    <Text
-                        variant="titleMedium"
-                        style={{
-                            color: theme.colors.primary,
-                            paddingLeft: 16,
-                            paddingTop: 30,
-                        }}
-                    >
-                        {letter}
-                    </Text>
-                </View>
-                <View style={{ flex: 7, flexDirection: "column" }}>
-                    {members.map((member) => (
-                        <MemberListItem
-                            key={member.jasen_id}
-                            jasen={member}
-                            navigation={navigation}
-                        />
-                    ))}
-                </View>
-            </View>
-        );
-    };
-
     return (
         <>
-            {membersByTitle && (
+            {result.isLoading ? <DefaultActivityIndicator /> : null}
+            {result.isError ? (
+                <ErrorScreen error={result.error} reload={result.refetch} />
+            ) : null}
+            {membersByTitle ? (
                 <SectionList
                     sections={membersByTitle}
                     keyExtractor={(item) => item.jasen_id.toString()}
@@ -122,12 +97,12 @@ function MemberScreen({ navigation, route }: Props) {
                     stickySectionHeadersEnabled={true}
                     refreshControl={
                         <RefreshControl
-                            refreshing={loading}
-                            onRefresh={onRefresh}
+                            refreshing={result.isLoading}
+                            onRefresh={result.refetch}
                         />
                     }
                 />
-            )}
+            ) : null}
             <FloatingNavigationButton
                 scrollValue={scrollValue}
                 type="jäsen"

@@ -1,24 +1,47 @@
-import { View } from "react-native";
-import { Text } from "react-native-paper";
-import useFetch from "../../hooks/useFetch";
+import { FlatList, RefreshControl } from "react-native-gesture-handler";
+import { ActivityIndicator, Text } from "react-native-paper";
+import { useFetchQuery } from "../../hooks/useTanStackQuery";
+import { ShotViewQuery } from "../../types";
+import { ErrorScreen } from "../ErrorScreen";
 
 export default function ProfileScreen() {
-    const { data, loading, error } = useFetch<any>("test");
+    const result = useFetchQuery<ShotViewQuery[]>(
+        "views/?name=mobiili_kaato_sivu",
+        "Shots"
+    );
+
+    // return (
+    //     <View
+    //         style={{
+    //             flex: 1,
+    //             justifyContent: "center",
+    //             alignItems: "center",
+    //             gap: 10,
+    //         }}
+    //     >
+    //         <Text>Profile</Text>
+    //     </View>
+    // );
+
     return (
-        <View
-            style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                gap: 10,
-            }}
-        >
-            <Text>Profile</Text>
-            {loading ? (
-                <Text>Loading...</Text>
-            ) : (
-                <Text>{`${data.message}: ${data.data.kayttajatunnus}`}</Text>
-            )}
-        </View>
+        <>
+            {result.isLoading ? <ActivityIndicator /> : null}
+            {result.isError ? (
+                <ErrorScreen error={result.error} reload={result.refetch} />
+            ) : null}
+            {result.isSuccess ? (
+                <FlatList
+                    data={result.data}
+                    keyExtractor={(item) => item.kaato_id.toString()}
+                    renderItem={({ item }) => <Text>{item.kaato_id}</Text>}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={result.isLoading}
+                            onRefresh={result.refetch}
+                        />
+                    }
+                />
+            ) : null}
+        </>
     );
 }

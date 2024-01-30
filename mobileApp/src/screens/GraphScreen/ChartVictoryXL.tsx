@@ -1,6 +1,6 @@
 import { View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import { Text, Surface, useTheme, ActivityIndicator } from "react-native-paper";
+import { ScrollView, RefreshControl } from "react-native-gesture-handler";
+import { Text, Surface, useTheme } from "react-native-paper";
 import { Bar, CartesianChart, useChartPressState } from "victory-native";
 import {
     LinearGradient,
@@ -9,7 +9,9 @@ import {
     Text as SkText,
 } from "@shopify/react-native-skia";
 import type { SharedValue } from "react-native-reanimated";
-import useFetch from "../../hooks/useFetch";
+import { useFetchQuery } from "../../hooks/useTanStackQuery";
+import { ErrorScreen } from "../ErrorScreen";
+import { DefaultActivityIndicator } from "../../components/DefaultActivityIndicator";
 
 type GroupDataChart = {
     ryhma_id: number;
@@ -20,8 +22,9 @@ type GroupDataChart = {
 };
 
 const ChartVictoryXL = () => {
-    const { data, loading, error } = useFetch<GroupDataChart[]>(
-        `views/?name=jakoryhma_osuus_maara`
+    const result = useFetchQuery<GroupDataChart[]>(
+        `views/?name=jakoryhma_osuus_maara`,
+        "GroupChartData"
     );
 
     const initialYState: Record<"maara", number> = {
@@ -43,8 +46,8 @@ const ChartVictoryXL = () => {
 
     const theme = useTheme();
 
-    const parsedData = data
-        ? data.map((item) => {
+    const parsedData = result.data
+        ? result.data.map((item) => {
               const maara = item.maara === null ? 0 : item.maara;
               return {
                   group: item.ryhman_nimi,
@@ -54,125 +57,138 @@ const ChartVictoryXL = () => {
         : [];
 
     return (
-        <ScrollView>
-            <View style={{ height: 400, margin: 16 }}>
-                {loading ? (
-                    <ActivityIndicator animating={true} />
-                ) : (
-                    <CartesianChart
-                        data={parsedData}
-                        xKey="group"
-                        yKeys={["maara"]}
-                        domainPadding={{
-                            left: 60,
-                            right: 60,
-                            top: 60,
-                            bottom: 400,
-                        }}
-                        chartPressState={state}
-                        axisOptions={{
-                            font,
-                            formatXLabel(_value) {
-                                return "";
-                            },
-                        }}
-                    >
-                        {({ points, chartBounds }) => (
-                            <>
-                                <Bar
-                                    key={"group"}
-                                    chartBounds={chartBounds}
-                                    points={points.maara}
-                                    innerPadding={0.5}
-                                    roundedCorners={{
-                                        topLeft: 5,
-                                        topRight: 5,
-                                    }}
-                                >
-                                    <LinearGradient
-                                        start={vec(0, 0)}
-                                        end={vec(0, 400)}
-                                        colors={["#526600", "#52660050"]}
-                                    />
-                                </Bar>
-                                {isActive && (
-                                    <ToolTip
-                                        x={state.x.position}
-                                        y={state.y.maara.position}
-                                        title={{
-                                            nimi: state.x.value.value,
-                                            maara: state.y.maara.value.value,
-                                        }}
-                                    />
-                                )}
-                            </>
-                        )}
-                    </CartesianChart>
-                )}
-            </View>
-            <Surface
-                elevation={1}
-                style={{
-                    marginHorizontal: 16,
-                    marginVertical: 30,
-                    borderRadius: 8,
-                    padding: 8,
-                    paddingBottom: 16,
-                }}
-            >
-                <View
-                    style={{
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                        gap: 8,
-                    }}
+        <>
+            {result.isLoading ? <DefaultActivityIndicator /> : null}
+            {result.isError ? (
+                <ErrorScreen error={result.error} reload={result.refetch} />
+            ) : null}
+            {result.isSuccess && (
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={result.isLoading}
+                            onRefresh={result.refetch}
+                        />
+                    }
                 >
-                    <View
+                    <View style={{ height: 400, margin: 16 }}>
+                        <CartesianChart
+                            data={parsedData}
+                            xKey="group"
+                            yKeys={["maara"]}
+                            domainPadding={{
+                                left: 60,
+                                right: 60,
+                                top: 60,
+                                bottom: 400,
+                            }}
+                            chartPressState={state}
+                            axisOptions={{
+                                font,
+                                formatXLabel(_value) {
+                                    return "";
+                                },
+                            }}
+                        >
+                            {({ points, chartBounds }) => (
+                                <>
+                                    <Bar
+                                        key={"group"}
+                                        chartBounds={chartBounds}
+                                        points={points.maara}
+                                        innerPadding={0.5}
+                                        roundedCorners={{
+                                            topLeft: 5,
+                                            topRight: 5,
+                                        }}
+                                    >
+                                        <LinearGradient
+                                            start={vec(0, 0)}
+                                            end={vec(0, 400)}
+                                            colors={["#526600", "#52660050"]}
+                                        />
+                                    </Bar>
+                                    {isActive && (
+                                        <ToolTip
+                                            x={state.x.position}
+                                            y={state.y.maara.position}
+                                            title={{
+                                                nimi: state.x.value.value,
+                                                maara: state.y.maara.value
+                                                    .value,
+                                            }}
+                                        />
+                                    )}
+                                </>
+                            )}
+                        </CartesianChart>
+                    </View>
+                    <Surface
+                        elevation={1}
                         style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
+                            marginHorizontal: 16,
+                            marginVertical: 30,
+                            borderRadius: 8,
+                            padding: 8,
+                            paddingBottom: 16,
                         }}
                     >
-                        <Text
-                            variant="titleMedium"
+                        <View
                             style={{
-                                color: theme.colors.primary,
-                                marginBottom: 12,
+                                flexDirection: "column",
+                                justifyContent: "space-between",
+                                gap: 8,
                             }}
                         >
-                            Ryhmien lihat
-                        </Text>
-                        <Text
-                            variant="titleSmall"
-                            style={{
-                                color: theme.colors.outline,
-                                marginBottom: 12,
-                                marginRight: 16,
-                            }}
-                        >
-                            {"(kg)"}
-                        </Text>
-                    </View>
-                    {loading ? (
-                        <ActivityIndicator animating={true} />
-                    ) : (
-                        parsedData.map((item) => (
                             <View
-                                key={item.group}
                                 style={{
                                     flexDirection: "row",
                                     justifyContent: "space-between",
-                                    marginHorizontal: 16,
                                 }}
                             >
-                                <Text variant="bodyMedium">{item.group}</Text>
-                                <Text variant="bodyMedium">{item.maara}</Text>
+                                <Text
+                                    variant="titleMedium"
+                                    style={{
+                                        color: theme.colors.primary,
+                                        marginBottom: 12,
+                                    }}
+                                >
+                                    Ryhmien lihat
+                                </Text>
+                                <Text
+                                    variant="titleSmall"
+                                    style={{
+                                        color: theme.colors.outline,
+                                        marginBottom: 12,
+                                        marginRight: 16,
+                                    }}
+                                >
+                                    {"(kg)"}
+                                </Text>
                             </View>
-                        ))
-                    )}
-                </View>
-            </Surface>
-        </ScrollView>
+
+                            {parsedData.map((item) => (
+                                <View
+                                    key={item.group}
+                                    style={{
+                                        flexDirection: "row",
+                                        justifyContent: "space-between",
+                                        marginHorizontal: 16,
+                                    }}
+                                >
+                                    <Text variant="bodyMedium">
+                                        {item.group}
+                                    </Text>
+                                    <Text variant="bodyMedium">
+                                        {item.maara}
+                                    </Text>
+                                </View>
+                            ))}
+                        </View>
+                    </Surface>
+                </ScrollView>
+            )}
+        </>
     );
 };
 
