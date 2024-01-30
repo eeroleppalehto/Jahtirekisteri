@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { BASE_URL } from "../baseUrl";
+import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
 type AuthContextType = {
@@ -15,6 +16,12 @@ export type AuthState = {
     authenticated: boolean | null;
 };
 
+type LoginResponse = {
+    token: string;
+    kayttajatunnus: string;
+    rooli: string;
+};
+
 type LoginInfo = {
     username: string;
     password: string;
@@ -25,6 +32,11 @@ export const useAuth = () => useContext<AuthContextType>(AuthContext);
 const TOKEN_KEY = "jwt-token";
 
 const AuthContext = createContext<AuthContextType>({});
+
+type UserInfo = {
+    kayttajatunnus: string;
+    rooli: string;
+};
 
 export const AuthProvider = ({ children }: any) => {
     const [authState, setAuthState] = useState<AuthState>({
@@ -47,16 +59,13 @@ export const AuthProvider = ({ children }: any) => {
                 return;
             }
 
-            const headers = new Headers();
-            headers.append("Content-Type", "application/json");
-            headers.append("Authorization", `Bearer ${token}`);
+            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-            const request = await fetch(`${BASE_URL}/api/v2/auth/user`, {
-                method: "GET",
-                headers,
-            });
+            const request = await axios.get<UserInfo>(
+                `${BASE_URL}/api/v2/auth/user`
+            );
 
-            if (!request.ok) {
+            if (request.status >= 400) {
                 setAuthState({
                     token: null,
                     username: null,
@@ -66,12 +75,10 @@ export const AuthProvider = ({ children }: any) => {
                 return;
             }
 
-            const data = await request.json();
-
             setAuthState({
                 token,
-                username: data.kayttajatunnus,
-                role: data.rooli,
+                username: request.data.kayttajatunnus,
+                role: request.data.rooli,
                 authenticated: true,
             });
         };
@@ -84,31 +91,31 @@ export const AuthProvider = ({ children }: any) => {
         myHeaders.append("Content-Type", "application/json");
 
         try {
-            console.log("requesting");
-            const request = await fetch(`${BASE_URL}/api/v2/auth/login`, {
-                method: "POST",
-                headers: myHeaders,
-                body: JSON.stringify({
+            const request = await axios.post<LoginResponse>(
+                `/api/v2/auth/login`,
+                {
                     kayttajatunnus: loginInfo.username,
                     salasana: loginInfo.password,
-                }),
-            });
+                }
+            );
 
-            console.log(request.status);
-            if (!request.ok) throw new Error(request.statusText);
-            const data = await request.json();
-            console.log(data);
+            if (request.status) throw new Error(request.statusText);
+            if (request.status >= 400) throw new Error("Error");
 
             setAuthState({
-                token: data.token,
-                username: data.kayttajatunnus,
-                role: data.rooli,
+                token: request.data.token,
+                username: request.data.kayttajatunnus,
+                role: request.data.rooli,
                 authenticated: true,
             });
 
-            await SecureStore.setItemAsync(TOKEN_KEY, data.token);
+            axios.defaults.headers.common[
+                "Authorization"
+            ] = `Bearer ${request.data.token}`;
 
-            return data;
+            await SecureStore.setItemAsync(TOKEN_KEY, request.data.token);
+
+            return request.data;
         } catch (e) {
             if (e instanceof Error) {
                 console.log(e.message);
@@ -119,6 +126,7 @@ export const AuthProvider = ({ children }: any) => {
     };
 
     const logout = async () => {
+        axios.defaults.headers.common["Authorization"] = "";
         await SecureStore.deleteItemAsync(TOKEN_KEY);
         setAuthState({
             token: null,
