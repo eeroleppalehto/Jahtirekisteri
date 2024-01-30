@@ -29,7 +29,7 @@ const seedUsers = async () => {
 };
 
 seedUsers()
-    .then((result) => console.log(result))
+    .then((result) => console.log(Promise.resolve(result)))
     .catch((error) => {
         console.error(error);
     });
