@@ -1,12 +1,13 @@
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import { useState } from "react";
-import { Text } from "react-native-paper";
 import { FlatList, RefreshControl } from "react-native-gesture-handler";
-import useFetch from "../../hooks/useFetch";
 import { BottomTabScreenProps } from "../../NavigationTypes";
 import { ShotViewQuery } from "../../types";
 import FloatingNavigationButton from "../../components/FloatingNavigationButton";
 import ShotListItem from "./ShotListItem";
+import { useFetchQuery } from "../../hooks/useTanStackQuery";
+import { ErrorScreen } from "../ErrorScreen";
+import { DefaultActivityIndicator } from "../../components/DefaultActivityIndicator";
 
 type Props = BottomTabScreenProps<"Kaadot">;
 
@@ -25,40 +26,41 @@ function ShotScreen({ navigation, route }: Props) {
         setScrollValue(currentScrollPosition);
     };
 
-    // Fetch all shots from the API
-    const { data, loading, error, onRefresh } = useFetch<ShotViewQuery[]>(
-        "views/?name=mobiili_kaato_sivu"
+    const result = useFetchQuery<ShotViewQuery[]>(
+        "views/?name=mobiili_kaato_sivu",
+        "Shots"
     );
 
-    if (error) {
-        return <Text>{error.message}</Text>;
-    }
-
-    // If loading, display loading indicator
-    // Else display the list of shots
-    // TODO: Add error handling
     return (
         <>
-            <FlatList
-                data={data}
-                keyExtractor={(item) => item.kaato_id.toString()}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={loading}
-                        onRefresh={onRefresh}
+            {result.isLoading ? <DefaultActivityIndicator /> : null}
+            {result.isError ? (
+                <ErrorScreen error={result.error} reload={result.refetch} />
+            ) : null}
+            {result.isSuccess && (
+                <>
+                    <FlatList
+                        data={result.data}
+                        keyExtractor={(item) => item.kaato_id.toString()}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={result.isLoading}
+                                onRefresh={result.refetch}
+                            />
+                        }
+                        renderItem={({ item }) => (
+                            <ShotListItem shot={item} navigation={navigation} />
+                        )}
+                        onScroll={onScroll}
+                        // onGestureEvent={console.log("gesture")}
                     />
-                }
-                renderItem={({ item }) => (
-                    <ShotListItem shot={item} navigation={navigation} />
-                )}
-                onScroll={onScroll}
-                // onGestureEvent={console.log("gesture")}
-            />
-            <FloatingNavigationButton
-                scrollValue={scrollValue}
-                type="kaato"
-                label="Lisää kaato  "
-            />
+                    <FloatingNavigationButton
+                        scrollValue={scrollValue}
+                        type="kaato"
+                        label="Lisää kaato  "
+                    />
+                </>
+            )}
         </>
     );
 }

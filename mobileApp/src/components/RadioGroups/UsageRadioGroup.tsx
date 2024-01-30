@@ -1,15 +1,7 @@
-import useFetch from "../../hooks/useFetch";
-import { ScrollView, View, StyleSheet } from "react-native";
-import {
-    RadioButton,
-    Text,
-    ActivityIndicator,
-    Divider,
-    Button,
-    Modal,
-    useTheme,
-} from "react-native-paper";
+import { RadioButton, ActivityIndicator } from "react-native-paper";
 import { UsageForm } from "../../types";
+import { useFetchQuery } from "../../hooks/useTanStackQuery";
+import { ErrorScreen } from "../../screens/ErrorScreen";
 
 type Usage = {
     kasittelyid: number;
@@ -22,12 +14,11 @@ type Props = {
 };
 
 export function UsageRadioGroup({ usageForm, onValueChange }: Props) {
-    const { data, error, loading } = useFetch<Usage[]>("option-tables/usages");
-    const theme = useTheme();
+    const result = useFetchQuery<Usage[]>("option-tables/usages", "Usages");
 
     const handleChange = (value: string) => {
         // Find the selected usage from the results
-        const selectedUsage = data?.find(
+        const selectedUsage = result.data?.find(
             (item) => item.kasittelyid === parseInt(value)
         );
         // Pass the selected usage to the parent components callback function
@@ -39,24 +30,27 @@ export function UsageRadioGroup({ usageForm, onValueChange }: Props) {
     // If results are still loading, use an empty string
     const initialValue = usageForm
         ? usageForm.kasittelyid?.toString()
-        : data
-        ? data[0].kasittelyid.toString()
+        : result.data
+        ? result.data[0].kasittelyid.toString()
         : "";
 
     return (
         <>
-            {loading && (
+            {result.isLoading && (
                 <ActivityIndicator
                     size={"large"}
-                    style={{ paddingVertical: 50 }}
+                    style={{ paddingVertical: 20 }}
                 />
             )}
-            {data && (
+            {result.isError && (
+                <ErrorScreen error={result.error} reload={result.refetch} />
+            )}
+            {result.isSuccess && (
                 <RadioButton.Group
                     onValueChange={(value) => handleChange(value)}
                     value={initialValue ? initialValue : ""}
                 >
-                    {data.map((item) => (
+                    {result.data.map((item) => (
                         <RadioButton.Item
                             label={item.kasittely_teksti}
                             value={item.kasittelyid.toString()}

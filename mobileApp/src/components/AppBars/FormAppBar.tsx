@@ -8,6 +8,7 @@ import {
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { UsageForm, ShotFormType } from "../../types";
 import { BASE_URL } from "../../baseUrl";
+import axios from "axios";
 
 type Props = NativeStackHeaderProps;
 
@@ -34,7 +35,6 @@ export default function FormAppBar({
     // TODO: Check if the form is valid before submitting
     const handleShotFormSubmit = () => {
         let path: string = "";
-        const method = "POST";
         let payload: any;
 
         if (type === "kaato") {
@@ -71,13 +71,8 @@ export default function FormAppBar({
 
         console.log("Submitting...");
 
-        fetch(`${BASE_URL}/api/v1/${path}`, {
-            method,
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-        })
+        axios
+            .post(`/api/v1/${path}`, payload)
             .then((res) => {
                 navigation.setParams({ clear: true });
                 console.log(`returned with status code ${res.status}`);

@@ -1,6 +1,14 @@
-import useFetch from "../../hooks/useFetch";
-import { RadioButton, Text, ActivityIndicator } from "react-native-paper";
-import { ScrollView } from "react-native-gesture-handler";
+import {
+    RadioButton,
+    ActivityIndicator,
+    TextInput,
+    useTheme,
+} from "react-native-paper";
+import { RadioButtonItem } from "./RadioButtonItem";
+import { useFetchQuery } from "../../hooks/useTanStackQuery";
+import { ErrorScreen } from "../../screens/ErrorScreen";
+import { useCallback, useState } from "react";
+import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 
 type Shooter = {
     jasen_id: number;
@@ -13,57 +21,89 @@ type Props = {
 };
 
 export function ShooterRadioGroup({ shooterId, onValueChange }: Props) {
-    // Get shooters from database
-    const { data, error, loading } = useFetch<Shooter[]>(
-        "views/?name=nimivalinta"
+    const [selectedShooterId, setSelectedShooterId] = useState<
+        number | undefined
+    >(shooterId);
+    const [search, setSearch] = useState("");
+    const [refreshing, setRefreshing] = useState(false);
+
+    const result = useFetchQuery<Shooter[]>(
+        "views/?name=nimivalinta",
+        "NameSelection"
     );
+
+    const theme = useTheme();
 
     // Callback function for changing the selected shooter
     const handleChange = (value: string) => {
+        setSelectedShooterId(parseInt(value));
         // Find the selected shooter from the results
-        const selectedShooter = data?.find(
+        const selectedShooter = result.data?.find(
             (item) => item.jasen_id === parseInt(value)
         );
         // Pass the selected shooter to the parent components callback function
         onValueChange(selectedShooter!);
     };
 
-    if (error) {
-        return <Text>{error.message}</Text>;
-    }
+    const handleRefresh = useCallback(() => {
+        setRefreshing(!true);
+        result.refetch();
+    }, []);
 
     // If shooterId is defined, use it as the initial value,
     // otherwise use the first shooter from the results.
     // If results are still loading, use an empty string
-    const initialValue = shooterId
+    const initialValue = shooterId // This Stinks!
         ? shooterId.toString()
-        : data
-        ? data[0].jasen_id.toString()
+        : result.data
+        ? result.data[0].jasen_id.toString()
         : "";
+
+    const filteredData = result.data?.filter((item) =>
+        item.kokonimi.toLowerCase().includes(search.toLowerCase())
+    );
 
     return (
         <>
-            {loading && (
+            {result.isLoading && (
                 <ActivityIndicator
                     size={"large"}
-                    style={{ paddingVertical: 50 }}
+                    style={{ paddingVertical: 20 }}
                 />
             )}
-            {data && (
-                <ScrollView>
-                    <RadioButton.Group
-                        onValueChange={(value) => handleChange(value)}
-                        value={initialValue}
-                    >
-                        {data.map((item) => (
-                            <RadioButton.Item
+            {result.isError && (
+                <ErrorScreen error={result.error} reload={result.refetch} />
+            )}
+            {result.isSuccess && (
+                <>
+                    <TextInput
+                        label="Hae"
+                        mode="outlined"
+                        value={search}
+                        right={<TextInput.Icon icon="magnify" />}
+                        style={{ marginHorizontal: 5 }}
+                        onChangeText={(text) => setSearch(text)}
+                    />
+                    <BottomSheetFlatList
+                        data={filteredData}
+                        keyExtractor={(item) => item.jasen_id.toString()}
+                        renderItem={({ item }) => (
+                            <RadioButtonItem
                                 label={item.kokonimi}
                                 value={item.jasen_id.toString()}
-                                key={item.jasen_id}
+                                theme={theme}
+                                status={
+                                    selectedShooterId === item.jasen_id
+                                        ? "checked"
+                                        : "unchecked"
+                                }
+                                onPress={handleChange}
                             />
-                        ))}
-                    </RadioButton.Group>
-                </ScrollView>
+                        )}
+                        refreshing={refreshing}
+                        onRefresh={handleRefresh}
+                    />
+                </>
             )}
         </>
     );

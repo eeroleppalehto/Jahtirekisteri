@@ -9,7 +9,7 @@ export type ErrorType = {
     success: boolean;
     errorType: string;
     errorMessage: string;
-    errorDetails: string[] | unknown[];
+    errorDetails: string[];
 };
 
 // Custom middleware for logging requests and responses
@@ -42,7 +42,7 @@ export const unknownEndpoint = (_req: Request, res: Response) => {
         success: false,
         errorType: "NotFound",
         errorMessage: "Unknown Endpoint",
-        errorDetails: ["The requested endpoint does not exist in the API"]
+        errorDetails: ["The requested endpoint does not exist in the API"],
     });
 };
 
@@ -67,7 +67,7 @@ export const errorHandler = (
         error.issues.forEach((issue) => {
             returnObject.errorDetails.push(`${issue.path}: ${issue.message}`);
         });
-
+        console.log(returnObject.errorType);
         // Send a 400 Bad Request with the error object
         return res.status(400).json(returnObject);
     }
@@ -78,7 +78,7 @@ export const errorHandler = (
             success: false,
             errorType: "PrismaClientKnownRequestError",
             errorMessage: "Error in database query",
-            errorDetails: [error.code, error.meta],
+            errorDetails: [error.code],
         };
 
         // Send a 400 Bad Request with the error object
@@ -89,10 +89,11 @@ export const errorHandler = (
         // Construct a return object that conforms to the custom ErrorType
         const returnObject: ErrorType = {
             success: false,
-            errorType: "Error",
+            errorType: "Unknown Error",
             errorMessage: error.message,
             errorDetails: [],
         };
+        console.log(returnObject.errorType, returnObject.errorMessage);
 
         // Send a 400 Bad Request with the error object
         return res.status(400).send(returnObject);

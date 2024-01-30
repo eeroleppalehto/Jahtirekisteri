@@ -1,5 +1,6 @@
-import useFetch from "../../hooks/useFetch";
 import { RadioButton, ActivityIndicator } from "react-native-paper";
+import { useFetchQuery } from "../../hooks/useTanStackQuery";
+import { ErrorScreen } from "../../screens/ErrorScreen";
 
 type Age = {
     ikaluokka: string;
@@ -11,22 +12,27 @@ type Props = {
 };
 
 export function AgeRadioGroup({ age, onValueChange }: Props) {
-    const { data, error, loading } = useFetch<Age[]>("option-tables/ages");
+    // const { data, error, loading } = useFetch<Age[]>("option-tables/ages");
+
+    const result = useFetchQuery<Age[]>("option-tables/ages", "Ages");
 
     return (
         <>
-            {loading && (
+            {result.isLoading && (
                 <ActivityIndicator
                     size={"large"}
-                    style={{ paddingVertical: 50 }}
+                    style={{ paddingVertical: 20 }}
                 />
             )}
-            {data && (
+            {result.isError && (
+                <ErrorScreen error={result.error} reload={result.refetch} />
+            )}
+            {result.isSuccess && (
                 <RadioButton.Group
                     onValueChange={(value) => onValueChange(value)}
                     value={age ? age : ""}
                 >
-                    {data.map((item) => (
+                    {result.data.map((item) => (
                         <RadioButton.Item
                             label={item.ikaluokka}
                             value={item.ikaluokka}

@@ -1,5 +1,6 @@
-import useFetch from "../../hooks/useFetch";
-import { RadioButton, ActivityIndicator, useTheme } from "react-native-paper";
+import { RadioButton, ActivityIndicator } from "react-native-paper";
+import { useFetchQuery } from "../../hooks/useTanStackQuery";
+import { ErrorScreen } from "../../screens/ErrorScreen";
 
 type Gender = {
     sukupuoli: string;
@@ -11,25 +12,29 @@ type Props = {
 };
 
 export function GenderRadioGroup({ gender, onValueChange }: Props) {
-    const { data, loading, error } = useFetch<Gender[]>(
-        "option-tables/genders"
-    );
-    const theme = useTheme();
+    // const { data, loading, error } = useFetch<Gender[]>(
+    //     "option-tables/genders"
+    // );
+
+    const result = useFetchQuery<Gender[]>("option-tables/genders", "Genders");
 
     return (
         <>
-            {loading && (
+            {result.isLoading && (
                 <ActivityIndicator
                     size={"large"}
-                    style={{ paddingVertical: 50 }}
+                    style={{ paddingVertical: 20 }}
                 />
             )}
-            {data && (
+            {result.isError && (
+                <ErrorScreen error={result.error} reload={result.refetch} />
+            )}
+            {result.isSuccess && (
                 <RadioButton.Group
                     onValueChange={(value) => onValueChange(value)}
                     value={gender ? gender : ""}
                 >
-                    {data?.map((item) => (
+                    {result.data?.map((item) => (
                         <RadioButton.Item
                             label={item.sukupuoli}
                             value={item.sukupuoli}
