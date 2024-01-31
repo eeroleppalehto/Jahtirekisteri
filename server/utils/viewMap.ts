@@ -225,7 +225,7 @@ viewMap.set(
 );
 
 viewMap.set(
-    "mobiili_jasenyydet",
+    "mobiili_ryhman_jasenyydet",
     queryBuilder`
     SELECT jasenyys.jasen_id,
 	jasenyys.jasenyys_id,
@@ -238,6 +238,23 @@ viewMap.set(
 FROM jasenyys
 	INNER JOIN jasen ON jasen.jasen_id = jasenyys.jasen_id
 	INNER JOIN jakoryhma ON jakoryhma.ryhma_id = jasenyys.ryhma_id
+WHERE ${"column"} = ${"value"};`
+);
+
+viewMap.set(
+    "mobiili_seurueen_jasenyydet",
+    queryBuilder`
+    SELECT jasenyys.jasen_id,
+	jasenyys.jasenyys_id,
+	(jasen.sukunimi::text || ' '::text) || jasen.etunimi::text AS jasenen_nimi,
+	jasenyys.osuus,
+	jasenyys.liittyi,
+	jasenyys.poistui,
+	jasenyys.ryhma_id,
+    jasenyys.seurue_id
+FROM jasenyys
+	INNER JOIN jasen ON jasen.jasen_id = jasenyys.jasen_id
+	INNER JOIN seurue ON seurue.seurue_id = jasenyys.seurue_id
 WHERE ${"column"} = ${"value"};`
 );
 

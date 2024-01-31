@@ -2,10 +2,11 @@ import { z } from "zod";
 
 // A list of allowed column names for validation
 const columnList: string[] = [
-    "jakoryhma.ryhma_id",    // Column name in 'jakoryhma' table
-    "seurue_id",             // Column name for 'seurue' ID
+    "jakoryhma.ryhma_id", // Column name in 'jakoryhma' table
+    "seurue_id", // Column name for 'seurue' ID
     "kaadon_kasittely.kaato_id", // Column name in 'kaadon_kasittely' table
     "kaadon_kasittely.kasittelyid", // Another column in 'kaadon_kasittely'
+    "seurue.seurue_id", // Column name in 'seurue' table
 ];
 
 // Function to validate if a given column name is valid
