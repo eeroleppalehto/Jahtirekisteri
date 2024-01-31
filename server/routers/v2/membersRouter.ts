@@ -25,6 +25,19 @@ jasenRouter.get("/", (async (req, res) => {
     res.json(jasenet);
 }) as express.RequestHandler);
 
+// GET endpoint for retrieving a member by ID
+jasenRouter.get("/:id", (async (req, res) => {
+    const decodedToken = getDecodedToken(req);
+
+    if (!EDIT_RIGHTS_SET.has(decodedToken.rooli)) {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    // Fetch the member with the given ID
+    const jasen = await jasenService.getJasenById(parseInt(req.params.id));
+    res.json(jasen);
+}) as express.RequestHandler);
+
 // POST endpoint for creating a new member
 jasenRouter.post("/", (async (req, res) => {
     const decodedToken = getDecodedToken(req);
