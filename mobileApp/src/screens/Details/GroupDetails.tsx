@@ -7,7 +7,7 @@ import {
     useTheme,
 } from "react-native-paper";
 import { RootStackScreenProps } from "../../NavigationTypes";
-import useFetch from "../../hooks/useFetch";
+import { useFetchQuery } from "../../hooks/useTanStackQuery";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import IconListItem from "../../components/IconListItem";
@@ -17,8 +17,9 @@ type Props = RootStackScreenProps<"Details">;
 
 function GroupDetails({ route, navigation }: Props) {
     const group = route.params?.data as GroupViewQuery;
-    const { data, loading, error } = useFetch<MembershipViewQuery[]>(
-        `views/?name=mobiili_jasenyydet&column=jakoryhma.ryhma_id&value=${group.ryhma_id}`
+    const result = useFetchQuery<MembershipViewQuery[]>(
+        `views/?name=mobiili_ryhman_jasenyydet&column=jakoryhma.ryhma_id&value=${group.ryhma_id}`,
+        ["GroupDetails", group.ryhma_id]
     );
 
     const theme = useTheme();
@@ -191,11 +192,13 @@ function GroupDetails({ route, navigation }: Props) {
                         (osuus)
                     </Text>
                 </View>
-                {loading ? (
-                    <ActivityIndicator />
-                ) : (
+                {result.isLoading ? <ActivityIndicator /> : null}
+                {result.isError ? (
+                    <Text style={{ paddingTop: 20 }}>Virhe</Text>
+                ) : null}
+                {result.isSuccess && (
                     <View style={{ gap: 16 }}>
-                        {GroupMembers(data || [])}
+                        {GroupMembers(result.data || [])}
                         <View
                             style={{
                                 flexDirection: "row",
@@ -216,6 +219,7 @@ function GroupDetails({ route, navigation }: Props) {
                     </View>
                 )}
             </Surface>
+            <View style={{ paddingVertical: 150 }}></View>
         </ScrollView>
     );
 }

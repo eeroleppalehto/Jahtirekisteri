@@ -13,10 +13,25 @@ const getAllJasen = async () => {
     return jasenet;
 };
 
+const getJasenById = async (id: number) => {
+    const jasen = await prisma.jasen.findUnique({
+        where: { jasen_id: id },
+    });
+
+    return jasen;
+};
+
 // Create a new 'jasen' record in the database
 const createJasen = async (object: unknown) => {
     const data = jasenInput.parse(object); // Validate input data using Zod schema
-    const { etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila } = data;
+    const {
+        etunimi,
+        sukunimi,
+        jakeluosoite,
+        postinumero,
+        postitoimipaikka,
+        tila,
+    } = data;
 
     const jasen = await prisma.jasen.create({
         data: {
@@ -26,7 +41,7 @@ const createJasen = async (object: unknown) => {
             postinumero,
             postitoimipaikka,
             tila,
-        }
+        },
     });
 
     return jasen;
@@ -35,7 +50,14 @@ const createJasen = async (object: unknown) => {
 // Update an existing 'jasen' record by its unique ID
 const updateJasen = async (id: number, object: unknown) => {
     const data = jasenInput.parse(object); // Validate and parse input data
-    const { etunimi, sukunimi, jakeluosoite, postinumero, postitoimipaikka, tila } = data;
+    const {
+        etunimi,
+        sukunimi,
+        jakeluosoite,
+        postinumero,
+        postitoimipaikka,
+        tila,
+    } = data;
 
     const jasen = await prisma.jasen.update({
         where: { jasen_id: id },
@@ -46,7 +68,7 @@ const updateJasen = async (id: number, object: unknown) => {
             postinumero,
             postitoimipaikka,
             tila,
-        }
+        },
     });
 
     return jasen;
@@ -55,11 +77,17 @@ const updateJasen = async (id: number, object: unknown) => {
 // Delete a 'jasen' record by its unique ID
 const deleteJasen = async (id: number) => {
     const jasen = await prisma.jasen.delete({
-        where: { jasen_id: id } // Specify the ID for deletion
+        where: { jasen_id: id }, // Specify the ID for deletion
     });
 
     return jasen;
 };
 
 // Export CRUD operations for external use
-export default { getAllJasen, createJasen, updateJasen, deleteJasen };
+export default {
+    getAllJasen,
+    getJasenById,
+    createJasen,
+    updateJasen,
+    deleteJasen,
+};

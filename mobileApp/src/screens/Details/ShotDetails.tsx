@@ -1,6 +1,6 @@
 import { Text, Divider, ActivityIndicator, useTheme } from "react-native-paper";
 import { RootStackScreenProps } from "../../NavigationTypes";
-import useFetch from "../../hooks/useFetch";
+import { useFetchQuery } from "../../hooks/useTanStackQuery";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import IconListItem from "../../components/IconListItem";
@@ -8,15 +8,13 @@ import { ShotViewQuery, UsageViewQuery } from "../../types";
 
 type Props = RootStackScreenProps<"Details">;
 
-//TODO: Get data from route params and render screen based on that
-//TODO: Error handling if data is undefined
-//TODO: Fetch usage data from backend
-
 // Screen for displaying details screen for a shot
 function ShotDetails({ route, navigation }: Props) {
-    const results = useFetch<UsageViewQuery[]>(
-        `views/?name=mobiili_kaadon_kasittely&column=kaadon_kasittely.kaato_id&value=${route.params.data.kaato_id}`
+    const result = useFetchQuery<UsageViewQuery[]>(
+        `views/?name=mobiili_kaadon_kasittely&column=kaadon_kasittely.kaato_id&value=${route.params.data.kaato_id}`,
+        ["ShotDetails", route.params.data.kaato_id]
     );
+
     const theme = useTheme();
     if (!route.params) return <Text>Virhe!</Text>;
 
@@ -106,13 +104,17 @@ function ShotDetails({ route, navigation }: Props) {
                 Käsittelyt
             </Text>
             <View style={{ paddingTop: 20, paddingBottom: 300 }}>
-                {results.loading ? (
+                {result.isLoading ? (
                     <ActivityIndicator
                         size={"large"}
                         style={{ paddingTop: 20 }}
                     />
-                ) : (
-                    results.data?.map((usage) => {
+                ) : null}
+                {result.isError ? (
+                    <Text style={{ paddingTop: 20 }}>Virhe</Text>
+                ) : null}
+                {result.isSuccess &&
+                    result.data?.map((usage) => {
                         const descriptionText = `Määrä ${usage.kasittely_maara.toString()}%`;
 
                         return (
@@ -123,8 +125,7 @@ function ShotDetails({ route, navigation }: Props) {
                                 description={descriptionText}
                             />
                         );
-                    })
-                )}
+                    })}
             </View>
         </ScrollView>
     );

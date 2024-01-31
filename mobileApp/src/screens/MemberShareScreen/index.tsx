@@ -1,4 +1,3 @@
-import useFetch from "../../hooks/useFetch";
 import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import { ShareTabScreenProps } from "../../NavigationTypes";
 import { ShareViewQuery } from "../../types";
@@ -11,13 +10,9 @@ type Props = ShareTabScreenProps<"Jäsenille">;
 
 //Screen for displaying shares meant for groups
 function MemberShareScreen({ navigation, route }: Props) {
-    const { data, loading, error, onRefresh } = useFetch<ShareViewQuery[]>(
-        "views/?name=mobiili_ryhmien_jaot&column=kaadon_kasittely.kasittelyid&value=5"
-    );
-
     const result = useFetchQuery<ShareViewQuery[]>(
         "views/?name=mobiili_ryhmien_jaot&column=kaadon_kasittely.kasittelyid&value=5",
-        "MemberShares"
+        ["MemberShares"]
     );
 
     return (

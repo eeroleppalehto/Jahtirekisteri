@@ -24,7 +24,7 @@ type GroupDataChart = {
 const ChartVictoryXL = () => {
     const result = useFetchQuery<GroupDataChart[]>(
         `views/?name=jakoryhma_osuus_maara`,
-        "GroupChartData"
+        ["GroupChartData"]
     );
 
     const initialYState: Record<"maara", number> = {

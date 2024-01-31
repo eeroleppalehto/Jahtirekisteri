@@ -91,7 +91,7 @@ export default function FormAppBar({
                     flexDirection: "row",
                     alignItems: "center",
                     backgroundColor: theme.colors.primary,
-                    borderRadius: 16,
+                    borderRadius: 24,
                     paddingLeft: 8,
                     marginRight: 8,
                 }}
@@ -103,7 +103,7 @@ export default function FormAppBar({
                         flexDirection: "row",
                         alignItems: "center",
                         backgroundColor: theme.colors.primary,
-                        borderRadius: 16,
+                        borderRadius: 24,
                         paddingLeft: 8,
                         gap: -8,
                     }}

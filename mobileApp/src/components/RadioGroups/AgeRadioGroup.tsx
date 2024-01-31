@@ -14,7 +14,7 @@ type Props = {
 export function AgeRadioGroup({ age, onValueChange }: Props) {
     // const { data, error, loading } = useFetch<Age[]>("option-tables/ages");
 
-    const result = useFetchQuery<Age[]>("option-tables/ages", "Ages");
+    const result = useFetchQuery<Age[]>("option-tables/ages", ["Ages"]);
 
     return (
         <>

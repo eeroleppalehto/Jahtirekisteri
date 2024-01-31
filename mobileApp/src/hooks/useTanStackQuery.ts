@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ServerError, ServerErrorType } from "../utils/ServerError";
 import axios from "axios";
 
-export function useFetchQuery<T>(url: string, key: string) {
+export function useFetchQuery<T>(url: string, key: any[]) {
     const axiosQuery = () =>
         axios
             .get(`/api/v2/${url}`)

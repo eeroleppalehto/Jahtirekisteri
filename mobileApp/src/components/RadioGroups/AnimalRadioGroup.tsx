@@ -12,7 +12,9 @@ type Props = {
 };
 
 export function AnimalRadioGroup({ animal, onValueChange }: Props) {
-    const result = useFetchQuery<Animal[]>("option-tables/animals", "Animals");
+    const result = useFetchQuery<Animal[]>("option-tables/animals", [
+        "Animals",
+    ]);
 
     return (
         <>

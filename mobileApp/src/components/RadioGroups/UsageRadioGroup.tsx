@@ -14,7 +14,7 @@ type Props = {
 };
 
 export function UsageRadioGroup({ usageForm, onValueChange }: Props) {
-    const result = useFetchQuery<Usage[]>("option-tables/usages", "Usages");
+    const result = useFetchQuery<Usage[]>("option-tables/usages", ["Usages"]);
 
     const handleChange = (value: string) => {
         // Find the selected usage from the results

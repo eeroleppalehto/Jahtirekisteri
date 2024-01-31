@@ -3,13 +3,17 @@ import { Text, TouchableRipple, useTheme } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { PartyViewQuery } from "../../types";
+import { MaintenanceTabScreenProps } from "../../NavigationTypes";
+
+type navigationProps = MaintenanceTabScreenProps<"Seurueet">["navigation"];
 
 type Props = {
     party: PartyViewQuery;
+    navigation: navigationProps;
 };
 
 // ListItem for displaying a single party in a list
-function PartyListItem({ party }: Props) {
+function PartyListItem({ party, navigation }: Props) {
     const theme = useTheme();
 
     // Left trailing icon for the party
@@ -22,7 +26,15 @@ function PartyListItem({ party }: Props) {
     );
 
     return (
-        <TouchableRipple onPress={() => console.log("pressed")}>
+        <TouchableRipple
+            onPress={() =>
+                navigation.navigate("Details", {
+                    type: "Seurue",
+                    data: party,
+                    title: party.seurueen_nimi,
+                })
+            }
+        >
             <View style={styles.container}>
                 {iconElement}
                 <View style={styles.textContainer}>

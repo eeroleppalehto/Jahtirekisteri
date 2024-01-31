@@ -1,4 +1,3 @@
-import useFetch from "../../hooks/useFetch";
 import { PartyViewQuery } from "../../types";
 import { MaintenanceTabScreenProps } from "../../NavigationTypes";
 import { RefreshControl } from "react-native-gesture-handler";
@@ -18,7 +17,7 @@ function PartyScreen({ navigation, route }: Props) {
 
     const result = useFetchQuery<PartyViewQuery[]>(
         `views/?name=mobiili_seurue_sivu`,
-        "Parties"
+        ["Parties"]
     );
 
     const theme = useTheme();
@@ -51,7 +50,9 @@ function PartyScreen({ navigation, route }: Props) {
                 <SectionList
                     sections={partiesByType}
                     keyExtractor={(item) => item.seurue_id.toString()}
-                    renderItem={({ item }) => <PartyListItem party={item} />}
+                    renderItem={({ item }) => (
+                        <PartyListItem party={item} navigation={navigation} />
+                    )}
                     renderSectionHeader={({ section: { type } }) => (
                         <Text
                             variant="titleMedium"
