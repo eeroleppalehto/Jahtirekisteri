@@ -16,7 +16,9 @@ export function GenderRadioGroup({ gender, onValueChange }: Props) {
     //     "option-tables/genders"
     // );
 
-    const result = useFetchQuery<Gender[]>("option-tables/genders", "Genders");
+    const result = useFetchQuery<Gender[]>("option-tables/genders", [
+        "Genders",
+    ]);
 
     return (
         <>

@@ -14,7 +14,7 @@ type Props = MaintenanceTabScreenProps<"Ryhmät">;
 function GroupScreen({ navigation, route }: Props) {
     const result = useFetchQuery<GroupViewQuery[]>(
         "views/?name=mobiili_ryhma_sivu",
-        "Groups"
+        ["Groups"]
     );
 
     const theme = useTheme();

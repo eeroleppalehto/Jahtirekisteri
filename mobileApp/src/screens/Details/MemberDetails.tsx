@@ -12,9 +12,10 @@ import {
 import { Jasen, JasenStateQuery } from "../../types";
 import { RootStackScreenProps } from "../../NavigationTypes";
 import IconListItem from "../../components/IconListItem";
-import useFetch from "../../hooks/useFetch";
 import { useAuth } from "../../context/AuthProvider";
 import { EDIT_RIGHTS_SET } from "../../utils/authenticationUtils";
+import { ErrorScreen } from "../ErrorScreen";
+import { useFetchQuery } from "../../hooks/useTanStackQuery";
 
 type Props = RootStackScreenProps<"Details">;
 
@@ -77,12 +78,15 @@ type MembersInfoProps = {
 };
 
 function MemberInfo({ id, theme }: MembersInfoProps) {
-    const { data, error, loading } = useFetch<Jasen>(`jasenet/${id}`);
+    const result = useFetchQuery<Jasen>(`members/${id}`, ["MemberDetails", id]);
 
     return (
         <>
-            {loading ? <ActivityIndicator /> : null}
-            {data ? (
+            {result.isLoading ? <ActivityIndicator /> : null}
+            {result.isError ? (
+                <ErrorScreen error={result.error} reload={result.refetch} />
+            ) : null}
+            {result.isSuccess ? (
                 <>
                     <Text
                         variant="titleMedium"
@@ -98,25 +102,25 @@ function MemberInfo({ id, theme }: MembersInfoProps) {
                         iconSet="MaterialIcons"
                         iconNameMaterial="phone"
                         title="Puhelinnumero"
-                        description={data.puhelinnumero}
+                        description={result.data.puhelinnumero}
                     />
                     <IconListItem
                         iconSet="MaterialIcons"
                         iconNameMaterial="location-on"
                         title="Osoite"
-                        description={data.jakeluosoite}
+                        description={result.data.jakeluosoite}
                     />
                     <IconListItem
                         iconSet="MaterialIcons"
                         iconNameMaterial="location-on"
                         title="Postinumero"
-                        description={data.postinumero}
+                        description={result.data.postinumero}
                     />
                     <IconListItem
                         iconSet="MaterialIcons"
                         iconNameMaterial="location-on"
                         title="Postitoimipaikka"
-                        description={data.postitoimipaikka}
+                        description={result.data.postitoimipaikka}
                     />
                 </>
             ) : null}

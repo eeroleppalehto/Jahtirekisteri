@@ -7,7 +7,7 @@ import { ErrorScreen } from "../ErrorScreen";
 export default function ProfileScreen() {
     const result = useFetchQuery<ShotViewQuery[]>(
         "views/?name=mobiili_kaato_sivu",
-        "Shots"
+        ["Shots"]
     );
 
     // return (

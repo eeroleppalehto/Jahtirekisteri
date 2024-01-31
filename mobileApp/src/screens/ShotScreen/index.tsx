@@ -28,7 +28,7 @@ function ShotScreen({ navigation, route }: Props) {
 
     const result = useFetchQuery<ShotViewQuery[]>(
         "views/?name=mobiili_kaato_sivu",
-        "Shots"
+        ["Shots"]
     );
 
     return (

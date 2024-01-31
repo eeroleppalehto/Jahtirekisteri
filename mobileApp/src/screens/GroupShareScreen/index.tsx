@@ -12,7 +12,7 @@ type Props = ShareTabScreenProps<"Ryhmille">;
 function GroupShareScreen({ navigation, route }: Props) {
     const result = useFetchQuery<ShareViewQuery[]>(
         "views/?name=mobiili_ryhmien_jaot&column=kaadon_kasittely.kasittelyid&value=2",
-        "GroupShares"
+        ["GroupShares"]
     );
 
     return (

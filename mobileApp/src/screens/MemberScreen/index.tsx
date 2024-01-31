@@ -20,7 +20,7 @@ type Props = MaintenanceTabScreenProps<"Jäsenet">;
 function MemberScreen({ navigation, route }: Props) {
     const result = useFetchQuery<JasenStateQuery[]>(
         "views/?name=jasen_tila_indeksilla",
-        "Members"
+        ["Members"]
     );
 
     const [scrollValue, setScrollValue] = useState(0);

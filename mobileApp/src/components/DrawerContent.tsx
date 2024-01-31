@@ -12,11 +12,12 @@ import {
     TouchableRipple,
     Switch,
     Divider,
+    ActivityIndicator,
 } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { DrawerNavigationHelpers } from "@react-navigation/drawer/lib/typescript/src/types";
 import { useAuth, AuthState } from "../context/AuthProvider";
-import useFetch from "../hooks/useFetch";
+import { useFetchQuery } from "../hooks/useTanStackQuery";
 
 interface Props {
     navigation: DrawerNavigationHelpers;
@@ -74,7 +75,9 @@ function ProfileSection({
                     <View style={styles.userInfoSection}>
                         <Avatar.Icon size={50} icon={"account"} />
                         {/* <Title style={styles.title}>Miika Hiivola</Title> */}
-                        {authState?.username ? <MemberNameTitle /> : null}
+                        {authState?.username ? (
+                            <MemberNameTitle username={authState.username} />
+                        ) : null}
                         <Caption style={styles.caption}>
                             {authState.username}
                         </Caption>
@@ -167,15 +170,23 @@ type MemberName = {
     sukunimi: string;
 };
 
-function MemberNameTitle() {
-    const { data, error, loading } = useFetch<MemberName>(`profiles/name`);
+type MemberNameTitleProps = {
+    username: string;
+};
+
+function MemberNameTitle({ username }: MemberNameTitleProps) {
+    // const { data, error, loading } = useFetch<MemberName>(`profiles/name`);
+    const result = useFetchQuery<MemberName>(`profiles/name`, [
+        "MemberName",
+        username,
+    ]);
     return (
         <>
-            {loading ?? null}
-            {data && (
+            {result.isLoading ?? <ActivityIndicator animating={true} />}
+            {result.isSuccess && (
                 <Title
                     style={styles.title}
-                >{`${data.etunimi} ${data.sukunimi}`}</Title>
+                >{`${result.data.etunimi} ${result.data.sukunimi}`}</Title>
             )}
             {/* <Title style={styles.title}>Miika Hiivola</Title>); */}
         </>

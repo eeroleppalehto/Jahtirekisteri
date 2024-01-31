@@ -27,10 +27,9 @@ export function ShooterRadioGroup({ shooterId, onValueChange }: Props) {
     const [search, setSearch] = useState("");
     const [refreshing, setRefreshing] = useState(false);
 
-    const result = useFetchQuery<Shooter[]>(
-        "views/?name=nimivalinta",
-        "NameSelection"
-    );
+    const result = useFetchQuery<Shooter[]>("views/?name=nimivalinta", [
+        "NameSelection",
+    ]);
 
     const theme = useTheme();
 
