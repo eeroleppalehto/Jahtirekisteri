@@ -3,6 +3,8 @@ import ShotDetails from "./ShotDetails";
 import GroupDetails from "./GroupDetails";
 import { PartyDetails } from "./PartyDetails";
 import { ErrorScreen } from "../ErrorScreen";
+import { MemberShareDetails } from "./MemberShareDetails";
+import { GroupShareDetails } from "./GroupShareDetails";
 import { RootStackScreenProps } from "../../NavigationTypes";
 
 type Props = RootStackScreenProps<"Details">;
@@ -20,14 +22,22 @@ function DetailsScreen({ route, navigation }: Props) {
 
         // Switch case for selecting the correct details screen
         switch (type) {
-            case "Jäsen":
+            case "Member":
                 return <MemberDetails route={route} navigation={navigation} />;
-            case "Kaato":
+            case "Shot":
                 return <ShotDetails route={route} navigation={navigation} />;
-            case "Ryhmä":
+            case "Group":
                 return <GroupDetails route={route} navigation={navigation} />;
-            case "Seurue":
+            case "Party":
                 return <PartyDetails route={route} navigation={navigation} />;
+            case "MemberShare":
+                return (
+                    <MemberShareDetails route={route} navigation={navigation} />
+                );
+            case "GroupShare":
+                return (
+                    <GroupShareDetails route={route} navigation={navigation} />
+                );
             default:
                 return (
                     <ErrorScreen

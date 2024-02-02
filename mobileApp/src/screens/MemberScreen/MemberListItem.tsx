@@ -39,7 +39,7 @@ function MemberListItem({ jasen, navigation }: Props) {
             <TouchableRipple
                 onPress={() =>
                     navigation.navigate("Details", {
-                        type: "Jäsen",
+                        type: "Member",
                         data: jasen,
                         title: title,
                     })

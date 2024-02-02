@@ -29,7 +29,7 @@ function GroupListItem({ group, navigation }: Props) {
         <TouchableRipple
             onPress={() =>
                 navigation.navigate("Details", {
-                    type: "Ryhmä",
+                    type: "Group",
                     data: group,
                     title: group.ryhman_nimi,
                 })

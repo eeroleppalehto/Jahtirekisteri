@@ -11,7 +11,6 @@ export function useFetchQuery<T>(url: string, key: any[]) {
                 if (!error.response) throw error;
                 if (!error.response.data) throw error;
 
-                console.log(typeof error.response.status);
                 if (error.response.status >= 400) {
                     error.response.data as ServerErrorType;
                     throw new ServerError(error.response.data);

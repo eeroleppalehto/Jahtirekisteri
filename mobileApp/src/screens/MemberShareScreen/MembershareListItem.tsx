@@ -8,13 +8,17 @@ import {
 } from "react-native-paper";
 import { ShareViewQuery } from "../../types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { ShareTabScreenProps } from "../../NavigationTypes";
+
+type navigationProps = ShareTabScreenProps<"Jäsenille">["navigation"];
 
 type Props = {
     share: ShareViewQuery;
+    navigation: navigationProps;
 };
 
 // List item for displaying a single share meant for member in a list
-function MemberShareListItem({ share }: Props) {
+function MemberShareListItem({ share, navigation }: Props) {
     const theme = useTheme();
 
     // Format date to Finnish format
@@ -67,7 +71,15 @@ function MemberShareListItem({ share }: Props) {
     };
 
     return (
-        <TouchableRipple onPress={() => console.log("pressed")}>
+        <TouchableRipple
+            onPress={() =>
+                navigation.navigate("Details", {
+                    type: "MemberShare",
+                    data: share,
+                    title: `Index: ${share.kaato_id}`,
+                })
+            }
+        >
             <View style={styles.container}>
                 <View style={styles.avatar}>
                     <Avatar.Image
