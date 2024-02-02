@@ -20,13 +20,13 @@ function DetailsScreen({ route, navigation }: Props) {
 
         // Switch case for selecting the correct details screen
         switch (type) {
-            case "Jäsen":
+            case "Member":
                 return <MemberDetails route={route} navigation={navigation} />;
-            case "Kaato":
+            case "Shot":
                 return <ShotDetails route={route} navigation={navigation} />;
-            case "Ryhmä":
+            case "Group":
                 return <GroupDetails route={route} navigation={navigation} />;
-            case "Seurue":
+            case "Party":
                 return <PartyDetails route={route} navigation={navigation} />;
             default:
                 return (

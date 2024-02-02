@@ -29,7 +29,7 @@ function PartyListItem({ party, navigation }: Props) {
         <TouchableRipple
             onPress={() =>
                 navigation.navigate("Details", {
-                    type: "Seurue",
+                    type: "Party",
                     data: party,
                     title: party.seurueen_nimi,
                 })
