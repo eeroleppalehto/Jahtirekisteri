@@ -225,37 +225,103 @@ viewMap.set(
 );
 
 viewMap.set(
+    "mobilii_jasen_jaot",
+    queryBuilder`
+    SELECT kaadon_kasittely.kaato_id,
+        kaadon_kasittely.kasittely_maara,
+        sum(ruhonosa.osnimitys_suhdeluku) * 10000::double precision / kaadon_kasittely.kasittely_maara::double precision AS jaettu_pros,
+        (jasen.sukunimi::text || ' '::text) || jasen.etunimi::text AS kaataja,
+        kaato.kaatopaiva,
+        kaato.paikka_teksti,
+        kaato.elaimen_nimi,
+        kaato.ikaluokka,
+        kaato.sukupuoli,
+        kasittely.kasittely_teksti,
+        kaato.ruhopaino,
+        kaadon_kasittely.kaadon_kasittely_id
+    FROM jasen
+        JOIN kaato ON jasen.jasen_id = kaato.jasen_id
+        JOIN kaadon_kasittely ON kaadon_kasittely.kaato_id = kaato.kaato_id
+        JOIN kasittely ON kaadon_kasittely.kasittelyid = kasittely.kasittelyid
+        LEFT JOIN jakotapahtuma_jasen ON jakotapahtuma_jasen.kaadon_kasittely_id = kaadon_kasittely.kaadon_kasittely_id
+        LEFT JOIN ruhonosa ON ruhonosa.osnimitys::text = jakotapahtuma_jasen.osnimitys::text
+		WHERE ${"column"} = ${"value"}
+		GROUP BY kaadon_kasittely.kaato_id, kaadon_kasittely.kasittely_maara, ((jasen.sukunimi::text || ' '::text) || jasen.etunimi::text), kaato.kaatopaiva, kaato.paikka_teksti, kaato.elaimen_nimi, kaato.ikaluokka, kaato.sukupuoli, kasittely.kasittely_teksti, kaato.ruhopaino, kaadon_kasittely.kaadon_kasittely_id
+    ORDER BY kasittely.kasittely_teksti DESC;
+    `
+);
+
+viewMap.set(
     "mobiili_ryhman_jasenyydet",
     queryBuilder`
     SELECT jasenyys.jasen_id,
-	jasenyys.jasenyys_id,
-	(jasen.sukunimi::text || ' '::text) || jasen.etunimi::text AS jasenen_nimi,
-	jasenyys.osuus,
-	jasenyys.liittyi,
-	jasenyys.poistui,
-	jasenyys.ryhma_id,
-    jasenyys.seurue_id
-FROM jasenyys
-	INNER JOIN jasen ON jasen.jasen_id = jasenyys.jasen_id
-	INNER JOIN jakoryhma ON jakoryhma.ryhma_id = jasenyys.ryhma_id
-WHERE ${"column"} = ${"value"};`
+        jasenyys.jasenyys_id,
+        (jasen.sukunimi::text || ' '::text) || jasen.etunimi::text AS jasenen_nimi,
+        jasenyys.osuus,
+        jasenyys.liittyi,
+        jasenyys.poistui,
+        jasenyys.ryhma_id,
+        jasenyys.seurue_id
+    FROM jasenyys
+        INNER JOIN jasen ON jasen.jasen_id = jasenyys.jasen_id
+        INNER JOIN jakoryhma ON jakoryhma.ryhma_id = jasenyys.ryhma_id
+    WHERE ${"column"} = ${"value"};`
 );
 
 viewMap.set(
     "mobiili_seurueen_jasenyydet",
     queryBuilder`
     SELECT jasenyys.jasen_id,
-	jasenyys.jasenyys_id,
-	(jasen.sukunimi::text || ' '::text) || jasen.etunimi::text AS jasenen_nimi,
-	jasenyys.osuus,
-	jasenyys.liittyi,
-	jasenyys.poistui,
-	jasenyys.ryhma_id,
-    jasenyys.seurue_id
-FROM jasenyys
-	INNER JOIN jasen ON jasen.jasen_id = jasenyys.jasen_id
-	INNER JOIN seurue ON seurue.seurue_id = jasenyys.seurue_id
-WHERE ${"column"} = ${"value"};`
+        jasenyys.jasenyys_id,
+        (jasen.sukunimi::text || ' '::text) || jasen.etunimi::text AS jasenen_nimi,
+        jasenyys.osuus,
+        jasenyys.liittyi,
+        jasenyys.poistui,
+        jasenyys.ryhma_id,
+        jasenyys.seurue_id
+    FROM jasenyys
+        INNER JOIN jasen ON jasen.jasen_id = jasenyys.jasen_id
+        INNER JOIN seurue ON seurue.seurue_id = jasenyys.seurue_id
+    WHERE ${"column"} = ${"value"};`
+);
+
+viewMap.set(
+    "jasenjaot_nimilla",
+    queryBuilder`
+    SELECT jakotapahtuma_jasen.tapahtuma_jasen_id,
+        jakotapahtuma_jasen.paiva,
+        jasenyys.jasenyys_id,
+        nimivalinta.kokonimi,
+        jakotapahtuma_jasen.osnimitys,
+        jakotapahtuma_jasen.kaadon_kasittely_id,
+        jakotapahtuma_jasen.maara,
+        kaadon_kasittely.kaato_id,
+        seurue.seurue_id
+    FROM jakotapahtuma_jasen
+        JOIN jasenyys ON jasenyys.jasenyys_id = jakotapahtuma_jasen.jasenyys_id
+        JOIN nimivalinta ON jasenyys.jasen_id = nimivalinta.jasen_id
+        JOIN kaadon_kasittely ON kaadon_kasittely.kaadon_kasittely_id = jakotapahtuma_jasen.kaadon_kasittely_id
+        JOIN seurue ON seurue.seurue_id = jasenyys.seurue_id
+    WHERE ${"column"} = ${"value"}`
+);
+
+viewMap.set(
+    "ryhmajaot_nimilla",
+    queryBuilder`
+    SELECT jakotapahtuma.tapahtuma_id,
+        jakotapahtuma.paiva,
+		jakotapahtuma.ryhma_id,
+		jakoryhma.ryhman_nimi,
+        jakotapahtuma.osnimitys,
+        jakotapahtuma.kaadon_kasittely_id,
+        jakotapahtuma.maara,
+        kaadon_kasittely.kaato_id,
+        seurue.seurue_id
+    FROM jakotapahtuma
+        JOIN jakoryhma ON jakoryhma.ryhma_id = jakotapahtuma.ryhma_id
+        JOIN kaadon_kasittely ON kaadon_kasittely.kaadon_kasittely_id = jakotapahtuma.kaadon_kasittely_id
+        JOIN seurue ON seurue.seurue_id = jakoryhma.seurue_id
+    WHERE ${"column"} = ${"value"}`
 );
 
 // View for the MemberScreen in the mobile app
@@ -263,9 +329,9 @@ viewMap.set(
     "jasen_tila_indeksilla",
     queryBuilder`
     SELECT jasen.jasen_id,
-    jasen.sukunimi,
-    jasen.etunimi,
-    jasen.tila
+        jasen.sukunimi,
+        jasen.etunimi,
+        jasen.tila
     FROM jasen
-    WHERE ${"column"} = ${"value"};`
+        WHERE ${"column"} = ${"value"};`
 );

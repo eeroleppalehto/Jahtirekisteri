@@ -7,6 +7,7 @@ const columnList: string[] = [
     "kaadon_kasittely.kaato_id", // Column name in 'kaadon_kasittely' table
     "kaadon_kasittely.kasittelyid", // Another column in 'kaadon_kasittely'
     "seurue.seurue_id", // Column name in 'seurue' table
+    "kaato_id",
 ];
 
 // Function to validate if a given column name is valid
