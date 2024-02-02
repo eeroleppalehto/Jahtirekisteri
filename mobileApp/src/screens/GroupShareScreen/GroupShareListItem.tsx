@@ -8,13 +8,17 @@ import {
 } from "react-native-paper";
 import { ShareViewQuery } from "../../types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { ShareTabScreenProps } from "../../NavigationTypes";
+
+type navigationProps = ShareTabScreenProps<"Ryhmille">["navigation"];
 
 type Props = {
+    navigation: navigationProps;
     share: ShareViewQuery;
 };
 
 // List item for displaying a single share meant for group in a list
-function GroupShareListItem({ share }: Props) {
+function GroupShareListItem({ navigation, share }: Props) {
     const theme = useTheme();
 
     // Format date to Finnish format
@@ -67,7 +71,15 @@ function GroupShareListItem({ share }: Props) {
     };
 
     return (
-        <TouchableRipple onPress={() => console.log("pressed")}>
+        <TouchableRipple
+            onPress={() =>
+                navigation.navigate("Details", {
+                    type: "GroupShare",
+                    data: share,
+                    title: `Index: ${share.kaato_id}`,
+                })
+            }
+        >
             <View style={styles.container}>
                 <View style={styles.avatar}>
                     <Avatar.Image

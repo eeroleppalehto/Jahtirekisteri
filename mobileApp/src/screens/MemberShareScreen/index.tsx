@@ -32,7 +32,10 @@ function MemberShareScreen({ navigation, route }: Props) {
                         />
                     }
                     renderItem={({ item }) => (
-                        <MemberShareListItem share={item} />
+                        <MemberShareListItem
+                            share={item}
+                            navigation={navigation}
+                        />
                     )}
                 />
             )}

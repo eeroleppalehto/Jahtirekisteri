@@ -32,7 +32,10 @@ function GroupShareScreen({ navigation, route }: Props) {
                         />
                     }
                     renderItem={({ item }) => (
-                        <GroupShareListItem share={item} />
+                        <GroupShareListItem
+                            navigation={navigation}
+                            share={item}
+                        />
                     )}
                 />
             )}

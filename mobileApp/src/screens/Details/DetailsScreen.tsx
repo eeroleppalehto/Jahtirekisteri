@@ -3,6 +3,8 @@ import ShotDetails from "./ShotDetails";
 import GroupDetails from "./GroupDetails";
 import { PartyDetails } from "./PartyDetails";
 import { ErrorScreen } from "../ErrorScreen";
+import { MemberShareDetails } from "./MemberShareDetails";
+import { GroupShareDetails } from "./GroupShareDetails";
 import { RootStackScreenProps } from "../../NavigationTypes";
 
 type Props = RootStackScreenProps<"Details">;
@@ -28,6 +30,14 @@ function DetailsScreen({ route, navigation }: Props) {
                 return <GroupDetails route={route} navigation={navigation} />;
             case "Party":
                 return <PartyDetails route={route} navigation={navigation} />;
+            case "MemberShare":
+                return (
+                    <MemberShareDetails route={route} navigation={navigation} />
+                );
+            case "GroupShare":
+                return (
+                    <GroupShareDetails route={route} navigation={navigation} />
+                );
             default:
                 return (
                     <ErrorScreen
