@@ -43,7 +43,6 @@ function ShotListItem({ shot, navigation }: Props) {
                     name="gender-female"
                     size={20}
                     color={theme.colors.outline}
-                    style={{ flexGrow: 0 }}
                 />
             );
         } else {
@@ -70,7 +69,7 @@ function ShotListItem({ shot, navigation }: Props) {
         <TouchableRipple
             onPress={() =>
                 navigation.navigate("Details", {
-                    type: "Kaato",
+                    type: "Shot",
                     data: shot,
                     title: `Kaato Index: ${shot.kaato_id}`,
                 })
