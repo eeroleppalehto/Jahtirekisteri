@@ -7,11 +7,15 @@ import GroupListItem from "./GroupListItem";
 import { useFetchQuery } from "../../hooks/useTanStackQuery";
 import { ErrorScreen } from "../ErrorScreen";
 import { DefaultActivityIndicator } from "../../components/DefaultActivityIndicator";
+import FloatingNavigationButton from "../../components/FloatingNavigationButton";
+import { useState } from "react";
 
 type Props = MaintenanceTabScreenProps<"Ryhmät">;
 
 // Screen for displaying all groups in Groups tab
 function GroupScreen({ navigation, route }: Props) {
+    const [scrollValue, setScrollValue] = useState(0);
+
     const result = useFetchQuery<GroupViewQuery[]>(
         "views/?name=mobiili_ryhma_sivu",
         ["Groups"]
