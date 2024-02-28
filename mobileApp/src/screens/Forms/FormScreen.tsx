@@ -1,5 +1,7 @@
 import MemberForm from "./MemberForm";
 import ShotForm from "./ShotForm";
+import { GroupForm } from "./GroupForm";
+import { PartyForm } from "./PartyForm";
 import { RootStackScreenProps } from "../../NavigationTypes";
 import { ErrorScreen } from "../ErrorScreen";
 
@@ -19,6 +21,10 @@ export default function FormScreen({ route, navigation }: Props) {
             return <MemberForm route={route} navigation={navigation} />;
         case "Shot":
             return <ShotForm route={route} navigation={navigation} />;
+        case "Group":
+            return <GroupForm route={route} navigation={navigation} />;
+        case "Party":
+            return <PartyForm route={route} navigation={navigation} />;
         default:
             return (
                 <ErrorScreen error={new Error("Virhe siirtyessä sivulle")} />
