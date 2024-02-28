@@ -73,6 +73,11 @@ function PartyScreen({ navigation, route }: Props) {
                     }
                 />
             )}
+            <FloatingNavigationButton
+                scrollValue={scrollValue}
+                type="Party"
+                label="Lisää seurue"
+            />
         </>
     );
 }

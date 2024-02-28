@@ -72,6 +72,11 @@ function GroupScreen({ navigation, route }: Props) {
                     }
                 />
             )}
+            <FloatingNavigationButton
+                scrollValue={scrollValue}
+                type="Group"
+                label="Lisää ryhmä"
+            />
         </>
     );
 }

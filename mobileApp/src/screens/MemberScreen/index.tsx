@@ -105,8 +105,8 @@ function MemberScreen({ navigation, route }: Props) {
             ) : null}
             <FloatingNavigationButton
                 scrollValue={scrollValue}
-                type="jäsen"
-                label="Lisää jäsen  "
+                type="Member"
+                label="Lisää jäsen"
             />
         </>
     );
