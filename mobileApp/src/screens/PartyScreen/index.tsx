@@ -7,13 +7,13 @@ import { SectionList } from "react-native";
 import { useFetchQuery } from "../../hooks/useTanStackQuery";
 import { ErrorScreen } from "../ErrorScreen";
 import { DefaultActivityIndicator } from "../../components/DefaultActivityIndicator";
+import FloatingNavigationButton from "../../components/FloatingNavigationButton";
+import { useState } from "react";
 
 type Props = MaintenanceTabScreenProps<"Seurueet">;
 
 function PartyScreen({ navigation, route }: Props) {
-    // const { data, loading, error, onRefresh } = useFetch<PartyViewQuery[]>(
-    //     `views/?name=mobiili_seurue_sivu`
-    // );
+    const [scrollValue, setScrollValue] = useState(0);
 
     const result = useFetchQuery<PartyViewQuery[]>(
         `views/?name=mobiili_seurue_sivu`,
@@ -23,22 +23,22 @@ function PartyScreen({ navigation, route }: Props) {
     const theme = useTheme();
 
     // Generate sections for SectionList
-    const partiesByType = result.isSuccess
-        ? result.data.reduce((acc, party) => {
-              // If type is not yet in array, add it
-              if (!acc.some((item) => item.type === party.seurue_tyyppi_nimi)) {
-                  acc.push({
-                      type: party.seurue_tyyppi_nimi, // Type of party
-                      data: [party], // Array of parties
-                  });
-              } else {
-                  acc.find(
-                      (item) => item.type === party.seurue_tyyppi_nimi
-                  )?.data.push(party);
-              }
-              return acc;
-          }, [] as { type: string; data: PartyViewQuery[] }[])
-        : undefined;
+    const partiesByType = (parties: PartyViewQuery[]) => {
+        return parties.reduce((acc, party) => {
+            // If type is not yet in array, add it
+            if (!acc.some((item) => item.type === party.seurue_tyyppi_nimi)) {
+                acc.push({
+                    type: party.seurue_tyyppi_nimi, // Type of party
+                    data: [party], // Array of parties
+                });
+            } else {
+                acc.find(
+                    (item) => item.type === party.seurue_tyyppi_nimi
+                )?.data.push(party);
+            }
+            return acc;
+        }, [] as { type: string; data: PartyViewQuery[] }[]);
+    };
 
     return (
         <>
@@ -46,10 +46,13 @@ function PartyScreen({ navigation, route }: Props) {
             {result.isError ? (
                 <ErrorScreen error={result.error} reload={result.refetch} />
             ) : null}
-            {partiesByType && (
+            {result.isSuccess && (
                 <SectionList
-                    sections={partiesByType}
-                    keyExtractor={(item) => item.seurue_id.toString()}
+                    sections={partiesByType(result.data) || []}
+                    keyExtractor={(item, index) => {
+                        // return item.seurue_id.toString() // Why is this throwing an error?
+                        return index.toString();
+                    }}
                     renderItem={({ item }) => (
                         <PartyListItem party={item} navigation={navigation} />
                     )}
