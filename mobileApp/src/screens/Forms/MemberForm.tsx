@@ -21,8 +21,6 @@ type Props = RootStackScreenProps<"Forms">;
 
 type Status = "aktiivinen" | "poistunut";
 
-//TODO: Refator to use implementation as ShotForm
-
 // Form for adding a new member
 export default function MemberForm({ route, navigation }: Props) {
     // Initialize the form with empty values and set it to route params
