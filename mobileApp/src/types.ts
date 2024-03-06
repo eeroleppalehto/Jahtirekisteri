@@ -125,6 +125,30 @@ export type ShareViewQuery = {
     kaadon_kasittely_id: number;
 };
 
+export type MemberShare = {
+    tapahtuma_jasen_id: number;
+    paiva: string;
+    kaadon_kasittely_id: number;
+    osnimitys: string;
+    maara: number;
+    jasenyys_id: number;
+};
+
+export type MemberShareFormType = Partial<
+    Omit<MemberShare, "tapahtuma_jasen_id">
+>;
+
+export type GroupShare = {
+    tapahtuma_id: number;
+    ryhma_id: number;
+    osnimitys: string;
+    maara: number;
+    kaadon_kasittely_id: number;
+    paiva: string;
+};
+
+export type GroupShareFormType = Partial<Omit<GroupShare, "tapahtuma_id">>;
+
 export type MembershipViewQuery = {
     jasen_id: number;
     jasenen_nimi: string;
@@ -141,4 +165,6 @@ export type FormTypes =
     | JasenForm
     | PartyFormType
     | GroupFormType
+    | MemberShareFormType
+    | GroupShareFormType
     | undefined;

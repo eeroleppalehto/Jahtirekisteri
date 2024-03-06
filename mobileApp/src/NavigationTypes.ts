@@ -38,6 +38,7 @@ export type RootStackParamList = {
         usage?: UsageForm[];
         path?: string;
         clear?: boolean;
+        payload?: any;
     };
 };
 
