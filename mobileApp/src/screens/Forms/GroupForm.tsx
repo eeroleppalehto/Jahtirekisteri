@@ -101,6 +101,7 @@ export function GroupForm({ route, navigation }: Props) {
                     <PartyRadioGroup
                         partyId={data ? data.seurue_id : undefined}
                         onValueChange={handlePartyChange}
+                        type="Ryhmä"
                     />
                 </View>
             </View>
