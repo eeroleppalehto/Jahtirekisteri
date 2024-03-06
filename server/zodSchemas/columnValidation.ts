@@ -4,6 +4,7 @@ import { z } from "zod";
 const columnList: string[] = [
     "jakoryhma.ryhma_id", // Column name in 'jakoryhma' table
     "seurue_id", // Column name for 'seurue' ID
+    "seurue.seurue_tyyppi_id", // Column name for 'seurue' type ID
     "kaadon_kasittely.kaato_id", // Column name in 'kaadon_kasittely' table
     "kaadon_kasittely.kasittelyid", // Another column in 'kaadon_kasittely'
     "seurue.seurue_id", // Column name in 'seurue' table
