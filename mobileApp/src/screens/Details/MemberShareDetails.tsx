@@ -266,7 +266,17 @@ export function MemberShareDetails({ route, navigation }: Props) {
                         textColor={theme.colors.onPrimary}
                         style={styles.button}
                         onPress={() =>
-                            navigation.navigate("Forms", { type: "jäsen" })
+                            navigation.navigate("Forms", {
+                                type: "MemberShare",
+                                data: {
+                                    paiva: undefined,
+                                    kaadon_kasittely_id:
+                                        data.kaadon_kasittely_id,
+                                    osnimitys: undefined,
+                                    maara: data.ruhopaino,
+                                    jasenyys_id: undefined,
+                                },
+                            })
                         }
                     >
                         {"Uusi jako"}
