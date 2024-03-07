@@ -117,11 +117,6 @@ export function MemberShareForm({ route, navigation }: Props) {
                         name="close"
                         size={24}
                         color={theme.colors.primary}
-                        // onPress={() => {
-                        //     setShooterId(undefined);
-                        //     setShooterLabel(undefined);
-                        //     setShooter(undefined);
-                        // }}
                     />
                     <Text variant="bodyLarge">{membership.jasenen_nimi}</Text>
                 </>
@@ -180,6 +175,17 @@ export function MemberShareForm({ route, navigation }: Props) {
         });
     };
 
+    const handlePartyChange = (value: number | undefined) => {
+        setPartyId(value);
+        setMembership(undefined);
+        navigation.setParams({
+            data: {
+                ...data,
+                jasenyys_id: undefined,
+            },
+        });
+    };
+
     const parseMembership = (data: MemberShareFormType | undefined) => {
         if (!data) return undefined;
 
@@ -230,12 +236,16 @@ export function MemberShareForm({ route, navigation }: Props) {
                         >
                             <Text
                                 variant="bodyLarge"
-                                style={{ paddingLeft: 8 }}
+                                style={{
+                                    paddingLeft: 8,
+                                    fontWeight: "bold",
+                                    color: theme.colors.primary,
+                                }}
                             >
                                 Jaon saaja
                             </Text>
                             <Text
-                                variant="bodyMedium"
+                                variant="bodyLarge"
                                 style={{
                                     color: theme.colors.error,
                                 }}
@@ -246,7 +256,7 @@ export function MemberShareForm({ route, navigation }: Props) {
                         <View style={{ marginBottom: 6 }}>
                             <PartyRadioGroup
                                 partyId={partyId}
-                                onValueChange={setPartyId}
+                                onValueChange={handlePartyChange}
                                 type={"Jäsen"}
                                 title={"Valitse seurue, josta saaja valitaan"}
                             />
@@ -275,13 +285,14 @@ export function MemberShareForm({ route, navigation }: Props) {
                             <Text
                                 variant="bodyLarge"
                                 style={{
-                                    color: theme.colors.onBackground,
+                                    fontWeight: "bold",
+                                    color: theme.colors.primary,
                                 }}
                             >
                                 Ruhonosa
                             </Text>
                             <Text
-                                variant="bodyMedium"
+                                variant="bodyLarge"
                                 style={{
                                     color: theme.colors.error,
                                 }}
@@ -299,13 +310,14 @@ export function MemberShareForm({ route, navigation }: Props) {
                             <Text
                                 variant="bodyLarge"
                                 style={{
-                                    color: theme.colors.onBackground,
+                                    fontWeight: "bold",
+                                    color: theme.colors.primary,
                                 }}
                             >
                                 Jaon päivämäärä
                             </Text>
                             <Text
-                                variant="bodyMedium"
+                                variant="bodyLarge"
                                 style={{
                                     color: theme.colors.error,
                                 }}
@@ -331,16 +343,19 @@ export function MemberShareForm({ route, navigation }: Props) {
                         </TouchableRipple>
                     </View>
                     {/* <Button
-                    onPress={() =>
-                        console.log(
-                            `${membership ? membership.jasenen_nimi : ""} | ${
-                                data.jasenyys_id
-                            } | ${data.osnimitys} | ${data.paiva}`
-                        )
-                    }
-                >
-                    Test
-                </Button> */}
+                        onPress={() => {
+                            // console.log(
+                            //     `${
+                            //         membership ? membership.jasenen_nimi : ""
+                            //     } | ${data.jasenyys_id} | ${data.osnimitys} | ${
+                            //         data.paiva
+                            //     }`
+                            // );
+                            console.log(data);
+                        }}
+                    >
+                        Test
+                    </Button> */}
                 </View>
                 <View style={{ paddingBottom: 300 }}></View>
             </ScrollView>
