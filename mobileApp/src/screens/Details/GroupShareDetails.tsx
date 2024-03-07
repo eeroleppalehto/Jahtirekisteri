@@ -250,7 +250,17 @@ export function GroupShareDetails({ route, navigation }: Props) {
                         textColor={theme.colors.onPrimary}
                         style={styles.button}
                         onPress={() =>
-                            navigation.navigate("Forms", { type: "jäsen" })
+                            navigation.navigate("Forms", {
+                                type: "GroupShare",
+                                data: {
+                                    paiva: undefined,
+                                    kaadon_kasittely_id:
+                                        data.kaadon_kasittely_id,
+                                    osnimitys: undefined,
+                                    maara: data.ruhopaino,
+                                    ryhma_id: undefined,
+                                },
+                            })
                         }
                     >
                         {"Uusi jako"}
