@@ -84,6 +84,23 @@ export default function FormAppBar({
                 path = "parties";
                 payload = { ...data };
                 break;
+
+            case "MemberShare":
+                if (!data) {
+                    console.log("no data");
+                    return;
+                }
+                path = "member-shares";
+                payload = { ...data };
+                break;
+            case "GroupShare":
+                if (!data) {
+                    console.log("no data");
+                    return;
+                }
+                path = "shares";
+                payload = { ...data };
+                break;
             default:
                 console.log("no type");
                 return;
