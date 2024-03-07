@@ -39,14 +39,15 @@ export function PartyRadioGroup({
                     style={{
                         ...styles.firstItem,
                         padding: 12,
+                        paddingLeft: 16,
                         backgroundColor: theme.colors.surface,
                         borderColor: theme.colors.surfaceVariant,
-                        alignItems: "center",
+                        // alignItems: "center",
                     }}
                 >
                     <Text
                         variant="titleMedium"
-                        style={{ color: theme.colors.primary }}
+                        style={{ color: theme.colors.secondary }}
                     >
                         {title}
                     </Text>
