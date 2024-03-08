@@ -6,6 +6,7 @@ import {
     ActivityIndicator,
     Button,
     List,
+    Chip,
 } from "react-native-paper";
 import { RootStackScreenProps } from "../../NavigationTypes";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -30,6 +31,7 @@ type GroupShareViewQuery = {
     maara: number;
     kaato_id: number;
     seurue_id: number;
+    kasittely_maara: number;
 };
 
 export function GroupShareDetails({ route, navigation }: Props) {
@@ -152,6 +154,24 @@ export function GroupShareDetails({ route, navigation }: Props) {
                                 : "0%"
                         }
                     />
+                </View>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginHorizontal: 24,
+                        marginTop: 32,
+                        padding: 12,
+                        backgroundColor: theme.colors.surface,
+                        borderColor: theme.colors.surfaceVariant,
+                        borderWidth: 1,
+                        borderRadius: 24,
+                    }}
+                >
+                    <Text variant="bodyLarge">Käsittelyn osuus kaadosta:</Text>
+                    <Chip>{data.kasittely_maara}%</Chip>
+                    {/* <Text variant="bodyLarge">{data.kasittely_maara} %</Text> */}
                 </View>
                 <View style={{ marginTop: 32, marginHorizontal: 24, gap: 4 }}>
                     <View
