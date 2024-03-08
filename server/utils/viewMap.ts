@@ -212,7 +212,8 @@ viewMap.set(
         kaato.sukupuoli,
         kasittely.kasittely_teksti,
         kaato.ruhopaino,
-        kaadon_kasittely.kaadon_kasittely_id
+        kaadon_kasittely.kaadon_kasittely_id,
+        kaadon_kasittely.kasittely_maara
     FROM jasen
         JOIN kaato ON jasen.jasen_id = kaato.jasen_id
         JOIN kaadon_kasittely ON kaadon_kasittely.kaato_id = kaato.kaato_id
@@ -238,7 +239,8 @@ viewMap.set(
         kaato.sukupuoli,
         kasittely.kasittely_teksti,
         kaato.ruhopaino,
-        kaadon_kasittely.kaadon_kasittely_id
+        kaadon_kasittely.kaadon_kasittely_id,
+        kaadon_kasittely.kasittely_maara
     FROM jasen
         JOIN kaato ON jasen.jasen_id = kaato.jasen_id
         JOIN kaadon_kasittely ON kaadon_kasittely.kaato_id = kaato.kaato_id
