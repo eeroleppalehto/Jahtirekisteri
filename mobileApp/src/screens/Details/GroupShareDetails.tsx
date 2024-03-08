@@ -2,10 +2,11 @@ import { ScrollView } from "react-native-gesture-handler";
 import {
     Text,
     useTheme,
-    Divider,
     Avatar,
     ActivityIndicator,
     Button,
+    List,
+    Chip,
 } from "react-native-paper";
 import { RootStackScreenProps } from "../../NavigationTypes";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -30,6 +31,7 @@ type GroupShareViewQuery = {
     maara: number;
     kaato_id: number;
     seurue_id: number;
+    kasittely_maara: number;
 };
 
 export function GroupShareDetails({ route, navigation }: Props) {
@@ -62,23 +64,78 @@ export function GroupShareDetails({ route, navigation }: Props) {
         return dateStringArray.toString().replace(/,/g, "");
     };
 
-    const Shares = (share: GroupShareViewQuery) => {
+    const Shares = ({
+        share,
+        isLast,
+    }: {
+        share: GroupShareViewQuery;
+        isLast: boolean;
+    }) => {
+        const containerStyle = isLast
+            ? {
+                  ...styles.shareContainer,
+                  ...styles.shareContainerLast,
+              }
+            : {
+                  ...styles.shareContainer,
+              };
+
         return (
             <View
                 style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    paddingHorizontal: 12,
-                    paddingVertical: 8,
+                    ...containerStyle,
+                    backgroundColor: theme.colors.surface,
+                    borderColor: theme.colors.surfaceVariant,
                 }}
             >
-                <Text style={{ flex: 3 }}>{share.ryhman_nimi}</Text>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <Text variant="labelLarge" style={{}}>
+                        {share.ryhman_nimi}
+                    </Text>
+                </View>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <Text
+                        variant="labelLarge"
+                        style={{
+                            textAlign: "left",
+                            color: theme.colors.outline,
+                        }}
+                    >
+                        {`Ruhonosa: ${share.osnimitys}`}
+                    </Text>
+                    <Text
+                        variant="labelLarge"
+                        style={{ color: theme.colors.outline }}
+                    >
+                        {dateStringFin(share.paiva)}
+                    </Text>
+                </View>
+            </View>
+        );
+    };
 
-                <Text style={{ flex: 2 }}>{share.osnimitys}</Text>
+    const ShareList = ({ shares }: { shares: GroupShareViewQuery[] }) => {
+        const last = shares.length - 1;
 
-                <Text style={{ flex: 2, textAlign: "right" }}>
-                    {dateStringFin(share.paiva)}
-                </Text>
+        return (
+            <View style={{ gap: 4 }}>
+                {shares.map((share, index) => (
+                    <Shares
+                        key={share.tapahtuma_id}
+                        share={share}
+                        isLast={last === index}
+                    />
+                ))}
             </View>
         );
     };
@@ -98,111 +155,103 @@ export function GroupShareDetails({ route, navigation }: Props) {
                         }
                     />
                 </View>
-                <Text
-                    variant="titleMedium"
-                    style={{
-                        color: theme.colors.primary,
-                        paddingLeft: 24,
-                        paddingTop: 20,
-                    }}
-                >
-                    Jaot
-                </Text>
                 <View
                     style={{
-                        ...styles.sharesList,
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginHorizontal: 24,
+                        marginTop: 32,
+                        padding: 12,
                         backgroundColor: theme.colors.surface,
                         borderColor: theme.colors.surfaceVariant,
+                        borderWidth: 1,
+                        borderRadius: 24,
                     }}
                 >
+                    <Text variant="bodyLarge">Käsittelyn osuus kaadosta:</Text>
+                    <Chip>{data.kasittely_maara}%</Chip>
+                    {/* <Text variant="bodyLarge">{data.kasittely_maara} %</Text> */}
+                </View>
+                <View style={{ marginTop: 32, marginHorizontal: 24, gap: 4 }}>
                     <View
                         style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            paddingHorizontal: 12,
-                            paddingTop: 12,
+                            ...styles.sharesList,
+                            backgroundColor: theme.colors.surface,
+                            borderColor: theme.colors.surfaceVariant,
                         }}
                     >
-                        <Text
-                            variant="bodyMedium"
+                        <View
                             style={{
-                                flex: 3,
-                                fontWeight: "bold",
-                                color: theme.colors.primary,
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                paddingHorizontal: 12,
+                                paddingTop: 12,
+                                paddingBottom: 8,
                             }}
                         >
-                            Ryhmä
-                        </Text>
-                        <Text
-                            variant="bodyMedium"
-                            style={{
-                                flex: 2,
-                                fontWeight: "bold",
-                                color: theme.colors.primary,
-                            }}
-                        >
-                            Osnimity
-                        </Text>
-                        <Text
-                            variant="bodyMedium"
-                            style={{
-                                flex: 2,
-                                fontWeight: "bold",
-                                color: theme.colors.primary,
-                                textAlign: "right",
-                            }}
-                        >
-                            Päivämäärä
-                        </Text>
+                            <Text
+                                variant="titleMedium"
+                                style={{
+                                    flex: 3,
+                                    fontWeight: "bold",
+                                    color: theme.colors.primary,
+                                }}
+                            >
+                                Jaot
+                            </Text>
+                        </View>
                     </View>
-                    <Divider />
-                    {result.isLoading ? <ActivityIndicator /> : null}
-                    {result.isError ? (
-                        <ErrorScreen error={result.error} />
-                    ) : null}
-                    {result.isSuccess ? (
-                        <>
-                            {result.data.length === 0 ? (
-                                <View
-                                    style={{
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        marginLeft: 16,
-                                        marginVertical: 8,
-                                        gap: 5,
-                                    }}
-                                >
-                                    <MaterialIcons
-                                        name="not-interested"
-                                        size={16}
-                                        color={theme.colors.outline}
-                                    />
-                                    <Text
-                                        variant="bodyLarge"
+                    <View>
+                        {result.isLoading ? <ActivityIndicator /> : null}
+                        {result.isError ? (
+                            <ErrorScreen error={result.error} />
+                        ) : null}
+                        {result.isSuccess ? (
+                            <>
+                                {result.data.length === 0 ? (
+                                    <View
                                         style={{
-                                            color: theme.colors.outline,
-                                            fontStyle: "italic",
+                                            ...styles.shareContainer,
+                                            ...styles.shareContainerLast,
+                                            backgroundColor:
+                                                theme.colors.surface,
+                                            borderColor:
+                                                theme.colors.surfaceVariant,
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            paddingVertical: 8,
+                                            gap: 5,
                                         }}
                                     >
-                                        Ei jakoja
-                                    </Text>
-                                </View>
-                            ) : (
-                                result.data.map((share) => (
-                                    <Shares
-                                        key={share.tapahtuma_id}
-                                        {...share}
-                                    />
-                                ))
-                            )}
-                        </>
-                    ) : null}
+                                        <MaterialIcons
+                                            name="not-interested"
+                                            size={16}
+                                            color={theme.colors.outline}
+                                        />
+                                        <Text
+                                            variant="bodyLarge"
+                                            style={{
+                                                color: theme.colors.outline,
+                                                fontStyle: "italic",
+                                            }}
+                                        >
+                                            Ei jakoja
+                                        </Text>
+                                    </View>
+                                ) : (
+                                    <ShareList shares={result.data} />
+                                )}
+                            </>
+                        ) : null}
+                    </View>
                 </View>
+                {/* Buttons */}
                 <View
                     style={{
                         ...styles.buttonContainer,
-                        backgroundColor: theme.colors.surface,
-                        borderColor: theme.colors.surfaceVariant,
+                        // backgroundColor: theme.colors.surface,
+                        // borderColor: theme.colors.surfaceVariant,
                     }}
                 >
                     <Button
@@ -221,7 +270,17 @@ export function GroupShareDetails({ route, navigation }: Props) {
                         textColor={theme.colors.onPrimary}
                         style={styles.button}
                         onPress={() =>
-                            navigation.navigate("Forms", { type: "jäsen" })
+                            navigation.navigate("Forms", {
+                                type: "GroupShare",
+                                data: {
+                                    paiva: undefined,
+                                    kaadon_kasittely_id:
+                                        data.kaadon_kasittely_id,
+                                    osnimitys: undefined,
+                                    maara: data.ruhopaino,
+                                    ryhma_id: undefined,
+                                },
+                            })
                         }
                     >
                         {"Uusi jako"}
@@ -240,25 +299,41 @@ export function GroupShareDetails({ route, navigation }: Props) {
 
 const styles = StyleSheet.create({
     sharesList: {
-        marginHorizontal: 24,
-        marginVertical: 12,
-        gap: 8,
+        // marginHorizontal: 24,
+        // marginVertical: 12,
+        // gap: 8,
+        // borderRadius: 24,
         borderWidth: 1,
-        borderRadius: 8,
+        borderBottomWidth: 0,
+        borderTopEndRadius: 24,
+        borderTopStartRadius: 24,
+    },
+    shareContainer: {
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        paddingBottom: 13,
+    },
+    shareContainerLast: {
+        borderBottomWidth: 1,
+        borderBottomEndRadius: 24,
+        borderBottomStartRadius: 24,
     },
     buttonContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
         gap: 8,
-        margin: 24,
-        paddingHorizontal: 8,
-        paddingVertical: 12,
-        borderWidth: 1,
+        marginHorizontal: 24,
+        marginVertical: 32,
+        // paddingHorizontal: 8,
+        // paddingVertical: 12,
+        // borderWidth: 1,
         borderRadius: 8,
     },
     button: {
         flex: 1,
         padding: 6,
-        borderRadius: 12,
+        borderRadius: 24,
     },
 });

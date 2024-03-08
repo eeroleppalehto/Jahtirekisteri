@@ -37,36 +37,73 @@ export default function FormAppBar({
         let path: string = "";
         let payload: any;
 
-        if (type === "kaato") {
-            if (!shot) {
-                console.log("no shot data");
-                return;
-            }
-            if (!usage) {
-                console.log("no usage data");
-                return;
-            }
+        switch (type) {
+            case "Shot":
+                if (!shot) {
+                    console.log("no shot data");
+                    return;
+                }
+                if (!usage) {
+                    console.log("no usage data");
+                    return;
+                }
 
-            const usages = usage.filter(
-                (item) => item.kasittelyid !== undefined
-            );
+                const usages = usage.filter(
+                    (item) => item.kasittelyid !== undefined
+                );
 
-            path = `shot-with-usages`;
+                path = `shot-with-usages`;
 
-            payload = {
-                shot,
-                usages,
-            };
-        } else if (type === "jäsen") {
-            if (!data) {
-                console.log("no data");
+                payload = {
+                    shot,
+                    usages,
+                };
+                break;
+            case "Member":
+                if (!data) {
+                    console.log("no data");
+                    return;
+                }
+                path = "members";
+                payload = { ...data };
+                break;
+
+            case "Group":
+                if (!data) {
+                    console.log("no data");
+                    return;
+                }
+                path = "groups";
+                payload = { ...data };
+                break;
+            case "Party":
+                if (!data) {
+                    console.log("no data");
+                    return;
+                }
+                path = "parties";
+                payload = { ...data };
+                break;
+
+            case "MemberShare":
+                if (!data) {
+                    console.log("no data");
+                    return;
+                }
+                path = "member-shares";
+                payload = { ...data };
+                break;
+            case "GroupShare":
+                if (!data) {
+                    console.log("no data");
+                    return;
+                }
+                path = "shares";
+                payload = { ...data };
+                break;
+            default:
+                console.log("no type");
                 return;
-            }
-            path = "members";
-            payload = { ...data };
-        } else {
-            console.log("no type");
-            return;
         }
 
         console.log("Submitting...");

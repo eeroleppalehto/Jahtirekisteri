@@ -99,7 +99,6 @@ export const AuthProvider = ({ children }: any) => {
                 }
             );
 
-            if (request.status) throw new Error(request.statusText);
             if (request.status >= 400) throw new Error("Error");
 
             setAuthState({

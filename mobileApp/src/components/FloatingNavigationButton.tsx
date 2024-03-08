@@ -60,12 +60,15 @@ function FloatingNavigationButton({ scrollValue, type, label }: Props) {
                     }
                     visible={true}
                     animateFrom={"right"}
-                    iconMode={"static"}
+                    iconMode={"dynamic"}
                     color={theme.colors.onPrimary}
                     style={[
                         styles.fabStyle,
                         {},
-                        { right: 16, backgroundColor: theme.colors.primary },
+                        {
+                            right: 16,
+                            backgroundColor: theme.colors.primary,
+                        },
                     ]}
                 />
             ) : null}

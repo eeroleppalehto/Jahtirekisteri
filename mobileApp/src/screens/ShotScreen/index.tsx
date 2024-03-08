@@ -56,8 +56,8 @@ function ShotScreen({ navigation, route }: Props) {
                     />
                     <FloatingNavigationButton
                         scrollValue={scrollValue}
-                        type="kaato"
-                        label="Lisää kaato  "
+                        type="Shot"
+                        label="Lisää kaato"
                     />
                 </>
             )}

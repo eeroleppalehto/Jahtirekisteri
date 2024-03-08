@@ -3,6 +3,7 @@ import {
     ActivityIndicator,
     TextInput,
     useTheme,
+    Searchbar,
 } from "react-native-paper";
 import { RadioButtonItem } from "./RadioButtonItem";
 import { useFetchQuery } from "../../hooks/useTanStackQuery";
@@ -75,13 +76,11 @@ export function ShooterRadioGroup({ shooterId, onValueChange }: Props) {
             )}
             {result.isSuccess && (
                 <>
-                    <TextInput
-                        label="Hae"
-                        mode="outlined"
+                    <Searchbar
+                        placeholder="Hae"
                         value={search}
-                        right={<TextInput.Icon icon="magnify" />}
-                        style={{ marginHorizontal: 5 }}
                         onChangeText={(text) => setSearch(text)}
+                        style={{ marginHorizontal: 5, marginBottom: 10 }}
                     />
                     <BottomSheetFlatList
                         data={filteredData}
