@@ -38,7 +38,7 @@ export function PortionRadioGroup({ portionName, onValueChange }: Props) {
             {result.isSuccess ? (
                 <RadioButton.Group
                     onValueChange={handleChange}
-                    value={portionName ? portionName : result.data[0].osnimitys}
+                    value={portionName ? portionName : ""}
                 >
                     {result.data.map((portion, index) => {
                         let style = { ...styles.allItems };
