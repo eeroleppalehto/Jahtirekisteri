@@ -291,12 +291,12 @@ function PartyGroups({ partyId, theme, navigation }: PartyGroupsProps) {
                                     icon={"plus"}
                                     onPress={() => console.log("pressed")}
                                     compact={true}
-                                    disabled={true}
+                                    disabled={false}
                                     style={{
                                         paddingHorizontal: 8,
                                     }}
                                 >
-                                    Lisää jäsen ryhmään
+                                    Lisää ryhmä seurueeseen
                                 </Button>
                             </View>
                         </View>
@@ -313,7 +313,7 @@ type PartyMemberProps = {
     navigation: RootStackScreenProps<"Details">["navigation"];
 };
 
-function PartyMembers({ partyId, theme }: PartyMemberProps) {
+function PartyMembers({ partyId, theme, navigation }: PartyMemberProps) {
     const result = useFetchQuery<MembershipViewQuery[]>(
         `views/?name=mobiili_seurueen_jasenyydet&column=seurue.seurue_id&value=${partyId}`,
         ["seurueen_jasenyydet", partyId]
@@ -490,14 +490,26 @@ function PartyMembers({ partyId, theme }: PartyMemberProps) {
                             >
                                 <Button
                                     icon={"plus"}
-                                    onPress={() => console.log("pressed")}
+                                    onPress={() =>
+                                        navigation.navigate("Forms", {
+                                            type: "Membership",
+                                            data: {
+                                                seurue_id: partyId,
+                                                ryhma_id: undefined,
+                                                jasen_id: undefined,
+                                                osuus: 100,
+                                                liittyi: undefined,
+                                                poistui: undefined,
+                                            },
+                                        })
+                                    }
                                     compact={true}
-                                    disabled={true}
+                                    disabled={false}
                                     style={{
                                         paddingHorizontal: 8,
                                     }}
                                 >
-                                    Lisää jäsen ryhmään
+                                    Lisää jäsen seurueeseen
                                 </Button>
                             </View>
                         </View>

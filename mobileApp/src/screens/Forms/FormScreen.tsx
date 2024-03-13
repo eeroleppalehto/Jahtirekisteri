@@ -6,6 +6,7 @@ import { RootStackScreenProps } from "../../NavigationTypes";
 import { ErrorScreen } from "../ErrorScreen";
 import { MemberShareForm } from "./MemberShareForm";
 import { GroupShareForm } from "./GroupShareForm";
+import { MembershipForm } from "./MembershipForm";
 
 type Props = RootStackScreenProps<"Forms">;
 
@@ -31,6 +32,8 @@ export default function FormScreen({ route, navigation }: Props) {
             return <MemberShareForm route={route} navigation={navigation} />;
         case "GroupShare":
             return <GroupShareForm route={route} navigation={navigation} />;
+        case "Membership":
+            return <MembershipForm route={route} navigation={navigation} />;
         default:
             return (
                 <ErrorScreen error={new Error("Virhe siirtyessä sivulle")} />

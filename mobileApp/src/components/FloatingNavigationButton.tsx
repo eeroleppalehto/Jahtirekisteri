@@ -15,6 +15,7 @@ interface Props {
     scrollValue: number;
     label: string;
     type: string;
+    onPress: () => void;
 }
 
 /**

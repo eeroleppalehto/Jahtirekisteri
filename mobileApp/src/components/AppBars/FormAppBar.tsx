@@ -101,6 +101,14 @@ export default function FormAppBar({
                 path = "shares";
                 payload = { ...data };
                 break;
+            case "Membership":
+                if (!data) {
+                    console.log("no data");
+                    return;
+                }
+                path = "memberships";
+                payload = { ...data };
+                break;
             default:
                 console.log("no type");
                 return;

@@ -69,7 +69,7 @@ function ShotForm({ route, navigation }: Props) {
         // TODO: Make this into a custom hook that returns the params
         // TODO: See if it's possible check params already has shot and usage
         // and if it does, skip this part to keep the old state
-        if (route.params?.clear !== false) {
+        if (route.params?.clear === true) {
             setShooterLabel(undefined);
             setFirstUsageLabel(undefined);
             setSecondUsageLabel(undefined);
@@ -94,7 +94,6 @@ function ShotForm({ route, navigation }: Props) {
                         kasittely_maara: 0,
                     },
                 ],
-                path: "createShotUsage",
             });
             navigation.setParams({ clear: false });
         }

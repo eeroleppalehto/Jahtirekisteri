@@ -160,6 +160,15 @@ export type MembershipViewQuery = {
     seurue_id: number;
 };
 
+export type MembershipFormType = {
+    jasen_id: number;
+    osuus: number;
+    liittyi: string;
+    poistui: string | null;
+    ryhma_id: number | null;
+    seurue_id: number;
+};
+
 export type FormTypes =
     | ShotUsageForm
     | JasenForm
@@ -167,4 +176,5 @@ export type FormTypes =
     | GroupFormType
     | MemberShareFormType
     | GroupShareFormType
+    | MembershipFormType
     | undefined;
