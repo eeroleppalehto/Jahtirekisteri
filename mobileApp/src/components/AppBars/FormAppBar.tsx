@@ -1,13 +1,7 @@
-import {
-    Appbar,
-    Text,
-    Surface,
-    useTheme,
-    TouchableRipple,
-} from "react-native-paper";
+import { Appbar, useTheme, Button } from "react-native-paper";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { UsageForm, ShotFormType } from "../../types";
-import { BASE_URL } from "../../baseUrl";
+import { MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 
 type Props = NativeStackHeaderProps;
@@ -29,6 +23,27 @@ export default function FormAppBar({
     };
 
     const theme = useTheme();
+
+    const getTitle = (type: string) => {
+        switch (type) {
+            case "Shot":
+                return "Lisää kaato";
+            case "Member":
+                return "Lisää jäsen";
+            case "Group":
+                return "Lisää ryhmä";
+            case "Party":
+                return "Lisää seurue";
+            case "MemberShare":
+                return "Lisää jäsenjako";
+            case "GroupShare":
+                return "Lisää ryhmäjako";
+            case "Membership":
+                return "Lisää jäsenyys";
+            default:
+                return "Lisää";
+        }
+    };
 
     // The callback function that is called when the user presses the save button
     // TODO: Exract this function to a separate file
@@ -130,8 +145,27 @@ export default function FormAppBar({
     return (
         <Appbar.Header>
             <Appbar.BackAction onPress={navigation.goBack} />
-            <Appbar.Content title={`Lisää ${type}`} />
-            <TouchableRipple
+            <Appbar.Content title={`${getTitle(type)}`} />
+            <Button
+                // icon="content-save-outline"
+                icon={() => (
+                    <MaterialIcons
+                        name="save-alt"
+                        size={22}
+                        color={theme.colors.onPrimary}
+                    />
+                )}
+                mode="contained-tonal"
+                buttonColor={theme.colors.primary}
+                textColor={theme.colors.onPrimary}
+                style={{ marginRight: 12 }}
+                contentStyle={{ flexDirection: "row-reverse", padding: 4 }}
+                labelStyle={{ fontSize: 16 }}
+                onPress={() => handleShotFormSubmit()}
+            >
+                Tallenna
+            </Button>
+            {/* <TouchableRipple
                 style={{
                     flexDirection: "row",
                     alignItems: "center",
@@ -164,7 +198,7 @@ export default function FormAppBar({
                         color={theme.colors.onPrimary}
                     />
                 </Surface>
-            </TouchableRipple>
+            </TouchableRipple> */}
         </Appbar.Header>
     );
 }

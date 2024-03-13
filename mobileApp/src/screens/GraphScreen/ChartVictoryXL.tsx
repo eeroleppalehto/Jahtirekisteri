@@ -71,17 +71,25 @@ const ChartVictoryXL = () => {
                         />
                     }
                 >
-                    <View style={{ height: 400, margin: 16 }}>
+                    <View
+                        style={{ height: 400, marginLeft: 16, marginRight: 32 }}
+                    >
                         <CartesianChart
                             data={parsedData}
                             xKey="group"
                             yKeys={["maara"]}
                             domainPadding={{
-                                left: 60,
-                                right: 60,
+                                left: 10,
+                                right: 10,
                                 top: 60,
-                                bottom: 400,
+                                // bottom: 400,
                             }}
+                            // padding={{
+                            //     top: 20,
+                            //     left: 20,
+                            //     right: 20,
+                            //     bottom: 20,
+                            // }}
                             chartPressState={state}
                             axisOptions={{
                                 font,
@@ -105,10 +113,10 @@ const ChartVictoryXL = () => {
                                         <LinearGradient
                                             start={vec(0, 0)}
                                             end={vec(0, 400)}
-                                            colors={["#526600", "#52660050"]}
+                                            colors={["#526600", "#52660080"]}
                                         />
                                     </Bar>
-                                    {isActive && (
+                                    {isActive ? (
                                         <ToolTip
                                             x={state.x.position}
                                             y={state.y.maara.position}
@@ -118,7 +126,7 @@ const ChartVictoryXL = () => {
                                                     .value,
                                             }}
                                         />
-                                    )}
+                                    ) : null}
                                 </>
                             )}
                         </CartesianChart>

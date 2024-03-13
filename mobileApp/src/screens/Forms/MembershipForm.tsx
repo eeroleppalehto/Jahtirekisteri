@@ -1,4 +1,10 @@
-import { Portal, Text, TouchableRipple, useTheme } from "react-native-paper";
+import {
+    Button,
+    Portal,
+    Text,
+    TouchableRipple,
+    useTheme,
+} from "react-native-paper";
 import { View } from "react-native";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { RootStackScreenProps } from "../../NavigationTypes";
@@ -218,7 +224,14 @@ export function MembershipForm({ route, navigation }: Props) {
                                 *
                             </Text>
                         </View>
-                        <Text>{data.osuus}</Text>
+                        <View style={{ alignItems: "center" }}>
+                            <Text
+                                variant="titleMedium"
+                                style={{ color: theme.colors.secondary }}
+                            >
+                                {data.osuus}
+                            </Text>
+                        </View>
                         <Slider
                             // style={{ height: 100 }}
                             minimumValue={0}
