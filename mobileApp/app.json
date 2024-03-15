@@ -17,7 +17,7 @@
     "ios": {
       "config": {
         "usesNonExemptEncryption": false
-        },
+      },
       "supportsTablet": true
     },
     "android": {
@@ -34,6 +34,9 @@
       "eas": {
         "projectId": "24c9258b-150c-43b3-97b0-5d26870d4178"
       }
-    }
+    },
+    "plugins": [
+      "expo-secure-store"
+    ]
   }
 }
