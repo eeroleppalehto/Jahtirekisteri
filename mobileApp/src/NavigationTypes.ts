@@ -37,6 +37,9 @@ export type RootStackParamList = {
         shot?: ShotFormType;
         usage?: UsageForm[];
         clear?: boolean;
+        isError?: boolean;
+        isSuccess?: boolean;
+        errorMessage?: string;
     };
 };
 
