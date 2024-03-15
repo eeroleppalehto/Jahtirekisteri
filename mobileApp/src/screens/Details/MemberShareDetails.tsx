@@ -174,6 +174,7 @@ export function MemberShareDetails({ route, navigation }: Props) {
         try {
             navigation.navigate("Forms", {
                 type: "MemberShare",
+                clear: false,
                 data: {
                     paiva: undefined,
                     kaadon_kasittely_id: data.kaadon_kasittely_id,

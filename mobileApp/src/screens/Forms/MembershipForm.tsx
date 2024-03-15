@@ -9,13 +9,15 @@ import { View } from "react-native";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { RootStackScreenProps } from "../../NavigationTypes";
 import BottomSheet from "@gorhom/bottom-sheet";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { BottomSheetPicker } from "../../components/BottomSheetPicker";
 import { ShooterRadioGroup } from "../../components/RadioGroups/ShooterRadioGroup";
 import { MembershipFormType } from "../../types";
 import { ScrollView } from "react-native-gesture-handler";
 import DatePicker from "../../components/DatePicker";
 import Slider from "@react-native-community/slider";
+import { ErrorModal } from "../../components/ErrorModal";
+import { SuccessSnackbar } from "../../components/SuccessSnackbar";
 
 type Shooter = {
     jasen_id: number;
@@ -35,7 +37,26 @@ export function MembershipForm({ route, navigation }: Props) {
     const [shooter, setShooter] = useState<Shooter | undefined>(undefined);
 
     // Data from the route
-    const { data } = route.params as { data: MembershipFormType };
+    const { data, isError, isSuccess } = route.params as {
+        data: MembershipFormType;
+        isError: boolean;
+        isSuccess: boolean;
+    };
+
+    useEffect(() => {
+        if (route.params?.clear !== false) {
+            navigation.setParams({
+                data: {
+                    ...data,
+                    jasen_id: undefined,
+                    osuus: 100,
+                    liittyi: undefined,
+                    poistui: undefined,
+                },
+            });
+            navigation.setParams({ clear: false });
+        }
+    }, [route.params?.clear]);
 
     const theme = useTheme();
 
@@ -145,6 +166,18 @@ export function MembershipForm({ route, navigation }: Props) {
         <>
             <ScrollView style={{ padding: 16 }}>
                 <Portal>
+                    <ErrorModal
+                        isError={isError}
+                        onDismiss={() =>
+                            navigation.setParams({ isError: false })
+                        }
+                    />
+                    <SuccessSnackbar
+                        isSuccess={isSuccess}
+                        onDismiss={() =>
+                            navigation.setParams({ isSuccess: false })
+                        }
+                    />
                     <DatePicker
                         initDate={parseDate(data)}
                         open={calendarOpen}

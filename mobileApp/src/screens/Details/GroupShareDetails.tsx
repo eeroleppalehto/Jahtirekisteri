@@ -152,6 +152,7 @@ export function GroupShareDetails({ route, navigation }: Props) {
         try {
             navigation.navigate("Forms", {
                 type: "GroupShare",
+                clear: false,
                 data: {
                     paiva: undefined,
                     kaadon_kasittely_id: data.kaadon_kasittely_id,

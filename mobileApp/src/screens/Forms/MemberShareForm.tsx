@@ -8,7 +8,7 @@ import {
 } from "react-native-paper";
 import DatePicker from "../../components/DatePicker";
 import { ScrollView } from "react-native-gesture-handler";
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { PortionRadioGroup } from "../../components/RadioGroups/PortionRadioGroup";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { BottomSheetPicker } from "../../components/BottomSheetPicker";
@@ -18,6 +18,8 @@ import { MemberShareFormType } from "../../types";
 import { PartyRadioGroup } from "../../components/RadioGroups/PartyRadioGroup";
 import { MembershipRadioGroup } from "../../components/RadioGroups/MembershipRadioGroup";
 import { ErrorScreen } from "../ErrorScreen";
+import { ErrorModal } from "../../components/ErrorModal";
+import { SuccessSnackbar } from "../../components/SuccessSnackbar";
 
 type Membership = {
     jasenyys_id: number;
@@ -35,12 +37,28 @@ export function MemberShareForm({ route, navigation }: Props) {
 
     const [partyId, setPartyId] = useState<number | undefined>(undefined);
 
+    const { data, isSuccess, isError } = route.params as {
+        data: MemberShareFormType;
+        isSuccess: boolean;
+        isError: boolean;
+    };
+
+    useEffect(() => {
+        if (route.params?.clear !== false) {
+            navigation.setParams({
+                data: {
+                    ...data,
+                    paiva: undefined,
+                    osnimitys: undefined,
+                    jasenyys_id: undefined,
+                },
+            });
+            navigation.setParams({ clear: false });
+        }
+    }, [route.params?.clear]);
+
     const bottomSheetRef = useRef<BottomSheet>(null);
     const theme = useTheme();
-
-    const { data } = route.params as {
-        data: MemberShareFormType;
-    };
 
     const parseWeight = (data: MemberShareFormType | undefined) => {
         if (!data) return undefined;
@@ -55,7 +73,7 @@ export function MemberShareForm({ route, navigation }: Props) {
     if (!data) {
         return (
             <ErrorScreen
-                error={new Error("Virhe navigoinnissa. Yritä uudelleen.")}
+                error={new Error("Virhe navigoinnissa. Yritä uudelleen.s")}
                 reload={() => {}}
             />
         );
@@ -214,6 +232,18 @@ export function MemberShareForm({ route, navigation }: Props) {
         <>
             <ScrollView style={{ paddingTop: 8 }}>
                 <Portal>
+                    <ErrorModal
+                        isError={isError}
+                        onDismiss={() =>
+                            navigation.setParams({ isError: false })
+                        }
+                    />
+                    <SuccessSnackbar
+                        isSuccess={isSuccess}
+                        onDismiss={() =>
+                            navigation.setParams({ isSuccess: false })
+                        }
+                    />
                     <DatePicker
                         initDate={parseDate(data)}
                         open={calendarOpen}

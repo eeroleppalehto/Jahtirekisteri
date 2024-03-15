@@ -1,8 +1,9 @@
 import { Appbar, useTheme, Button } from "react-native-paper";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { UsageForm, ShotFormType } from "../../types";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 type Props = NativeStackHeaderProps;
 
@@ -21,6 +22,14 @@ export default function FormAppBar({
         usage?: UsageForm[];
         clear?: any;
     };
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [isError, setIsError] = useState<boolean>(false);
+    const [isSuccess, setIsSuccess] = useState<boolean>(false);
+
+    useEffect(() => {
+        navigation.setParams({ isError: isError, isSuccess: isSuccess });
+    }, [isError, isSuccess]);
 
     const theme = useTheme();
 
@@ -67,6 +76,10 @@ export default function FormAppBar({
                     (item) => item.kasittelyid !== undefined
                 );
 
+                if (shot.lisatieto?.trim() === "") {
+                    delete shot.lisatieto;
+                }
+
                 path = `shot-with-usages`;
 
                 payload = {
@@ -79,6 +92,27 @@ export default function FormAppBar({
                     console.log("no data");
                     return;
                 }
+
+                if (data.etunimi.trim() === "" || data.sukunimi.trim() === "") {
+                    navigation.setParams({
+                        isError: true,
+                        errorMessage: "Etunimi ja sukunimi ovat pakollisia",
+                    });
+                    return;
+                }
+
+                if (data.jakeluosoite.trim() === "") {
+                    delete data.jakeluosoite;
+                }
+
+                if (data.postinumero.trim() === "") {
+                    delete data.postinumero;
+                }
+
+                if (data.postitoimipaikka.trim() === "") {
+                    delete data.postitoimipaikka;
+                }
+
                 path = "members";
                 payload = { ...data };
                 break;
@@ -88,6 +122,17 @@ export default function FormAppBar({
                     console.log("no data");
                     return;
                 }
+
+                console.log("group data", data);
+
+                if (data.ryhman_nimi.trim() === "") {
+                    navigation.setParams({
+                        isError: true,
+                        errorMessage: "Ryhmän nimi on pakollinen",
+                    });
+                    return;
+                }
+
                 path = "groups";
                 payload = { ...data };
                 break;
@@ -96,6 +141,15 @@ export default function FormAppBar({
                     console.log("no data");
                     return;
                 }
+
+                if (data.seurueen_nimi.trim() === "") {
+                    navigation.setParams({
+                        isError: true,
+                        errorMessage: "Seurueen nimi on pakollinen",
+                    });
+                    return;
+                }
+
                 path = "parties";
                 payload = { ...data };
                 break;
@@ -130,15 +184,25 @@ export default function FormAppBar({
         }
 
         console.log("Submitting...");
-
+        setIsLoading(true);
         axios
             .post(`/api/v1/${path}`, payload)
             .then((res) => {
                 navigation.setParams({ clear: true });
                 console.log(`returned with status code ${res.status}`);
+                setIsLoading(false);
+                // setIsSuccess(true);
+                navigation.setParams({ isSuccess: true });
+                if (type === "MemberShare" || type === "GroupShare") {
+                    setTimeout(() => navigation.goBack(), 1500);
+                }
             })
             .catch((err) => {
+                console.log("Error in submitting form");
                 console.log(err);
+                navigation.setParams({ isError: true });
+                // setIsError(true);
+                setIsLoading(false);
             });
     };
 
@@ -151,10 +215,12 @@ export default function FormAppBar({
                 icon={() => (
                     <MaterialIcons
                         name="save-alt"
-                        size={22}
+                        size={24}
                         color={theme.colors.onPrimary}
                     />
                 )}
+                loading={isLoading}
+                disabled={isLoading}
                 mode="contained-tonal"
                 buttonColor={theme.colors.primary}
                 textColor={theme.colors.onPrimary}

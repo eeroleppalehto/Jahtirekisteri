@@ -58,32 +58,6 @@ function ShotScreen({ navigation, route }: Props) {
                         scrollValue={scrollValue}
                         type="Shot"
                         label="Lisää kaato"
-                        onPress={() =>
-                            navigation.navigate("Forms", {
-                                type: "Shot",
-                                clear: false,
-                                shot: {
-                                    jasen_id: undefined,
-                                    kaatopaiva: undefined,
-                                    ruhopaino: 0,
-                                    paikka_teksti: "",
-                                    elaimen_nimi: undefined,
-                                    sukupuoli: undefined,
-                                    ikaluokka: undefined,
-                                    lisatieto: "",
-                                },
-                                usage: [
-                                    {
-                                        kasittelyid: undefined,
-                                        kasittely_maara: 100,
-                                    },
-                                    {
-                                        kasittelyid: undefined,
-                                        kasittely_maara: 0,
-                                    },
-                                ],
-                            })
-                        }
                     />
                 </>
             )}

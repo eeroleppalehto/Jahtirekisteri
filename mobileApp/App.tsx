@@ -6,6 +6,7 @@ import { en, registerTranslation } from "react-native-paper-dates";
 import { AuthProvider } from "./src/context/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import axios from "axios";
+import { BASE_URL } from "./src/baseUrl";
 
 // Register your translation with the react-native-paper-dates library
 registerTranslation("en", en);
@@ -75,7 +76,8 @@ const theme = {
     },
 };
 
-axios.defaults.baseURL = "https://dev.jahtirekisteri.fi";
+// axios.defaults.baseURL = "https://dev.jahtirekisteri.fi";
+axios.defaults.baseURL = BASE_URL;
 axios.defaults.timeout = 5000;
 axios.defaults.headers.common["Content-Type"] = "application/json";
 

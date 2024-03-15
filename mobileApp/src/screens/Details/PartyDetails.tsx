@@ -493,9 +493,10 @@ function PartyMembers({ partyId, theme, navigation }: PartyMemberProps) {
                                     onPress={() =>
                                         navigation.navigate("Forms", {
                                             type: "Membership",
+                                            clear: false,
                                             data: {
                                                 seurue_id: partyId,
-                                                ryhma_id: undefined,
+                                                ryhma_id: null,
                                                 jasen_id: undefined,
                                                 osuus: 100,
                                                 liittyi: undefined,

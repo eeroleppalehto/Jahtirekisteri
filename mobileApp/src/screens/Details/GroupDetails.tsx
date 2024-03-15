@@ -209,6 +209,7 @@ function GroupDetails({ route, navigation }: Props) {
                                 onPress={() =>
                                     navigation.navigate("Forms", {
                                         type: "Membership",
+                                        clear: false,
                                         data: {
                                             seurue_id: group.seurue_id,
                                             ryhma_id: group.ryhma_id,

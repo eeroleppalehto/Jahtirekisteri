@@ -8,7 +8,7 @@ import {
 } from "react-native-paper";
 import DatePicker from "../../components/DatePicker";
 import { ScrollView } from "react-native-gesture-handler";
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { PortionRadioGroup } from "../../components/RadioGroups/PortionRadioGroup";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { BottomSheetPicker } from "../../components/BottomSheetPicker";
@@ -18,6 +18,8 @@ import { GroupShareFormType } from "../../types";
 import { PartyRadioGroup } from "../../components/RadioGroups/PartyRadioGroup";
 import { GroupRadioGroup } from "../../components/RadioGroups/GroupRadioGroup";
 import { ErrorScreen } from "../ErrorScreen";
+import { ErrorModal } from "../../components/ErrorModal";
+import { SuccessSnackbar } from "../../components/SuccessSnackbar";
 
 type Group = {
     ryhma_id: number;
@@ -33,9 +35,25 @@ export function GroupShareForm({ route, navigation }: Props) {
     const [partyId, setPartyId] = useState<number | undefined>(undefined);
     const bottomSheetRef = useRef<BottomSheet>(null);
 
-    const { data } = route.params as {
+    const { data, isError, isSuccess } = route.params as {
         data: GroupShareFormType;
+        isError: boolean;
+        isSuccess: boolean;
     };
+
+    useEffect(() => {
+        if (route.params?.clear !== false) {
+            navigation.setParams({
+                data: {
+                    ...data,
+                    osnimitys: undefined,
+                    paiva: undefined,
+                    ryhma_id: undefined,
+                },
+            });
+            navigation.setParams({ clear: false });
+        }
+    }, [route.params?.clear]);
 
     const parseWeight = (data: GroupShareFormType | undefined) => {
         if (!data) return undefined;
@@ -189,6 +207,18 @@ export function GroupShareForm({ route, navigation }: Props) {
         <>
             <ScrollView style={{ paddingTop: 8 }}>
                 <Portal>
+                    <ErrorModal
+                        isError={isError}
+                        onDismiss={() =>
+                            navigation.setParams({ isError: false })
+                        }
+                    />
+                    <SuccessSnackbar
+                        isSuccess={isSuccess}
+                        onDismiss={() =>
+                            navigation.setParams({ isSuccess: false })
+                        }
+                    />
                     <DatePicker
                         initDate={parseDate(data)}
                         open={calendarOpen}

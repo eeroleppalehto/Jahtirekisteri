@@ -1,4 +1,14 @@
-import { Portal, Text, useTheme, Divider, Switch } from "react-native-paper";
+import {
+    Portal,
+    Text,
+    useTheme,
+    Divider,
+    Switch,
+    Snackbar,
+    Modal,
+    Button,
+} from "react-native-paper";
+import { MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useEffect, useState, useRef } from "react";
@@ -15,6 +25,8 @@ import { GenderRadioGroup } from "../../components/RadioGroups/GenderRadioGroup"
 import { ShooterRadioGroup } from "../../components/RadioGroups/ShooterRadioGroup";
 import { UsageRadioGroup } from "../../components/RadioGroups/UsageRadioGroup";
 import BottomSheet from "@gorhom/bottom-sheet";
+import { ErrorModal } from "../../components/ErrorModal";
+import { SuccessSnackbar } from "../../components/SuccessSnackbar";
 
 type Props = RootStackScreenProps<"Forms">;
 
@@ -109,9 +121,11 @@ function ShotForm({ route, navigation }: Props) {
     };
 
     // Read the params from route
-    const { shot, usage } = route.params as {
+    const { shot, usage, isError, isSuccess } = route.params as {
         shot: ShotFormType;
         usage: UsageForm[];
+        isError: boolean;
+        isSuccess: boolean;
     };
 
     // Callback functions for updating the params
@@ -264,6 +278,14 @@ function ShotForm({ route, navigation }: Props) {
     return (
         <>
             <Portal>
+                <ErrorModal
+                    isError={isError}
+                    onDismiss={() => navigation.setParams({ isError: false })}
+                />
+                <SuccessSnackbar
+                    isSuccess={isSuccess}
+                    onDismiss={() => navigation.setParams({ isSuccess: false })}
+                />
                 <DatePicker
                     initDate={
                         shot

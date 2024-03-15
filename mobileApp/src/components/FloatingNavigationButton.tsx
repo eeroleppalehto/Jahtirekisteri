@@ -15,7 +15,7 @@ interface Props {
     scrollValue: number;
     label: string;
     type: string;
-    onPress: () => void;
+    // onPress: () => void;
 }
 
 /**
@@ -57,6 +57,7 @@ function FloatingNavigationButton({ scrollValue, type, label }: Props) {
                     onPress={() =>
                         navigation.navigate("Forms", {
                             type,
+                            clear: true,
                         })
                     }
                     visible={true}
