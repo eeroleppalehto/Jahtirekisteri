@@ -77,7 +77,7 @@ type MembersInfoProps = {
     theme: MD3Theme;
 };
 
-function MemberInfo({ id, theme }: MembersInfoProps) {
+export function MemberInfo({ id, theme }: MembersInfoProps) {
     const result = useFetchQuery<Jasen>(`members/${id}`, ["MemberDetails", id]);
 
     return (

@@ -80,10 +80,10 @@ export type ShotViewQuery = {
     kaatopaiva: string;
     ruhopaino: number;
     paikka_teksti: string;
-    paikka_koordinaatti: string;
+    paikka_koordinaatti: string | null;
     sukupuoli: string;
     ikaluokka: string;
-    lisatieto: string;
+    lisatieto: string | null;
     elaimen_nimi: string;
 };
 
@@ -160,6 +160,15 @@ export type MembershipViewQuery = {
     seurue_id: number;
 };
 
+export type MembershipFormType = {
+    jasen_id: number;
+    osuus: number;
+    liittyi: string;
+    poistui: string | null;
+    ryhma_id: number | null;
+    seurue_id: number;
+};
+
 export type FormTypes =
     | ShotUsageForm
     | JasenForm
@@ -167,4 +176,5 @@ export type FormTypes =
     | GroupFormType
     | MemberShareFormType
     | GroupShareFormType
+    | MembershipFormType
     | undefined;

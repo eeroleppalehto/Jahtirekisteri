@@ -76,6 +76,7 @@ const theme = {
     },
 };
 
+// axios.defaults.baseURL = "https://dev.jahtirekisteri.fi";
 axios.defaults.baseURL = BASE_URL;
 axios.defaults.timeout = 5000;
 axios.defaults.headers.common["Content-Type"] = "application/json";

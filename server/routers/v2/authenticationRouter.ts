@@ -12,6 +12,8 @@ import jwt from "jsonwebtoken";
 import "dotenv/config";
 import { loginInput } from "../../zodSchemas/kayttajaValidation";
 import kayttajaService from "../../services/kayttajaService";
+import jasenService from "../../services/jasenService";
+import kaatoService from "../../services/kaatoService";
 import { getDecodedToken } from "../../utils/authenticationUtils";
 
 const loginRouter = express.Router();
@@ -63,6 +65,39 @@ loginRouter.get("/user", ((req, res) => {
     res.status(200).json({
         kayttajatunnus: decodedToken.kayttajatunnus,
         rooli: decodedToken.rooli,
+    });
+}) as express.RequestHandler);
+
+loginRouter.get("/userinfo", (async (req, res) => {
+    const decodedToken = getDecodedToken(req);
+
+    if (!decodedToken)
+        return res.status(401).json({ error: "Token missing or invalid" });
+
+    const kayttaja = await kayttajaService.getKayttajaByUsername(
+        decodedToken.kayttajatunnus
+    );
+
+    if (!kayttaja) return res.status(401).json({ error: "Käyttäjää ei löydy" });
+
+    const jasen = await jasenService.getJasenById(kayttaja.jasen_id);
+
+    if (!jasen) return res.status(401).json({ error: "Jäsentä ei löydy" });
+
+    const kaadot = await kaatoService.getKaatoByJasenId(jasen.jasen_id);
+
+    res.status(200).json({
+        kayttaja: {
+            kayttajatunnus: decodedToken.kayttajatunnus,
+            rooli: decodedToken.rooli,
+            jasen_id: jasen.jasen_id,
+            nimi: `${jasen.etunimi} ${jasen.sukunimi}`,
+            osoite: jasen.jakeluosoite,
+            postinumero: jasen.postinumero,
+            postitoimipaikka: jasen.postitoimipaikka,
+            puhelin: jasen.puhelinnumero,
+        },
+        kaadot: kaadot,
     });
 }) as express.RequestHandler);
 

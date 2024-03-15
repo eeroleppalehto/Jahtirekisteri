@@ -4,6 +4,7 @@ import {
     TouchableRipple,
     TextInput,
     Button,
+    Portal,
 } from "react-native-paper";
 import { useState, useEffect, useRef } from "react";
 import { View } from "react-native";
@@ -15,6 +16,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { ShooterRadioGroup } from "../../components/RadioGroups/ShooterRadioGroup";
 import { BottomSheetPicker } from "../../components/BottomSheetPicker";
 import { PartyFormType, PartyType } from "../../types";
+import { ErrorModal } from "../../components/ErrorModal";
+import { SuccessSnackbar } from "../../components/SuccessSnackbar";
 
 type Shooter = {
     jasen_id: number;
@@ -44,7 +47,12 @@ export function PartyForm({ route, navigation }: Props) {
         }
     }, [route.params?.clear]);
 
-    const { data } = route.params as { data: PartyFormType };
+    const { data, isError, isSuccess, errorMessage } = route.params as {
+        data: PartyFormType;
+        isError: boolean;
+        isSuccess: boolean;
+        errorMessage?: string;
+    };
 
     const handleShooterChange = (shooter: Shooter) => {
         // setShooterId(shooter.jasen_id);
@@ -102,6 +110,22 @@ export function PartyForm({ route, navigation }: Props) {
 
     return (
         <>
+            <Portal>
+                <ErrorModal
+                    isError={isError}
+                    onDismiss={() =>
+                        navigation.setParams({
+                            isError: false,
+                            errorMessage: undefined,
+                        })
+                    }
+                    message={errorMessage}
+                />
+                <SuccessSnackbar
+                    isSuccess={isSuccess}
+                    onDismiss={() => navigation.setParams({ isSuccess: false })}
+                />
+            </Portal>
             <Text
                 variant="titleMedium"
                 style={{

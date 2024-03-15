@@ -13,10 +13,17 @@ const getAllKaato = async () => {
     return kaadot;
 };
 
+const getKaatoByJasenId = async (id: number) => {
+    const kaadot = await prisma.kaato.findMany({
+        where: { jasen_id: id },
+    });
+    return kaadot;
+};
+
 // Create a new kaato entry in the 'kaato' table
 const createKaato = async (object: unknown) => {
     const data = kaatoInput.parse(object); // Validate input using Zod schema
-    const { 
+    const {
         jasen_id,
         kaatopaiva,
         ruhopaino,
@@ -25,7 +32,8 @@ const createKaato = async (object: unknown) => {
         elaimen_nimi,
         sukupuoli,
         ikaluokka,
-        lisatieto } = data;
+        lisatieto,
+    } = data;
 
     const kaato = await prisma.kaato.create({
         data: {
@@ -37,9 +45,9 @@ const createKaato = async (object: unknown) => {
             elaimen_nimi,
             sukupuoli,
             ikaluokka,
-            lisatieto
-        }
-    }); 
+            lisatieto,
+        },
+    });
 
     return kaato;
 };
@@ -47,7 +55,7 @@ const createKaato = async (object: unknown) => {
 // Update an existing kaato entry in the 'kaato' table
 const updateKaato = async (id: number, object: unknown) => {
     const data = kaatoInput.parse(object); // Validate input using Zod schema
-    const { 
+    const {
         jasen_id,
         kaatopaiva,
         ruhopaino,
@@ -56,11 +64,11 @@ const updateKaato = async (id: number, object: unknown) => {
         elaimen_nimi,
         sukupuoli,
         ikaluokka,
-        lisatieto } = data;
+        lisatieto,
+    } = data;
 
     const kaato = await prisma.kaato.update({
-        where: 
-            { kaato_id: id },
+        where: { kaato_id: id },
         data: {
             jasen_id,
             kaatopaiva,
@@ -70,8 +78,8 @@ const updateKaato = async (id: number, object: unknown) => {
             elaimen_nimi,
             sukupuoli,
             ikaluokka,
-            lisatieto
-        }
+            lisatieto,
+        },
     });
 
     return kaato;
@@ -80,11 +88,17 @@ const updateKaato = async (id: number, object: unknown) => {
 // Delete an existing kaato entry from the 'kaato' table
 const deleteKaato = async (id: number) => {
     const kaato = await prisma.kaato.delete({
-        where: { kaato_id: id }
+        where: { kaato_id: id },
     });
 
     return kaato;
 };
 
 // Export CRUD operations for external use
-export default { getAllKaato, createKaato, updateKaato, deleteKaato };
+export default {
+    getAllKaato,
+    createKaato,
+    updateKaato,
+    deleteKaato,
+    getKaatoByJasenId,
+};

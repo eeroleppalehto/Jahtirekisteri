@@ -206,9 +206,22 @@ function GroupDetails({ route, navigation }: Props) {
                         >
                             <Button
                                 icon={"plus"}
-                                onPress={() => console.log("pressed")}
+                                onPress={() =>
+                                    navigation.navigate("Forms", {
+                                        type: "Membership",
+                                        clear: false,
+                                        data: {
+                                            seurue_id: group.seurue_id,
+                                            ryhma_id: group.ryhma_id,
+                                            jasen_id: undefined,
+                                            osuus: 100,
+                                            liittyi: undefined,
+                                            poistui: undefined,
+                                        },
+                                    })
+                                }
                                 compact={true}
-                                disabled={true}
+                                // disabled={true}
                                 style={{
                                     paddingHorizontal: 8,
                                 }}

@@ -14,7 +14,7 @@ import { ShareViewQuery } from "../../types";
 import { View, StyleSheet } from "react-native";
 import { useFetchQuery } from "../../hooks/useTanStackQuery";
 import { BottomSheetPicker } from "../../components/BottomSheetPicker";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { ShareShotDetails } from "./utils/ShareShotDetails";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 
@@ -34,6 +34,8 @@ type MemberShareViewQuery = {
 };
 
 export function MemberShareDetails({ route, navigation }: Props) {
+    const [error, setError] = useState<Error | null>(null);
+
     if (!route.params?.data)
         return (
             <ErrorScreen error={new Error("Tapahtui virhe navigaatiossa")} />
@@ -160,6 +162,32 @@ export function MemberShareDetails({ route, navigation }: Props) {
         );
     };
 
+    const openBottomSheet = () => {
+        try {
+            bottomSheetRef.current?.snapToIndex(2);
+        } catch (error) {
+            if (error instanceof Error) setError(error);
+        }
+    };
+
+    const navigateToForm = () => {
+        try {
+            navigation.navigate("Forms", {
+                type: "MemberShare",
+                clear: false,
+                data: {
+                    paiva: undefined,
+                    kaadon_kasittely_id: data.kaadon_kasittely_id,
+                    osnimitys: undefined,
+                    maara: data.ruhopaino,
+                    jasenyys_id: undefined,
+                },
+            });
+        } catch (error) {
+            if (error instanceof Error) setError(error);
+        }
+    };
+
     return (
         <>
             <ScrollView>
@@ -272,8 +300,9 @@ export function MemberShareDetails({ route, navigation }: Props) {
                 >
                     <Button
                         mode="contained-tonal"
-                        onPress={() => bottomSheetRef.current?.snapToIndex(2)}
+                        onPress={openBottomSheet}
                         style={styles.button}
+                        contentStyle={{ padding: 6 }}
                         icon="view-list"
                     >
                         Kaadon tiedot
@@ -285,19 +314,8 @@ export function MemberShareDetails({ route, navigation }: Props) {
                         buttonColor={theme.colors.primary}
                         textColor={theme.colors.onPrimary}
                         style={styles.button}
-                        onPress={() =>
-                            navigation.navigate("Forms", {
-                                type: "MemberShare",
-                                data: {
-                                    paiva: undefined,
-                                    kaadon_kasittely_id:
-                                        data.kaadon_kasittely_id,
-                                    osnimitys: undefined,
-                                    maara: data.ruhopaino,
-                                    jasenyys_id: undefined,
-                                },
-                            })
-                        }
+                        contentStyle={{ padding: 6 }}
+                        onPress={navigateToForm}
                     >
                         {"Uusi jako"}
                     </Button>
@@ -348,7 +366,6 @@ const styles = StyleSheet.create({
     },
     button: {
         flex: 1,
-        padding: 6,
         borderRadius: 12,
     },
 });

@@ -1,11 +1,12 @@
-import { Text, useTheme, TextInput } from "react-native-paper";
+import { Text, useTheme, TextInput, Portal } from "react-native-paper";
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { MaintenanceTabScreenProps } from "../../NavigationTypes";
 import { RootStackScreenProps } from "../../NavigationTypes";
 import { GroupFormType } from "../../types";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { PartyRadioGroup } from "../../components/RadioGroups/PartyRadioGroup";
+import { ErrorModal } from "../../components/ErrorModal";
+import { SuccessSnackbar } from "../../components/SuccessSnackbar";
 
 type navType = MaintenanceTabScreenProps<"Ryhmät">["navigation"];
 
@@ -25,7 +26,12 @@ export function GroupForm({ route, navigation }: Props) {
         }
     }, [route.params?.clear]);
 
-    const { data } = route.params as { data: GroupFormType };
+    const { data, isError, isSuccess, errorMessage } = route.params as {
+        data: GroupFormType;
+        isError: boolean;
+        isSuccess: boolean;
+        errorMessage?: string;
+    };
 
     const handlePartyChange = (value: number | undefined) => {
         navigation.setParams({
@@ -40,6 +46,22 @@ export function GroupForm({ route, navigation }: Props) {
 
     return (
         <>
+            <Portal>
+                <ErrorModal
+                    isError={isError}
+                    onDismiss={() =>
+                        navigation.setParams({
+                            isError: false,
+                            errorMessage: undefined,
+                        })
+                    }
+                    message={errorMessage}
+                />
+                <SuccessSnackbar
+                    isSuccess={isSuccess}
+                    onDismiss={() => navigation.setParams({ isSuccess: false })}
+                />
+            </Portal>
             <Text
                 variant="titleMedium"
                 style={{

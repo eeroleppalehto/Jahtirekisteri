@@ -61,9 +61,7 @@ export const AuthProvider = ({ children }: any) => {
 
             axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-            const request = await axios.get<UserInfo>(
-                `${BASE_URL}/api/v2/auth/user`
-            );
+            const request = await axios.get<UserInfo>(`/api/v2/auth/user`);
 
             if (request.status >= 400) {
                 setAuthState({

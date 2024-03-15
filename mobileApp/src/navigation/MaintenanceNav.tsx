@@ -3,7 +3,6 @@ import MemberScreen from "../screens/MemberScreen";
 import GroupScreen from "../screens/GroupScreen";
 import PartyScreen from "../screens/PartyScreen";
 import { useTheme } from "react-native-paper";
-import ErrorScreen from "../screens/ErrorScreen";
 import { MaintenanceTabParamList } from "../NavigationTypes";
 
 const TopTab = createMaterialTopTabNavigator<MaintenanceTabParamList>();

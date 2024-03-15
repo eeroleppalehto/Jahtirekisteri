@@ -35,18 +35,18 @@ app.get("/ping", (_req, res) => {
 });
 
 // Attach routers to the /api/v1/ path
-app.use("/api/v1/members", jasenRouter);
-app.use("/api/v1/groups", jakoryhmaRouter);
-app.use("/api/v1/shots", kaatoRouter);
-app.use("/api/v1/shares", jakotapahtumaRouter);
-app.use("/api/v1/shot-usages", kaadonkasittelyRouter);
-app.use("/api/v1/licenses", lupaRouter);
-app.use("/api/v1/parties", seurueRouter);
-app.use("/api/v1/memberships", jasenyysRouter);
-app.use("/api/v1/views", apiViewRouter);
-app.use("/api/v1/option-tables", optionTablesRouter);
-app.use("/api/v1/shot-with-usages", createShotUsageRouter);
-app.use("/api/v1/member-shares", jakotapahtumaJasenRouter);
+// app.use("/api/v1/members", jasenRouter);
+// app.use("/api/v1/groups", jakoryhmaRouter);
+// app.use("/api/v1/shots", kaatoRouter);
+// app.use("/api/v1/shares", jakotapahtumaRouter);
+// app.use("/api/v1/shot-usages", kaadonkasittelyRouter);
+// app.use("/api/v1/licenses", lupaRouter);
+// app.use("/api/v1/parties", seurueRouter);
+// app.use("/api/v1/memberships", jasenyysRouter);
+// app.use("/api/v1/views", apiViewRouter);
+// app.use("/api/v1/option-tables", optionTablesRouter);
+// app.use("/api/v1/shot-with-usages", createShotUsageRouter);
+// app.use("/api/v1/member-shares", jakotapahtumaJasenRouter);
 
 // Attach routers to the /api/v2/ path
 app.use("/api/v2/auth", authenticationRouter);

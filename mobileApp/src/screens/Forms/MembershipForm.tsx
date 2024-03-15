@@ -1,42 +1,44 @@
-import { View } from "react-native";
 import {
-    Text,
-    Portal,
-    useTheme,
-    TouchableRipple,
     Button,
+    Portal,
+    Text,
+    TouchableRipple,
+    useTheme,
 } from "react-native-paper";
-import DatePicker from "../../components/DatePicker";
-import { ScrollView } from "react-native-gesture-handler";
-import { useState, useRef, useMemo, useEffect } from "react";
-import { PortionRadioGroup } from "../../components/RadioGroups/PortionRadioGroup";
+import { View } from "react-native";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { BottomSheetPicker } from "../../components/BottomSheetPicker";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { RootStackScreenProps } from "../../NavigationTypes";
-import { GroupShareFormType } from "../../types";
-import { PartyRadioGroup } from "../../components/RadioGroups/PartyRadioGroup";
-import { GroupRadioGroup } from "../../components/RadioGroups/GroupRadioGroup";
-import { ErrorScreen } from "../ErrorScreen";
+import BottomSheet from "@gorhom/bottom-sheet";
+import { useState, useRef, useEffect } from "react";
+import { BottomSheetPicker } from "../../components/BottomSheetPicker";
+import { ShooterRadioGroup } from "../../components/RadioGroups/ShooterRadioGroup";
+import { MembershipFormType } from "../../types";
+import { ScrollView } from "react-native-gesture-handler";
+import DatePicker from "../../components/DatePicker";
+import Slider from "@react-native-community/slider";
 import { ErrorModal } from "../../components/ErrorModal";
 import { SuccessSnackbar } from "../../components/SuccessSnackbar";
 
-type Group = {
-    ryhma_id: number;
-    ryhman_nimi: string;
+type Shooter = {
+    jasen_id: number;
+    kokonimi: string;
 };
 
 type Props = RootStackScreenProps<"Forms">;
 
-export function GroupShareForm({ route, navigation }: Props) {
-    const theme = useTheme();
-    const [group, setGroup] = useState<Group | undefined>(undefined);
-    const [calendarOpen, setCalendarOpen] = useState(false);
-    const [partyId, setPartyId] = useState<number | undefined>(undefined);
+export function MembershipForm({ route, navigation }: Props) {
+    // Bottom sheet state and ref
     const bottomSheetRef = useRef<BottomSheet>(null);
 
+    // Modal visibility states
+    const [calendarOpen, setCalendarOpen] = useState(false);
+
+    // Label states for displaying the selected value
+    const [shooter, setShooter] = useState<Shooter | undefined>(undefined);
+
+    // Data from the route
     const { data, isError, isSuccess } = route.params as {
-        data: GroupShareFormType;
+        data: MembershipFormType;
         isError: boolean;
         isSuccess: boolean;
     };
@@ -46,45 +48,32 @@ export function GroupShareForm({ route, navigation }: Props) {
             navigation.setParams({
                 data: {
                     ...data,
-                    osnimitys: undefined,
-                    paiva: undefined,
-                    ryhma_id: undefined,
+                    jasen_id: undefined,
+                    osuus: 100,
+                    liittyi: undefined,
+                    poistui: undefined,
                 },
             });
             navigation.setParams({ clear: false });
         }
     }, [route.params?.clear]);
 
-    const parseWeight = (data: GroupShareFormType | undefined) => {
-        if (!data) return undefined;
+    const theme = useTheme();
 
-        if (!data.maara) return undefined;
-
-        return data.maara;
+    // Function for handling the change of the shooter
+    const handleShooterChange = (shooter: Shooter) => {
+        setShooter(shooter);
+        navigation.setParams({
+            data: {
+                ...data,
+                jasen_id: shooter.jasen_id,
+            },
+        });
+        // bottomSheetRef.current?.close();
     };
 
-    const initWeight = useMemo(() => parseWeight(data), []);
-
-    if (!data) {
-        return (
-            <ErrorScreen
-                error={new Error("Virhe navigoinnissa. Yritä uudelleen.")}
-                reload={() => {}}
-            />
-        );
-    }
-
-    if (!initWeight) {
-        return (
-            <ErrorScreen
-                error={new Error("Virhe navigoinnissa. Yritä uudelleen.")}
-                reload={() => {}}
-            />
-        );
-    }
-
-    const GroupContent = (group: Group | undefined) => {
-        if (group) {
+    const ShooterContent = (shooter: Shooter | undefined) => {
+        if (shooter) {
             return (
                 <>
                     <MaterialIcons
@@ -92,7 +81,7 @@ export function GroupShareForm({ route, navigation }: Props) {
                         size={24}
                         color={theme.colors.primary}
                     />
-                    <Text variant="bodyLarge">{group.ryhman_nimi}</Text>
+                    <Text variant="bodyLarge">{shooter.kokonimi}</Text>
                 </>
             );
         } else {
@@ -103,7 +92,7 @@ export function GroupShareForm({ route, navigation }: Props) {
                         size={24}
                         color={theme.colors.primary}
                     />
-                    <Text variant="bodyLarge">Lisää saaja</Text>
+                    <Text variant="bodyLarge">Valitse jäsen</Text>
                 </>
             );
         }
@@ -151,61 +140,31 @@ export function GroupShareForm({ route, navigation }: Props) {
         navigation.setParams({
             data: {
                 ...data,
-                paiva: date.toISOString(),
+                liittyi: date.toISOString(),
             },
         });
     };
 
-    const handlePortionChange = (value: string) => {
-        const portionMap = new Map<string, number>([
-            ["Koko", 1],
-            ["Puolikas", 0.5],
-            ["Neljännes", 0.25],
-        ]);
-
-        const portionNumber = portionMap.get(value) ?? 0;
-
-        const weight = initWeight * portionNumber;
-
+    const handleSliderChange = (value: number) => {
         navigation.setParams({
             data: {
                 ...data,
-                osnimitys: value,
-                maara: weight,
+                osuus: value,
             },
         });
     };
 
-    const handlePartyChange = (value: number | undefined) => {
-        setPartyId(value);
-        setGroup(undefined);
-        navigation.setParams({
-            data: {
-                ...data,
-                ryhma_id: undefined,
-            },
-        });
-    };
-
-    const parseDate = (data: GroupShareFormType | undefined) => {
+    const parseDate = (data: MembershipFormType | undefined) => {
         if (!data) return undefined;
 
-        if (!data.paiva) return undefined;
+        if (!data.liittyi) return undefined;
 
-        return new Date(data.paiva);
-    };
-
-    const parsePortion = (data: GroupShareFormType | undefined) => {
-        if (!data) return undefined;
-
-        if (!data.osnimitys) return undefined;
-
-        return data.osnimitys;
+        return new Date(data.liittyi);
     };
 
     return (
         <>
-            <ScrollView style={{ paddingTop: 8 }}>
+            <ScrollView style={{ padding: 16 }}>
                 <Portal>
                     <ErrorModal
                         isError={isError}
@@ -226,13 +185,8 @@ export function GroupShareForm({ route, navigation }: Props) {
                         setDate={handleDateChange}
                     />
                 </Portal>
-                <View style={{ gap: 30 }}>
-                    <View
-                        style={{
-                            paddingHorizontal: 16,
-                            gap: 2,
-                        }}
-                    >
+                <View style={{ gap: 50 }}>
+                    <View>
                         <View
                             style={{
                                 flexDirection: "row",
@@ -247,7 +201,7 @@ export function GroupShareForm({ route, navigation }: Props) {
                                     color: theme.colors.primary,
                                 }}
                             >
-                                Jaon saaja
+                                Jäsen
                             </Text>
                             <Text
                                 variant="bodyLarge"
@@ -257,14 +211,6 @@ export function GroupShareForm({ route, navigation }: Props) {
                             >
                                 *
                             </Text>
-                        </View>
-                        <View style={{ marginBottom: 6 }}>
-                            <PartyRadioGroup
-                                partyId={partyId}
-                                onValueChange={handlePartyChange}
-                                type={"Ryhmä"}
-                                title={"Rajaa ryhmät seurueen mukaan"}
-                            />
                         </View>
                         <TouchableRipple
                             style={{
@@ -282,19 +228,25 @@ export function GroupShareForm({ route, navigation }: Props) {
                                 bottomSheetRef.current?.snapToIndex(2)
                             }
                         >
-                            {GroupContent(group)}
+                            {ShooterContent(shooter)}
                         </TouchableRipple>
                     </View>
-                    <View style={{ paddingHorizontal: 16, gap: 2 }}>
-                        <View style={{ flexDirection: "row", marginLeft: 10 }}>
+                    <View>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "flex-start",
+                            }}
+                        >
                             <Text
                                 variant="bodyLarge"
                                 style={{
+                                    paddingLeft: 8,
                                     fontWeight: "bold",
                                     color: theme.colors.primary,
                                 }}
                             >
-                                Ruhonosa
+                                Osuus
                             </Text>
                             <Text
                                 variant="bodyLarge"
@@ -305,21 +257,41 @@ export function GroupShareForm({ route, navigation }: Props) {
                                 *
                             </Text>
                         </View>
-                        <PortionRadioGroup
-                            portionName={parsePortion(data)}
-                            onValueChange={handlePortionChange}
+                        <View style={{ alignItems: "center" }}>
+                            <Text
+                                variant="titleMedium"
+                                style={{ color: theme.colors.secondary }}
+                            >
+                                {data.osuus}
+                            </Text>
+                        </View>
+                        <Slider
+                            // style={{ height: 100 }}
+                            minimumValue={0}
+                            maximumValue={100}
+                            minimumTrackTintColor={theme.colors.primary}
+                            thumbTintColor={theme.colors.primary}
+                            value={data ? data.osuus : 100}
+                            onValueChange={handleSliderChange}
+                            step={50}
                         />
                     </View>
-                    <View style={{ paddingHorizontal: 16, gap: 2 }}>
-                        <View style={{ flexDirection: "row", marginLeft: 10 }}>
+                    <View>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "flex-start",
+                            }}
+                        >
                             <Text
                                 variant="bodyLarge"
                                 style={{
+                                    paddingLeft: 8,
                                     fontWeight: "bold",
                                     color: theme.colors.primary,
                                 }}
                             >
-                                Jaon päivämäärä
+                                Liittymispäivä
                             </Text>
                             <Text
                                 variant="bodyLarge"
@@ -344,25 +316,15 @@ export function GroupShareForm({ route, navigation }: Props) {
                             }}
                             onPress={() => setCalendarOpen(true)}
                         >
-                            {DateContent(data ? data.paiva : undefined)}
+                            {DateContent(data ? data.liittyi : undefined)}
                         </TouchableRipple>
                     </View>
-                    {/* <Button onPress={() => console.log(data)}>Test</Button> */}
                 </View>
             </ScrollView>
             <BottomSheetPicker ref={bottomSheetRef}>
-                <GroupRadioGroup
-                    groupId={group?.ryhma_id}
-                    onValueChange={(value) => {
-                        setGroup(value);
-                        navigation.setParams({
-                            data: {
-                                ...data,
-                                ryhma_id: value.ryhma_id,
-                            },
-                        });
-                    }}
-                    partyId={partyId}
+                <ShooterRadioGroup
+                    shooterId={data ? data.jasen_id : undefined}
+                    onValueChange={handleShooterChange}
                 />
             </BottomSheetPicker>
         </>

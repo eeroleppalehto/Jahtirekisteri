@@ -34,6 +34,7 @@ export default function LoginScreen() {
             <View style={styles.container}>
                 <TextInput
                     label="Käyttäjätunnus"
+                    autoCapitalize="none"
                     value={username}
                     onChangeText={setUsername}
                     mode="outlined"
@@ -41,6 +42,7 @@ export default function LoginScreen() {
                 <View>
                     <TextInput
                         label="Salasana"
+                        autoCapitalize="none"
                         value={password}
                         secureTextEntry={securePassword}
                         onChangeText={setPassword}
