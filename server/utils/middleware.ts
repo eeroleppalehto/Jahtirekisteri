@@ -67,7 +67,7 @@ export const errorHandler = (
         error.issues.forEach((issue) => {
             returnObject.errorDetails.push(`${issue.path}: ${issue.message}`);
         });
-        console.log(returnObject.errorType);
+        console.log(returnObject.errorType, returnObject.errorDetails);
         // Send a 400 Bad Request with the error object
         return res.status(400).json(returnObject);
     }
