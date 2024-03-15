@@ -80,10 +80,10 @@ export type ShotViewQuery = {
     kaatopaiva: string;
     ruhopaino: number;
     paikka_teksti: string;
-    paikka_koordinaatti: string;
+    paikka_koordinaatti: string | null;
     sukupuoli: string;
     ikaluokka: string;
-    lisatieto: string;
+    lisatieto: string | null;
     elaimen_nimi: string;
 };
 
