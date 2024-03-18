@@ -1,7 +1,7 @@
 import { View, StyleSheet } from "react-native";
 import { BarChart, yAxisSides } from "react-native-gifted-charts";
 import { FlatList } from "react-native-gesture-handler";
-import { MD3Theme, Text, useTheme } from "react-native-paper";
+import { MD3Theme, Surface, Text, useTheme } from "react-native-paper";
 import { useFetchQuery } from "../../hooks/useTanStackQuery";
 import { ErrorScreen } from "../ErrorScreen";
 
@@ -10,22 +10,12 @@ type ChartData = {
     count: number;
 };
 
-export function GiftedChart() {
+export function DeerShotsGraph() {
     const result = useFetchQuery<ChartData[]>("graphs/deer-count", [
         "DeerChart",
     ]);
 
     const theme = useTheme();
-
-    const barData = [
-        { value: 250, label: "M" },
-        { value: 500, label: "T", frontColor: theme.colors.primary },
-        { value: 745, label: "W", frontColor: theme.colors.primary },
-        { value: 320, label: "T" },
-        { value: 600, label: "F", frontColor: theme.colors.primary },
-        { value: 256, label: "S" },
-        { value: 300, label: "S" },
-    ];
 
     const mapBarData = () => {
         if (result.isSuccess) {
@@ -41,60 +31,42 @@ export function GiftedChart() {
         }
     };
 
-    barData.sort((a, b) => b.value - a.value);
-
     return (
         <>
             {result.isError && <ErrorScreen error={result.error} />}
             {result.isSuccess && (
                 <>
-                    <View
+                    <Surface
+                        elevation={2}
                         style={{
                             // height: 400,
-                            padding: 16,
-                            marginTop: 16,
+                            padding: 12,
+                            marginVertical: 12,
                             marginHorizontal: 16,
-                            backgroundColor: theme.colors.surface,
+                            backgroundColor: theme.colors.background,
                             borderRadius: 16,
                             borderWidth: 1,
                             borderColor: theme.colors.surfaceVariant,
                         }}
                     >
                         <BarChart
-                            // horizontal
-                            // barWidth={22}
                             noOfSections={5}
-                            // yAxisSide={yAxisSides.RIGHT}
                             yAxisAtTop={true}
                             barBorderRadius={4}
                             frontColor="lightgray"
                             data={mapBarData()}
-                            // width={250}
                             yAxisThickness={0}
                             xAxisThickness={0}
-                            // height={500}
-                            // renderTooltip={(item: { name: string }) => (
-                            //     <View
-                            //         style={{
-                            //             position: "relative",
-                            //             right: 30,
-                            //             bottom: 30,
-                            //         }}
-                            //     >
-                            //         <Text style={{ transform: [{ rotate: "-90deg" }] }}>
-                            //             {item.name}
-                            //         </Text>
-                            //     </View>
-                            // )}
                         />
-                    </View>
+                    </Surface>
+                    <TableHeader theme={theme} />
                     <FlatList
                         data={result.data}
-                        style={{ marginHorizontal: 16, marginTop: 16 }}
+                        style={{ marginHorizontal: 16 }}
                         ItemSeparatorComponent={() => (
                             <View style={{ height: 4 }} />
                         )}
-                        ListHeaderComponent={<TableHeader theme={theme} />}
+                        // ListHeaderComponent={<TableHeader theme={theme} />}
                         ListFooterComponent={() => (
                             <View style={{ height: 32 }} />
                         )}
@@ -108,27 +80,6 @@ export function GiftedChart() {
                             />
                         )}
                     />
-                    {/* <ScrollView>
-                        <View>
-                            {result.data.map((item, index) => {
-                                return (
-                                    <View
-                                        key={index}
-                                        style={{
-                                            flexDirection: "row",
-                                            justifyContent: "space-between",
-                                            marginHorizontal: 16,
-                                            marginTop: 8,
-                                        }}
-                                    >
-                                        <Text>{`${index + 1}.`}</Text>
-                                        <Text>{item.kokonimi}</Text>
-                                        <Text>{item.count}</Text>
-                                    </View>
-                                );
-                            })}
-                        </View>
-                    </ScrollView> */}
                 </>
             )}
         </>
@@ -154,6 +105,8 @@ function TableHeader({ theme }: { theme: MD3Theme }) {
                 borderTopWidth: 1,
                 borderColor: theme.colors.surfaceVariant,
                 marginBottom: 4,
+                marginHorizontal: 16,
+                paddingTop: 16,
             }}
         >
             <View>
