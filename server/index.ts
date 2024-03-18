@@ -16,6 +16,7 @@ import createShotUsageRouter from "./routers/v2/createShotUsageRouter";
 import jakotapahtumaJasenRouter from "./routers/v2/memberSharesRouter";
 import authenticationRouter from "./routers/v2/authenticationRouter";
 import miscRouter from "./routers/v2/profilesRouter";
+import graphRouter from "./routers/v2/graphRouter";
 import { errorHandler, logRequest, unknownEndpoint } from "./utils/middleware";
 
 // Initialize the Express application
@@ -63,6 +64,7 @@ app.use("/api/v2/option-tables", optionTablesRouter);
 app.use("/api/v2/shot-with-usages", createShotUsageRouter);
 app.use("/api/v2/member-shares", jakotapahtumaJasenRouter);
 app.use("/api/v2/profiles", miscRouter);
+app.use("/api/v2/graphs", graphRouter);
 
 // Middleware for handling unknown endpoints
 app.use(unknownEndpoint);
