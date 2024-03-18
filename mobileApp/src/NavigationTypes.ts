@@ -88,6 +88,18 @@ export type ShareTabScreenProps<T extends keyof ShareTabParamList> =
         RootStackScreenProps<keyof RootStackParamList>
     >;
 
+// Graph tab types
+export type GraphTabParamList = {
+    Peura: undefined;
+    Hirvi: undefined;
+};
+
+export type GraphTabScreenProps<T extends keyof GraphTabParamList> =
+    CompositeScreenProps<
+        MaterialTopTabScreenProps<GraphTabParamList, T>,
+        RootStackScreenProps<keyof RootStackParamList>
+    >;
+
 declare global {
     namespace ReactNavigation {
         interface RootParamList extends RootStackParamList {}

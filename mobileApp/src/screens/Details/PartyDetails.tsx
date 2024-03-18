@@ -277,12 +277,12 @@ function PartyGroups({ partyId, theme, navigation }: PartyGroupsProps) {
                                 (osuus)
                             </Text>
                         </View>
-                        <View style={{ gap: 16 }}>
+                        <View style={{ gap: 16, paddingBottom: 10 }}>
                             <PartyGroupList
                                 groups={groupsByPartyId ?? []}
                                 navigation={navigation}
                             />
-                            <View
+                            {/* <View
                                 style={{
                                     flexDirection: "row",
                                 }}
@@ -298,7 +298,7 @@ function PartyGroups({ partyId, theme, navigation }: PartyGroupsProps) {
                                 >
                                     Lisää ryhmä seurueeseen
                                 </Button>
-                            </View>
+                            </View> */}
                         </View>
                     </Surface>
                 </>

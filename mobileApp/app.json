@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobileApp",
-    "slug": "mobileApp",
+    "name": "Jahtirekisteri",
+    "slug": "Jahtirekisteri",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,7 +25,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.eeroleppalehto.mobileApp"
+      "package": "com.eeroleppalehto.Jahtirekisteri"
     },
     "web": {
       "favicon": "./assets/favicon.png"

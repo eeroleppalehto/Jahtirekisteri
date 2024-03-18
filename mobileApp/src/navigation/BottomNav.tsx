@@ -2,8 +2,8 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import MaintenanceNav from "./MaintenanceNav";
 import ShareNav from "./ShareNav";
-import ChartVictoryXL from "../screens/GraphScreen/ChartVictoryXL";
 import ShotScreen from "../screens/ShotScreen";
+import GraphNav from "./GraphNav";
 import { BottomNavParamList } from "../NavigationTypes";
 
 const Tab = createMaterialBottomTabNavigator<BottomNavParamList>();
@@ -19,7 +19,7 @@ function BottomNav() {
         <Tab.Navigator>
             <Tab.Screen
                 name="Grafiikka"
-                component={ChartVictoryXL}
+                component={GraphNav}
                 options={{
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons
