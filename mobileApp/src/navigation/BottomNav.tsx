@@ -4,6 +4,7 @@ import MaintenanceNav from "./MaintenanceNav";
 import ShareNav from "./ShareNav";
 import ChartVictoryXL from "../screens/GraphScreen/ChartVictoryXL";
 import ShotScreen from "../screens/ShotScreen";
+import { GiftedChart } from "../screens/GraphScreen/GiftedChart";
 import { BottomNavParamList } from "../NavigationTypes";
 
 const Tab = createMaterialBottomTabNavigator<BottomNavParamList>();
@@ -19,7 +20,7 @@ function BottomNav() {
         <Tab.Navigator>
             <Tab.Screen
                 name="Grafiikka"
-                component={ChartVictoryXL}
+                component={GiftedChart}
                 options={{
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons
