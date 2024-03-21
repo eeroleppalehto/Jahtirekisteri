@@ -17,6 +17,8 @@ import { BottomSheetPicker } from "../../components/BottomSheetPicker";
 import { useRef, useState } from "react";
 import { ShareShotDetails } from "./utils/ShareShotDetails";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { useAuth } from "../../context/AuthProvider";
+import { WRITE_RIGHTS_SET } from "../../utils/authenticationUtils";
 
 type Props = RootStackScreenProps<"Details">;
 
@@ -41,6 +43,10 @@ export function GroupShareDetails({ route, navigation }: Props) {
         );
 
     const bottomSheetRef = useRef<BottomSheet>(null);
+
+    const { authState } = useAuth();
+
+    const hasWriteRights = !WRITE_RIGHTS_SET.has(authState?.role || "");
 
     const { data } = route.params as { data: ShareViewQuery };
 
@@ -291,7 +297,7 @@ export function GroupShareDetails({ route, navigation }: Props) {
                     </Button>
                     <Button
                         mode="elevated"
-                        disabled={false}
+                        disabled={hasWriteRights}
                         icon={"share"}
                         buttonColor={theme.colors.primary}
                         textColor={theme.colors.onPrimary}

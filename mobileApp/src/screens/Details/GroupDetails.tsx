@@ -12,6 +12,8 @@ import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import IconListItem from "../../components/IconListItem";
 import { GroupViewQuery, MembershipViewQuery } from "../../types";
+import { useAuth } from "../../context/AuthProvider";
+import { WRITE_RIGHTS_SET } from "../../utils/authenticationUtils";
 
 type Props = RootStackScreenProps<"Details">;
 
@@ -21,6 +23,10 @@ function GroupDetails({ route, navigation }: Props) {
         `views/?name=mobiili_ryhman_jasenyydet&column=jakoryhma.ryhma_id&value=${group.ryhma_id}`,
         ["GroupDetails", group.ryhma_id]
     );
+
+    const { authState } = useAuth();
+
+    const hasWriteRights = !WRITE_RIGHTS_SET.has(authState?.role || "");
 
     const theme = useTheme();
 
@@ -221,7 +227,7 @@ function GroupDetails({ route, navigation }: Props) {
                                     })
                                 }
                                 compact={true}
-                                // disabled={true}
+                                disabled={hasWriteRights}
                                 style={{
                                     paddingHorizontal: 8,
                                 }}

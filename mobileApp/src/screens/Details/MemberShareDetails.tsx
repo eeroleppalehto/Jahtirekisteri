@@ -16,6 +16,8 @@ import { useFetchQuery } from "../../hooks/useTanStackQuery";
 import { BottomSheetPicker } from "../../components/BottomSheetPicker";
 import { useRef, useState } from "react";
 import { ShareShotDetails } from "./utils/ShareShotDetails";
+import { useAuth } from "../../context/AuthProvider";
+import { WRITE_RIGHTS_SET } from "../../utils/authenticationUtils";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 
 type Props = RootStackScreenProps<"Details">;
@@ -40,6 +42,10 @@ export function MemberShareDetails({ route, navigation }: Props) {
         return (
             <ErrorScreen error={new Error("Tapahtui virhe navigaatiossa")} />
         );
+
+    const { authState } = useAuth();
+
+    const hasWriteRights = !WRITE_RIGHTS_SET.has(authState?.role || "");
 
     const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -309,7 +315,7 @@ export function MemberShareDetails({ route, navigation }: Props) {
                     </Button>
                     <Button
                         mode="elevated"
-                        disabled={false}
+                        disabled={hasWriteRights}
                         icon={"share"}
                         buttonColor={theme.colors.primary}
                         textColor={theme.colors.onPrimary}
