@@ -186,7 +186,7 @@ export default function FormAppBar({
         console.log("Submitting...");
         setIsLoading(true);
         axios
-            .post(`/api/v1/${path}`, payload)
+            .post(`/api/v2/${path}`, payload)
             .then((res) => {
                 navigation.setParams({ clear: true });
                 console.log(`returned with status code ${res.status}`);
@@ -231,40 +231,6 @@ export default function FormAppBar({
             >
                 Tallenna
             </Button>
-            {/* <TouchableRipple
-                style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    backgroundColor: theme.colors.primary,
-                    borderRadius: 24,
-                    paddingLeft: 8,
-                    marginRight: 8,
-                }}
-                onPress={() => handleShotFormSubmit()}
-            >
-                <Surface
-                    elevation={1}
-                    style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        backgroundColor: theme.colors.primary,
-                        borderRadius: 24,
-                        paddingLeft: 8,
-                        gap: -8,
-                    }}
-                >
-                    <Text
-                        variant="bodyLarge"
-                        style={{ color: theme.colors.onPrimary }}
-                    >
-                        Tallenna
-                    </Text>
-                    <Appbar.Action
-                        icon="content-save-outline"
-                        color={theme.colors.onPrimary}
-                    />
-                </Surface>
-            </TouchableRipple> */}
         </Appbar.Header>
     );
 }
