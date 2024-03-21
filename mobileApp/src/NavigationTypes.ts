@@ -21,6 +21,7 @@ import { FormTypes, ShotFormType, UsageForm } from "./types";
 export type DrawerParamList = {
     RootStack: NavigatorScreenParams<RootStackParamList>;
     Profile: undefined;
+    ChangePassword: undefined;
 };
 
 export type MyDrawerScreenProps<T extends keyof DrawerParamList> =

@@ -14,7 +14,7 @@ import {
     Divider,
     ActivityIndicator,
 } from "react-native-paper";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { DrawerNavigationHelpers } from "@react-navigation/drawer/lib/typescript/src/types";
 import { useAuth, AuthState } from "../context/AuthProvider";
 import { useFetchQuery } from "../hooks/useTanStackQuery";
@@ -74,7 +74,6 @@ function ProfileSection({
                 <>
                     <View style={styles.userInfoSection}>
                         <Avatar.Icon size={50} icon={"account"} />
-                        {/* <Title style={styles.title}>Miika Hiivola</Title> */}
                         {authState?.username ? (
                             <MemberNameTitle username={authState.username} />
                         ) : null}
@@ -91,7 +90,26 @@ function ProfileSection({
                             />
                         )}
                         label="Profiili"
-                        onPress={() => navigation.navigate("Profile")}
+                        onPress={() =>
+                            navigation.navigate("Profile", {
+                                title: "Profiili",
+                            })
+                        }
+                    />
+                    <DrawerItem
+                        icon={({ color, size }) => (
+                            <MaterialIcons
+                                name="password"
+                                color={color}
+                                size={size}
+                            />
+                        )}
+                        label="Vaihda salasana"
+                        onPress={() =>
+                            navigation.navigate("ChangePassword", {
+                                title: "Salasanan vaihto",
+                            })
+                        }
                     />
                     <DrawerItem
                         icon={({ color, size }) => (
