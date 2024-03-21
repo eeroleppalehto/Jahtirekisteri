@@ -1,11 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { BASE_URL } from "../baseUrl";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import * as SecureStore from "expo-secure-store";
 
 type AuthContextType = {
     authState?: AuthState;
-    onLogin?: (loginInfo: LoginInfo) => Promise<any>;
+    onLogin?: (loginInfo: LoginInfo) => Promise<string>;
     onLogout?: () => Promise<any>;
 };
 
@@ -112,13 +112,21 @@ export const AuthProvider = ({ children }: any) => {
 
             await SecureStore.setItemAsync(TOKEN_KEY, request.data.token);
 
-            return request.data;
+            return "OK";
         } catch (e) {
-            if (e instanceof Error) {
-                console.log(e.message);
-                return { error: e.message };
+            if (e instanceof AxiosError) {
+                if (e.response?.status === 401) {
+                    return "Väärä käyttäjätunnus tai salasana";
+                } else {
+                    return "Virhe ottaessa yhteyttä palvelimeen";
+                }
             }
-            return { error: e };
+
+            if (e instanceof Error) {
+                return e.message;
+            }
+
+            return "Tuntematon virhe";
         }
     };
 
