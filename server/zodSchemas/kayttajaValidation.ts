@@ -26,3 +26,13 @@ export const loginInput = z.object({
     kayttajatunnus: z.string().max(32),
     salasana: z.string().max(255),
 });
+
+export const passwordChangeInput = z.object({
+    oldPassword: z.string().max(255),
+    // At least 7 characters long and must contain at least one number, special character, uppercase and lowercase letter.
+    newPassword: z
+        .string()
+        .regex(/^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-ZÄÖÅ])(?=.*[a-zäöå]).{8,}$/)
+        .max(255),
+    confirmNewPassword: z.string().max(255),
+});
