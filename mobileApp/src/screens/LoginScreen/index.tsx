@@ -15,18 +15,27 @@ export default function LoginScreen() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [securePassword, setSecurePassword] = useState(true);
-    const [snackbarVisible, setSnackbarVisible] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState<string | undefined>("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const theme = useTheme();
 
     const { onLogin } = useAuth();
 
     const onSubmit = async () => {
-        if (onLogin) {
-            const result = await onLogin({ username, password });
-            console.log(result);
+        setIsLoading(true);
+
+        if (!onLogin) {
+            setIsLoading(false);
+            setErrorMessage("Kirjautuminen ei onnistunut");
+            return;
         }
+
+        const result = await onLogin({ username, password });
+        if (result !== "OK") {
+            setErrorMessage(result);
+        }
+        setIsLoading(false);
     };
 
     return (
@@ -56,12 +65,20 @@ export default function LoginScreen() {
                             />
                         }
                     />
-                    <Text
+                    {/* <Text
                         variant="bodyMedium"
                         style={{ textDecorationLine: "underline" }}
                     >
                         Unohditko salasanasi?
-                    </Text>
+                    </Text> */}
+                    {errorMessage && (
+                        <Text
+                            variant="bodyMedium"
+                            style={{ color: theme.colors.error }}
+                        >
+                            {errorMessage}
+                        </Text>
+                    )}
                 </View>
                 <Text variant="bodyMedium">
                     Jos sinulla ei ole tunnuksia, ota yhteyttä ylläpitoon
@@ -69,6 +86,7 @@ export default function LoginScreen() {
                 <Button
                     mode="contained"
                     onPress={onSubmit}
+                    loading={isLoading}
                     contentStyle={{ flexDirection: "row-reverse" }}
                     icon={() => (
                         <MaterialIcons
@@ -81,16 +99,6 @@ export default function LoginScreen() {
                     KIRJAUDU
                 </Button>
             </View>
-            <Snackbar
-                visible={snackbarVisible}
-                onDismiss={() => {}}
-                action={{
-                    label: "OK",
-                    onPress: () => setSnackbarVisible(false),
-                }}
-            >
-                {snackbarMessage}
-            </Snackbar>
         </>
     );
 }

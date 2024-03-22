@@ -61,7 +61,7 @@ export function MooseShareChart() {
                 label: data[i].ryhman_nimi,
                 spacing: 2,
                 labelWidth: 60,
-                topLabelComponent: () => <Text>{data[i].maara}</Text>,
+                topLabelComponent: () => <Text>{data[i].maara ?? ""}</Text>,
                 frontColor: theme.colors.primary,
             });
 
@@ -76,7 +76,11 @@ export function MooseShareChart() {
             graphData.push({
                 value: expectedShareValue,
                 topLabelComponent: () => (
-                    <Text>{expectedShareValue.toString()}</Text>
+                    <Text>
+                        {expectedShareValue === 0
+                            ? ""
+                            : expectedShareValue.toString()}
+                    </Text>
                 ),
                 frontColor: theme.colors.outline,
             });

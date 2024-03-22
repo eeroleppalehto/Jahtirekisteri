@@ -3,8 +3,9 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import DrawerContent from "../components/DrawerContent";
 import RootStack from "./RootStack";
 import ProfileScreen from "../screens/ProfileScreen";
-import ProfileAppBar from "../components/AppBars/ProfileAppBar";
+import DrawerAppBar from "../components/AppBars/DrawerAppBar";
 import { DrawerParamList } from "../NavigationTypes";
+import { ChangePasswordScreen } from "../screens/ChangePasswordScreen";
 
 export type DrawerNavParamList = {
     RootStack: undefined;
@@ -33,16 +34,18 @@ function DrawerNav() {
                 name="Profile"
                 component={ProfileScreen}
                 options={{
-                    header: (props) => <ProfileAppBar {...props} />,
+                    title: "Profiili",
+                    header: (props) => <DrawerAppBar {...props} />,
                 }}
             />
-            {/* <Drawer.Screen // Screen that shows user profile
-                name="Login"
-                component={LoginScreen}
+            <Drawer.Screen // Screen that allows user to change their password
+                name="ChangePassword"
+                component={ChangePasswordScreen}
                 options={{
-                    header: (props) => <LoginAppBar {...props} />,
+                    title: "Vaihda salasana",
+                    header: (props) => <DrawerAppBar {...props} />,
                 }}
-            /> */}
+            />
         </Drawer.Navigator>
     );
 }

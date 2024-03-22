@@ -21,6 +21,8 @@ import { ErrorScreen } from "../ErrorScreen";
 import { RootStackScreenProps } from "../../NavigationTypes";
 import { useFetchQuery } from "../../hooks/useTanStackQuery";
 import IconListItem from "../../components/IconListItem";
+import { useAuth } from "../../context/AuthProvider";
+import { WRITE_RIGHTS_SET } from "../../utils/authenticationUtils";
 
 type Props = RootStackScreenProps<"Details">;
 
@@ -282,23 +284,6 @@ function PartyGroups({ partyId, theme, navigation }: PartyGroupsProps) {
                                 groups={groupsByPartyId ?? []}
                                 navigation={navigation}
                             />
-                            {/* <View
-                                style={{
-                                    flexDirection: "row",
-                                }}
-                            >
-                                <Button
-                                    icon={"plus"}
-                                    onPress={() => console.log("pressed")}
-                                    compact={true}
-                                    disabled={false}
-                                    style={{
-                                        paddingHorizontal: 8,
-                                    }}
-                                >
-                                    Lisää ryhmä seurueeseen
-                                </Button>
-                            </View> */}
                         </View>
                     </Surface>
                 </>
@@ -318,6 +303,10 @@ function PartyMembers({ partyId, theme, navigation }: PartyMemberProps) {
         `views/?name=mobiili_seurueen_jasenyydet&column=seurue.seurue_id&value=${partyId}`,
         ["seurueen_jasenyydet", partyId]
     );
+
+    const { authState } = useAuth();
+
+    const hasWriteRights = !WRITE_RIGHTS_SET.has(authState?.role || "");
 
     const PartySummary = (members: MembershipViewQuery[]) => {
         const numberOfMembers = members.length;
@@ -505,7 +494,7 @@ function PartyMembers({ partyId, theme, navigation }: PartyMemberProps) {
                                         })
                                     }
                                     compact={true}
-                                    disabled={false}
+                                    disabled={hasWriteRights}
                                     style={{
                                         paddingHorizontal: 8,
                                     }}

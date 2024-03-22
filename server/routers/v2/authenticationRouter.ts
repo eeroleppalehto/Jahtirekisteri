@@ -10,7 +10,10 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
-import { loginInput } from "../../zodSchemas/kayttajaValidation";
+import {
+    loginInput,
+    passwordChangeInput,
+} from "../../zodSchemas/kayttajaValidation";
 import kayttajaService from "../../services/kayttajaService";
 import jasenService from "../../services/jasenService";
 import kaatoService from "../../services/kaatoService";
@@ -99,6 +102,40 @@ loginRouter.get("/userinfo", (async (req, res) => {
         },
         kaadot: kaadot,
     });
+}) as express.RequestHandler);
+
+loginRouter.post("/change-password", (async (req, res) => {
+    const decodedToken = getDecodedToken(req);
+    if (!decodedToken)
+        return res.status(401).json({ error: "Token missing or invalid" });
+
+    const data = passwordChangeInput.parse(req.body);
+    const { oldPassword, newPassword, confirmNewPassword } = data;
+
+    if (newPassword !== confirmNewPassword)
+        return res.status(400).json({ error: "Uudet salasanat eivät täsmää" });
+
+    const kayttaja = await kayttajaService.getKayttajaByUsername(
+        decodedToken.kayttajatunnus
+    );
+
+    if (!kayttaja) return res.status(401).json({ error: "Käyttäjää ei löydy" });
+
+    const authenticationResult = await bcrypt.compare(
+        oldPassword,
+        kayttaja.salasana_hash
+    );
+
+    if (!authenticationResult)
+        return res.status(401).json({ error: "Väärä salasana" });
+
+    const newHash = await bcrypt.hash(newPassword, 10);
+    await kayttajaService.updateKayttajaSalasana(
+        decodedToken.kayttajatunnus,
+        newHash
+    );
+
+    res.status(200).json({ message: "Salasana vaihdettu" });
 }) as express.RequestHandler);
 
 export default loginRouter;
