@@ -8,6 +8,7 @@ import prepareData
 import dialogs.dialogueWindow as dialogueWindow
 import dialogs.removeDialogues.License as removeLicenseDialog
 import dialogs.editDialogues.License as editLicenseDialog
+import dialogs.messageModule as msg
 
 
 class Ui_licenseTabWidget(QScrollArea, QWidget):
@@ -178,7 +179,8 @@ class Ui_licenseTabWidget(QScrollArea, QWidget):
                 databaseOperation.detailedMessage
                 )
         else:
-            # Update the page to show new data and clear 
+            # Update the page to show new data and clear
+            msg.PopupMessages().successMessage('Tallennus onnistui')
             self.populateLicensePage()
             self.licenseYearLE.clear()
             self.licenseAmountLE.clear()

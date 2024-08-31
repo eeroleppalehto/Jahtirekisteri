@@ -1,26 +1,32 @@
 // Import required libraries and modules
 import express from "express";
-import cors from "cors";
 import "express-async-errors";
-import jasenRouter from "./routers/jasenRouter";
-import kaatoRouter from "./routers/kaatoRouter";
-import jakoryhmaRouter from "./routers/jakoryhmaRouter";
-import jakotapahtumaRouter from "./routers/jakotapahtumaRouter";
-import kaadonkasittelyRouter from "./routers/kaadonkasittelyRouter";
-import lupaRouter from "./routers/lupaRouter";
-import seurueRouter from "./routers/seurueRouter";
-import jasenyysRouter from "./routers/jasenyysRouter";
-import apiViewRouter from "./routers/apiViewRouter";
-import optionTablesRouter from "./routers/optionTablesRouter";
-import createShotUsageRouter from "./routers/createShotUsageRouter";
-import { errorHandler } from "./utils/middleware"; // Import errorHandler
+import "dotenv/config";
+import jasenRouter from "./routers/v2/membersRouter";
+import kaatoRouter from "./routers/v2/shotsRouter";
+import jakoryhmaRouter from "./routers/v2/groupsRouter";
+import jakotapahtumaRouter from "./routers/v2/sharesRouter";
+import kaadonkasittelyRouter from "./routers/v2/shotUsagesRouter";
+import lupaRouter from "./routers/v2/licensesRouter";
+import seurueRouter from "./routers/v2/partiesRouter";
+import jasenyysRouter from "./routers/v2/membershipsRouter";
+import apiViewRouter from "./routers/v2/viewRouter";
+import optionTablesRouter from "./routers/v2/optionTablesRouter";
+import createShotUsageRouter from "./routers/v2/createShotUsageRouter";
+import jakotapahtumaJasenRouter from "./routers/v2/memberSharesRouter";
+import authenticationRouter from "./routers/v2/authenticationRouter";
+import miscRouter from "./routers/v2/profilesRouter";
+import graphRouter from "./routers/v2/graphRouter";
+import { errorHandler, logRequest, unknownEndpoint } from "./utils/middleware";
 
 // Initialize the Express application
 const app = express();
 
 // Middleware configurations
-app.use(cors()); // Enable CORS
+// app.use(cors()); // Enable CORS
 app.use(express.json()); // Parse JSON payloads
+
+app.use(logRequest); // Log requests and responses
 
 // Routes
 app.get("/ping", (_req, res) => {
@@ -29,24 +35,45 @@ app.get("/ping", (_req, res) => {
     res.send("pong");
 });
 
-// Attach routers to the /api/ path
-app.use("/api/members", jasenRouter);
-app.use("/api/jakoryhma", jakoryhmaRouter);
-app.use("/api/shots", kaatoRouter);
-app.use("/api/jakotapahtuma", jakotapahtumaRouter);
-app.use("/api/kaadonkasittely", kaadonkasittelyRouter);
-app.use("/api/lupa", lupaRouter);
-app.use("/api/seurue", seurueRouter);
-app.use("/api/jasenyys", jasenyysRouter);
-app.use("/api/view", apiViewRouter);
-app.use("/api/option-tables", optionTablesRouter);
-app.use("/api/createShotUsage", createShotUsageRouter);
+// Attach routers to the /api/v1/ path
+// app.use("/api/v1/members", jasenRouter);
+// app.use("/api/v1/groups", jakoryhmaRouter);
+// app.use("/api/v1/shots", kaatoRouter);
+// app.use("/api/v1/shares", jakotapahtumaRouter);
+// app.use("/api/v1/shot-usages", kaadonkasittelyRouter);
+// app.use("/api/v1/licenses", lupaRouter);
+// app.use("/api/v1/parties", seurueRouter);
+// app.use("/api/v1/memberships", jasenyysRouter);
+// app.use("/api/v1/views", apiViewRouter);
+// app.use("/api/v1/option-tables", optionTablesRouter);
+// app.use("/api/v1/shot-with-usages", createShotUsageRouter);
+// app.use("/api/v1/member-shares", jakotapahtumaJasenRouter);
+
+// Attach routers to the /api/v2/ path
+app.use("/api/v2/auth", authenticationRouter);
+app.use("/api/v2/members", jasenRouter);
+app.use("/api/v2/groups", jakoryhmaRouter);
+app.use("/api/v2/shots", kaatoRouter);
+app.use("/api/v2/shares", jakotapahtumaRouter);
+app.use("/api/v2/shot-usages", kaadonkasittelyRouter);
+app.use("/api/v2/licenses", lupaRouter);
+app.use("/api/v2/parties", seurueRouter);
+app.use("/api/v2/memberships", jasenyysRouter);
+app.use("/api/v2/views", apiViewRouter);
+app.use("/api/v2/option-tables", optionTablesRouter);
+app.use("/api/v2/shot-with-usages", createShotUsageRouter);
+app.use("/api/v2/member-shares", jakotapahtumaJasenRouter);
+app.use("/api/v2/profiles", miscRouter);
+app.use("/api/v2/graphs", graphRouter);
+
+// Middleware for handling unknown endpoints
+app.use(unknownEndpoint);
 
 // Centralized error handling
 app.use(errorHandler);
 
 // Set the port
-const PORT = 3000;
+const PORT = process.env.PORT ? process.env.PORT : 3000;
 
 // Start the Express server
 app.listen(PORT, () => {

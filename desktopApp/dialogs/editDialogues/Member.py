@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import (QDialog, QLineEdit, QLabel, QPushButton,
                              QComboBox, QDateEdit,
                              QMainWindow, QApplication)
 from PyQt5.uic import loadUi
-from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
+from dialogs.dialogueWindow import DialogFrame
 import pgModule as pgModule
 import prepareData as prepareData
 from dialogs.messageModule import PopupMessages as msg

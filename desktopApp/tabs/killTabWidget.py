@@ -6,8 +6,9 @@ from datetime import date
 import pgModule
 import prepareData
 
+import dialogs.messageModule as msg
 import dialogs.dialogueWindow as dialogueWindow
-import dialogs.editShotDialog as editShotDialog
+import dialogs.editDialogues.Shot as Shot
 import dialogs.removeDialogues.Shot as removeShotDialog
 
 
@@ -269,15 +270,14 @@ class Ui_killTabWidget(QScrollArea, QWidget):
                 databaseOperation, self.shotLicenseTW)
 
     def saveUsage(self, shotId, usageId, usagePortion):
-        """_summary_
+        """Insert single usage into database
 
         Args:
-            shotId (int): _description_
-            usageId (int): _description_
-            usagePortion (int): _description_
+            shotId (int): Id of shot to insert
+            usageId (int): Id of usage to insert
+            usagePortion (int): Portion amount to insert
         """
-        errorCode = 0
-        # FIXME: Is the try-except block necessary?
+
         try:
             sqlClauseBeginning = "INSERT INTO public.kaadon_kasittely(kaato_id, kasittelyid, kasittely_maara) VALUES("
             sqlClauseValues = f"{shotId!r}, {usageId!r}, {usagePortion!r})"
@@ -340,7 +340,7 @@ class Ui_killTabWidget(QScrollArea, QWidget):
             sqlClauseEnd = "RETURNING kaato_id;"
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
         except:
-            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','Tallennus epäonnistui' )
             return
         
 
@@ -360,6 +360,7 @@ class Ui_killTabWidget(QScrollArea, QWidget):
                 )
         else:
             # Update the page to show new data and clear
+            msg.PopupMessages().successMessage('Tallennus onnistui')
             self.shotLocationLE.clear()
             self.shotWeightLE.clear()
             self.shotAddInfoTE.clear()
@@ -368,10 +369,8 @@ class Ui_killTabWidget(QScrollArea, QWidget):
     def toggleUsage2(self):
         if self.shotUsage2CheckB.isChecked():
             self.shotUsage2CB.setEnabled(True)
-            # self.shotUsage2PortionSB.setEnabled(True)
         else:
             self.shotUsage2CB.setEnabled(False)
-            # self.shotUsage2PortionSB.setEnabled(False)
 
     def calculateUsage2Value(self):
         value = self.shotUsagePortionSB.value()
@@ -445,7 +444,7 @@ class Ui_killTabWidget(QScrollArea, QWidget):
         dialog.exec()
 
     def openEditShotDialog(self):
-        dialog = editShotDialog.EditShot()
+        dialog = Shot.EditShot()
         dialog.exec()
         
     def opeRemoveShotDialog(self):

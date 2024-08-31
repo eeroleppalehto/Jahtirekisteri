@@ -9,7 +9,8 @@ from PyQt5.QtWidgets import (QDialog, QLabel, QPushButton, QTableWidgetItem,
                              QComboBox, QTableWidget, QSpinBox, QDateEdit, QCheckBox,
                              QMainWindow, QApplication)
 from PyQt5.uic import loadUi
-from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
+from dialogs.dialogueWindow import DialogFrame
+import dialogs.messageModule as msg
 import pgModule as pgModule
 import prepareData as prepareData
 from datetime import date
@@ -258,7 +259,7 @@ class Membership(DialogFrame):
             table = 'public.jasenyys'
             limit = f"public.jasenyys.jasenyys_id = {self.membershipToEditDict['jasenyys_id']}"
         except:
-            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','Jäsenyyden muokkaus epäonnistui' )
         
 
 
@@ -273,8 +274,7 @@ class Membership(DialogFrame):
                 dataBaseOperation.detailedMessage
                 )
         else:
-            success = SuccessfulOperationDialog()
-            success.exec()
+            msg.PopupMessages().successMessage('Muokkaus onnistui')
             self.populateMembershipTW()
 
     def handlePartyCBChange(self):

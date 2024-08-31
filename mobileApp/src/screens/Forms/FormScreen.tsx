@@ -1,25 +1,42 @@
 import MemberForm from "./MemberForm";
 import ShotForm from "./ShotForm";
-import { Text } from "react-native-paper";
+import { GroupForm } from "./GroupForm";
+import { PartyForm } from "./PartyForm";
 import { RootStackScreenProps } from "../../NavigationTypes";
-
-const ErrorScreen = () => {
-    return <Text>Virhe!</Text>;
-};
+import { ErrorScreen } from "../ErrorScreen";
+import { MemberShareForm } from "./MemberShareForm";
+import { GroupShareForm } from "./GroupShareForm";
+import { MembershipForm } from "./MembershipForm";
 
 type Props = RootStackScreenProps<"Forms">;
 
-export default function FormScreen({ route }: Props) {
-    if (!route.params?.type) return <ErrorScreen />;
+// Screen for displaying the correct form based on the type parameter
+export default function FormScreen({ route, navigation }: Props) {
+    // If type parameter is undefined, display error screen
+    if (!route.params?.type)
+        return <ErrorScreen error={new Error("Virhe siirtyessä sivulle")} />;
 
     const { type } = route.params;
 
+    // Switch case for selecting the correct form
     switch (type) {
-        case "jäsen":
-            return <MemberForm />;
-        case "kaato":
-            return <ShotForm />;
+        case "Member":
+            return <MemberForm route={route} navigation={navigation} />;
+        case "Shot":
+            return <ShotForm route={route} navigation={navigation} />;
+        case "Group":
+            return <GroupForm route={route} navigation={navigation} />;
+        case "Party":
+            return <PartyForm route={route} navigation={navigation} />;
+        case "MemberShare":
+            return <MemberShareForm route={route} navigation={navigation} />;
+        case "GroupShare":
+            return <GroupShareForm route={route} navigation={navigation} />;
+        case "Membership":
+            return <MembershipForm route={route} navigation={navigation} />;
         default:
-            return <ErrorScreen />;
+            return (
+                <ErrorScreen error={new Error("Virhe siirtyessä sivulle")} />
+            );
     }
 }

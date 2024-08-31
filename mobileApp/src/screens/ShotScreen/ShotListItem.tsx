@@ -1,18 +1,22 @@
 import { View } from "react-native";
-import { Text, Avatar, MD3Colors, TouchableRipple } from "react-native-paper";
+import { Text, Avatar, TouchableRipple, useTheme } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
-import { Kaato } from "../../types";
+import { ShotViewQuery } from "../../types";
 import { BottomTabScreenProps } from "../../NavigationTypes";
 
 type navigationProps = BottomTabScreenProps<"Kaadot">["navigation"];
 
 type Props = {
-    shot: Kaato;
+    shot: ShotViewQuery;
     navigation: navigationProps;
 };
 
+// ListItem for displaying a single shot in a list
 function ShotListItem({ shot, navigation }: Props) {
+    const theme = useTheme();
+
+    // Format date to Finnish format
     const dateStringArray = new Date(shot.kaatopaiva)
         .toLocaleDateString("fi-FI", {
             year: "2-digit",
@@ -23,13 +27,14 @@ function ShotListItem({ shot, navigation }: Props) {
 
     const dateString = dateStringArray.toString().replace(/,/g, "");
 
+    // Render icon based on gender value
     const getGenderIcon = (gender: string) => {
         if (gender === "Uros") {
             return (
                 <MaterialCommunityIcons
                     name="gender-male"
                     size={20}
-                    color={MD3Colors.neutral30}
+                    color={theme.colors.outline}
                 />
             );
         } else if (gender === "Naaras") {
@@ -37,8 +42,7 @@ function ShotListItem({ shot, navigation }: Props) {
                 <MaterialCommunityIcons
                     name="gender-female"
                     size={20}
-                    color={MD3Colors.neutral30}
-                    style={{ flexGrow: 0 }}
+                    color={theme.colors.outline}
                 />
             );
         } else {
@@ -46,12 +50,13 @@ function ShotListItem({ shot, navigation }: Props) {
                 <MaterialCommunityIcons
                     name="minus"
                     size={20}
-                    color={MD3Colors.neutral30}
+                    color={theme.colors.outline}
                 />
             );
         }
     };
 
+    // Render avatar based on animal value
     const getAnimalAvatar = (animal: string) => {
         if (animal === "Hirvi") {
             return require("../../../assets/mooseAvatar.jpg");
@@ -64,7 +69,7 @@ function ShotListItem({ shot, navigation }: Props) {
         <TouchableRipple
             onPress={() =>
                 navigation.navigate("Details", {
-                    type: "Kaato",
+                    type: "Shot",
                     data: shot,
                     title: `Kaato Index: ${shot.kaato_id}`,
                 })
@@ -93,10 +98,10 @@ function ShotListItem({ shot, navigation }: Props) {
                             <Text
                                 variant="bodyMedium"
                                 style={{
-                                    color: MD3Colors.neutral40,
+                                    color: theme.colors.outline,
                                 }}
                             >
-                                Miika Hiivola
+                                {shot.kaatajan_nimi}
                             </Text>
                         </View>
                         <View
@@ -107,7 +112,7 @@ function ShotListItem({ shot, navigation }: Props) {
                             <Text
                                 variant="bodyMedium"
                                 style={{
-                                    color: MD3Colors.neutral40,
+                                    color: theme.colors.outline,
                                 }}
                             >
                                 {shot.ikaluokka}
@@ -124,7 +129,8 @@ function ShotListItem({ shot, navigation }: Props) {
 const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
-        paddingVertical: 12,
+        alignItems: "center",
+        paddingVertical: 20,
         gap: 15,
     },
     avatar: {

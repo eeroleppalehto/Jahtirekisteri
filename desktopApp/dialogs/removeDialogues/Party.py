@@ -4,7 +4,8 @@ sys.path.append('../desktopApp')
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QDialog, QComboBox, QLabel, QPushButton
 from PyQt5.uic import loadUi
-from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
+from dialogs.dialogueWindow import DialogFrame
+import dialogs.messageModule as msg
 import pgModule as pgModule
 import prepareData as prepareData
 from datetime import date
@@ -25,12 +26,12 @@ class Party(DialogFrame):
         self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
 
         # Elements
-        self.removePartyCB = self.removePartyComboBox
+        self.removePartyCB: QComboBox = self.removePartyComboBox
         
         
-        self.removePartyRemovePushBtn = self.removePartyRemovePushButton
+        self.removePartyRemovePushBtn: QPushButton = self.removePartyRemovePushButton
         self.removePartyRemovePushBtn.clicked.connect(self.removeParty) # Signal
-        self.removePartyCancelPushBtn = self.removePartyCancelPushButton
+        self.removePartyCancelPushBtn: QPushButton = self.removePartyCancelPushButton
         self.removePartyCancelPushBtn.clicked.connect(self.closeDialog) # Signal
 
         self.populateRemovePartyDialog()
@@ -85,8 +86,7 @@ class Party(DialogFrame):
                     )
             else:
                 # Update the page to show new data and clear 
-                success = SuccessfulOperationDialog()
-                success.exec()
+                msg.PopupMessages().successMessage('Poisto onnistui')
                 self.populateRemovePartyDialog()
 
     def closeDialog(self):

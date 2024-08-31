@@ -1,9 +1,41 @@
 import { View } from "react-native";
-import { Bar, CartesianChart } from "victory-native";
-import { LinearGradient, useFont, vec } from "@shopify/react-native-skia";
-// import inter from "../fonts/inter-medium.ttf"
+import { ScrollView, RefreshControl } from "react-native-gesture-handler";
+import { Text, Surface, useTheme } from "react-native-paper";
+import { Bar, CartesianChart, useChartPressState } from "victory-native";
+import {
+    LinearGradient,
+    useFont,
+    vec,
+    Text as SkText,
+} from "@shopify/react-native-skia";
+import type { SharedValue } from "react-native-reanimated";
+import { useFetchQuery } from "../../hooks/useTanStackQuery";
+import { ErrorScreen } from "../ErrorScreen";
+import { DefaultActivityIndicator } from "../../components/DefaultActivityIndicator";
+
+type GroupDataChart = {
+    ryhma_id: number;
+    ryhman_nimi: string;
+    seurue_id: number;
+    osuus: number | null;
+    maara: number | null;
+};
 
 const ChartVictoryXL = () => {
+    const result = useFetchQuery<GroupDataChart[]>(
+        `views/?name=jakoryhma_osuus_maara`,
+        ["GroupChartData"]
+    );
+
+    const initialYState: Record<"maara", number> = {
+        maara: 0,
+    };
+
+    const { state, isActive } = useChartPressState({
+        x: "0",
+        y: initialYState,
+    });
+
     const font = useFont(
         require("../../fonts/Roboto-Regular.ttf"),
         12,
@@ -12,56 +44,200 @@ const ChartVictoryXL = () => {
         }
     );
 
-    const data = Array.from({ length: 6 }, (_, index) => ({
-        month: index + 1,
-        listenCount: Math.floor(Math.random() * (100 - 50 + 1)) + 50,
-    }));
+    const theme = useTheme();
+
+    const parsedData = result.data
+        ? result.data.map((item) => {
+              const maara = item.maara === null ? 0 : item.maara;
+              return {
+                  group: item.ryhman_nimi,
+                  maara: maara,
+              };
+          })
+        : [];
 
     return (
-        <View
-            style={{
-                flex: 1,
-                justifyContent: "space-between",
-                //alignItems: "center",
-                width: "100%",
-                height: "90%",
-                padding: "2%",
-            }}
-        >
-            <CartesianChart
-                data={data}
-                xKey="month"
-                yKeys={["listenCount"]}
-                domainPadding={{ left: 50, right: 50, top: 30 }}
-                axisOptions={{
-                    font,
-                    formatXLabel(value) {
-                        const date = new Date(2023, value - 1);
-                        return date.toLocaleString("default", {
-                            month: "short",
-                        });
-                    },
-                }}
-            >
-                {({ points, chartBounds }) => (
-                    <Bar
-                        chartBounds={chartBounds}
-                        points={points.listenCount}
-                        roundedCorners={{
-                            topLeft: 5,
-                            topRight: 5,
+        <>
+            {result.isLoading ? <DefaultActivityIndicator /> : null}
+            {result.isError ? (
+                <ErrorScreen error={result.error} reload={result.refetch} />
+            ) : null}
+            {result.isSuccess && (
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={result.isLoading}
+                            onRefresh={result.refetch}
+                        />
+                    }
+                >
+                    <View
+                        style={{ height: 400, marginLeft: 16, marginRight: 32 }}
+                    >
+                        <CartesianChart
+                            data={parsedData}
+                            xKey="group"
+                            yKeys={["maara"]}
+                            domainPadding={{
+                                left: 10,
+                                right: 10,
+                                top: 60,
+                                // bottom: 400,
+                            }}
+                            // padding={{
+                            //     top: 20,
+                            //     left: 20,
+                            //     right: 20,
+                            //     bottom: 20,
+                            // }}
+                            chartPressState={state}
+                            axisOptions={{
+                                font,
+                                formatXLabel(_value) {
+                                    return "";
+                                },
+                            }}
+                        >
+                            {({ points, chartBounds }) => (
+                                <>
+                                    <Bar
+                                        key={"group"}
+                                        chartBounds={chartBounds}
+                                        points={points.maara}
+                                        innerPadding={0.5}
+                                        roundedCorners={{
+                                            topLeft: 5,
+                                            topRight: 5,
+                                        }}
+                                    >
+                                        <LinearGradient
+                                            start={vec(0, 0)}
+                                            end={vec(0, 400)}
+                                            colors={["#526600", "#52660080"]}
+                                        />
+                                    </Bar>
+                                    {isActive ? (
+                                        <ToolTip
+                                            x={state.x.position}
+                                            y={state.y.maara.position}
+                                            title={{
+                                                nimi: state.x.value.value,
+                                                maara: state.y.maara.value
+                                                    .value,
+                                            }}
+                                        />
+                                    ) : null}
+                                </>
+                            )}
+                        </CartesianChart>
+                    </View>
+                    <Surface
+                        elevation={1}
+                        style={{
+                            marginHorizontal: 16,
+                            marginVertical: 30,
+                            borderRadius: 8,
+                            padding: 8,
+                            paddingBottom: 16,
                         }}
                     >
-                        <LinearGradient
-                            start={vec(0, 0)}
-                            end={vec(0, 400)}
-                            colors={["#a78bfa", "#a78bfa50"]}
-                        />
-                    </Bar>
-                )}
-            </CartesianChart>
-        </View>
+                        <View
+                            style={{
+                                flexDirection: "column",
+                                justifyContent: "space-between",
+                                gap: 8,
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                }}
+                            >
+                                <Text
+                                    variant="titleMedium"
+                                    style={{
+                                        color: theme.colors.primary,
+                                        marginBottom: 12,
+                                    }}
+                                >
+                                    Ryhmien lihat
+                                </Text>
+                                <Text
+                                    variant="titleSmall"
+                                    style={{
+                                        color: theme.colors.outline,
+                                        marginBottom: 12,
+                                        marginRight: 16,
+                                    }}
+                                >
+                                    {"(kg)"}
+                                </Text>
+                            </View>
+
+                            {parsedData.map((item) => (
+                                <View
+                                    key={item.group}
+                                    style={{
+                                        flexDirection: "row",
+                                        justifyContent: "space-between",
+                                        marginHorizontal: 16,
+                                    }}
+                                >
+                                    <Text variant="bodyMedium">
+                                        {item.group}
+                                    </Text>
+                                    <Text variant="bodyMedium">
+                                        {item.maara}
+                                    </Text>
+                                </View>
+                            ))}
+                        </View>
+                    </Surface>
+                </ScrollView>
+            )}
+        </>
     );
 };
+
+function ToolTip({
+    x,
+    y,
+    title,
+}: {
+    x: SharedValue<number>;
+    y: SharedValue<number>;
+    title: { nimi: string; maara: number };
+}) {
+    const theme = useTheme();
+
+    const nameLength = title.nimi.length * 4;
+    const amountLength = title.maara.toString().length * 4;
+
+    const font = useFont(
+        require("../../fonts/Roboto-Regular.ttf"),
+        16,
+        (err) => {
+            console.log(err.message);
+        }
+    );
+
+    return (
+        <>
+            <SkText
+                text={title.nimi}
+                x={x.value - nameLength}
+                y={16}
+                font={font}
+            />
+            <SkText
+                text={title.maara.toString() + " kg"}
+                x={x.value - amountLength}
+                y={32}
+                font={font}
+            />
+        </>
+    );
+}
 
 export default ChartVictoryXL;

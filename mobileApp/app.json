@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "mobileApp",
+    "name": "Jahtirekisteri",
     "slug": "mobileApp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -15,16 +15,28 @@
       "**/*"
     ],
     "ios": {
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.eeroleppalehto.Jahtirekisteri"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "24c9258b-150c-43b3-97b0-5d26870d4178"
+      }
+    },
+    "plugins": [
+      "expo-secure-store"
+    ]
   }
 }

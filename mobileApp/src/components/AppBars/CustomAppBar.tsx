@@ -6,6 +6,10 @@ import { Route } from "@react-navigation/native";
 
 import { RootStackScreenProps } from "../../NavigationTypes";
 
+/* 
+    This function is used to get the title of the app bar based on the current
+    route.
+*/
 function myGetHeaderTitle(route: Route<string>) {
     const routeName = getFocusedRouteNameFromRoute(route) ?? "Grafiikka";
 
@@ -28,6 +32,10 @@ type NavigationBarProps =
 
 type Props = NativeStackHeaderProps;
 
+/*
+    The CustomAppBar component is used to render the app bar that is used in the
+    bottom navigation screens.
+ */
 export function CustomAppBar({ navigation, route, options, back }: Props) {
     //const title = getHeaderTitle(options, route.name);
     const drawerNavigation = useNavigation<NavigationBarProps>();

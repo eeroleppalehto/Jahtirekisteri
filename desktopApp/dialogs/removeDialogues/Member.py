@@ -4,7 +4,8 @@ sys.path.append('../desktopApp')
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QDialog, QComboBox, QLabel, QPushButton
 from PyQt5.uic import loadUi
-from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
+from dialogs.dialogueWindow import DialogFrame
+import dialogs.messageModule as msg
 import pgModule as pgModule
 import prepareData as prepareData
 from datetime import date
@@ -25,11 +26,11 @@ class Member(DialogFrame):
         self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
 
         # Elements
-        self.removeMemberCB = self.removeMemberComboBox
+        self.removeMemberCB: QComboBox = self.removeMemberComboBox
         
-        self.removeMemberPushBtn = self.removeMemberPushButton
+        self.removeMemberPushBtn: QPushButton = self.removeMemberPushButton
         self.removeMemberPushBtn.clicked.connect(self.removeMember) # Signal
-        self.removeMemberCancelPushBtn = self.removeMemberCancelPushButton
+        self.removeMemberCancelPushBtn: QPushButton = self.removeMemberCancelPushButton
         self.removeMemberCancelPushBtn.clicked.connect(self.closeDialog) # Signal
 
         # Populate the member combo box
@@ -61,7 +62,7 @@ class Member(DialogFrame):
             table = 'public.jasen'
             limit = f"public.jasen.jasen_id = {memberId}"
         except Exception:
-            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','Poisto epäonnistui' )
         
         databaseOperation1 = pgModule.DatabaseOperation()
         databaseOperation1.getAllRowsFromTable(self.connectionArguments, 'public.jasen_liitokset')
@@ -87,8 +88,7 @@ class Member(DialogFrame):
                     )
             else:
                 # Update the page to show new data and clear 
-                success = SuccessfulOperationDialog()
-                success.exec()
+                msg.PopupMessages().successMessage('Poisto onnistui')
                 self.populateRemoveMemberDialog()
 
     def closeDialog(self):

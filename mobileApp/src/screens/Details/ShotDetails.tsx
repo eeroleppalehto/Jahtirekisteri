@@ -1,55 +1,40 @@
-import { Text, MD3Colors, Divider, useTheme } from "react-native-paper";
-import { BottomTabScreenProps } from "../../NavigationTypes";
-import useFetch from "../../../hooks/useFetch";
+import { Text, Divider, ActivityIndicator, useTheme } from "react-native-paper";
+import { RootStackScreenProps } from "../../NavigationTypes";
+import { useFetchQuery } from "../../hooks/useTanStackQuery";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-
 import IconListItem from "../../components/IconListItem";
-import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { ShotViewQuery, UsageViewQuery } from "../../types";
 
-type Props = BottomTabScreenProps<"Kaadot">;
+type Props = RootStackScreenProps<"Details">;
 
+// Screen for displaying details screen for a shot
 function ShotDetails({ route, navigation }: Props) {
+    const result = useFetchQuery<UsageViewQuery[]>(
+        `views/?name=mobiili_kaadon_kasittely&column=kaadon_kasittely.kaato_id&value=${route.params.data.kaato_id}`,
+        ["ShotDetails", route.params.data.kaato_id]
+    );
+
     const theme = useTheme();
     if (!route.params) return <Text>Virhe!</Text>;
 
-    const LocationIcon = (
-        <MaterialIcons
-            name="location-on"
-            size={24}
-            style={{ color: MD3Colors.neutral40 }}
-        />
-    );
+    const { data } = route.params as { data: ShotViewQuery };
 
     const locationTitle = "Paikka";
 
-    const ShooterIcon = (
-        <MaterialCommunityIcons
-            name="account"
-            size={24}
-            style={{ color: MD3Colors.neutral40 }}
-        />
-    );
-    const shooterTitle = "Kaataja";
+    const description = undefined;
 
-    const DateIcon = (
-        <MaterialCommunityIcons
-            name="calendar"
-            size={24}
-            style={{ color: MD3Colors.neutral40 }}
-        />
-    );
+    const dateString = new Date(data.kaatopaiva).toLocaleDateString("fi-FI");
 
-    const WeightIcon = (
-        <MaterialCommunityIcons
-            name="scale"
-            size={24}
-            style={{ color: MD3Colors.neutral40 }}
-        />
-    );
-    const weightTitle = "Paino";
-
-    const description = null;
+    const UsageComponent = (usage: UsageViewQuery) => {
+        return (
+            <IconListItem
+                iconSet="NoIcon"
+                title={usage.kasittely_teksti}
+                description={usage.kasittely_maara.toString()}
+            />
+        );
+    };
 
     return (
         <ScrollView>
@@ -64,44 +49,48 @@ function ShotDetails({ route, navigation }: Props) {
                 Kaadon tiedot
             </Text>
             <IconListItem
-                icon={LocationIcon}
+                iconSet="MaterialIcons"
+                iconNameMaterial="location-on"
                 title={locationTitle}
-                description={"Mynämäki"}
+                description={data.paikka_teksti}
             />
             <IconListItem
-                icon={DateIcon}
+                iconSet="MaterialCommunityIcons"
+                iconNameMaterialCommunity="calendar"
                 title={"Päivämäärä"}
-                description={"12.12.2020"}
+                description={dateString}
             />
             <IconListItem
-                icon={ShooterIcon}
+                iconSet="MaterialCommunityIcons"
+                iconNameMaterialCommunity="account"
                 title={"Kaataja"}
-                description={description}
+                description={data.kaatajan_nimi}
             />
             <IconListItem
-                icon={WeightIcon}
+                iconSet="MaterialCommunityIcons"
+                iconNameMaterialCommunity="scale"
                 title={"Paino"}
-                description={description}
+                description={`${data.ruhopaino.toString()}kg`}
             />
             <IconListItem
-                icon={null}
+                iconSet="NoIcon"
                 title={"Eläin"}
-                description={description}
+                description={data.elaimen_nimi}
             />
             <IconListItem
-                icon={null}
+                iconSet="NoIcon"
                 title={"Ikäluokka"}
-                description={description}
+                description={data.ikaluokka}
             />
             <IconListItem
-                icon={null}
+                iconSet="NoIcon"
                 title={"Sukupuoli"}
-                description={description}
+                description={data.sukupuoli}
             />
             <IconListItem
-                icon={null}
+                iconSet="NoIcon"
                 title={"Lisätietoja"}
-                description={description}
+                description={data.lisatieto}
             />
             <Divider />
             <Text
@@ -115,16 +104,28 @@ function ShotDetails({ route, navigation }: Props) {
                 Käsittelyt
             </Text>
             <View style={{ paddingTop: 20, paddingBottom: 300 }}>
-                <IconListItem
-                    icon={null}
-                    title="Jäsenelle"
-                    description={"Määrä 75%"}
-                />
-                <IconListItem
-                    icon={null}
-                    title="Seuralle"
-                    description={"Määrä 25%"}
-                />
+                {result.isLoading ? (
+                    <ActivityIndicator
+                        size={"large"}
+                        style={{ paddingTop: 20 }}
+                    />
+                ) : null}
+                {result.isError ? (
+                    <Text style={{ paddingTop: 20 }}>Virhe</Text>
+                ) : null}
+                {result.isSuccess &&
+                    result.data?.map((usage) => {
+                        const descriptionText = `Määrä ${usage.kasittely_maara.toString()}%`;
+
+                        return (
+                            <IconListItem
+                                key={usage.kasittelyid}
+                                iconSet="NoIcon"
+                                title={usage.kasittely_teksti}
+                                description={descriptionText}
+                            />
+                        );
+                    })}
             </View>
         </ScrollView>
     );

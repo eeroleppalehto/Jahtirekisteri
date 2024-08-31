@@ -4,10 +4,11 @@ sys.path.append('../desktopApp')
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QDateEdit, QSpinBox, QComboBox, QLineEdit
 from PyQt5.uic import loadUi
-from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
+from dialogs.dialogueWindow import DialogFrame
 import pgModule as pgModule
 import prepareData as prepareData
 from datetime import date
+import dialogs.messageModule as msg
 
 class Group(DialogFrame):
     """Creates a dialog to add group to database"""
@@ -25,12 +26,12 @@ class Group(DialogFrame):
         self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
 
         # Elements
-        self.addGroupGroupNameLE = self.addGroupGroupNameLineEdit
-        self.addGroupPartyCB = self.addGroupPartyComboBox
+        self.addGroupGroupNameLE: QLineEdit = self.addGroupGroupNameLineEdit
+        self.addGroupPartyCB: QComboBox = self.addGroupPartyComboBox
         
-        self.addGroupAddPushBtn = self.addGroupAddPushButton
+        self.addGroupAddPushBtn: QPushButton = self.addGroupAddPushButton
         self.addGroupAddPushBtn.clicked.connect(self.addGroup) # Signal
-        self.addGroupCancelPushBtn = self.addGroupCancelPushButton
+        self.addGroupCancelPushBtn: QPushButton = self.addGroupCancelPushButton
         self.addGroupCancelPushBtn.clicked.connect(self.closeDialog) # Signal
 
         self.populateAddGroupDialog()
@@ -67,7 +68,7 @@ class Group(DialogFrame):
             sqlClauseEnd = ");"
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
         except:
-            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','Ryhmän lisäys epäonnistui' )
 
         if errorCode == 1:
             self.alert(
@@ -88,8 +89,7 @@ class Group(DialogFrame):
                     )
             else:
                 # Update the page to show new data and clear 
-                success = SuccessfulOperationDialog()
-                success.exec()
+                msg.PopupMessages().successMessage('Lisäys onnistui')
                 self.addGroupGroupNameLE.clear()
             
 

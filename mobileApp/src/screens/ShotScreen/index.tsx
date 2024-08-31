@@ -1,19 +1,22 @@
-//import { ActivityIndicator } from "react-native";
 import { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import { useState } from "react";
-import { MD3Colors, Text, ActivityIndicator } from "react-native-paper";
-import { FlatList } from "react-native-gesture-handler";
-import useFetch from "../../../hooks/useFetch";
+import { FlatList, RefreshControl } from "react-native-gesture-handler";
 import { BottomTabScreenProps } from "../../NavigationTypes";
-import { Kaato } from "../../types";
+import { ShotViewQuery } from "../../types";
 import FloatingNavigationButton from "../../components/FloatingNavigationButton";
 import ShotListItem from "./ShotListItem";
+import { useFetchQuery } from "../../hooks/useTanStackQuery";
+import { ErrorScreen } from "../ErrorScreen";
+import { DefaultActivityIndicator } from "../../components/DefaultActivityIndicator";
 
 type Props = BottomTabScreenProps<"Kaadot">;
 
+// Screen for displaying all shots in Shots tab
 function ShotScreen({ navigation, route }: Props) {
     const [scrollValue, setScrollValue] = useState(0);
 
+    // Callback function for updating scroll value and passing it to FloatingNavigationButton
+    // which uses it to determine when to extend the button
     const onScroll = ({
         nativeEvent,
     }: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -23,25 +26,28 @@ function ShotScreen({ navigation, route }: Props) {
         setScrollValue(currentScrollPosition);
     };
 
-    const onSwipeDown = () => {
-        console.log("swipe");
-    };
-
-    const results = useFetch<Kaato[]>("shots", "GET", null);
-
-    if (results.error) {
-        return <Text>{results.error.message}</Text>;
-    }
+    const result = useFetchQuery<ShotViewQuery[]>(
+        "views/?name=mobiili_kaato_sivu",
+        ["Shots"]
+    );
 
     return (
         <>
-            {results.loading ? (
-                <ActivityIndicator size={"large"} style={{ paddingTop: 50 }} />
-            ) : (
+            {result.isLoading ? <DefaultActivityIndicator /> : null}
+            {result.isError ? (
+                <ErrorScreen error={result.error} reload={result.refetch} />
+            ) : null}
+            {result.isSuccess && (
                 <>
                     <FlatList
-                        data={results.data}
+                        data={result.data}
                         keyExtractor={(item) => item.kaato_id.toString()}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={result.isLoading}
+                                onRefresh={result.refetch}
+                            />
+                        }
                         renderItem={({ item }) => (
                             <ShotListItem shot={item} navigation={navigation} />
                         )}
@@ -50,8 +56,8 @@ function ShotScreen({ navigation, route }: Props) {
                     />
                     <FloatingNavigationButton
                         scrollValue={scrollValue}
-                        type="kaato"
-                        label="Lisää kaato  "
+                        type="Shot"
+                        label="Lisää kaato"
                     />
                 </>
             )}

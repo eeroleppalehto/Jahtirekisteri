@@ -4,7 +4,8 @@ sys.path.append('../desktopApp')
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QDateEdit, QSpinBox, QComboBox, QLineEdit
 from PyQt5.uic import loadUi
-from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
+from dialogs.dialogueWindow import DialogFrame
+import dialogs.messageModule as msg
 import pgModule as pgModule
 import prepareData as prepareData
 from datetime import date
@@ -97,7 +98,7 @@ class Party(DialogFrame):
             sqlClauseEnd = ");"
             sqlClause = sqlClauseBeginning + sqlClauseValues + sqlClauseEnd
         except:
-            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','Ryhmän lisäys epäonnistui' )
             return
 
         
@@ -112,8 +113,7 @@ class Party(DialogFrame):
                 )
         else:
             # Update the page to show new data and clear the line edit
-            success = SuccessfulOperationDialog()
-            success.exec()
+            msg.PopupMessages().successMessage('Lisäys onnistui')
             self.addPartyNameLE.clear()
 
     def closeDialog(self):

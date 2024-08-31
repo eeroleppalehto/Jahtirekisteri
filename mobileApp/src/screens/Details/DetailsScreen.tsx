@@ -1,60 +1,56 @@
 import MemberDetails from "./MemberDetails";
 import ShotDetails from "./ShotDetails";
-import { View } from "react-native";
-import { Text } from "react-native-paper";
-import { useRoute, useNavigation } from "@react-navigation/native";
-
-import {
-    MaintenanceTabScreenProps,
-    BottomTabScreenProps,
-    RootStackScreenProps,
-} from "../../NavigationTypes";
-
-const ErrorScreen = () => {
-    return (
-        <View>
-            <Text>Virhe!</Text>
-        </View>
-    );
-};
+import GroupDetails from "./GroupDetails";
+import { PartyDetails } from "./PartyDetails";
+import { ErrorScreen } from "../ErrorScreen";
+import { MemberShareDetails } from "./MemberShareDetails";
+import { GroupShareDetails } from "./GroupShareDetails";
+import { RootStackScreenProps } from "../../NavigationTypes";
 
 type Props = RootStackScreenProps<"Details">;
 
-function DetailsScreen({ route }: Props) {
-    if (!route.params?.type) return <ErrorScreen />;
+// Screen for displaying details screens for different types
+// if type is not found, displays an error screen
+function DetailsScreen({ route, navigation }: Props) {
+    if (!route.params?.type)
+        return (
+            <ErrorScreen error={new Error("Tapahtui virhe navigaatiossa")} />
+        );
     try {
+        // Get type from route params
         const { type } = route.params;
-        let navigation;
+
+        // Switch case for selecting the correct details screen
         switch (type) {
-            case "Jäsen":
-                const memberRoute =
-                    useRoute<MaintenanceTabScreenProps<"Jäsenet">["route"]>();
-                navigation =
-                    useNavigation<
-                        MaintenanceTabScreenProps<"Jäsenet">["navigation"]
-                    >();
+            case "Member":
+                return <MemberDetails route={route} navigation={navigation} />;
+            case "Shot":
+                return <ShotDetails route={route} navigation={navigation} />;
+            case "Group":
+                return <GroupDetails route={route} navigation={navigation} />;
+            case "Party":
+                return <PartyDetails route={route} navigation={navigation} />;
+            case "MemberShare":
                 return (
-                    <MemberDetails
-                        route={memberRoute}
-                        navigation={navigation}
-                    />
+                    <MemberShareDetails route={route} navigation={navigation} />
                 );
-            case "Kaato":
-                const shotRoute =
-                    useRoute<BottomTabScreenProps<"Kaadot">["route"]>();
-                navigation =
-                    useNavigation<
-                        BottomTabScreenProps<"Kaadot">["navigation"]
-                    >();
+            case "GroupShare":
                 return (
-                    <ShotDetails route={shotRoute} navigation={navigation} />
+                    <GroupShareDetails route={route} navigation={navigation} />
                 );
             default:
-                return <ErrorScreen />;
+                return (
+                    <ErrorScreen
+                        error={new Error("Tapahtui virhe navigaatiossa")}
+                    />
+                );
         }
     } catch (error) {
         console.log("Screen type not found");
-        return <ErrorScreen />;
+        if (error instanceof Error) console.log(error.message);
+        return (
+            <ErrorScreen error={new Error("Tapahtui virhe navigaatiossa")} />
+        );
     }
 }
 

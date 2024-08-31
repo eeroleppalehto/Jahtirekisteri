@@ -4,7 +4,8 @@ sys.path.append('../desktopApp')
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import QDialog, QComboBox, QLabel, QPushButton
 from PyQt5.uic import loadUi
-from dialogs.dialogueWindow import DialogFrame, SuccessfulOperationDialog
+from dialogs.dialogueWindow import DialogFrame
+import dialogs.messageModule as msg
 import pgModule as pgModule
 import prepareData as prepareData
 from datetime import date
@@ -25,12 +26,12 @@ class Group(DialogFrame):
         self.connectionArguments = databaseOperationConnections.readDatabaseSettingsFromFile('connectionSettings.dat')
 
         # Elements
-        self.removeGroupCB = self.removeGroupComboBox
+        self.removeGroupCB: QComboBox = self.removeGroupComboBox
         
         
-        self.removeGroupRemovePushBtn = self.removeGroupRemovePushButton
+        self.removeGroupRemovePushBtn: QPushButton = self.removeGroupRemovePushButton
         self.removeGroupRemovePushBtn.clicked.connect(self.removeGroup) # Signal
-        self.removeGroupCancelPushBtn = self.removeGroupCancelPushButton
+        self.removeGroupCancelPushBtn: QPushButton = self.removeGroupCancelPushButton
         self.removeGroupCancelPushBtn.clicked.connect(self.closeDialog) # Signal
 
         self.populateRemoveGroupDialog()
@@ -59,7 +60,7 @@ class Group(DialogFrame):
             table = 'public.jakoryhma'
             limit = f"public.jakoryhma.ryhma_id = {groupId}"
         except Exception:
-            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','hippopotamus' )
+            self.alert('Virheellinen syöte', 'Tarkista antamasi tiedot', 'Jotain meni pieleen','Poisto epäonnistui' )
 
         databaseOperation1 = pgModule.DatabaseOperation()
         databaseOperation1.getAllRowsFromTable(self.connectionArguments, 'public.jakoryhma_liitokset')
@@ -85,8 +86,7 @@ class Group(DialogFrame):
                     )
             else:
                 # Update the page to show new data and clear 
-                success = SuccessfulOperationDialog()
-                success.exec()
+                msg.PopupMessages().successMessage('Poisto onnistui')
                 self.populateRemoveGroupDialog()
 
     def closeDialog(self):

@@ -8,10 +8,11 @@ import pgModule
 import prepareData
 import figures
 
-import dialogs.dialogueWindow as dialogueWindow
+import dialogs.messageModule as msg
 import dialogs.editDialogues.MemberShare as editMemberShare
 import dialogs.removeDialogues.MemberShare as removeMemberShare
 import dialogs.graphDialog as graphDialog
+import dialogs.dialogueWindow as dialogueWindow
 
 class Ui_shareMemberTabWidget(QScrollArea, QWidget):
     def __init__(self):
@@ -317,6 +318,7 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
                 )
         else:
             # Update the table
+            msg.PopupMessages().successMessage('Tallennus onnistui')
             self.populateSharePage()
             self.shareSavePushBtn.setEnabled(False)
    
@@ -567,6 +569,11 @@ class Ui_shareMemberTabWidget(QScrollArea, QWidget):
                 'Sankey chart failed to load on share page',
                 str(e)
             )
+
+
+    def openSettingsDialog(self):
+        dialog = dialogueWindow.SaveDBSettingsDialog()
+        dialog.exec()
 
     def openGraphDialog(self):
         dialog = graphDialog.GraphDialog()

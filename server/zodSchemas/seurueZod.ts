@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 const seurueZod = z.object({
     // Integer ID for the seurue, now made optional
@@ -11,7 +11,9 @@ const seurueZod = z.object({
     seurueen_nimi: z.string().max(50),
 
     // Integer ID for the member associated with this seurue
-    jasen_id: z.number().int()
+    jasen_id: z.number().int(),
+
+    seurue_tyyppi_id: z.number().int(),
 });
 
 export default seurueZod;
