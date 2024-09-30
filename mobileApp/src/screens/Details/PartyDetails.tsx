@@ -485,7 +485,6 @@ function PartyMembers({ partyId, theme, navigation }: PartyMemberProps) {
                                             clear: false,
                                             data: {
                                                 seurue_id: partyId,
-                                                ryhma_id: null,
                                                 jasen_id: undefined,
                                                 osuus: 100,
                                                 liittyi: undefined,
