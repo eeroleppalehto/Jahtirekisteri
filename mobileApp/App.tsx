@@ -6,7 +6,6 @@ import { en, registerTranslation } from "react-native-paper-dates";
 import { AuthProvider } from "./src/context/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import axios from "axios";
-import { BASE_URL } from "./src/baseUrl";
 
 // Register your translation with the react-native-paper-dates library
 registerTranslation("en", en);
@@ -75,6 +74,9 @@ const theme = {
         backdrop: "rgba(47, 49, 38, 0.4)",
     },
 };
+
+// This IP address is a loops back to host machine for local server access
+const BASE_URL = "http://10.0.2.2:3000";
 
 // axios.defaults.baseURL = "https://dev.jahtirekisteri.fi";
 axios.defaults.baseURL = BASE_URL;
