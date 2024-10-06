@@ -6,7 +6,6 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { MaterialBottomTabScreenProps } from "@react-navigation/material-bottom-tabs";
 import type { MaterialTopTabScreenProps } from "@react-navigation/material-top-tabs";
 import type { DrawerScreenProps } from "@react-navigation/drawer";
-import { FormTypes, ShotFormType, UsageForm } from "./types";
 
 /* 
     This file describes the types of the navigations that the app has and
@@ -27,21 +26,27 @@ export type DrawerParamList = {
 export type MyDrawerScreenProps<T extends keyof DrawerParamList> =
     DrawerScreenProps<DrawerParamList, T>;
 
+type FormRouteType = {
+    method: string;
+    id: number | undefined;
+    isError: boolean;
+    isSuccess: boolean;
+    clearFields: boolean;
+    errorMessage: string;
+};
+
 // Root types
 export type RootStackParamList = {
     BottomNavigation: NavigatorScreenParams<BottomNavParamList>;
     Details: { type: string; data: any; title: string };
     Login: undefined;
-    Forms: {
-        type: string;
-        data?: FormTypes;
-        shot?: ShotFormType;
-        usage?: UsageForm[];
-        clear?: boolean;
-        isError?: boolean;
-        isSuccess?: boolean;
-        errorMessage?: string;
-    };
+    MemberForm: FormRouteType;
+    GroupForm: FormRouteType;
+    PartyForm: FormRouteType;
+    ShotForm: FormRouteType;
+    MembershipForm: FormRouteType;
+    MemberShareForm: FormRouteType;
+    GroupShareForm: FormRouteType;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
