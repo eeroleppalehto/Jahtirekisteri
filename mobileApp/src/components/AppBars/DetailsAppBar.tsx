@@ -17,6 +17,7 @@ export default function DetailsAppBar({
         <Appbar.Header>
             <Appbar.BackAction onPress={navigation.goBack} />
             <Appbar.Content title={title} />
+            <Appbar.Action icon="account-edit" onPress={() => console.log("Edit")} />
         </Appbar.Header>
     );
 }
