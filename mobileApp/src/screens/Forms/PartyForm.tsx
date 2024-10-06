@@ -3,76 +3,78 @@ import {
     useTheme,
     TouchableRipple,
     TextInput,
-    Button,
     Portal,
 } from "react-native-paper";
 import { useState, useEffect, useRef } from "react";
 import { View } from "react-native";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { MaintenanceTabScreenProps } from "../../NavigationTypes";
 import { RootStackScreenProps } from "../../NavigationTypes";
 import { PartyTypesRadioGroup } from "../../components/RadioGroups/PartyTypesRadioGroup";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ShooterRadioGroup } from "../../components/RadioGroups/ShooterRadioGroup";
 import { BottomSheetPicker } from "../../components/BottomSheetPicker";
-import { PartyFormType, PartyType } from "../../types";
+import { PartyType } from "../../types";
 import { ErrorModal } from "../../components/ErrorModal";
 import { SuccessSnackbar } from "../../components/SuccessSnackbar";
+import { usePartyFormStore } from "../../stores/formStore";
 
 type Shooter = {
     jasen_id: number;
     kokonimi: string;
 };
 
-type navType = MaintenanceTabScreenProps<"Seurueet">["navigation"];
-
-type Props = RootStackScreenProps<"Forms">;
+type Props = RootStackScreenProps<"PartyForm">;
 
 export function PartyForm({ route, navigation }: Props) {
     const [shooter, setShooter] = useState<Shooter | undefined>(undefined);
 
+    const { method, isError, isSuccess, clearFields, errorMessage } =
+        route.params;
+
+    // Load form data from the store
+    const {
+        partyName,
+        partyLeaderId,
+        partyTypeId,
+        updatePartyName,
+        updatePartyLeader,
+        updatePartyType,
+        clearForm,
+    } = usePartyFormStore((state) => ({
+        partyName: state.seurueen_nimi,
+        partyLeaderId: state.jasen_id,
+        partyTypeId: state.seurue_tyyppi_id,
+        updatePartyName: state.updatePartyName,
+        updatePartyLeader: state.updatePartyLeader,
+        updatePartyType: state.updatePartyType,
+        clearForm: state.clearForm,
+    }));
+
     const bottomSheetRef = useRef<BottomSheet>(null);
 
     useEffect(() => {
-        if (route.params?.clear !== false) {
-            navigation.setParams({
-                data: {
-                    seurueen_nimi: "",
-                    seura_id: 1,
-                    seurue_tyyppi_id: undefined,
-                    jasen_id: undefined,
-                },
-            });
-            navigation.setParams({ clear: false });
+        if (method === "POST") {
+            clearForm();
         }
-    }, [route.params?.clear]);
+    }, []);
 
-    const { data, isError, isSuccess, errorMessage } = route.params as {
-        data: PartyFormType;
-        isError: boolean;
-        isSuccess: boolean;
-        errorMessage?: string;
-    };
+    useEffect(() => {
+        if (clearFields) {
+            setShooter(undefined);
+            navigation.setParams({
+                clearFields: false,
+            });
+        }
+    }, [clearFields]);
 
     const handleShooterChange = (shooter: Shooter) => {
-        // setShooterId(shooter.jasen_id);
         setShooter(shooter);
-        navigation.setParams({
-            data: {
-                ...data,
-                jasen_id: shooter.jasen_id,
-            },
-        });
+        updatePartyLeader(shooter.jasen_id);
         bottomSheetRef.current?.close();
     };
 
     const handlePartyTypeChange = (partyType: PartyType) => {
-        navigation.setParams({
-            data: {
-                ...data,
-                seurue_tyyppi_id: partyType.seurue_tyyppi_id,
-            },
-        });
+        updatePartyType(partyType.seurue_tyyppi_id);
     };
 
     const ShooterContent = (shooter: Shooter | undefined) => {
@@ -145,16 +147,9 @@ export function PartyForm({ route, navigation }: Props) {
                         borderRadius: 24,
                         borderColor: theme.colors.surfaceVariant,
                     }}
-                    value={data ? data.seurueen_nimi : ""}
+                    value={partyName}
                     placeholder="Lisää nimi"
-                    onChangeText={(text) =>
-                        navigation.setParams({
-                            data: {
-                                ...data,
-                                seurueen_nimi: text,
-                            },
-                        })
-                    }
+                    onChangeText={(text) => updatePartyName(text)}
                 />
                 <View style={{ paddingHorizontal: 16 }}>
                     <View
@@ -180,7 +175,7 @@ export function PartyForm({ route, navigation }: Props) {
                         </Text>
                     </View>
                     <PartyTypesRadioGroup
-                        partyTypeId={data ? data.seurue_tyyppi_id : undefined}
+                        partyTypeId={partyTypeId}
                         onValueChange={handlePartyTypeChange}
                     />
                 </View>
@@ -227,7 +222,7 @@ export function PartyForm({ route, navigation }: Props) {
             </View>
             <BottomSheetPicker ref={bottomSheetRef}>
                 <ShooterRadioGroup
-                    shooterId={data ? data.jasen_id : undefined}
+                    shooterId={partyLeaderId}
                     onValueChange={handleShooterChange}
                 />
             </BottomSheetPicker>

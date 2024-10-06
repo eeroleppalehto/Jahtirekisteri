@@ -1,11 +1,5 @@
 import { View } from "react-native";
-import {
-    Text,
-    Portal,
-    useTheme,
-    TouchableRipple,
-    Button,
-} from "react-native-paper";
+import { Text, Portal, useTheme, TouchableRipple } from "react-native-paper";
 import DatePicker from "../../components/DatePicker";
 import { ScrollView } from "react-native-gesture-handler";
 import { useState, useRef, useMemo, useEffect } from "react";
@@ -14,19 +8,19 @@ import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { BottomSheetPicker } from "../../components/BottomSheetPicker";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { RootStackScreenProps } from "../../NavigationTypes";
-import { MemberShareFormType } from "../../types";
 import { PartyRadioGroup } from "../../components/RadioGroups/PartyRadioGroup";
 import { MembershipRadioGroup } from "../../components/RadioGroups/MembershipRadioGroup";
 import { ErrorScreen } from "../ErrorScreen";
 import { ErrorModal } from "../../components/ErrorModal";
 import { SuccessSnackbar } from "../../components/SuccessSnackbar";
+import { useMemberShareFromStore } from "../../stores/formStore";
 
 type Membership = {
     jasenyys_id: number;
     jasenen_nimi: string;
 };
 
-type Props = RootStackScreenProps<"Forms">;
+type Props = RootStackScreenProps<"MemberShareForm">;
 
 export function MemberShareForm({ route, navigation }: Props) {
     const [membership, setMembership] = useState<Membership | undefined>(
@@ -37,58 +31,29 @@ export function MemberShareForm({ route, navigation }: Props) {
 
     const [partyId, setPartyId] = useState<number | undefined>(undefined);
 
-    const { data, isSuccess, isError } = route.params as {
-        data: MemberShareFormType;
-        isSuccess: boolean;
-        isError: boolean;
-    };
-
-    useEffect(() => {
-        if (route.params?.clear !== false) {
-            navigation.setParams({
-                data: {
-                    ...data,
-                    paiva: undefined,
-                    osnimitys: undefined,
-                    jasenyys_id: undefined,
-                },
-            });
-            navigation.setParams({ clear: false });
-        }
-    }, [route.params?.clear]);
+    const memberShareFormStore = useMemberShareFromStore();
 
     const bottomSheetRef = useRef<BottomSheet>(null);
     const theme = useTheme();
 
-    const parseWeight = (data: MemberShareFormType | undefined) => {
-        if (!data) return undefined;
+    const { method, isError, isSuccess, clearFields, errorMessage } =
+        route.params as {
+            method: string;
+            isError: boolean;
+            isSuccess: boolean;
+            clearFields: boolean;
+            errorMessage: string;
+        };
 
-        if (!data.maara) return undefined;
-
-        return data.maara;
-    };
-
-    const initWeight = useMemo(() => parseWeight(data), []);
-
-    if (!data) {
-        return (
-            <ErrorScreen
-                error={new Error("Virhe navigoinnissa. Yritä uudelleen.s")}
-                reload={() => {}}
-            />
-        );
-    }
-
-    if (!initWeight) {
-        return (
-            <ErrorScreen
-                error={new Error("Virhe navigoinnissa. Yritä uudelleen.")}
-                reload={() => {}}
-            />
-        );
-    }
-
-    console.log(data);
+    useEffect(() => {
+        if (clearFields) {
+            setMembership(undefined);
+            setPartyId(undefined);
+            navigation.setParams({
+                clearFields: false,
+            });
+        }
+    }, [clearFields]);
 
     const DateContent = (dateString: string | undefined) => {
         if (dateString) {
@@ -98,11 +63,6 @@ export function MemberShareForm({ route, navigation }: Props) {
                         name="close"
                         size={24}
                         color={theme.colors.primary}
-                        // onPress={() => {
-                        //     setShooterId(undefined);
-                        //     setShooterLabel(undefined);
-                        //     setShooter(undefined);
-                        // }}
                     />
                     <Text variant="bodyLarge">
                         {new Date(dateString).toLocaleString("fi-FI", {
@@ -154,78 +114,25 @@ export function MemberShareForm({ route, navigation }: Props) {
     };
 
     const handleMembershipChange = (value: Membership) => {
-        navigation.setParams({
-            data: {
-                ...data,
-                jasenyys_id: value.jasenyys_id,
-            },
-        });
+        memberShareFormStore.updateMemberId(value.jasenyys_id);
         setMembership(value);
-    };
-
-    const handlePortionChange = (value: string) => {
-        const portionMap = new Map<string, number>([
-            ["Koko", 1],
-            ["Puolikas", 0.5],
-            ["Neljännes", 0.25],
-        ]);
-
-        const portionNumber = portionMap.get(value) ?? 0;
-
-        const weight = initWeight * portionNumber;
-
-        navigation.setParams({
-            data: {
-                ...data,
-                osnimitys: value,
-                maara: weight,
-            },
-        });
     };
 
     const handleDateChange = (date: Date | undefined) => {
         if (!date) return;
-        navigation.setParams({
-            data: {
-                ...data,
-                paiva: date.toISOString(),
-            },
-        });
+        memberShareFormStore.updateShareDate(date.toISOString());
     };
 
     const handlePartyChange = (value: number | undefined) => {
         setPartyId(value);
         setMembership(undefined);
-        navigation.setParams({
-            data: {
-                ...data,
-                jasenyys_id: undefined,
-            },
-        });
+        memberShareFormStore.updateMemberId(undefined);
     };
 
-    const parseMembership = (data: MemberShareFormType | undefined) => {
-        if (!data) return undefined;
+    const parseDate = (dateString: string | undefined) => {
+        if (!dateString) return undefined;
 
-        if (!data.jasenyys_id) return undefined;
-
-        return data.jasenyys_id;
-    };
-
-    const parseDate = (data: MemberShareFormType | undefined) => {
-        if (!data) return undefined;
-
-        if (!data.paiva) return undefined;
-
-        return new Date(data.paiva);
-    };
-
-    const parsePortion = (data: MemberShareFormType | undefined) => {
-        if (!data) return undefined;
-
-        if (!data.osnimitys) return undefined;
-
-        return data.osnimitys;
+        return new Date(dateString);
     };
 
     return (
@@ -245,7 +152,7 @@ export function MemberShareForm({ route, navigation }: Props) {
                         }
                     />
                     <DatePicker
-                        initDate={parseDate(data)}
+                        initDate={parseDate(memberShareFormStore.paiva)}
                         open={calendarOpen}
                         setOpen={setCalendarOpen}
                         setDate={handleDateChange}
@@ -331,8 +238,8 @@ export function MemberShareForm({ route, navigation }: Props) {
                             </Text>
                         </View>
                         <PortionRadioGroup
-                            portionName={parsePortion(data)}
-                            onValueChange={handlePortionChange}
+                            portionName={memberShareFormStore.osnimitys}
+                            onValueChange={memberShareFormStore.updatePortion}
                         />
                     </View>
                     <View style={{ paddingHorizontal: 16, gap: 2 }}>
@@ -369,7 +276,7 @@ export function MemberShareForm({ route, navigation }: Props) {
                             }}
                             onPress={() => setCalendarOpen(true)}
                         >
-                            {DateContent(data ? data.paiva : undefined)}
+                            {DateContent(memberShareFormStore.paiva)}
                         </TouchableRipple>
                     </View>
                     {/* <Button
@@ -391,7 +298,7 @@ export function MemberShareForm({ route, navigation }: Props) {
             </ScrollView>
             <BottomSheetPicker ref={bottomSheetRef}>
                 <MembershipRadioGroup
-                    membershipId={parseMembership(data)}
+                    membershipId={memberShareFormStore.jasenyys_id}
                     onValueChange={handleMembershipChange}
                     partyId={partyId}
                 />

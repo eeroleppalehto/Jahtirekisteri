@@ -1,126 +1,111 @@
-import {
-    Text,
-    useTheme,
-    Divider,
-    Switch,
-    Checkbox,
-    Button,
-    Portal,
-} from "react-native-paper";
+import { Text, useTheme, Divider, Switch, Portal } from "react-native-paper";
 import { useState, useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { JasenForm } from "../../types";
-import { MaintenanceTabScreenProps } from "../../NavigationTypes";
 import { RootStackScreenProps } from "../../NavigationTypes";
-import CustomInput from "../../components/CustomInput";
 import IconTextInput from "../../components/IconTextInput";
 import { View } from "react-native";
 import { ErrorModal } from "../../components/ErrorModal";
 import { SuccessSnackbar } from "../../components/SuccessSnackbar";
-import { err } from "react-native-svg";
+import { useMemberFormStore } from "../../stores/formStore";
 
-type navType = MaintenanceTabScreenProps<"Jäsenet">["navigation"];
-
-type Props = RootStackScreenProps<"Forms">;
+type Props = RootStackScreenProps<"MemberForm">;
 
 type Status = "aktiivinen" | "poistunut";
 
 // Form for adding a new member
 export default function MemberForm({ route, navigation }: Props) {
-    // Initialize the form with empty values and set it to route params
-    useEffect(() => {
-        // TODO: Make this into a custom hook that returns the params
-        if (route.params?.clear !== false) {
-            navigation.setParams({
-                data: {
-                    etunimi: "",
-                    sukunimi: "",
-                    jakeluosoite: "",
-                    postinumero: "",
-                    postitoimipaikka: "",
-                    tila: "aktiivinen",
-                },
-            });
-            navigation.setParams({ clear: false });
-        }
-    }, [route.params?.clear]);
+    // Load form data from the store
+    const {
+        firstName,
+        lastName,
+        address,
+        zipCode,
+        city,
+        phoneNumber,
+        memberState,
+        updateFirstName,
+        updateLastName,
+        updateAddress,
+        updateZipCode,
+        updateCity,
+        updatePhoneNumber,
+        updateMemberState,
+        clearForm,
+    } = useMemberFormStore((state) => ({
+        firstName: state.etunimi,
+        lastName: state.sukunimi,
+        address: state.jakeluosoite,
+        zipCode: state.postinumero,
+        city: state.postitoimipaikka,
+        phoneNumber: state.puhelinnumero,
+        memberState: state.tila,
+        updateFirstName: state.updateFirstName,
+        updateLastName: state.updateLastName,
+        updateAddress: state.updateAddress,
+        updateZipCode: state.updateZipCode,
+        updateCity: state.updateCity,
+        updatePhoneNumber: state.updatePhoneNumber,
+        updateMemberState: state.updateMemberState,
+        clearForm: state.clearForm,
+    }));
 
-    const [status, setStatus] = useState<Status>("aktiivinen");
+    useEffect(() => {
+        if (route.params.method === "POST") {
+            clearForm();
+            updateMemberState("aktiivinen");
+            setActive(true);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (route.params.clearFields) {
+            setActive(true);
+            updateMemberState("aktiivinen");
+            navigation.setParams({
+                clearFields: false,
+            });
+        }
+    }, [route.params.clearFields]);
 
     const [active, setActive] = useState<boolean>(true);
 
     const theme = useTheme();
 
-    const { data, isError, isSuccess, errorMessage } = route.params as {
-        data: JasenForm;
+    const { method, isError, isSuccess, errorMessage } = route.params as {
+        method: string;
         isError: boolean;
         isSuccess: boolean;
-        errorMessage?: string;
+        errorMessage: string;
     };
 
     const onFirstNameChange = (text: string) => {
-        navigation.setParams({
-            data: {
-                ...data,
-                etunimi: text,
-            },
-        });
+        updateFirstName(text);
     };
 
     const onLastNameChange = (text: string) => {
-        navigation.setParams({
-            data: {
-                ...data,
-                sukunimi: text,
-            },
-        });
+        updateLastName(text);
     };
 
     const onAddressChange = (text: string) => {
-        navigation.setParams({
-            data: {
-                ...data,
-                jakeluosoite: text,
-            },
-        });
+        updateAddress(text);
     };
 
     const onZipChange = (text: string) => {
-        navigation.setParams({
-            data: {
-                ...data,
-                postinumero: text,
-            },
-        });
+        updateZipCode(text);
     };
 
     const onCityChange = (text: string) => {
-        navigation.setParams({
-            data: {
-                ...data,
-                postitoimipaikka: text,
-            },
-        });
+        updateCity(text);
     };
 
     const onPhoneChange = (text: string) => {
-        navigation.setParams({
-            data: {
-                ...data,
-                puhelinnumero: text,
-            },
-        });
+        updatePhoneNumber(text);
     };
 
     const onValueChange = (value: boolean) => {
         setActive(value);
-        navigation.setParams({
-            data: {
-                ...data,
-                tila: value ? "aktiivinen" : "poistunut",
-                //BUG: Doesn't change the value on the first click, but does on later clicks
-            },
-        });
+        updateMemberState(value ? "aktiivinen" : "poistunut");
+        console.log("Value: ", value);
     };
 
     return (
@@ -158,7 +143,7 @@ export default function MemberForm({ route, navigation }: Props) {
                     label="Etunimi"
                     required={true}
                     inputType="default"
-                    value={data ? data.etunimi : ""}
+                    value={firstName}
                     onChangeText={onFirstNameChange}
                 />
                 <IconTextInput
@@ -167,7 +152,7 @@ export default function MemberForm({ route, navigation }: Props) {
                     label="Sukunimi"
                     required={true}
                     inputType="default"
-                    value={data ? data.sukunimi : ""}
+                    value={lastName}
                     onChangeText={onLastNameChange}
                 />
                 <Divider />
@@ -187,7 +172,7 @@ export default function MemberForm({ route, navigation }: Props) {
                     label="Puhelinnumero"
                     required={false}
                     inputType="phone-pad"
-                    value={data ? data.puhelinnumero : ""}
+                    value={phoneNumber}
                     onChangeText={onPhoneChange}
                 />
                 <IconTextInput
@@ -196,7 +181,7 @@ export default function MemberForm({ route, navigation }: Props) {
                     label="Osoite"
                     required={false}
                     inputType="default"
-                    value={data ? data.jakeluosoite : ""}
+                    value={address}
                     onChangeText={onAddressChange}
                 />
                 <IconTextInput
@@ -205,7 +190,7 @@ export default function MemberForm({ route, navigation }: Props) {
                     label="Postitoimipaikka"
                     required={false}
                     inputType="default"
-                    value={data ? data.postitoimipaikka : ""}
+                    value={city}
                     onChangeText={onCityChange}
                 />
                 <IconTextInput
@@ -214,7 +199,7 @@ export default function MemberForm({ route, navigation }: Props) {
                     label="Postinumero"
                     required={false}
                     inputType="numeric"
-                    value={data ? data.postinumero : ""}
+                    value={zipCode}
                     onChangeText={onZipChange}
                 />
                 <Divider />

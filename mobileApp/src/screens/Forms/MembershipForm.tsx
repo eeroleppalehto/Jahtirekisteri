@@ -18,13 +18,14 @@ import DatePicker from "../../components/DatePicker";
 import Slider from "@react-native-community/slider";
 import { ErrorModal } from "../../components/ErrorModal";
 import { SuccessSnackbar } from "../../components/SuccessSnackbar";
+import { useMemberShipFormStore } from "../../stores/formStore";
 
 type Shooter = {
     jasen_id: number;
     kokonimi: string;
 };
 
-type Props = RootStackScreenProps<"Forms">;
+type Props = RootStackScreenProps<"MembershipForm">;
 
 export function MembershipForm({ route, navigation }: Props) {
     // Bottom sheet state and ref
@@ -36,39 +37,33 @@ export function MembershipForm({ route, navigation }: Props) {
     // Label states for displaying the selected value
     const [shooter, setShooter] = useState<Shooter | undefined>(undefined);
 
+    const membershipFormStore = useMemberShipFormStore();
+
     // Data from the route
-    const { data, isError, isSuccess } = route.params as {
-        data: MembershipFormType;
-        isError: boolean;
-        isSuccess: boolean;
-    };
+    const { method, isError, isSuccess, clearFields, errorMessage } =
+        route.params as {
+            method: string;
+            isError: boolean;
+            isSuccess: boolean;
+            clearFields: boolean;
+            errorMessage: string;
+        };
 
     useEffect(() => {
-        if (route.params?.clear !== false) {
+        if (clearFields) {
+            setShooter(undefined);
             navigation.setParams({
-                data: {
-                    ...data,
-                    jasen_id: undefined,
-                    osuus: 100,
-                    liittyi: undefined,
-                    poistui: undefined,
-                },
+                clearFields: false,
             });
-            navigation.setParams({ clear: false });
         }
-    }, [route.params?.clear]);
+    }, [clearFields]);
 
     const theme = useTheme();
 
     // Function for handling the change of the shooter
     const handleShooterChange = (shooter: Shooter) => {
         setShooter(shooter);
-        navigation.setParams({
-            data: {
-                ...data,
-                jasen_id: shooter.jasen_id,
-            },
-        });
+        membershipFormStore.updateMemberId(shooter.jasen_id);
         // bottomSheetRef.current?.close();
     };
 
@@ -137,29 +132,29 @@ export function MembershipForm({ route, navigation }: Props) {
 
     const handleDateChange = (date: Date | undefined) => {
         if (!date) return;
-        navigation.setParams({
-            data: {
-                ...data,
-                liittyi: date.toISOString(),
-            },
-        });
+        membershipFormStore.updateJoinDate(date.toISOString());
+        // navigation.setParams({
+        //     data: {
+        //         ...data,
+        //         liittyi: date.toISOString(),
+        //     },
+        // });
     };
 
     const handleSliderChange = (value: number) => {
-        navigation.setParams({
-            data: {
-                ...data,
-                osuus: value,
-            },
-        });
+        membershipFormStore.updateShare(value);
+        // navigation.setParams({
+        //     data: {
+        //         ...data,
+        //         osuus: value,
+        //     },
+        // });
     };
 
-    const parseDate = (data: MembershipFormType | undefined) => {
-        if (!data) return undefined;
+    const parseDate = (dateString: string | undefined) => {
+        if (!dateString) return undefined;
 
-        if (!data.liittyi) return undefined;
-
-        return new Date(data.liittyi);
+        return new Date(dateString);
     };
 
     return (
@@ -179,7 +174,7 @@ export function MembershipForm({ route, navigation }: Props) {
                         }
                     />
                     <DatePicker
-                        initDate={parseDate(data)}
+                        initDate={parseDate(membershipFormStore.liittyi)}
                         open={calendarOpen}
                         setOpen={setCalendarOpen}
                         setDate={handleDateChange}
@@ -262,7 +257,7 @@ export function MembershipForm({ route, navigation }: Props) {
                                 variant="titleMedium"
                                 style={{ color: theme.colors.secondary }}
                             >
-                                {data.osuus}
+                                {membershipFormStore.osuus}
                             </Text>
                         </View>
                         <Slider
@@ -271,7 +266,7 @@ export function MembershipForm({ route, navigation }: Props) {
                             maximumValue={100}
                             minimumTrackTintColor={theme.colors.primary}
                             thumbTintColor={theme.colors.primary}
-                            value={data ? data.osuus : 100}
+                            value={membershipFormStore.osuus}
                             onValueChange={handleSliderChange}
                             step={50}
                         />
@@ -316,14 +311,14 @@ export function MembershipForm({ route, navigation }: Props) {
                             }}
                             onPress={() => setCalendarOpen(true)}
                         >
-                            {DateContent(data ? data.liittyi : undefined)}
+                            {DateContent(membershipFormStore.liittyi)}
                         </TouchableRipple>
                     </View>
                 </View>
             </ScrollView>
             <BottomSheetPicker ref={bottomSheetRef}>
                 <ShooterRadioGroup
-                    shooterId={data ? data.jasen_id : undefined}
+                    shooterId={membershipFormStore.jasen_id}
                     onValueChange={handleShooterChange}
                 />
             </BottomSheetPicker>

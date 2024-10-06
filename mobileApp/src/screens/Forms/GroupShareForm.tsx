@@ -1,11 +1,5 @@
 import { View } from "react-native";
-import {
-    Text,
-    Portal,
-    useTheme,
-    TouchableRipple,
-    Button,
-} from "react-native-paper";
+import { Text, Portal, useTheme, TouchableRipple } from "react-native-paper";
 import DatePicker from "../../components/DatePicker";
 import { ScrollView } from "react-native-gesture-handler";
 import { useState, useRef, useMemo, useEffect } from "react";
@@ -14,19 +8,19 @@ import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { BottomSheetPicker } from "../../components/BottomSheetPicker";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { RootStackScreenProps } from "../../NavigationTypes";
-import { GroupShareFormType } from "../../types";
 import { PartyRadioGroup } from "../../components/RadioGroups/PartyRadioGroup";
 import { GroupRadioGroup } from "../../components/RadioGroups/GroupRadioGroup";
 import { ErrorScreen } from "../ErrorScreen";
 import { ErrorModal } from "../../components/ErrorModal";
 import { SuccessSnackbar } from "../../components/SuccessSnackbar";
+import { useGroupShareFormStore } from "../../stores/formStore";
 
 type Group = {
     ryhma_id: number;
     ryhman_nimi: string;
 };
 
-type Props = RootStackScreenProps<"Forms">;
+type Props = RootStackScreenProps<"GroupShareForm">;
 
 export function GroupShareForm({ route, navigation }: Props) {
     const theme = useTheme();
@@ -35,53 +29,26 @@ export function GroupShareForm({ route, navigation }: Props) {
     const [partyId, setPartyId] = useState<number | undefined>(undefined);
     const bottomSheetRef = useRef<BottomSheet>(null);
 
-    const { data, isError, isSuccess } = route.params as {
-        data: GroupShareFormType;
-        isError: boolean;
-        isSuccess: boolean;
-    };
+    const groupShareFormStore = useGroupShareFormStore();
+
+    const { method, isError, isSuccess, clearFields, errorMessage } =
+        route.params as {
+            method: string;
+            isError: boolean;
+            isSuccess: boolean;
+            clearFields: boolean;
+            errorMessage: string;
+        };
 
     useEffect(() => {
-        if (route.params?.clear !== false) {
+        if (clearFields) {
+            setPartyId(undefined);
+            setGroup(undefined);
             navigation.setParams({
-                data: {
-                    ...data,
-                    osnimitys: undefined,
-                    paiva: undefined,
-                    ryhma_id: undefined,
-                },
+                clearFields: false,
             });
-            navigation.setParams({ clear: false });
         }
-    }, [route.params?.clear]);
-
-    const parseWeight = (data: GroupShareFormType | undefined) => {
-        if (!data) return undefined;
-
-        if (!data.maara) return undefined;
-
-        return data.maara;
-    };
-
-    const initWeight = useMemo(() => parseWeight(data), []);
-
-    if (!data) {
-        return (
-            <ErrorScreen
-                error={new Error("Virhe navigoinnissa. Yritä uudelleen.")}
-                reload={() => {}}
-            />
-        );
-    }
-
-    if (!initWeight) {
-        return (
-            <ErrorScreen
-                error={new Error("Virhe navigoinnissa. Yritä uudelleen.")}
-                reload={() => {}}
-            />
-        );
-    }
+    }, [clearFields]);
 
     const GroupContent = (group: Group | undefined) => {
         if (group) {
@@ -148,59 +115,19 @@ export function GroupShareForm({ route, navigation }: Props) {
 
     const handleDateChange = (date: Date | undefined) => {
         if (!date) return;
-        navigation.setParams({
-            data: {
-                ...data,
-                paiva: date.toISOString(),
-            },
-        });
-    };
-
-    const handlePortionChange = (value: string) => {
-        const portionMap = new Map<string, number>([
-            ["Koko", 1],
-            ["Puolikas", 0.5],
-            ["Neljännes", 0.25],
-        ]);
-
-        const portionNumber = portionMap.get(value) ?? 0;
-
-        const weight = initWeight * portionNumber;
-
-        navigation.setParams({
-            data: {
-                ...data,
-                osnimitys: value,
-                maara: weight,
-            },
-        });
+        groupShareFormStore.updateShareDate(date.toISOString());
     };
 
     const handlePartyChange = (value: number | undefined) => {
         setPartyId(value);
         setGroup(undefined);
-        navigation.setParams({
-            data: {
-                ...data,
-                ryhma_id: undefined,
-            },
-        });
+        groupShareFormStore.updateGroupId(undefined);
     };
 
-    const parseDate = (data: GroupShareFormType | undefined) => {
-        if (!data) return undefined;
+    const parseDate = (dateString: string | undefined) => {
+        if (!dateString) return undefined;
 
-        if (!data.paiva) return undefined;
-
-        return new Date(data.paiva);
-    };
-
-    const parsePortion = (data: GroupShareFormType | undefined) => {
-        if (!data) return undefined;
-
-        if (!data.osnimitys) return undefined;
-
-        return data.osnimitys;
+        return new Date(dateString);
     };
 
     return (
@@ -220,7 +147,7 @@ export function GroupShareForm({ route, navigation }: Props) {
                         }
                     />
                     <DatePicker
-                        initDate={parseDate(data)}
+                        initDate={parseDate(groupShareFormStore.paiva)}
                         open={calendarOpen}
                         setOpen={setCalendarOpen}
                         setDate={handleDateChange}
@@ -306,8 +233,8 @@ export function GroupShareForm({ route, navigation }: Props) {
                             </Text>
                         </View>
                         <PortionRadioGroup
-                            portionName={parsePortion(data)}
-                            onValueChange={handlePortionChange}
+                            portionName={groupShareFormStore.osnimitys}
+                            onValueChange={groupShareFormStore.updatePortion}
                         />
                     </View>
                     <View style={{ paddingHorizontal: 16, gap: 2 }}>
@@ -344,7 +271,7 @@ export function GroupShareForm({ route, navigation }: Props) {
                             }}
                             onPress={() => setCalendarOpen(true)}
                         >
-                            {DateContent(data ? data.paiva : undefined)}
+                            {DateContent(groupShareFormStore.paiva)}
                         </TouchableRipple>
                     </View>
                     {/* <Button onPress={() => console.log(data)}>Test</Button> */}
@@ -355,12 +282,7 @@ export function GroupShareForm({ route, navigation }: Props) {
                     groupId={group?.ryhma_id}
                     onValueChange={(value) => {
                         setGroup(value);
-                        navigation.setParams({
-                            data: {
-                                ...data,
-                                ryhma_id: value.ryhma_id,
-                            },
-                        });
+                        groupShareFormStore.updateGroupId(value.ryhma_id);
                     }}
                     partyId={partyId}
                 />

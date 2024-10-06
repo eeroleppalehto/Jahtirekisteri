@@ -1,13 +1,4 @@
-import {
-    Portal,
-    Text,
-    useTheme,
-    Divider,
-    Switch,
-    Snackbar,
-    Modal,
-    Button,
-} from "react-native-paper";
+import { Portal, Text, useTheme, Divider, Switch } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -17,7 +8,6 @@ import IconTextInput from "../../components/IconTextInput";
 import DatePicker from "../../components/DatePicker";
 import Slider from "@react-native-community/slider";
 import { RootStackScreenProps } from "../../NavigationTypes";
-import { UsageForm, ShotFormType } from "../../types";
 import { BottomSheetPicker } from "../../components/BottomSheetPicker";
 import { AgeRadioGroup } from "../../components/RadioGroups/AgeRadioGroup";
 import { AnimalRadioGroup } from "../../components/RadioGroups/AnimalRadioGroup";
@@ -27,8 +17,9 @@ import { UsageRadioGroup } from "../../components/RadioGroups/UsageRadioGroup";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { ErrorModal } from "../../components/ErrorModal";
 import { SuccessSnackbar } from "../../components/SuccessSnackbar";
+import { useShotFormStore } from "../../stores/formStore";
 
-type Props = RootStackScreenProps<"Forms">;
+type Props = RootStackScreenProps<"ShotForm">;
 
 type Shooter = {
     jasen_id: number;
@@ -74,42 +65,38 @@ function ShotForm({ route, navigation }: Props) {
         string | undefined
     >(undefined);
 
+    const shotFormStore = useShotFormStore();
+
     const theme = useTheme();
 
-    // Initialize the form with empty values and set it to route params
+    // Read the params from route
+    const { method, isError, clearFields, isSuccess, errorMessage } =
+        route.params as {
+            method: string;
+            isError: boolean;
+            isSuccess: boolean;
+            clearFields: boolean;
+            errorMessage: string;
+        };
+
     useEffect(() => {
-        // TODO: Make this into a custom hook that returns the params
-        // TODO: See if it's possible check params already has shot and usage
-        // and if it does, skip this part to keep the old state
-        if (route.params?.clear === true) {
+        if (route.params?.method === "POST") {
+            shotFormStore.clearForm();
+        }
+    }, []);
+
+    useEffect(() => {
+        // Clear lable states after a succesful save
+        if (clearFields) {
             setShooterLabel(undefined);
             setFirstUsageLabel(undefined);
             setSecondUsageLabel(undefined);
+            setSecondUsageEnabled(false);
             navigation.setParams({
-                shot: {
-                    jasen_id: undefined,
-                    kaatopaiva: undefined,
-                    ruhopaino: 0,
-                    paikka_teksti: "",
-                    elaimen_nimi: undefined,
-                    sukupuoli: undefined,
-                    ikaluokka: undefined,
-                    lisatieto: "",
-                },
-                usage: [
-                    {
-                        kasittelyid: undefined,
-                        kasittely_maara: 100,
-                    },
-                    {
-                        kasittelyid: undefined,
-                        kasittely_maara: 0,
-                    },
-                ],
+                clearFields: false,
             });
-            navigation.setParams({ clear: false });
         }
-    }, [route.params?.clear]);
+    }, [clearFields]);
 
     const handleBottomSheetOpen = (
         content: BottomSheetContent,
@@ -120,110 +107,73 @@ function ShotForm({ route, navigation }: Props) {
         setBottomSheetContent(content);
     };
 
-    // Read the params from route
-    const { shot, usage, isError, isSuccess } = route.params as {
-        shot: ShotFormType;
-        usage: UsageForm[];
-        isError: boolean;
-        isSuccess: boolean;
-    };
-
     // Callback functions for updating the params
     const handleShooterChange = (shooter: Shooter) => {
         setShooterLabel(shooter.kokonimi);
-        navigation.setParams({
-            shot: { ...shot, jasen_id: shooter.jasen_id },
-        });
+        shotFormStore.updateShooterId(shooter.jasen_id);
     };
 
     const handleShotDateChange = (date: Date | undefined) => {
         if (date === undefined) return;
-        navigation.setParams({
-            shot: { ...shot, kaatopaiva: date.toISOString() },
-        });
+        shotFormStore.updateShotDate(date.toISOString());
     };
 
     const handleShotLocationChange = (location: string) => {
-        navigation.setParams({
-            shot: { ...shot, paikka_teksti: location },
-        });
+        shotFormStore.updateLocationText(location);
     };
 
     const handleAnimalChange = (animal: string) => {
-        navigation.setParams({
-            shot: { ...shot, elaimen_nimi: animal },
-        });
+        shotFormStore.updateAnimal(animal);
     };
 
     const handleAgeChange = (age: string) => {
-        navigation.setParams({
-            shot: { ...shot, ikaluokka: age },
-        });
+        shotFormStore.updateAgeGroup(age);
     };
 
     const handleGenderChange = (gender: string) => {
-        navigation.setParams({
-            shot: { ...shot, sukupuoli: gender },
-        });
+        shotFormStore.updateGender(gender);
     };
 
     const handleWeightChange = (weight: string) => {
-        navigation.setParams({
-            shot: { ...shot, ruhopaino: Number(weight) },
-        });
+        shotFormStore.updateWeight(Number(weight));
     };
 
     const handleInfoChange = (info: string) => {
-        navigation.setParams({
-            shot: { ...shot, lisatieto: info },
-        });
+        shotFormStore.updateInfo(info);
     };
 
     const handleFirstUsageChange = (obj: Usage | undefined) => {
         if (obj === undefined) return;
         setFirstUsageLabel(obj.kasittely_teksti);
-        navigation.setParams({
-            usage: [{ ...usage[0], kasittelyid: obj.kasittelyid }, usage[1]],
-        });
+        shotFormStore.updateFirstUsage(obj.kasittelyid);
     };
 
     const handleSecondUsageChange = (obj: Usage | undefined) => {
         if (obj === undefined) return;
         setSecondUsageLabel(obj.kasittely_teksti);
-        navigation.setParams({
-            usage: [usage[0], { ...usage[1], kasittelyid: obj.kasittelyid }],
-        });
+        shotFormStore.updateSecondUsage(obj.kasittelyid);
     };
 
     const handleFirstSliderChange = (value: number) => {
-        navigation.setParams({
-            usage: [
-                { ...usage[0], kasittely_maara: value },
-                { ...usage[1], kasittely_maara: 100 - value },
-            ],
-        });
+        shotFormStore.updateFirstUsageAmount(value);
     };
 
     const handleSecondSliderChange = (value: number) => {
-        navigation.setParams({
-            usage: [
-                { ...usage[0], kasittely_maara: 100 - value },
-                { ...usage[1], kasittely_maara: value },
-            ],
-        });
+        shotFormStore.updateSecondUsageAmount(value);
     };
 
     const handleSecondUsageToggle = (value: boolean) => {
         setSecondUsageEnabled(value);
         if (value === false) {
             setSecondUsageLabel(undefined);
-            navigation.setParams({
-                usage: [
-                    { ...usage[0], kasittely_maara: 100 },
-                    { kasittelyid: undefined, kasittely_maara: 0 },
-                ],
-            });
+            shotFormStore.resetSecondUsage();
         }
+    };
+
+    const parseDate = (dateString: string | undefined) => {
+        if (!dateString) return undefined;
+
+        return new Date(dateString);
     };
 
     const BottomSheetContent = () => {
@@ -231,42 +181,42 @@ function ShotForm({ route, navigation }: Props) {
             case "shooter":
                 return (
                     <ShooterRadioGroup
-                        shooterId={shot ? shot.jasen_id : undefined}
+                        shooterId={shotFormStore.shot.jasen_id}
                         onValueChange={handleShooterChange}
                     />
                 );
             case "age":
                 return (
                     <AgeRadioGroup
-                        age={shot ? shot.ikaluokka : undefined}
+                        age={shotFormStore.shot.ikaluokka}
                         onValueChange={handleAgeChange}
                     />
                 );
             case "animal":
                 return (
                     <AnimalRadioGroup
-                        animal={shot ? shot.elaimen_nimi : undefined}
+                        animal={shotFormStore.shot.elaimen_nimi}
                         onValueChange={handleAnimalChange}
                     />
                 );
             case "gender":
                 return (
                     <GenderRadioGroup
-                        gender={shot ? shot.sukupuoli : undefined}
+                        gender={shotFormStore.shot.sukupuoli}
                         onValueChange={handleGenderChange}
                     />
                 );
             case "usage1":
                 return (
                     <UsageRadioGroup
-                        usageForm={usage ? usage[0] : undefined}
+                        usageForm={shotFormStore.usages[0]}
                         onValueChange={handleFirstUsageChange}
                     />
                 );
             case "usage2":
                 return (
                     <UsageRadioGroup
-                        usageForm={usage ? usage[1] : undefined}
+                        usageForm={shotFormStore.usages[1]}
                         onValueChange={handleSecondUsageChange}
                     />
                 );
@@ -287,13 +237,7 @@ function ShotForm({ route, navigation }: Props) {
                     onDismiss={() => navigation.setParams({ isSuccess: false })}
                 />
                 <DatePicker
-                    initDate={
-                        shot
-                            ? shot.kaatopaiva
-                                ? new Date(shot.kaatopaiva)
-                                : undefined
-                            : undefined
-                    }
+                    initDate={parseDate(shotFormStore.shot.kaatopaiva)}
                     setDate={handleShotDateChange}
                     open={calendarOpen}
                     setOpen={setCalendarOpen}
@@ -328,12 +272,10 @@ function ShotForm({ route, navigation }: Props) {
                         title="Kaatopäivä"
                         required={true}
                         valueState={
-                            shot
-                                ? shot.kaatopaiva
-                                    ? new Date(
-                                          shot.kaatopaiva
-                                      ).toLocaleDateString("fi-FI") // TODO: This stinks!!!
-                                    : undefined
+                            shotFormStore.shot.kaatopaiva
+                                ? new Date(
+                                      shotFormStore.shot.kaatopaiva
+                                  ).toLocaleDateString("fi-FI")
                                 : undefined
                         }
                         placeholder="Ei valittua päivää"
@@ -346,7 +288,7 @@ function ShotForm({ route, navigation }: Props) {
                         label="Paikka"
                         required={true}
                         inputType="default"
-                        value={shot ? shot.paikka_teksti : undefined}
+                        value={shotFormStore.shot.paikka_teksti}
                         onChangeText={handleShotLocationChange}
                     />
                     <Divider />
@@ -363,7 +305,7 @@ function ShotForm({ route, navigation }: Props) {
                     <CustomInput
                         iconSet="NoIcon"
                         title="Eläinlaji"
-                        valueState={shot ? shot.elaimen_nimi : undefined}
+                        valueState={shotFormStore.shot.elaimen_nimi}
                         required={true}
                         iconButtonName="plus"
                         onPress={() => handleBottomSheetOpen("animal", 0)}
@@ -371,7 +313,7 @@ function ShotForm({ route, navigation }: Props) {
                     <CustomInput
                         iconSet="NoIcon"
                         title="Ikäluokka"
-                        valueState={shot ? shot.ikaluokka : undefined}
+                        valueState={shotFormStore.shot.ikaluokka}
                         required={true}
                         iconButtonName="plus"
                         onPress={() => handleBottomSheetOpen("age", 0)}
@@ -379,7 +321,7 @@ function ShotForm({ route, navigation }: Props) {
                     <CustomInput
                         iconSet="NoIcon"
                         title="Sukupuoli"
-                        valueState={shot ? shot.sukupuoli : undefined}
+                        valueState={shotFormStore.shot.sukupuoli}
                         required={true}
                         iconButtonName="plus"
                         onPress={() => handleBottomSheetOpen("gender", 0)}
@@ -390,14 +332,7 @@ function ShotForm({ route, navigation }: Props) {
                         label="Ruhopaino"
                         required={true}
                         inputType="numeric"
-                        value={
-                            //TODO: This stinks!!!
-                            shot
-                                ? shot.ruhopaino
-                                    ? shot.ruhopaino.toString()
-                                    : ""
-                                : ""
-                        }
+                        value={shotFormStore.shot.ruhopaino?.toString()}
                         onChangeText={handleWeightChange}
                     />
                     <IconTextInput
@@ -406,7 +341,7 @@ function ShotForm({ route, navigation }: Props) {
                         label="Lisätietoja"
                         required={false}
                         inputType="default"
-                        value={shot ? shot.lisatieto : undefined}
+                        value={shotFormStore.shot.lisatieto}
                         onChangeText={handleInfoChange}
                         multiline={true}
                     />
@@ -435,7 +370,7 @@ function ShotForm({ route, navigation }: Props) {
                             Ensimmäisen käytön osuus
                         </Text>
                         <Text style={{ color: theme.colors.outline }}>
-                            {usage ? usage[0].kasittely_maara : 100}
+                            {shotFormStore.usages[0].kasittely_maara}
                         </Text>
                     </View>
                     <Slider
@@ -444,7 +379,7 @@ function ShotForm({ route, navigation }: Props) {
                         maximumValue={100}
                         minimumTrackTintColor={theme.colors.primary}
                         thumbTintColor={theme.colors.primary}
-                        value={usage ? usage[0].kasittely_maara : 100}
+                        value={shotFormStore.usages[0].kasittely_maara}
                         onValueChange={handleFirstSliderChange}
                         step={25}
                     />
@@ -489,7 +424,7 @@ function ShotForm({ route, navigation }: Props) {
                             Toisen käytön osuus
                         </Text>
                         <Text style={{ color: theme.colors.outline }}>
-                            {usage ? usage[1].kasittely_maara : 0}
+                            {shotFormStore.usages[1].kasittely_maara}
                         </Text>
                     </View>
                     <Slider
@@ -499,7 +434,7 @@ function ShotForm({ route, navigation }: Props) {
                         maximumValue={100}
                         minimumTrackTintColor={theme.colors.primary}
                         thumbTintColor={theme.colors.primary}
-                        value={usage ? usage[1].kasittely_maara : 0}
+                        value={shotFormStore.usages[1].kasittely_maara}
                         onValueChange={handleSecondSliderChange}
                         step={25}
                     />

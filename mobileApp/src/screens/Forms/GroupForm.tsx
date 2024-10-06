@@ -1,45 +1,50 @@
 import { Text, useTheme, TextInput, Portal } from "react-native-paper";
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { View } from "react-native";
-import { MaintenanceTabScreenProps } from "../../NavigationTypes";
 import { RootStackScreenProps } from "../../NavigationTypes";
-import { GroupFormType } from "../../types";
 import { PartyRadioGroup } from "../../components/RadioGroups/PartyRadioGroup";
 import { ErrorModal } from "../../components/ErrorModal";
 import { SuccessSnackbar } from "../../components/SuccessSnackbar";
+import { useGroupFormStore } from "../../stores/formStore";
 
-type navType = MaintenanceTabScreenProps<"Ryhmät">["navigation"];
-
-type Props = RootStackScreenProps<"Forms">;
+type Props = RootStackScreenProps<"GroupForm">;
 
 export function GroupForm({ route, navigation }: Props) {
-    useEffect(() => {
-        if (route.params?.clear !== false) {
-            // setShooterLabel(undefined);
-            navigation.setParams({
-                data: {
-                    seurue_id: undefined,
-                    ryhman_nimi: "",
-                },
-            });
-            navigation.setParams({ clear: false });
-        }
-    }, [route.params?.clear]);
+    // Load form data from the store
+    const { groupName, partyId, updateGroupName, updatePartyId, clearForm } =
+        useGroupFormStore((state) => ({
+            groupName: state.ryhman_nimi,
+            partyId: state.seurue_id,
+            updateGroupName: state.updateGroupName,
+            updatePartyId: state.updatePartyId,
+            clearForm: state.clearForm,
+        }));
 
-    const { data, isError, isSuccess, errorMessage } = route.params as {
-        data: GroupFormType;
-        isError: boolean;
-        isSuccess: boolean;
-        errorMessage?: string;
-    };
+    const { method, isError, isSuccess, clearFields, errorMessage } =
+        route.params as {
+            method: string;
+            isError: boolean;
+            isSuccess: boolean;
+            clearFields: boolean;
+            errorMessage?: string;
+        };
+
+    useEffect(() => {
+        if (route.params?.method === "POST") {
+            clearForm();
+        }
+    }, []);
+
+    useEffect(() => {
+        if (clearFields) {
+            navigation.setParams({
+                clearFields: false,
+            });
+        }
+    }, [clearFields]);
 
     const handlePartyChange = (value: number | undefined) => {
-        navigation.setParams({
-            data: {
-                ...data,
-                seurue_id: value,
-            },
-        });
+        updatePartyId(value);
     };
 
     const theme = useTheme();
@@ -81,14 +86,9 @@ export function GroupForm({ route, navigation }: Props) {
                 <TextInput
                     label="Ryhmän nimi"
                     mode="outlined"
-                    value={data ? data.ryhman_nimi : ""}
+                    value={groupName}
                     onChangeText={(text) => {
-                        navigation.setParams({
-                            data: {
-                                ...data,
-                                ryhman_nimi: text,
-                            },
-                        });
+                        updateGroupName(text);
                     }}
                     style={{ marginHorizontal: 16, paddingVertical: 4 }}
                     outlineStyle={{
@@ -121,7 +121,7 @@ export function GroupForm({ route, navigation }: Props) {
                         </Text>
                     </View>
                     <PartyRadioGroup
-                        partyId={data ? data.seurue_id : undefined}
+                        partyId={partyId}
                         onValueChange={handlePartyChange}
                         type="Ryhmä"
                     />
