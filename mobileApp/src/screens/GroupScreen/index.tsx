@@ -79,6 +79,8 @@ function GroupScreen({ navigation, route }: Props) {
             <FloatingNavigationButton
                 scrollValue={scrollValue}
                 type="Group"
+                navPath="GroupForm"
+                method="POST"
                 label="Lisää ryhmä"
             />
         </>

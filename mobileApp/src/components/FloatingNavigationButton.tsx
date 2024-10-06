@@ -11,10 +11,21 @@ import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../context/AuthProvider";
 import { WRITE_RIGHTS_SET } from "../utils/authenticationUtils";
 
+type NavPath =
+    | "MemberForm"
+    | "GroupForm"
+    | "PartyForm"
+    | "ShotForm"
+    | "MembershipForm"
+    | "MemberShareForm"
+    | "GroupShareForm";
+
 interface Props {
+    navPath: NavPath;
     scrollValue: number;
     label: string;
     type: string;
+    method: string;
     // onPress: () => void;
 }
 
@@ -28,7 +39,12 @@ interface Props {
  * @returns {*}
  */
 
-function FloatingNavigationButton({ scrollValue, type, label }: Props) {
+function FloatingNavigationButton({
+    navPath,
+    scrollValue,
+    method,
+    label,
+}: Props) {
     const extended = scrollValue <= 10; // If scrollValue is less than 10, extend the button
     const animateFrom = "right";
     const fabStyle = { [animateFrom]: 16 };
@@ -55,9 +71,13 @@ function FloatingNavigationButton({ scrollValue, type, label }: Props) {
                     label={label}
                     extended={extended}
                     onPress={() =>
-                        navigation.navigate("Forms", {
-                            type,
-                            clear: true,
+                        navigation.navigate(navPath, {
+                            method,
+                            id: undefined,
+                            isError: false,
+                            clearFields: false,
+                            isSuccess: false,
+                            errorMessage: "",
                         })
                     }
                     visible={true}

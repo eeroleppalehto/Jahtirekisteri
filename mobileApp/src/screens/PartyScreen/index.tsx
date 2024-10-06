@@ -78,6 +78,8 @@ function PartyScreen({ navigation, route }: Props) {
             )}
             <FloatingNavigationButton
                 scrollValue={scrollValue}
+                navPath="PartyForm"
+                method="POST"
                 type="Party"
                 label="Lisää seurue"
             />

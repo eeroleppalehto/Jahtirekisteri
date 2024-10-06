@@ -22,6 +22,7 @@ import { RootStackScreenProps } from "../../NavigationTypes";
 import { useFetchQuery } from "../../hooks/useTanStackQuery";
 import IconListItem from "../../components/IconListItem";
 import { useAuth } from "../../context/AuthProvider";
+import { useMemberShipFormStore } from "../../stores/formStore";
 import { WRITE_RIGHTS_SET } from "../../utils/authenticationUtils";
 
 type Props = RootStackScreenProps<"Details">;
@@ -308,6 +309,8 @@ function PartyMembers({ partyId, theme, navigation }: PartyMemberProps) {
 
     const hasWriteRights = !WRITE_RIGHTS_SET.has(authState?.role || "");
 
+    const membershipFormStore = useMemberShipFormStore();
+
     const PartySummary = (members: MembershipViewQuery[]) => {
         const numberOfMembers = members.length;
         const totalShare =
@@ -479,20 +482,20 @@ function PartyMembers({ partyId, theme, navigation }: PartyMemberProps) {
                             >
                                 <Button
                                     icon={"plus"}
-                                    onPress={() =>
-                                        navigation.navigate("Forms", {
-                                            type: "Membership",
-                                            clear: false,
-                                            data: {
-                                                seurue_id: partyId,
-                                                ryhma_id: null,
-                                                jasen_id: undefined,
-                                                osuus: 100,
-                                                liittyi: undefined,
-                                                poistui: undefined,
-                                            },
-                                        })
-                                    }
+                                    onPress={() => {
+                                        navigation.navigate("MembershipForm", {
+                                            method: "POST",
+                                            id: undefined,
+                                            isError: false,
+                                            isSuccess: false,
+                                            clearFields: false,
+                                            errorMessage: "",
+                                        });
+                                        membershipFormStore.clearForm();
+                                        membershipFormStore.updatePartyId(
+                                            partyId
+                                        );
+                                    }}
                                     compact={true}
                                     disabled={hasWriteRights}
                                     style={{

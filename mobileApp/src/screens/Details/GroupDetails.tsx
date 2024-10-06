@@ -14,6 +14,7 @@ import IconListItem from "../../components/IconListItem";
 import { GroupViewQuery, MembershipViewQuery } from "../../types";
 import { useAuth } from "../../context/AuthProvider";
 import { WRITE_RIGHTS_SET } from "../../utils/authenticationUtils";
+import { useMemberShipFormStore } from "../../stores/formStore";
 
 type Props = RootStackScreenProps<"Details">;
 
@@ -23,6 +24,8 @@ function GroupDetails({ route, navigation }: Props) {
         `views/?name=mobiili_ryhman_jasenyydet&column=jakoryhma.ryhma_id&value=${group.ryhma_id}`,
         ["GroupDetails", group.ryhma_id]
     );
+
+    const membershipFormStore = useMemberShipFormStore();
 
     const { authState } = useAuth();
 
@@ -212,20 +215,23 @@ function GroupDetails({ route, navigation }: Props) {
                         >
                             <Button
                                 icon={"plus"}
-                                onPress={() =>
-                                    navigation.navigate("Forms", {
-                                        type: "Membership",
-                                        clear: false,
-                                        data: {
-                                            seurue_id: group.seurue_id,
-                                            ryhma_id: group.ryhma_id,
-                                            jasen_id: undefined,
-                                            osuus: 100,
-                                            liittyi: undefined,
-                                            poistui: undefined,
-                                        },
-                                    })
-                                }
+                                onPress={() => {
+                                    navigation.navigate("MembershipForm", {
+                                        method: "POST",
+                                        id: undefined,
+                                        isError: false,
+                                        isSuccess: false,
+                                        clearFields: false,
+                                        errorMessage: "",
+                                    });
+                                    membershipFormStore.clearForm();
+                                    membershipFormStore.updatePartyId(
+                                        group.seurue_id
+                                    );
+                                    membershipFormStore.updateGroupId(
+                                        group.ryhma_id
+                                    );
+                                }}
                                 compact={true}
                                 disabled={hasWriteRights}
                                 style={{

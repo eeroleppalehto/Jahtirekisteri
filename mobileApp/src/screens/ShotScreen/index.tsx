@@ -57,6 +57,8 @@ function ShotScreen({ navigation, route }: Props) {
                     <FloatingNavigationButton
                         scrollValue={scrollValue}
                         type="Shot"
+                        navPath="ShotForm"
+                        method="POST"
                         label="Lisää kaato"
                     />
                 </>

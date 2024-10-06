@@ -19,6 +19,7 @@ import { ShareShotDetails } from "./utils/ShareShotDetails";
 import { useAuth } from "../../context/AuthProvider";
 import { WRITE_RIGHTS_SET } from "../../utils/authenticationUtils";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { useMemberShareFromStore } from "../../stores/formStore";
 
 type Props = RootStackScreenProps<"Details">;
 
@@ -176,19 +177,21 @@ export function MemberShareDetails({ route, navigation }: Props) {
         }
     };
 
+    const memberShareStore = useMemberShareFromStore();
+
     const navigateToForm = () => {
         try {
-            navigation.navigate("Forms", {
-                type: "MemberShare",
-                clear: false,
-                data: {
-                    paiva: undefined,
-                    kaadon_kasittely_id: data.kaadon_kasittely_id,
-                    osnimitys: undefined,
-                    maara: data.ruhopaino,
-                    jasenyys_id: undefined,
-                },
+            navigation.navigate("MemberShareForm", {
+                method: "POST",
+                id: undefined,
+                isError: false,
+                clearFields: false,
+                isSuccess: false,
+                errorMessage: "",
             });
+            memberShareStore.clearForm();
+            memberShareStore.updateShotUsage(data.kaadon_kasittely_id);
+            memberShareStore.updateInitWeight(data.ruhopaino);
         } catch (error) {
             if (error instanceof Error) setError(error);
         }

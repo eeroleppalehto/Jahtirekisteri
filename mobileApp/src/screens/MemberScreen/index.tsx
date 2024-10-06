@@ -106,6 +106,8 @@ function MemberScreen({ navigation, route }: Props) {
             <FloatingNavigationButton
                 scrollValue={scrollValue}
                 type="Member"
+                navPath="MemberForm"
+                method="POST"
                 label="Lisää jäsen"
             />
         </>

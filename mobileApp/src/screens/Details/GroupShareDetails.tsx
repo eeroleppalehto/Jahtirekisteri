@@ -18,6 +18,7 @@ import { useRef, useState } from "react";
 import { ShareShotDetails } from "./utils/ShareShotDetails";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useAuth } from "../../context/AuthProvider";
+import { useGroupShareFormStore } from "../../stores/formStore";
 import { WRITE_RIGHTS_SET } from "../../utils/authenticationUtils";
 
 type Props = RootStackScreenProps<"Details">;
@@ -154,19 +155,21 @@ export function GroupShareDetails({ route, navigation }: Props) {
         }
     };
 
+    const groupShareFormStore = useGroupShareFormStore();
+
     const navigateToForm = () => {
         try {
-            navigation.navigate("Forms", {
-                type: "GroupShare",
-                clear: false,
-                data: {
-                    paiva: undefined,
-                    kaadon_kasittely_id: data.kaadon_kasittely_id,
-                    osnimitys: undefined,
-                    maara: data.ruhopaino,
-                    ryhma_id: undefined,
-                },
+            navigation.navigate("GroupShareForm", {
+                method: "POST",
+                id: undefined,
+                isError: false,
+                isSuccess: false,
+                clearFields: false,
+                errorMessage: "",
             });
+            groupShareFormStore.clearForm();
+            groupShareFormStore.updateInitWeight(data.ruhopaino);
+            groupShareFormStore.updateShotUsage(data.kaadon_kasittely_id);
         } catch (error) {
             if (error instanceof Error) setError(error);
         }
