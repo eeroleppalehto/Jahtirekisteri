@@ -14,6 +14,8 @@ type Status = "aktiivinen" | "poistunut";
 
 // Form for adding a new member
 export default function MemberForm({ route, navigation }: Props) {
+    const [active, setActive] = useState<boolean>(true);
+
     // Load form data from the store
     const {
         firstName,
@@ -49,11 +51,20 @@ export default function MemberForm({ route, navigation }: Props) {
         clearForm: state.clearForm,
     }));
 
+    const { method, isError, isSuccess, errorMessage } = route.params as {
+        method: string;
+        isError: boolean;
+        isSuccess: boolean;
+        errorMessage: string;
+    };
+
     useEffect(() => {
-        if (route.params.method === "POST") {
+        if (method === "POST") {
             clearForm();
             updateMemberState("aktiivinen");
             setActive(true);
+        } else if (method === "PUT") {
+            setActive(memberState === "aktiivinen");
         }
     }, []);
 
@@ -67,16 +78,7 @@ export default function MemberForm({ route, navigation }: Props) {
         }
     }, [route.params.clearFields]);
 
-    const [active, setActive] = useState<boolean>(true);
-
     const theme = useTheme();
-
-    const { method, isError, isSuccess, errorMessage } = route.params as {
-        method: string;
-        isError: boolean;
-        isSuccess: boolean;
-        errorMessage: string;
-    };
 
     const onFirstNameChange = (text: string) => {
         updateFirstName(text);

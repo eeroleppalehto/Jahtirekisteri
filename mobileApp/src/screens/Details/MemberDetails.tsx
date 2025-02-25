@@ -5,7 +5,7 @@ import {
     useTheme,
     Avatar,
     Chip,
-    Surface,
+    Button,
     MD3Theme,
     ActivityIndicator,
 } from "react-native-paper";
@@ -16,6 +16,10 @@ import { useAuth } from "../../context/AuthProvider";
 import { EDIT_RIGHTS_SET } from "../../utils/authenticationUtils";
 import { ErrorScreen } from "../ErrorScreen";
 import { useFetchQuery } from "../../hooks/useTanStackQuery";
+import { useMemberFormStore } from "../../stores/formStore";
+import { useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = RootStackScreenProps<"Details">;
 
@@ -23,16 +27,23 @@ type Props = RootStackScreenProps<"Details">;
 function MemberDetails({ route, navigation }: Props) {
     if (!route.params) return <Text>Virhe</Text>;
 
+    // TODO: Error handling if data is undefined
+    const { data } = route.params as { data: JasenStateQuery };
+
+    const member = getMember(data.jasen_id);
+    if (!member) return <Text>Virhe ladattaessa välimuistia</Text>;
+
     const { authState } = useAuth();
+
+    // DO NOT REMOVE!
+    // This allows the screen to rerender after returning from edit form
+    const isFocused = useIsFocused();
 
     const theme = useTheme();
 
     const hasEditRights = authState?.role
         ? EDIT_RIGHTS_SET.has(authState.role)
         : false;
-
-    // TODO: Error handling if data is undefined
-    const { data } = route.params as { data: JasenStateQuery };
 
     const TextAvatar = (firstname: string, lastname: string) => {
         const firstLetter = firstname.charAt(0).toUpperCase();
@@ -48,26 +59,34 @@ function MemberDetails({ route, navigation }: Props) {
 
     return (
         <ScrollView>
-            <View style={{ paddingBottom: 300 }}>
-                <View
-                    style={{
-                        alignItems: "center",
-                        paddingTop: 60,
-                    }}
-                >
-                    {TextAvatar(data.etunimi, data.sukunimi)}
-                    <Text
-                        variant="headlineMedium"
-                        style={{ paddingTop: 60, paddingBottom: 10 }}
-                    >{`${data.sukunimi} ${data.etunimi}`}</Text>
-                    <Chip mode="flat" elevated={false}>
-                        {data.tila}
-                    </Chip>
+            {isFocused ? (
+                <View style={{ paddingBottom: 300 }}>
+                    <View
+                        style={{
+                            alignItems: "center",
+                            paddingTop: 60,
+                        }}
+                    >
+                        {TextAvatar(member.etunimi, member.sukunimi)}
+                        <Text
+                            variant="headlineMedium"
+                            style={{ paddingTop: 60, paddingBottom: 10 }}
+                        >{`${member.sukunimi} ${member.etunimi}`}</Text>
+                        <Chip mode="flat" elevated={false}>
+                            {member.tila}
+                        </Chip>
+                    </View>
+                    {hasEditRights ? (
+                        <>
+                            <MemberInfo
+                                id={data.jasen_id}
+                                theme={theme}
+                                hasEditRights={hasEditRights}
+                            />
+                        </>
+                    ) : null}
                 </View>
-                {hasEditRights ? (
-                    <MemberInfo id={data.jasen_id} theme={theme} />
-                ) : null}
-            </View>
+            ) : null}
         </ScrollView>
     );
 }
@@ -75,10 +94,37 @@ function MemberDetails({ route, navigation }: Props) {
 type MembersInfoProps = {
     id: number;
     theme: MD3Theme;
+    hasEditRights: boolean;
 };
 
-export function MemberInfo({ id, theme }: MembersInfoProps) {
+export function MemberInfo({ id, theme, hasEditRights }: MembersInfoProps) {
+    const queryClient = useQueryClient();
     const result = useFetchQuery<Jasen>(`members/${id}`, ["MemberDetails", id]);
+
+    const navigation = useNavigation();
+
+    const memberFormStore = useMemberFormStore();
+
+    const handleEditnavigation = () => {
+        if (!result.isSuccess) return;
+
+        memberFormStore.updateFirstName(result.data.etunimi);
+        memberFormStore.updateLastName(result.data.sukunimi);
+        memberFormStore.updateAddress(result.data.jakeluosoite);
+        memberFormStore.updateCity(result.data.postitoimipaikka);
+        memberFormStore.updateZipCode(result.data.postinumero);
+        memberFormStore.updatePhoneNumber(result.data.puhelinnumero);
+        memberFormStore.updateMemberState(result.data.tila);
+
+        navigation.navigate("MemberForm", {
+            method: "PUT",
+            id: id,
+            isError: false,
+            clearFields: false,
+            isSuccess: false,
+            errorMessage: "",
+        });
+    };
 
     return (
         <>
@@ -88,6 +134,18 @@ export function MemberInfo({ id, theme }: MembersInfoProps) {
             ) : null}
             {result.isSuccess ? (
                 <>
+                    {hasEditRights ? (
+                        <View style={{ alignItems: "center", marginTop: 20 }}>
+                            <Button
+                                icon="account-edit"
+                                mode="contained"
+                                style={{ width: 140 }}
+                                onPress={handleEditnavigation}
+                            >
+                                Muokkaa
+                            </Button>
+                        </View>
+                    ) : null}
                     <Text
                         variant="titleMedium"
                         style={{
@@ -126,6 +184,20 @@ export function MemberInfo({ id, theme }: MembersInfoProps) {
             ) : null}
         </>
     );
+}
+
+function getMember(memberId: number) {
+    const queryClient = useQueryClient();
+
+    const memberStateArray = queryClient.getQueryData<JasenStateQuery[]>([
+        "MemberStates",
+    ]);
+    if (!memberStateArray) return undefined;
+
+    const member = memberStateArray.find((i) => i.jasen_id === memberId);
+    if (!member) return undefined;
+
+    return member;
 }
 
 export default MemberDetails;

@@ -2,10 +2,10 @@ import { Appbar, Button, useTheme } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { useMemberFormStore } from "../../../stores/formStore";
-import { axiosPost } from "../../../hooks/useTanStackQuery";
-import { JasenForm } from "../../../types";
-import { shallow } from "zustand/shallow";
-import { useMutation } from "@tanstack/react-query";
+import { axiosPost, axiosPut } from "../../../hooks/useTanStackQuery";
+import { JasenForm, Jasen, JasenStateQuery } from "../../../types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { FormRouteType } from "../../../NavigationTypes";
 
 type Props = NativeStackHeaderProps;
 
@@ -31,15 +31,48 @@ export default function MemberFormAppBar({ navigation, route }: Props) {
         clearForm: state.clearForm,
     }));
 
-    const mutation = useMutation<JasenForm, Error, JasenForm, unknown>({
-        mutationFn: axiosPost("members"),
-        onSuccess: () => {
-            console.log("Mutation success");
-            navigation.setParams({
-                isSuccess: true,
-                clearFields: true,
-            });
-            clearForm();
+    const { method, id } = route.params as FormRouteType;
+
+    const queryClient = useQueryClient();
+
+    const axiosFunction = () => {
+        if (method === "POST") return axiosPost("members");
+        if (method === "PUT") {
+            if (!id) {
+                navigation.setParams({
+                    isError: true,
+                    errorMessage: "ID is missing",
+                });
+            }
+            return axiosPut(`members/${id}`);
+        }
+    };
+
+    const mutation = useMutation<Jasen, Error, JasenForm, unknown>({
+        mutationFn: axiosFunction(),
+        onSuccess: (data) => {
+            queryClient.setQueryData<JasenStateQuery[]>(
+                ["MemberStates"],
+                (oldList) =>
+                    oldList?.map((i) => {
+                        return i.jasen_id === data.jasen_id ? data : i;
+                    })
+            );
+
+            if (method === "PUT") {
+                queryClient.setQueryData(
+                    ["MemberDetails", data.jasen_id],
+                    data
+                );
+                navigation.goBack();
+            } else {
+                console.log("Mutation success");
+                navigation.setParams({
+                    isSuccess: true,
+                    clearFields: true,
+                });
+                clearForm();
+            }
         },
     });
 
@@ -64,16 +97,32 @@ export default function MemberFormAppBar({ navigation, route }: Props) {
             return;
         }
 
-        if (payload.jakeluosoite?.trim() === "") {
+        if (
+            payload.jakeluosoite?.trim() === "" ||
+            payload.jakeluosoite === null
+        ) {
             delete payload.jakeluosoite;
         }
 
-        if (payload.postinumero?.trim() === "") {
+        if (
+            payload.postinumero?.trim() === "" ||
+            payload.postinumero === null
+        ) {
             delete payload.postinumero;
         }
 
-        if (payload.postitoimipaikka?.trim() === "") {
+        if (
+            payload.postitoimipaikka?.trim() === "" ||
+            payload.postitoimipaikka === null
+        ) {
             delete payload.postitoimipaikka;
+        }
+
+        if (
+            payload.puhelinnumero?.trim() === "" ||
+            payload.puhelinnumero === null
+        ) {
+            delete payload.puhelinnumero;
         }
 
         mutation.mutate(payload);
