@@ -11,28 +11,47 @@ import {
     MD3Theme,
     Surface,
     Text,
-    TouchableRipple,
     useTheme,
 } from "react-native-paper";
-import { StyleSheet } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import { ErrorScreen } from "../ErrorScreen";
 import { RootStackScreenProps } from "../../NavigationTypes";
 import { useFetchQuery } from "../../hooks/useTanStackQuery";
 import IconListItem from "../../components/IconListItem";
 import { useAuth } from "../../context/AuthProvider";
-import { useMemberShipFormStore } from "../../stores/formStore";
-import { WRITE_RIGHTS_SET } from "../../utils/authenticationUtils";
+import {
+    useMemberShipFormStore,
+    usePartyFormStore,
+} from "../../stores/formStore";
+import {
+    EDIT_RIGHTS_SET,
+    WRITE_RIGHTS_SET,
+} from "../../utils/authenticationUtils";
+import { useQueryClient } from "@tanstack/react-query";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { MaterialIcons } from "@expo/vector-icons";
 
 type Props = RootStackScreenProps<"Details">;
 
 type PartyTypeNames = "Ryhmä" | "Jäsen";
 
 export function PartyDetails({ route, navigation }: Props) {
-    const party = route.params?.data as PartyViewQuery;
+    const data = route.params?.data as PartyViewQuery;
+
+    const party = getParty(data.seurue_id);
+    if (!party) return <Text>Virhe ladattaessa välimuistia</Text>;
 
     const theme = useTheme();
+
+    const { authState } = useAuth();
+
+    const hasEditRights = authState?.role
+        ? EDIT_RIGHTS_SET.has(authState.role)
+        : false;
+
+    // DO NOT REMOVE!
+    // This allows the screen to rerender after returning from edit form
+    useIsFocused();
 
     const partyDetailsView = (party: PartyViewQuery) => {
         const partyTypeName = party.seurue_tyyppi_nimi as PartyTypeNames;
@@ -87,6 +106,11 @@ export function PartyDetails({ route, navigation }: Props) {
                 iconNameMaterialCommunity="account"
                 title="Seurueen Tyyppi"
                 description={party.seurue_tyyppi_nimi}
+            />
+            <ManagementButtons
+                party={party}
+                theme={theme}
+                hasEditRights={hasEditRights}
             />
             {partyDetailsView(party)}
             <View style={{ paddingVertical: 150 }}></View>
@@ -511,4 +535,93 @@ function PartyMembers({ partyId, theme, navigation }: PartyMemberProps) {
             )}
         </>
     );
+}
+
+type ManagementButtonsProps = {
+    hasEditRights: boolean;
+    theme: MD3Theme;
+    party: PartyViewQuery;
+};
+
+function ManagementButtons({
+    hasEditRights,
+    theme,
+    party,
+}: ManagementButtonsProps) {
+    const partyFormStore = usePartyFormStore();
+
+    const navigation = useNavigation();
+
+    const handleNavigation = () => {
+        partyFormStore.updatePartyLeader(party.jasen_id);
+        partyFormStore.updatePartyLeaderName(party.seurueen_johatajan_nimi);
+        partyFormStore.updatePartyName(party.seurueen_nimi);
+        partyFormStore.updatePartyType(party.seurue_tyyppi_id);
+
+        navigation.navigate("PartyForm", {
+            method: "PUT",
+            id: party.seurue_id,
+            isError: false,
+            clearFields: false,
+            isSuccess: false,
+            errorMessage: "",
+        });
+    };
+
+    return (
+        <>
+            {hasEditRights ? (
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        marginVertical: 20,
+                        marginHorizontal: 20,
+                        gap: 10,
+                    }}
+                >
+                    <Button
+                        icon={() => (
+                            <MaterialIcons
+                                name="edit"
+                                size={24}
+                                color={theme.colors.onPrimary}
+                            />
+                        )}
+                        mode="contained"
+                        style={{ width: "50%" }}
+                        onPress={handleNavigation}
+                    >
+                        Muokkaa
+                    </Button>
+                    <Button
+                        icon={() => (
+                            <MaterialIcons
+                                name="delete"
+                                size={24}
+                                color={theme.colors.onPrimary}
+                            />
+                        )}
+                        disabled={true}
+                        mode="contained"
+                        style={{ width: "50%" }}
+                        onPress={() => {}}
+                    >
+                        Poista
+                    </Button>
+                </View>
+            ) : null}
+        </>
+    );
+}
+
+function getParty(partyId: number) {
+    const queryClient = useQueryClient();
+    const parties = queryClient.getQueryData<PartyViewQuery[]>(["Parties"]);
+    if (!parties) return undefined;
+
+    const party = parties.find((i) => i.seurue_id === partyId);
+    if (!party) return undefined;
+
+    return party;
 }

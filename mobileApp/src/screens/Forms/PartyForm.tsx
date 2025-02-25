@@ -26,7 +26,7 @@ type Shooter = {
 type Props = RootStackScreenProps<"PartyForm">;
 
 export function PartyForm({ route, navigation }: Props) {
-    const [shooter, setShooter] = useState<Shooter | undefined>(undefined);
+    //const [shooter, setShooter] = useState<Shooter | undefined>(undefined);
 
     const { method, isError, isSuccess, clearFields, errorMessage } =
         route.params;
@@ -35,20 +35,35 @@ export function PartyForm({ route, navigation }: Props) {
     const {
         partyName,
         partyLeaderId,
+        partyLeaderName,
         partyTypeId,
         updatePartyName,
         updatePartyLeader,
         updatePartyType,
+        updatePartyLeaderName,
         clearForm,
     } = usePartyFormStore((state) => ({
         partyName: state.seurueen_nimi,
         partyLeaderId: state.jasen_id,
+        partyLeaderName: state.kokonimi,
         partyTypeId: state.seurue_tyyppi_id,
         updatePartyName: state.updatePartyName,
         updatePartyLeader: state.updatePartyLeader,
         updatePartyType: state.updatePartyType,
+        updatePartyLeaderName: state.updatePartyLeaderName,
         clearForm: state.clearForm,
     }));
+
+    const getShooter = () => {
+        if (!partyLeaderId) return undefined;
+        if (!partyLeaderName) return undefined;
+
+        const shooter: Shooter = {
+            jasen_id: partyLeaderId,
+            kokonimi: partyLeaderName,
+        };
+        return shooter;
+    };
 
     const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -60,7 +75,8 @@ export function PartyForm({ route, navigation }: Props) {
 
     useEffect(() => {
         if (clearFields) {
-            setShooter(undefined);
+            updatePartyLeader(undefined);
+            updatePartyLeaderName(undefined);
             navigation.setParams({
                 clearFields: false,
             });
@@ -68,8 +84,8 @@ export function PartyForm({ route, navigation }: Props) {
     }, [clearFields]);
 
     const handleShooterChange = (shooter: Shooter) => {
-        setShooter(shooter);
         updatePartyLeader(shooter.jasen_id);
+        updatePartyLeaderName(shooter.kokonimi);
         bottomSheetRef.current?.close();
     };
 
@@ -151,34 +167,36 @@ export function PartyForm({ route, navigation }: Props) {
                     placeholder="Lisää nimi"
                     onChangeText={(text) => updatePartyName(text)}
                 />
-                <View style={{ paddingHorizontal: 16 }}>
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            // gap: 4,
-                            alignItems: "flex-start",
-                        }}
-                    >
-                        <Text
-                            variant="bodyLarge"
-                            style={{ paddingLeft: 8, paddingBottom: 4 }}
-                        >
-                            Seurueen Tyyppi
-                        </Text>
-                        <Text
-                            variant="bodyMedium"
+                {method === "POST" ? (
+                    <View style={{ paddingHorizontal: 16 }}>
+                        <View
                             style={{
-                                color: theme.colors.error,
+                                flexDirection: "row",
+                                // gap: 4,
+                                alignItems: "flex-start",
                             }}
                         >
-                            *
-                        </Text>
+                            <Text
+                                variant="bodyLarge"
+                                style={{ paddingLeft: 8, paddingBottom: 4 }}
+                            >
+                                Seurueen Tyyppi
+                            </Text>
+                            <Text
+                                variant="bodyMedium"
+                                style={{
+                                    color: theme.colors.error,
+                                }}
+                            >
+                                *
+                            </Text>
+                        </View>
+                        <PartyTypesRadioGroup
+                            partyTypeId={partyTypeId}
+                            onValueChange={handlePartyTypeChange}
+                        />
                     </View>
-                    <PartyTypesRadioGroup
-                        partyTypeId={partyTypeId}
-                        onValueChange={handlePartyTypeChange}
-                    />
-                </View>
+                ) : null}
                 <View style={{ paddingHorizontal: 16 }}>
                     <View
                         style={{
@@ -216,7 +234,7 @@ export function PartyForm({ route, navigation }: Props) {
                         }}
                         onPress={() => bottomSheetRef.current?.snapToIndex(2)}
                     >
-                        {ShooterContent(shooter)}
+                        {ShooterContent(getShooter())}
                     </TouchableRipple>
                 </View>
             </View>
