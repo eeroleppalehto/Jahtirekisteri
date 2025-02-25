@@ -26,7 +26,7 @@ export type DrawerParamList = {
 export type MyDrawerScreenProps<T extends keyof DrawerParamList> =
     DrawerScreenProps<DrawerParamList, T>;
 
-type FormRouteType = {
+export type FormRouteType = {
     method: string;
     id: number | undefined;
     isError: boolean;
