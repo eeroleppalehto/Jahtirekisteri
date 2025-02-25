@@ -47,6 +47,10 @@ export function GroupForm({ route, navigation }: Props) {
         updatePartyId(value);
     };
 
+    const onGroupNameChange = (text: string) => {
+        updateGroupName(text);
+    };
+
     const theme = useTheme();
 
     return (
@@ -87,9 +91,7 @@ export function GroupForm({ route, navigation }: Props) {
                     label="Ryhmän nimi"
                     mode="outlined"
                     value={groupName}
-                    onChangeText={(text) => {
-                        updateGroupName(text);
-                    }}
+                    onChangeText={onGroupNameChange}
                     style={{ marginHorizontal: 16, paddingVertical: 4 }}
                     outlineStyle={{
                         borderRadius: 24,

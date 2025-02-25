@@ -2,9 +2,15 @@ import { Appbar, Button, useTheme } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { useGroupFormStore } from "../../../stores/formStore";
-import { axiosPost } from "../../../hooks/useTanStackQuery";
-import { GroupFormType } from "../../../types";
-import { useMutation } from "@tanstack/react-query";
+import { axiosPost, axiosPut } from "../../../hooks/useTanStackQuery";
+import {
+    Group,
+    GroupFormType,
+    GroupViewQuery,
+    PartyViewQuery,
+} from "../../../types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { FormRouteType } from "../../../NavigationTypes";
 
 type Props = NativeStackHeaderProps;
 
@@ -16,15 +22,55 @@ export default function GroupFormAppBar({ navigation, route }: Props) {
         clearForm: state.clearForm,
     }));
 
-    const mutation = useMutation<GroupFormType, Error, GroupFormType, unknown>({
-        mutationFn: axiosPost("groups"),
-        onSuccess: () => {
-            console.log("Mutation success");
-            navigation.setParams({
-                isSuccess: true,
-                clearFields: true,
-            });
-            clearForm();
+    const { method, id } = route.params as FormRouteType;
+
+    const queryClient = useQueryClient();
+
+    const axiosFunction = () => {
+        if (method === "POST") return axiosPost("groups");
+        if (method === "PUT") {
+            if (!id) {
+                navigation.setParams({
+                    isError: true,
+                    errorMessage: "ID is missing",
+                });
+            }
+            return axiosPut(`groups/${id}`);
+        }
+    };
+
+    const mutation = useMutation<Group, Error, GroupFormType, unknown>({
+        mutationFn: axiosFunction(),
+        onSuccess: (data) => {
+            const parties = queryClient.getQueryData<PartyViewQuery[]>([
+                "Parties",
+            ]);
+
+            const party = parties?.find((p) => p.seurue_id === data.seurue_id);
+            queryClient.setQueryData<GroupViewQuery[]>(["Groups"], (oldList) =>
+                oldList?.map((i) => {
+                    if (i.ryhma_id === data.ryhma_id) {
+                        return {
+                            ...i,
+                            seurue_id: data.seurue_id,
+                            ryhman_nimi: data.ryhman_nimi,
+                            seurueen_nimi: party ? party.seurueen_nimi : "",
+                        };
+                    }
+                    return i;
+                })
+            );
+
+            if (method === "PUT") {
+                navigation.goBack();
+            } else {
+                console.log("Mutation success");
+                navigation.setParams({
+                    isSuccess: true,
+                    clearFields: true,
+                });
+                clearForm();
+            }
         },
     });
 

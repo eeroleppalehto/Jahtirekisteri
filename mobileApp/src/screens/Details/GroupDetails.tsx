@@ -5,6 +5,7 @@ import {
     Button,
     ActivityIndicator,
     useTheme,
+    MD3Theme,
 } from "react-native-paper";
 import { RootStackScreenProps } from "../../NavigationTypes";
 import { useFetchQuery } from "../../hooks/useTanStackQuery";
@@ -13,17 +14,29 @@ import { ScrollView } from "react-native-gesture-handler";
 import IconListItem from "../../components/IconListItem";
 import { GroupViewQuery, MembershipViewQuery } from "../../types";
 import { useAuth } from "../../context/AuthProvider";
-import { WRITE_RIGHTS_SET } from "../../utils/authenticationUtils";
-import { useMemberShipFormStore } from "../../stores/formStore";
+import {
+    EDIT_RIGHTS_SET,
+    WRITE_RIGHTS_SET,
+} from "../../utils/authenticationUtils";
+import {
+    useGroupFormStore,
+    useMemberShipFormStore,
+} from "../../stores/formStore";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useQueryClient } from "@tanstack/react-query";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 
 type Props = RootStackScreenProps<"Details">;
 
 function GroupDetails({ route, navigation }: Props) {
-    const group = route.params?.data as GroupViewQuery;
+    const groupId = route.params?.data.ryhma_id as number;
     const result = useFetchQuery<MembershipViewQuery[]>(
-        `views/?name=mobiili_ryhman_jasenyydet&column=jakoryhma.ryhma_id&value=${group.ryhma_id}`,
-        ["GroupDetails", group.ryhma_id]
+        `views/?name=mobiili_ryhman_jasenyydet&column=jakoryhma.ryhma_id&value=${groupId}`,
+        ["GroupDetails", groupId]
     );
+
+    const group = getGroup(groupId);
+    if (!group) return <Text>Virhe ladatessa välimuistia!</Text>;
 
     const membershipFormStore = useMemberShipFormStore();
 
@@ -31,7 +44,15 @@ function GroupDetails({ route, navigation }: Props) {
 
     const hasWriteRights = !WRITE_RIGHTS_SET.has(authState?.role || "");
 
+    const hasEditRights = authState?.role
+        ? EDIT_RIGHTS_SET.has(authState.role)
+        : false;
+
     const theme = useTheme();
+
+    // DO NOT REMOVE!
+    // This allows the screen to rerender after returning from edit form
+    useIsFocused();
 
     const GroupMembers = (members: MembershipViewQuery[]) => {
         if (members.length === 0) {
@@ -65,9 +86,24 @@ function GroupDetails({ route, navigation }: Props) {
                     }}
                 >
                     <Text variant="bodyLarge">{member.jasenen_nimi}</Text>
-                    <Text variant="bodyLarge">
-                        {(member.osuus / 100).toString()}
-                    </Text>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: 5,
+                        }}
+                    >
+                        <Text variant="bodyLarge">
+                            {(member.osuus / 100).toString()}
+                        </Text>
+                        {/* <IconButton
+                            icon="dots-vertical"
+                            iconColor={theme.colors.primary}
+                            size={20}
+                            // mode="contained-tonal"
+                            onPress={() => console.log("Pressed")}
+                        /> */}
+                    </View>
                 </View>
             ));
         }
@@ -83,7 +119,7 @@ function GroupDetails({ route, navigation }: Props) {
                     paddingTop: 20,
                 }}
             >
-                Ryhmän perustiedot:
+                Ryhmän perustiedot:{group.ryhman_nimi}
             </Text>
             <IconListItem
                 iconSet="MaterialCommunityIcons"
@@ -96,6 +132,11 @@ function GroupDetails({ route, navigation }: Props) {
                 iconNameMaterialCommunity="account-group"
                 title="Seurue"
                 description={group.seurueen_nimi}
+            />
+            <ManagementButtons
+                group={group}
+                hasEditRights={hasEditRights}
+                theme={theme}
             />
             <Divider />
             <Text
@@ -247,6 +288,92 @@ function GroupDetails({ route, navigation }: Props) {
             <View style={{ paddingVertical: 150 }}></View>
         </ScrollView>
     );
+}
+
+type ManagementButtonsProps = {
+    hasEditRights: boolean;
+    theme: MD3Theme;
+    group: GroupViewQuery;
+};
+
+function ManagementButtons({
+    hasEditRights,
+    theme,
+    group,
+}: ManagementButtonsProps) {
+    const groupFormStore = useGroupFormStore();
+
+    const navigation = useNavigation();
+
+    const handleNavigation = () => {
+        groupFormStore.updateGroupName(group.ryhman_nimi);
+        groupFormStore.updatePartyId(group.seurue_id);
+
+        navigation.navigate("GroupForm", {
+            method: "PUT",
+            id: group.ryhma_id,
+            isError: false,
+            clearFields: false,
+            isSuccess: false,
+            errorMessage: "",
+        });
+    };
+    return (
+        <>
+            {hasEditRights ? (
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        marginVertical: 20,
+                        marginHorizontal: 20,
+                        gap: 10,
+                    }}
+                >
+                    <Button
+                        icon={() => (
+                            <MaterialIcons
+                                name="edit"
+                                size={24}
+                                color={theme.colors.onPrimary}
+                            />
+                        )}
+                        mode="contained"
+                        style={{ width: "50%" }}
+                        onPress={handleNavigation}
+                    >
+                        Muokkaa
+                    </Button>
+                    <Button
+                        icon={() => (
+                            <MaterialIcons
+                                name="delete"
+                                size={24}
+                                color={theme.colors.onPrimary}
+                            />
+                        )}
+                        disabled={true}
+                        mode="contained"
+                        style={{ width: "50%" }}
+                        onPress={() => {}}
+                    >
+                        Poista
+                    </Button>
+                </View>
+            ) : null}
+        </>
+    );
+}
+
+function getGroup(groupId: number) {
+    const queryClient = useQueryClient();
+    const groups = queryClient.getQueryData<GroupViewQuery[]>(["Groups"]);
+    if (!groups) return undefined;
+
+    const group = groups.find((i) => i.ryhma_id === groupId);
+    if (!group) return undefined;
+
+    return group;
 }
 
 export default GroupDetails;
