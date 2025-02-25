@@ -85,25 +85,35 @@ type PartyFormStoreActions = {
     clearForm: () => void;
 };
 
-export const usePartyFormStore = create<PartyFormType & PartyFormStoreActions>(
-    (set) => ({
-        seurueen_nimi: undefined,
-        jasen_id: undefined,
-        seurue_tyyppi_id: undefined,
-        updatePartyName: (partyName: string | undefined) =>
-            set(() => ({ seurueen_nimi: partyName })),
-        updatePartyLeader: (partyLeaderId: number | undefined) =>
-            set(() => ({ jasen_id: partyLeaderId })),
-        updatePartyType: (partyTypeId: number | undefined) =>
-            set(() => ({ seurue_tyyppi_id: partyTypeId })),
-        clearForm: () =>
-            set({
-                seurueen_nimi: "",
-                jasen_id: undefined,
-                seurue_tyyppi_id: undefined,
-            }),
-    })
-);
+// PartyLeaderName is added to the usePartyFormStore
+// to allow the edit form to show the current leader
+type PartyLeaderNameType = {
+    kokonimi: string | undefined;
+    updatePartyLeaderName: (partyLeaderName: string | undefined) => void;
+};
+
+export const usePartyFormStore = create<
+    PartyFormType & PartyFormStoreActions & PartyLeaderNameType
+>((set) => ({
+    seurueen_nimi: undefined,
+    jasen_id: undefined,
+    seurue_tyyppi_id: undefined,
+    kokonimi: undefined,
+    updatePartyName: (partyName: string | undefined) =>
+        set(() => ({ seurueen_nimi: partyName })),
+    updatePartyLeader: (partyLeaderId: number | undefined) =>
+        set(() => ({ jasen_id: partyLeaderId })),
+    updatePartyType: (partyTypeId: number | undefined) =>
+        set(() => ({ seurue_tyyppi_id: partyTypeId })),
+    updatePartyLeaderName: (partyLeaderName: string | undefined) =>
+        set(() => ({ kokonimi: partyLeaderName })),
+    clearForm: () =>
+        set({
+            seurueen_nimi: "",
+            jasen_id: undefined,
+            seurue_tyyppi_id: undefined,
+        }),
+}));
 
 type ShotFormStoreActions = {
     updateShooterId: (shooterId: number | undefined) => void;
