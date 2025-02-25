@@ -18,7 +18,7 @@ export function useFetchQuery<T>(url: string, key: any[]) {
             });
 
     const query = useQuery<T>({
-        queryKey: [key],
+        queryKey: key,
         queryFn: axiosQuery,
     });
 
@@ -73,6 +73,22 @@ export function axiosPost(url: string) {
     return (data: any) =>
         axios
             .post(`/api/v2/${url}`, data)
+            .then((response) => response.data)
+            .catch((error) => {
+                if (!error.response) throw error;
+                if (!error.response.data) throw error;
+
+                if (error.response.status >= 400) {
+                    error.response.data as ServerErrorType;
+                    throw new ServerError(error.response.data);
+                }
+            });
+}
+
+export function axiosPut(url: string) {
+    return (data: any) =>
+        axios
+            .put(`/api/v2/${url}`, data)
             .then((response) => response.data)
             .catch((error) => {
                 if (!error.response) throw error;
