@@ -30,6 +30,7 @@ const createJasen = async (object: unknown) => {
         jakeluosoite,
         postinumero,
         postitoimipaikka,
+        puhelinnumero,
         tila,
     } = data;
 
@@ -40,6 +41,7 @@ const createJasen = async (object: unknown) => {
             jakeluosoite,
             postinumero,
             postitoimipaikka,
+            puhelinnumero,
             tila,
         },
     });
@@ -56,6 +58,7 @@ const updateJasen = async (id: number, object: unknown) => {
         jakeluosoite,
         postinumero,
         postitoimipaikka,
+        puhelinnumero,
         tila,
     } = data;
 
@@ -67,6 +70,7 @@ const updateJasen = async (id: number, object: unknown) => {
             jakeluosoite,
             postinumero,
             postitoimipaikka,
+            puhelinnumero,
             tila,
         },
     });
